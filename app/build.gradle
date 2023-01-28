@@ -9,7 +9,6 @@ plugins {
 }
 
 android {
-    namespace 'com.thesis.sportologia'
     compileSdkVersion 33
 
     defaultConfig {
@@ -35,8 +34,10 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-    buildFeatures {
-        viewBinding true
+
+    buildFeatures{
+        dataBinding = true
+        viewBinding = true
     }
 }
 

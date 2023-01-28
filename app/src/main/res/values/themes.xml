@@ -11,7 +11,9 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
         <!-- Customize your theme here. -->
+
     </style>
 
     <style name="SplashActivityStyle" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -20,11 +22,24 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
-    <style name="ButtonStyle" parent="Widget.MaterialComponents.Button">
+    <style name="ButtonStyleBasic" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:background">@drawable/button_custom_basic</item>
         <item name="android:backgroundTint">@color/grey_light</item>
+        <item name="android:layout_height">37dp</item>
+        <item name="android:drawableLeft">@drawable/icon_snippet_black</item>
+        <item name="android:drawablePadding">4dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ButtonStyleRound" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:background">@drawable/button_custom_round</item>
+        <item name="android:backgroundTint">@color/purple_dark</item>
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="android:padding">12dp</item>
     </style>
 
 </resources>

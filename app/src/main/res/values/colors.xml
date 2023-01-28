@@ -14,5 +14,8 @@
     <color name="grey_medium">#5E5E5E</color>
     <color name="grey_light">#E8E8E8</color>
     <color name="purple_medium">#6834A4</color>
-    <color name="purple_dark">#3820B2</color>
+    <color name="purple_dark">#3A20B1</color>
+    <color name="purple_start">#6834A4</color>
+    <color name="purple_end">#3820B2</color>
+    <!-- для градиента был 4F29AB -->
 </resources>

@@ -9,12 +9,4 @@
     tools:background="@drawable/splash"
     tools:context="scientists.house.affiche.app.screens.splash.SplashFragment">
 
-    <Button
-        style="@style/ButtonStyle"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        tools:text="Привет!"
-        android:fontFamily=""
-        android:id="@+id/fnewsMbNext"/>
-
 </LinearLayout>
