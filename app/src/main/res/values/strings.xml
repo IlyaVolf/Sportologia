@@ -1,3 +1,15 @@
 <resources>
+
+    <!-- Common -->
     <string name="app_name">Sportologia</string>
+    <string name="action_try_again">Повторить</string>
+
+    <!-- Network errors -->
+    <string name="network_connection_error">Невозможно подключиться к серверу</string>
+    <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
+
+    <!-- Errors -->
+    <string name="error_default_load_error_body">Проверьте соединение с интернетом или зайдите позже</string>
+    <string name="error_loading">Ошибка при загрузке</string>
+
 </resources>
