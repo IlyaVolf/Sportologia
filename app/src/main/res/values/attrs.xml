@@ -5,6 +5,13 @@
         <attr name="drawable" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="EditTextBasicView">
+        <attr name="hint" format="string" />
+        <attr name="title" format="string" />
+        <attr name="lines" format="integer" />
+        <attr name="limit" format="integer" />
+    </declare-styleable>
+
     <declare-styleable name="ButtonBasicView">
         <attr name="backgroundColor" format="color" />
 
