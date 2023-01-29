@@ -40,11 +40,16 @@
                 android:layout_gravity="start"
                 android:text="@string/email" />
 
-            <EditText
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="1dp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:background="@drawable/button_custom_basic"
-                android:hint="Введите адрес эл. почты"
+                android:hint="@string/hint_email"
                 android:inputType="textEmailAddress"
                 android:paddingHorizontal="@dimen/margin_sides"
                 android:paddingStart="20dp"
@@ -68,11 +73,16 @@
                 android:layout_gravity="start"
                 android:text="@string/password" />
 
-            <EditText
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="1dp" />
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="40dp"
                 android:background="@drawable/button_custom_basic"
-                android:hint="Введите пароль"
+                android:hint="@string/hint_password"
                 android:inputType="textPassword"
                 android:paddingHorizontal="@dimen/margin_sides"
                 android:textSize="14sp" />
