@@ -11,5 +11,13 @@
     <!-- Errors -->
     <string name="error_default_load_error_body">Проверьте соединение с интернетом или зайдите позже</string>
     <string name="error_loading">Ошибка при загрузке</string>
+    
+    <!-- Sign-In and Sign-Up Pages -->
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="back">Назад</string>
 
 </resources>

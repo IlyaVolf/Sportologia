@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_standard">50dp</dimen>
+    <dimen name="button_standard_corners">50dp</dimen>
+    <dimen name="button_standard_height">37dp</dimen>
+
+    <dimen name="margin_sides">16dp</dimen>
 </resources>
