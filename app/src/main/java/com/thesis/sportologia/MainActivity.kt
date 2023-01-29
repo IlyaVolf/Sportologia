@@ -2,6 +2,7 @@ package com.thesis.sportologia
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.thesis.sportologia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

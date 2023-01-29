@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
-    tools:background="@drawable/splash"
-    tools:context="scientists.house.affiche.app.screens.splash.SplashFragment">
+    tools:background="@drawable/splash">
+    <!-- tools:context="scientists.house.affiche.app.screens.splash.SplashFragment" -->
 
 </LinearLayout>

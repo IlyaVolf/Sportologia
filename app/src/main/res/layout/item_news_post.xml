@@ -32,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:textColor="@color/grey"
+        android:textColor="@color/grey_medium"
         android:layout_marginTop="4dp"
         android:textSize="12sp"
         tools:text="12 ДЕКАБРЯ 2022" />

@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <declare-styleable name="ButtonRoundView">
-        <attr name="icon" format="string" />
+        <attr name="drawable" format="reference" />
     </declare-styleable>
-    
+
+    <declare-styleable name="ButtonBasicView">
+        <attr name="backgroundColor" format="color" />
+
+        <attr name="text" format="string" />
+        <attr name="textColor" format="color" />
+
+        <attr name="icon" format="reference" />
+        <attr name="iconColor" format="color" />
+    </declare-styleable>
+
 </resources>

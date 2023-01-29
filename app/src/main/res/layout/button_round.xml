@@ -8,14 +8,18 @@
     android:layout_height="wrap_content">
 
     <ImageView
+        android:id="@+id/button"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:paddingHorizontal="12dp"
         android:background="@drawable/button_custom_round"
         android:src="@drawable/icon_snippet_white"
+        android:clickable="true"
+        android:focusable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/app_name" />
 
 </merge>

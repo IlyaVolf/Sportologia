@@ -1,46 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.thesis.sportologia.MainActivity">
 
-    <TextView
+    <com.thesis.sportologia.views.ButtonRoundView
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:drawable="@drawable/icon_album" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/edit_button"
-        android:layout_width="wrap_content"
-        style="@style/ButtonStyleBasic"
-        tools:text="Редактировать"
-        android:drawableLeft="@drawable/icon_plus"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/map_button" />
+    <com.thesis.sportologia.views.ButtonBasicView
+        android:layout_gravity="center"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        app:icon="@drawable/icon_star"
+        app:text="Избранное" />
 
-    <include
-        layout="@layout/button_round"
-        android:src="@drawable/icon_map" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/map_button"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:background="@drawable/button_custom_round"
-        style="@style/ButtonStyleRound"
-        app:icon="@drawable/icon_map"
-        app:layout_constraintBottom_toBottomOf="@id/edit_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
