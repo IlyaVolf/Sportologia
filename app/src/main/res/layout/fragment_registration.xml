@@ -2,11 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:statusBarColor="@color/white"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:statusBarColor="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -23,28 +23,29 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
+            android:id="@+id/title"
             style="@style/TextStyleTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="Регистрация"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="Регистрация"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             style="@style/TextStyleRegular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginRight="@dimen/margin_sides"
-            android:text="Завершить"
-            android:textColor="@color/purple_medium"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:text="Завершить"
+            android:textColor="@color/purple_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -66,270 +67,67 @@
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:focusable="true"
                 android:src="@drawable/avatar" />
 
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="12dp" />
 
-            <LinearLayout
+            <com.thesis.sportologia.views.SpinnerBasicView
+                android:id="@+id/spinner_account_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_account_type"
+                app:spinnerTitle="@string/account_type" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/account_type" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_account_type"
-                    android:inputType="textEmailAddress"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingStart="20dp"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_athlete_name"
+                app:limit="70"
+                app:editTextTitle="@string/athlete_name" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/athlete_name" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_athlete_name"
-                    android:lines="1"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp"
-                    android:maxLength="70"/>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_organization_name"
+                app:limit="100"
+                app:editTextTitle="@string/organization_name" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/organization_name" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_organization_name"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp"
-                    android:maxLength="100"/>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.SpinnerBasicView
+                android:id="@+id/spinner_gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_account_type"
+                app:spinnerTitle="@string/gender" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/gender" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_gender"
-                    android:lines="1"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_description"
+                app:limit="512"
+                app:editTextTitle="@string/description" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/description" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_description"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp"
-                    android:maxLength="512"/>
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_athlete_interests"
+                app:editTextTitle="@string/athlete_interests" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/athlete_interests" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_athlete_interests"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                app:hint="@string/hint_organization_specializations"
+                app:editTextTitle="@string/organization_specializations" />
 
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/organization_specializations" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_organization_specializations"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
+            <com.thesis.sportologia.views.EditTextBasicView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:text="@string/address" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp" />
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:minHeight="40dp"
-                    android:background="@drawable/button_custom_basic"
-                    android:hint="@string/hint_address"
-                    android:lines="1"
-                    android:paddingHorizontal="@dimen/margin_sides"
-                    android:paddingVertical="4dp"
-                    android:textSize="14sp" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="8dp" />
-
-            </LinearLayout>
+                app:hint="@string/hint_address"
+                app:editTextTitle="@string/address" />
 
         </LinearLayout>
 

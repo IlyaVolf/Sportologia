@@ -1,12 +1,10 @@
 package com.thesis.sportologia.views
 
-import android.R.attr.maxLength
 import android.content.Context
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.EditTextBasicBinding
@@ -53,7 +51,7 @@ class EditTextBasicView(
         )
 
         with(binding) {
-            val title = typedArray.getString(R.styleable.EditTextBasicView_title)
+            val title = typedArray.getString(R.styleable.EditTextBasicView_editTextTitle)
             binding.title.text = title
 
             val lines = typedArray.getInteger(R.styleable.EditTextBasicView_lines,0)

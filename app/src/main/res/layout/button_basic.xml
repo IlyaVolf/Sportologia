@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/button_custom_basic"
-        android:backgroundTint="@color/grey_light"
+        android:backgroundTint="@color/element_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,8 @@
             android:id="@+id/drawable"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/icon_snippet_black" />
+            android:src="@drawable/icon_star"
+            app:tint="@color/text_main"/>
 
         <Space
             android:layout_width="4dp"
@@ -47,7 +48,7 @@
             android:includeFontPadding="false"
             android:text="Text"
             android:textAllCaps="false"
-            android:textColor="@color/black"
+            android:textColor="@color/text_main"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -29,10 +29,10 @@
     <!-- для градиента был 4F29AB -->
 
     <!-- Elements -->
-    <color name="background">@color/white</color>
-    <color name="button_press">@color/black_50a</color>
-    <color name="element_primary">@color/grey_light</color>
-    <color name="element_secondary">@color/grey_blue_light</color>
-    <color name="text_main">@color/black</color>
-    <color name="text_hint">@color/grey_default</color>
+    <color name="background">@color/grey_extra_dark</color>
+    <color name="button_press">@color/white_50a</color>
+    <color name="element_primary">@color/grey_very_dark</color>
+    <color name="element_secondary">@color/grey_blue_dark</color>
+    <color name="text_main">@color/white</color>
+    <color name="text_hint">@color/grey_light</color>
 </resources>

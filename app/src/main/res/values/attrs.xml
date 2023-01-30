@@ -7,9 +7,13 @@
 
     <declare-styleable name="EditTextBasicView">
         <attr name="hint" format="string" />
-        <attr name="title" format="string" />
+        <attr name="editTextTitle" format="string" />
         <attr name="lines" format="integer" />
         <attr name="limit" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerBasicView">
+        <attr name="spinnerTitle" format="string" />
     </declare-styleable>
 
     <declare-styleable name="ButtonBasicView">
