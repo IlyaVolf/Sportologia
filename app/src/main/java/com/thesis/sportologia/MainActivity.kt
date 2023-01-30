@@ -8,6 +8,8 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.databinding.ActivityMainBinding
+import com.thesis.sportologia.views.RegistrationFragment
+import com.thesis.sportologia.views.SignInFragment
 import com.thesis.sportologia.views.SpinnerBasicView
 
 
@@ -19,6 +21,15 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+        val fragment = SignInFragment()
+
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_container, fragment)
+                .commit()
+        }
+
         /*val tf = Typeface.createFromAsset(
             assets,
             "fonts/SourceSansPro/SourceSansPro-Bold.ttf"
@@ -29,13 +40,13 @@ class MainActivity : AppCompatActivity() {
         tv2.typeface = tf*/
 
         // access the spinner
-        val accountTypes = listOf(getString(R.string.athlete), getString(R.string.organization))
+        /*val accountTypes = listOf(getString(R.string.athlete), getString(R.string.organization))
         val spinnerBlockAccountType = findViewById<SpinnerBasicView>(R.id.spinner_account_type)
         spinnerBlockAccountType.initAdapter(accountTypes, getString(R.string.hint_account_type))
 
         val genders = listOf(getString(R.string.male), getString(R.string.female))
         val spinnerBlockGender = findViewById<SpinnerBasicView>(R.id.spinner_gender)
-        spinnerBlockGender.initAdapter(genders, getString(R.string.hint_gender))
+        spinnerBlockGender.initAdapter(genders, getString(R.string.hint_gender))*/
 
     }
 }

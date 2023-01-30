@@ -1,136 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:statusBarColor="@color/white">
+    android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="vertical">
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:background="?attr/colorSecondaryVariant"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/TextStyleTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Регистрация"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_sides"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="Завершить"
-            android:textColor="@color/purple_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/margin_sides">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/avatar" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="12dp" />
-
-            <com.thesis.sportologia.views.SpinnerBasicView
-                android:id="@+id/spinner_account_type"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_account_type"
-                app:spinnerTitle="@string/account_type" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_athlete_name"
-                app:limit="70"
-                app:editTextTitle="@string/athlete_name" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_organization_name"
-                app:limit="100"
-                app:editTextTitle="@string/organization_name" />
-
-            <com.thesis.sportologia.views.SpinnerBasicView
-                android:id="@+id/spinner_gender"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_account_type"
-                app:spinnerTitle="@string/gender" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_description"
-                app:limit="512"
-                app:editTextTitle="@string/description" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_athlete_interests"
-                app:editTextTitle="@string/athlete_interests" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_organization_specializations"
-                app:editTextTitle="@string/organization_specializations" />
-
-            <com.thesis.sportologia.views.EditTextBasicView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hint="@string/hint_address"
-                app:editTextTitle="@string/address" />
-
-        </LinearLayout>
-
-    </ScrollView>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

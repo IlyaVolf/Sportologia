@@ -102,18 +102,20 @@ class SpinnerBasicView(
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>,
-                view: View, position: Int, id: Long
+                view: View?, position: Int, id: Long
             ) {
-                val value = parent.getItemAtPosition(position).toString()
-                if (value == data[0]) {
-                    view.findViewById<TextView>(R.id.dropdown_text)
-                        .setTextColor(context.getColor(R.color.grey_default))
-                } else {
-                    /*Toast.makeText(
+                if (view != null) {
+                    val value = parent.getItemAtPosition(position).toString()
+                    if (value == data[0]) {
+                        view.findViewById<TextView>(R.id.dropdown_text)
+                            .setTextColor(context.getColor(R.color.text_hint))
+                    } else {
+                        /*Toast.makeText(
                         context,
                         "Selected Item" + " " +
                                 "" + data[position], Toast.LENGTH_SHORT
                     ).show()*/
+                    }
                 }
             }
 

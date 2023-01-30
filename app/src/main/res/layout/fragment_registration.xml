@@ -67,7 +67,7 @@
             <ImageView
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:background="?attr/selectableItemBackground"
+                android:foreground="@drawable/photo_custom_round"
                 android:clickable="true"
                 android:focusable="true"
                 android:src="@drawable/avatar" />
