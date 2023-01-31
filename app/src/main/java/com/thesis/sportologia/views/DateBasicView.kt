@@ -111,8 +111,8 @@ class DateBasicView(
 
     private fun validateDate(): Boolean {
         if (isBefore) {
-            val currentDateAndTime = Calendar.getInstance();
-            if (currentDateAndTime > dateAndTime) {
+            val currentDateAndTime = Calendar.getInstance()
+            if (currentDateAndTime.after(dateAndTime)) {
                 Toast.makeText(context, context.getString(R.string.error_date), Toast.LENGTH_SHORT)
                 return false
             }
