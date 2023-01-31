@@ -12,7 +12,7 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        applicationId "scientists.house.affiche.app"
+        applicationId "com.thesis.sportologia"
         minSdkVersion 24
         targetSdkVersion 33
         versionCode 1
