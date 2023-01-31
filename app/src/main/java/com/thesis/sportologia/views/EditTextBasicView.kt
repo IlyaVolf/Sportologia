@@ -58,17 +58,17 @@ class EditTextBasicView(
             val title = typedArray.getString(R.styleable.EditTextBasicView_editTextTitle)
             binding.title.text = title
 
-            val lines = typedArray.getInteger(R.styleable.EditTextBasicView_lines,0)
+            val lines = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLines,0)
             if (lines > 0) {
                 textBlock.maxLines = lines
             }
 
-            val limit = typedArray.getInteger(R.styleable.EditTextBasicView_limit,0)
+            val limit = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLimit,0)
             if (limit > 0) {
                 textBlock.filters = arrayOf<InputFilter>(LengthFilter(limit))
             }
 
-            val hint = typedArray.getString(R.styleable.EditTextBasicView_hint)
+            val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
             textBlock.hint = hint
 
         }

@@ -5,11 +5,18 @@
         <attr name="drawable" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="ToolbarBasicView">
+        <attr name="toolbarLeftButton" format="string" />
+        <attr name="toolbarTitle" format="string" />
+        <attr name="toolbarRightButton" format="string" />
+    </declare-styleable>
+
+
     <declare-styleable name="EditTextBasicView">
-        <attr name="hint" format="string" />
+        <attr name="editTextHint" format="string" />
         <attr name="editTextTitle" format="string" />
-        <attr name="lines" format="integer" />
-        <attr name="limit" format="integer" />
+        <attr name="editTextLines" format="integer" />
+        <attr name="editTextLimit" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="SpinnerBasicView">
@@ -22,6 +29,11 @@
         <attr name="multiChoiceHint" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="DateBasicView">
+        <attr name="dateTitle" format="string" />
+        <attr name="dateHint" format="string" />
+        <attr name="dateIsBefore" format="boolean" />
+    </declare-styleable>
 
     <declare-styleable name="ButtonBasicView">
         <attr name="backgroundColor" format="color" />

@@ -56,7 +56,7 @@ class ButtonBasicView(
                     R.drawable.icon_snippet_black
                 )
             drawable.setImageResource(icon)
-            drawable.visibility = VISIBLE
+            //drawable.visibility = VISIBLE
 
             val text = typedArray.getText(R.styleable.ButtonBasicView_text)
             binding.text.text = text ?: "Description"

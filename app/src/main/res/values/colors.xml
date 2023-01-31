@@ -34,5 +34,6 @@
     <color name="element_primary">@color/grey_light</color>
     <color name="element_secondary">@color/grey_blue_light</color>
     <color name="text_main">@color/black</color>
+    <color name="text_secondary">@color/grey_medium</color>
     <color name="text_hint">@color/grey_default</color>
 </resources>

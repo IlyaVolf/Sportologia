@@ -87,6 +87,7 @@ class RegistrationFragment : Fragment() {
                     athleteName.visibility = View.GONE
                     organizationName.visibility = View.GONE
                     gender.visibility = View.GONE
+                    birthDate.visibility = View.GONE
                     description.visibility = View.GONE
                     interests.visibility = View.GONE
                     specializations.visibility = View.GONE
@@ -97,6 +98,7 @@ class RegistrationFragment : Fragment() {
                     athleteName.visibility = View.VISIBLE
                     organizationName.visibility = View.GONE
                     gender.visibility = View.VISIBLE
+                    birthDate.visibility = View.VISIBLE
                     description.visibility = View.VISIBLE
                     interests.visibility = View.VISIBLE
                     specializations.visibility = View.GONE
@@ -107,6 +109,7 @@ class RegistrationFragment : Fragment() {
                     athleteName.visibility = View.GONE
                     organizationName.visibility = View.VISIBLE
                     gender.visibility = View.GONE
+                    birthDate.visibility = View.GONE
                     description.visibility = View.VISIBLE
                     interests.visibility = View.GONE
                     specializations.visibility = View.VISIBLE

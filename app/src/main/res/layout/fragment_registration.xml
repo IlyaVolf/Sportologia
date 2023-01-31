@@ -8,46 +8,11 @@
     android:orientation="vertical"
     android:statusBarColor="@color/white">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <com.thesis.sportologia.views.ToolbarBasicView
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_gravity="center"
-            android:background="?attr/colorSecondaryVariant"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/title"
-            style="@style/TextStyleTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Регистрация"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_sides"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:text="Завершить"
-            android:textColor="@color/purple_medium"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="wrap_content"
+        app:toolbarTitle="@string/registration"
+        app:toolbarRightButton="@string/action_complete" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -87,18 +52,18 @@
                 android:id="@+id/athlete_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/hint_athlete_name"
-                app:limit="70"
-                app:lines="2"
+                app:editTextHint="@string/hint_athlete_name"
+                app:editTextLimit="70"
+                app:editTextLines="2"
                 app:editTextTitle="@string/athlete_name" />
 
             <com.thesis.sportologia.views.EditTextBasicView
                 android:id="@+id/organization_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/hint_organization_name"
-                app:limit="100"
-                app:lines="2"
+                app:editTextHint="@string/hint_organization_name"
+                app:editTextLimit="100"
+                app:editTextLines="2"
                 app:editTextTitle="@string/organization_name" />
 
             <com.thesis.sportologia.views.SpinnerBasicView
@@ -108,13 +73,20 @@
                 app:spinnerHint="@string/hint_gender"
                 app:spinnerTitle="@string/gender" />
 
+            <com.thesis.sportologia.views.DateBasicView
+                android:id="@+id/birth_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dateHint="@string/hint_age"
+                app:dateTitle="@string/age" />
+
             <com.thesis.sportologia.views.EditTextBasicView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/hint_description"
-                app:limit="512"
-                app:lines="10"
+                app:editTextHint="@string/hint_description"
+                app:editTextLimit="512"
+                app:editTextLines="10"
                 app:editTextTitle="@string/description" />
 
             <com.thesis.sportologia.views.MultiChoiceBasicView
@@ -135,8 +107,8 @@
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hint="@string/hint_address"
-                app:lines="3"
+                app:editTextHint="@string/hint_address"
+                app:editTextLines="3"
                 app:editTextTitle="@string/address" />
 
         </LinearLayout>

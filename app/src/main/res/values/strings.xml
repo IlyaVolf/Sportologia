@@ -11,6 +11,7 @@
     <!-- Errors -->
     <string name="error_default_load_error_body">Проверьте соединение с интернетом или зайдите позже</string>
     <string name="error_loading">Ошибка при загрузке</string>
+    <string name="error_date">Указана неверная дата</string>
 
     <!-- Actions -->
     <string name="action_complete">Завершить</string>
@@ -44,6 +45,7 @@
     <string name="athlete_name">Имя пользователя</string>
     <string name="organization_name">Название организации</string>
     <string name="gender">Пол</string>
+    <string name="age">Дата рождения</string>
     <string name="male">Мужской</string>
     <string name="female">Женский</string>
     <string name="description">Описание</string>
@@ -56,6 +58,7 @@
     <string name="hint_organization_name">Введите название организации</string>
     <string name="hint_description">Введите описание</string>
     <string name="hint_gender">Выберите пол</string>
+    <string name="hint_age">Укажите дату рождения</string>
     <string name="hint_athlete_interests">Укажите свои интересы</string>
     <string name="hint_organization_specializations">Укажите свои специализации</string>
     <string name="hint_address">Укажите свой адрес</string>
