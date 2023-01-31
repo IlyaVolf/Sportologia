@@ -1,10 +1,14 @@
 package com.thesis.sportologia.views
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.EditTextBasicBinding
@@ -56,7 +60,7 @@ class EditTextBasicView(
 
             val lines = typedArray.getInteger(R.styleable.EditTextBasicView_lines,0)
             if (lines > 0) {
-                textBlock.setLines(lines)
+                textBlock.maxLines = lines
             }
 
             val limit = typedArray.getInteger(R.styleable.EditTextBasicView_limit,0)
@@ -80,6 +84,57 @@ class EditTextBasicView(
 
     fun setListener(listener: OnEditTextBasicActionListener?) {
         this.listener = listener
+    }
+
+    // SAVE
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()!!
+        val savedState = SavedState(superState)
+        savedState.enteredText = binding.textBlock.text.toString()
+        return savedState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        val savedState = state as SavedState
+        super.onRestoreInstanceState(savedState.superState)
+
+        val enteredText = savedState.enteredText
+
+        Log.d("BUGFIX", "HELLO")
+
+        binding.textBlock.post {
+            binding.textBlock.setText(enteredText)
+        }
+    }
+
+    class SavedState : BaseSavedState {
+
+        var enteredText: String? = null
+
+        constructor(superState: Parcelable) : super(superState)
+
+        constructor(parcel: Parcel) : super(parcel) {
+            enteredText = parcel.readString()
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeString(enteredText)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(source: Parcel): SavedState {
+                    return SavedState(source)
+                }
+
+                override fun newArray(size: Int): Array<SavedState?> {
+                    return Array(size) { null }
+                }
+            }
+        }
     }
 
 }

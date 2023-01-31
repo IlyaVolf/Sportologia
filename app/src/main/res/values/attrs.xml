@@ -13,8 +13,15 @@
     </declare-styleable>
 
     <declare-styleable name="SpinnerBasicView">
+        <attr name="spinnerHint" format="string" />
         <attr name="spinnerTitle" format="string" />
     </declare-styleable>
+
+    <declare-styleable name="MultiChoiceBasicView">
+        <attr name="multiChoiceTitle" format="string" />
+        <attr name="multiChoiceHint" format="string" />
+    </declare-styleable>
+
 
     <declare-styleable name="ButtonBasicView">
         <attr name="backgroundColor" format="color" />

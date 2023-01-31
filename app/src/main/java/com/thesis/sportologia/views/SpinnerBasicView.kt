@@ -1,27 +1,24 @@
 package com.thesis.sportologia.views
 
 import android.content.Context
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatSpinner
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.SpinnerBasicBinding
 
 
-typealias OnSpinnerBasicActionListener = (OnSpinnerBasicAction) -> Unit
+typealias OnSpinnerBasicActionListener = (String) -> Unit
 
-enum class OnSpinnerBasicAction {
-    POSITIVE
-}
-
-class SpinnerBasicView(
+class SpinnerBasicView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
@@ -36,6 +33,10 @@ class SpinnerBasicView(
 
     private lateinit var data: MutableList<String>
 
+    private lateinit var currentValue: String
+
+    private var hint = ""
+
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
         attrs,
@@ -49,7 +50,9 @@ class SpinnerBasicView(
     init {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.spinner_basic, this, true)
+
         binding = SpinnerBasicBinding.bind(this)
+
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -62,12 +65,19 @@ class SpinnerBasicView(
         val title = typedArray.getString(R.styleable.SpinnerBasicView_spinnerTitle)
         binding.title.text = title
 
+        val hint = typedArray.getString(R.styleable.SpinnerBasicView_spinnerHint)
+        this.hint = hint ?: ""
+        this.currentValue = this.hint
+
         typedArray.recycle()
     }
 
-    fun initAdapter(list: List<String>, string: String) {
+    fun initAdapter(list: List<String>) {
+
+        //Toast.makeText(context, "AGAIN" + hint, Toast.LENGTH_SHORT).show()
+        Log.d("BUGFIX", "INIT ADAPTER $hint")
         data = list.toMutableList()
-        data.add(0, string)
+        data.add(0, hint)
 
         adapter = object : ArrayAdapter<String>(
             context, R.layout.item_spinner, R.id.dropdown_text, data
@@ -96,7 +106,6 @@ class SpinnerBasicView(
 
         adapter.setDropDownViewResource(R.layout.item_spinner)
         setAdapter(adapter)
-        //spinner.dropDownWidth = 500
 
         binding.spinnerBlock.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
@@ -105,31 +114,32 @@ class SpinnerBasicView(
                 view: View?, position: Int, id: Long
             ) {
                 if (view != null) {
+
                     val value = parent.getItemAtPosition(position).toString()
                     if (value == data[0]) {
                         view.findViewById<TextView>(R.id.dropdown_text)
                             .setTextColor(context.getColor(R.color.text_hint))
                     } else {
-                        /*Toast.makeText(
-                        context,
-                        "Selected Item" + " " +
-                                "" + data[position], Toast.LENGTH_SHORT
-                    ).show()*/
+                        currentValue = value
                     }
+
+                    Log.d("BUGFIX", "onItemSelected $currentValue")
+                    listener?.invoke(currentValue)
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
+                Log.d("BUGFIX", "onNothingSelected $currentValue")
                 // write code to perform some action
             }
 
         }
+
+        Log.d("BUGFIX", "leaving initAdapter: $currentValue")
     }
 
-    private fun initListeners() {
-        binding.root.setOnClickListener {
-            this.listener?.invoke(OnSpinnerBasicAction.POSITIVE)
-        }
+    fun getCurrentAccountType(): String {
+        return currentValue
     }
 
     fun setListener(listener: OnSpinnerBasicActionListener?) {
@@ -141,8 +151,73 @@ class SpinnerBasicView(
         binding.spinnerBlock.adapter = adapter
     }
 
-    fun getSpinner(): AppCompatSpinner {
-        return binding.spinnerBlock
+    /// Save
+
+    override fun onSaveInstanceState(): Parcelable {
+        val superState = super.onSaveInstanceState()!!
+        val savedState = SavedState(superState)
+
+        savedState.currentValue = currentValue
+
+        return savedState
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        Log.d("BUGFIX", " onRestoreInstanceState Entered:  $currentValue")
+
+        val savedState = state as SavedState
+        super.onRestoreInstanceState(savedState.superState)
+
+        currentValue = savedState.currentValue!!
+
+        Log.d("BUGFIX", " onRestoreInstanceState Entered:  $currentValue $hint")
+
+        binding.spinnerBlock.post {
+            binding.spinnerBlock.setSelection(
+                data.indexOf(
+                    currentValue
+                ), true
+            )
+
+            if (currentValue == hint) {
+                binding.spinnerBlock.getChildAt(0).findViewById<TextView>(R.id.dropdown_text)
+                    .setTextColor(context.getColor(R.color.text_hint))
+            }
+        }
+
+        //adapter.notifyDataSetChanged()
+
+        listener?.invoke(currentValue)
+
+    }
+
+    class SavedState : BaseSavedState {
+
+        var currentValue: String? = null
+
+        constructor(superState: Parcelable) : super(superState)
+
+        constructor(parcel: Parcel) : super(parcel) {
+            currentValue = parcel.readString()
+        }
+
+        override fun writeToParcel(out: Parcel, flags: Int) {
+            super.writeToParcel(out, flags)
+            out.writeString(currentValue)
+        }
+
+        companion object {
+            @JvmField
+            val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
+                override fun createFromParcel(source: Parcel): SavedState {
+                    return SavedState(source)
+                }
+
+                override fun newArray(size: Int): Array<SavedState?> {
+                    return Array(size) { null }
+                }
+            }
+        }
     }
 
 }
