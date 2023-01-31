@@ -77,6 +77,8 @@
                 android:id="@+id/birth_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:dateIsTimeEnabled="true"
+                app:dateIsBefore="true"
                 app:dateHint="@string/hint_age"
                 app:dateTitle="@string/age" />
 

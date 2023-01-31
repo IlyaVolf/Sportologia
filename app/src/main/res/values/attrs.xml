@@ -33,6 +33,13 @@
         <attr name="dateTitle" format="string" />
         <attr name="dateHint" format="string" />
         <attr name="dateIsBefore" format="boolean" />
+        <attr name="dateIsTimeEnabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="TimeBasicView">
+        <attr name="timeTitle" format="string" />
+        <attr name="timeHint" format="string" />
+        <attr name="timeIsTimeEnabled" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="ButtonBasicView">
