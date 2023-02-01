@@ -13,7 +13,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.SpinnerBasicBinding
+import com.thesis.sportologia.databinding.ViewSpinnerBasicBinding
 
 
 typealias OnSpinnerBasicActionListener = (String) -> Unit
@@ -25,7 +25,7 @@ class SpinnerBasicView @JvmOverloads constructor(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: SpinnerBasicBinding
+    private val binding: ViewSpinnerBasicBinding
 
     private var listener: OnSpinnerBasicActionListener? = null
 
@@ -49,9 +49,9 @@ class SpinnerBasicView @JvmOverloads constructor(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.spinner_basic, this, true)
+        inflater.inflate(R.layout.view_spinner_basic, this, true)
 
-        binding = SpinnerBasicBinding.bind(this)
+        binding = ViewSpinnerBasicBinding.bind(this)
 
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }

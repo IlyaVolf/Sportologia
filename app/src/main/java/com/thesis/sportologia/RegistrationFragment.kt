@@ -1,17 +1,14 @@
-package com.thesis.sportologia.views
+package com.thesis.sportologia
 
-import android.app.AlertDialog
 import android.os.Bundle
-import android.os.Debug
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentRegistrationBinding
-import java.util.*
+import com.thesis.sportologia.views.MultiChoiceBasicView
+import com.thesis.sportologia.views.SpinnerBasicView
 
 class RegistrationFragment : Fragment() {
 

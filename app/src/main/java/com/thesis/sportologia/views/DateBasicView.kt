@@ -2,8 +2,6 @@ package com.thesis.sportologia.views
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
-import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
@@ -12,7 +10,7 @@ import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.DateBasicBinding
+import com.thesis.sportologia.databinding.ViewDateBasicBinding
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -32,7 +30,7 @@ class DateBasicView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: DateBasicBinding
+    private val binding: ViewDateBasicBinding
 
     private var listener: OnDateBasicActionListener? = null
 
@@ -54,8 +52,8 @@ class DateBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.date_basic, this, true)
-        binding = DateBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_date_basic, this, true)
+        binding = ViewDateBasicBinding.bind(this)
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -88,23 +86,9 @@ class DateBasicView(
             }
         }
 
-        val t = OnTimeSetListener { view, hourOfDay, minute ->
-            dateAndTime[Calendar.HOUR_OF_DAY] = hourOfDay
-            dateAndTime[Calendar.MINUTE] = minute
-
-            if (validateDate()) {
-                binding.textBlock.text = parseDate()
-            }
-        }
-
         binding.textBlock.setOnClickListener {
             invokeDatePicker(d)
-
-            if (isTimeEnabled) {
-                invokeTimePicker(t)
-            }
         }
-
 
         typedArray.recycle()
     }
@@ -136,21 +120,18 @@ class DateBasicView(
     }
 
     private fun invokeDatePicker(d: OnDateSetListener) {
-        DatePickerDialog(
-            context, d,
+        val datePickerDialog = DatePickerDialog(
+            context, R.style.DialogStyleBasic, d,
             dateAndTime.get(Calendar.YEAR),
             dateAndTime.get(Calendar.MONTH),
             dateAndTime.get(Calendar.DAY_OF_MONTH)
-        ).show()
-    }
+        )
+        datePickerDialog.show()
 
-    private fun invokeTimePicker(t: OnTimeSetListener) {
-        TimePickerDialog(
-            context, t,
-            dateAndTime[Calendar.HOUR_OF_DAY],
-            dateAndTime[Calendar.MINUTE],
-            true
-        ).show()
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+            .setTextColor(context.getColor(R.color.text_main))
+        datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+            .setTextColor(context.getColor(R.color.text_main))
     }
 
     private fun initListeners() {

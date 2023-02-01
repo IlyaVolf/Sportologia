@@ -1,5 +1,6 @@
 package com.thesis.sportologia.views
 
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
@@ -11,9 +12,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.TimeBasicBinding
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 
 
@@ -50,7 +48,7 @@ class TimeBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.date_basic, this, true)
+        inflater.inflate(R.layout.view_date_basic, this, true)
         binding = TimeBasicBinding.bind(this)
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
@@ -93,12 +91,19 @@ class TimeBasicView(
     }
 
     private fun invokeTimePicker(t: OnTimeSetListener) {
-        TimePickerDialog(
+        val timePickerDialog = TimePickerDialog(
             context, t,
             dateAndTime[Calendar.HOUR_OF_DAY],
             dateAndTime[Calendar.MINUTE],
             true
-        ).show()
+        )
+
+        timePickerDialog.show()
+
+        timePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+            .setTextColor(context.getColor(R.color.text_main))
+        timePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+            .setTextColor(context.getColor(R.color.text_main))
     }
 
     private fun initListeners() {

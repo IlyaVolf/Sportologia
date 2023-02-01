@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ButtonRoundBinding
+import com.thesis.sportologia.databinding.ViewButtonRoundBinding
 
 typealias OnButtonRoundActionListener = (OnButtonRoundAction) -> Unit
 
@@ -20,7 +20,7 @@ class ButtonRoundView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ButtonRoundBinding
+    private val binding: ViewButtonRoundBinding
 
     private var listener: OnButtonRoundActionListener? = null
 
@@ -36,8 +36,8 @@ class ButtonRoundView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.button_round, this, true)
-        binding = ButtonRoundBinding.bind(this)
+        inflater.inflate(R.layout.view_button_round, this, true)
+        binding = ViewButtonRoundBinding.bind(this)
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 

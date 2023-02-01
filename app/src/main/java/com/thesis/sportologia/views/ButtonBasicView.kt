@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ButtonBasicBinding
+import com.thesis.sportologia.databinding.ViewButtonBasicBinding
 
 typealias OnButtonBasicActionListener = (OnButtonBasicAction) -> Unit
 
@@ -22,7 +22,7 @@ class ButtonBasicView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ButtonBasicBinding
+    private val binding: ViewButtonBasicBinding
 
     private var listener: OnButtonBasicActionListener? = null
 
@@ -38,8 +38,8 @@ class ButtonBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.button_basic, this, true)
-        binding = ButtonBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_button_basic, this, true)
+        binding = ViewButtonBasicBinding.bind(this)
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -73,7 +73,7 @@ class ButtonBasicView(
                     R.styleable.ButtonBasicView_iconColor,
                     ContextCompat.getColor(context, R.color.black)
                 )
-            drawable.backgroundTintList = ColorStateList.valueOf(iconColor)
+            drawable.setColorFilter(iconColor)
 
             val textColor =
                 typedArray.getColor(

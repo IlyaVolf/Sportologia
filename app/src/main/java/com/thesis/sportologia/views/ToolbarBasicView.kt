@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ToolbarBasicBinding
+import com.thesis.sportologia.databinding.ViewToolbarBasicBinding
 
 typealias OnToolbarActionListener = (OnToolbarBasicAction) -> Unit
 
@@ -21,7 +21,7 @@ class ToolbarBasicView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ToolbarBasicBinding
+    private val binding: ViewToolbarBasicBinding
 
     private var listener: OnToolbarActionListener? = null
 
@@ -37,8 +37,8 @@ class ToolbarBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.toolbar_basic, this, true)
-        binding = ToolbarBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_toolbar_basic, this, true)
+        binding = ViewToolbarBasicBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
 

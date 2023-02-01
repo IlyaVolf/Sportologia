@@ -96,13 +96,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:multiChoiceHint="@string/hint_athlete_interests"
-                app:multiChoiceTitle="@string/athlete_interests" />
+                app:multiChoiceTitle="@string/athlete_categories" />
 
             <com.thesis.sportologia.views.MultiChoiceBasicView
                 android:id="@+id/specializations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:multiChoiceTitle="@string/organization_specializations"
+                app:multiChoiceTitle="@string/organization_categories"
                 app:multiChoiceHint="@string/hint_organization_specializations" />
 
             <com.thesis.sportologia.views.EditTextBasicView
@@ -112,6 +112,10 @@
                 app:editTextHint="@string/hint_address"
                 app:editTextLines="3"
                 app:editTextTitle="@string/address" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
 
         </LinearLayout>
 

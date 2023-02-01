@@ -1,16 +1,8 @@
 package com.thesis.sportologia
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.databinding.ActivityMainBinding
-import com.thesis.sportologia.views.RegistrationFragment
-import com.thesis.sportologia.views.SignInFragment
-import com.thesis.sportologia.views.SpinnerBasicView
 
 
 class MainActivity : AppCompatActivity() {
@@ -21,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
-        val fragment = RegistrationFragment()
+        val fragment = ProfileFragment()
 
         if (savedInstanceState == null) {
             supportFragmentManager

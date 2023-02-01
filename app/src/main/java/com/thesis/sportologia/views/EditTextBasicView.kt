@@ -8,10 +8,9 @@ import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.EditTextBasicBinding
+import com.thesis.sportologia.databinding.ViewEditTextBasicBinding
 
 
 typealias OnEditTextBasicActionListener = (OnEditTextBasicAction) -> Unit
@@ -27,7 +26,7 @@ class EditTextBasicView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: EditTextBasicBinding
+    private val binding: ViewEditTextBasicBinding
 
     private var listener: OnEditTextBasicActionListener? = null
 
@@ -43,8 +42,8 @@ class EditTextBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.edit_text_basic, this, true)
-        binding = EditTextBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_edit_text_basic, this, true)
+        binding = ViewEditTextBasicBinding.bind(this)
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -54,24 +53,21 @@ class EditTextBasicView(
             attrs, R.styleable.EditTextBasicView, defStyleAttr, defStyleRes
         )
 
-        with(binding) {
-            val title = typedArray.getString(R.styleable.EditTextBasicView_editTextTitle)
-            binding.title.text = title
+        val title = typedArray.getString(R.styleable.EditTextBasicView_editTextTitle)
+        binding.title.text = title
 
-            val lines = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLines,0)
-            if (lines > 0) {
-                textBlock.maxLines = lines
-            }
-
-            val limit = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLimit,0)
-            if (limit > 0) {
-                textBlock.filters = arrayOf<InputFilter>(LengthFilter(limit))
-            }
-
-            val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
-            textBlock.hint = hint
-
+        val lines = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLines, 0)
+        if (lines > 0) {
+            binding.textBlock.maxLines = lines
         }
+
+        val limit = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLimit, 0)
+        if (limit > 0) {
+            binding.textBlock.filters = arrayOf<InputFilter>(LengthFilter(limit))
+        }
+
+        val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
+        binding.textBlock.hint = hint
 
         typedArray.recycle()
     }

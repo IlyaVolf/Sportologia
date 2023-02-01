@@ -2,18 +2,13 @@ package com.thesis.sportologia.views
 
 import android.app.AlertDialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Parcel
 import android.os.Parcelable
-import android.text.InputFilter
-import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.MultiChoiceBasicBinding
+import com.thesis.sportologia.databinding.ViewMultiChoiceBasicBinding
 
 
 typealias OnMultiChoiceBasicActionListener = (OnMultiChoiceBasicAction) -> Unit
@@ -29,7 +24,7 @@ class MultiChoiceBasicView(
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: MultiChoiceBasicBinding
+    private val binding: ViewMultiChoiceBasicBinding
 
     private var listener: OnMultiChoiceBasicActionListener? = null
 
@@ -48,8 +43,8 @@ class MultiChoiceBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.multi_choice_basic, this, true)
-        binding = MultiChoiceBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_multi_choice_basic, this, true)
+        binding = ViewMultiChoiceBasicBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
