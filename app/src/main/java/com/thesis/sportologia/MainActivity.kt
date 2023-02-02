@@ -7,6 +7,8 @@ import com.thesis.sportologia.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    //        Toast.makeText(context, "$savedActivatedButtonId", Toast.LENGTH_SHORT).show()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)

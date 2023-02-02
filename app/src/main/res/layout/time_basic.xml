@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="40dp"
-        android:background="@drawable/button_custom_basic"
+        android:background="@drawable/background_basic"
         android:paddingStart="@dimen/margin_sides"
         android:paddingEnd="44dp"
         android:paddingVertical="4dp"

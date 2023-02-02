@@ -17,7 +17,7 @@
         <attr name="contentTabsText3" format="string" />
         <attr name="contentTabsText4" format="string" />
 
-        <attr name="contentTabsTextSize" format="string"/>
+        <attr name="contentTabsTextSizeSp" format="string"/>
 
         <attr name="contentTabsButtonsNumber" format="integer"/>
 
@@ -26,7 +26,6 @@
         <attr name="contentTabsSpinnerSupport" format="boolean" />
         <attr name="contentTabsCounterSupport" format="boolean" />
     </declare-styleable>
-
 
     <declare-styleable name="EditTextBasicView">
         <attr name="editTextHint" format="string" />
@@ -38,6 +37,11 @@
     <declare-styleable name="SpinnerBasicView">
         <attr name="spinnerHint" format="string" />
         <attr name="spinnerTitle" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="SpinnerOnlyOutlinedView">
+        <attr name="spinnerOnlyHint" format="string" />
+        <attr name="spinnerOnlyIsHintEnabled" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="MultiChoiceBasicView">

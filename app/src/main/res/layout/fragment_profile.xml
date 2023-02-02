@@ -1,287 +1,310 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_sides"
         android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="17dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="@drawable/photo_custom_round"
-                android:src="@drawable/avatar"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <LinearLayout
-                android:id="@+id/followings_layout"
-                android:layout_width="75dp"
-                android:layout_height="42dp"
-                android:background="@drawable/button_custom_transparent"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/followings"
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="134"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/followings_label"
-                    style="@style/TextStyleSecondary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/followings"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/followers_layout"
-                android:layout_width="75dp"
-                android:layout_height="42dp"
-                android:background="@drawable/button_custom_transparent"
-                android:clickable="true"
-                android:focusable="true"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/followings_layout"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/followers"
-                    style="@style/TextStyleBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="12"
-                    android:textSize="20sp" />
-
-                <TextView
-                    android:id="@+id/followers_label"
-                    style="@style/TextStyleSecondary"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/followers"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
-
-        <TextView
-            android:id="@+id/name"
-            style="@style/TextStyleBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Имя спортсмена"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/userType"
-            style="@style/TextStyleSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/athlete"
-            android:textSize="12sp" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
-
-        <TextView
-            android:id="@+id/categories_label"
-            style="@style/TextStyleSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/interests"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/categories"
-            style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Лыжи" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
-
-        <TextView
-            android:id="@+id/address_label"
-            style="@style/TextStyleSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/address"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/address"
-            style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Россия, г. Москва" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
-
-        <TextView
-            android:id="@+id/description_label"
-            style="@style/TextStyleSecondary"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/description"
-            android:textSize="12sp" />
-
-        <TextView
-            android:id="@+id/description"
-            style="@style/TextStyleRegular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Блогер" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="7dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginHorizontal="@dimen/margin_sides"
+            android:orientation="vertical">
 
-            <com.thesis.sportologia.views.ButtonBasicView
-                android:id="@+id/left_button"
-                android:layout_width="0dp"
-                android:layout_height="37dp"
-                android:layout_weight="1"
-                app:backgroundColor="@color/purple_dark"
-                app:icon="@drawable/icon_unsubscribe"
-                app:iconColor="@color/white"
-                app:text="@string/action_unsubscribe_2"
-                app:textColor="@color/white"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="17dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/photo_custom_round"
+                    android:src="@drawable/avatar"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/followings_layout"
+                    android:layout_width="75dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/background_transparent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/followings"
+                        style="@style/TextStyleBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="134"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/followings_label"
+                        style="@style/TextStyleSecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/followings"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/followers_layout"
+                    android:layout_width="75dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/background_transparent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/followings_layout"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/followers"
+                        style="@style/TextStyleBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="12"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/followers_label"
+                        style="@style/TextStyleSecondary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/followers"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Space
-                android:id="@+id/space_2"
-                android:layout_width="12dp"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toRightOf="@id/left_button"
-                app:layout_constraintRight_toLeftOf="@id/right_button"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <TextView
+                android:id="@+id/name"
+                style="@style/TextStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Имя спортсмена"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/userType"
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/athlete"
+                android:textSize="12sp" />
 
             <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_width="match_parent"
+                android:layout_height="8dp" />
+
+            <TextView
+                android:id="@+id/categories_label"
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/interests"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/categories"
+                style="@style/TextStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Лыжи" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <TextView
+                android:id="@+id/address_label"
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/address"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/address"
+                style="@style/TextStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Россия, г. Москва" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <TextView
+                android:id="@+id/description_label"
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/description"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/description"
+                style="@style/TextStyleRegular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Блогер" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.thesis.sportologia.views.ButtonBasicView
+                    android:id="@+id/left_button"
+                    android:layout_width="0dp"
+                    android:layout_height="37dp"
+                    android:layout_weight="1"
+                    app:backgroundColor="@color/purple_dark"
+                    app:icon="@drawable/icon_unsubscribe"
+                    app:iconColor="@color/white"
+                    app:text="@string/action_unsubscribe_2"
+                    app:textColor="@color/white" />
+
+                <Space
+                    android:id="@+id/space_2"
+                    android:layout_width="12dp"
+                    android:layout_height="match_parent" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/photo_label"
+                    style="@style/TextStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/photos"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/photo_count"
+                    style="@style/TextStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" (1)"
+                    app:layout_constraintLeft_toRightOf="@id/photo_label"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/open_photos_button"
+                    style="@style/TextStyleButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_transparent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="@string/action_open"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Space
+                    android:id="@+id/space_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="7dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/photo_label" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="75dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/photo_mash"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/space_1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <com.thesis.sportologia.views.ContentTabsView
+            android:id="@+id/contentTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:orientation="horizontal">
+            app:contentTabsActiveByDefault="1"
+            app:contentTabsButtonsNumber="3"
+            app:contentTabsCounterSupport="true"
+            app:contentTabsText1="@string/posts"
+            app:contentTabsText2="@string/services"
+            app:contentTabsText3="@string/events"
+            app:contentTabsTextSizeSp="12" />
 
-            <TextView
-                android:id="@+id/photo_label"
-                style="@style/TextStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/photos"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/margin_sides"
+            android:paddingVertical="6dp">
 
-            <TextView
-                android:id="@+id/photo_count"
-                style="@style/TextStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=" (1)"
-                app:layout_constraintLeft_toRightOf="@id/photo_label"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/open_photos_button"
-                style="@style/TextStyleButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/button_custom_transparent"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="@string/action_open"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <com.thesis.sportologia.views.SpinnerOnlyOutlinedView
+                android:id="@+id/spinner"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                app:spinnerOnlyIsHintEnabled="false"
+                app:spinnerOnlyHint="adad"
+                android:layout_weight="1" />
 
             <Space
-                android:id="@+id/space_1"
-                android:layout_width="match_parent"
-                android:layout_height="7dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/photo_label" />
+                android:layout_width="12dp"
+                android:layout_height="match_parent" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="75dp"
-                android:adjustViewBounds="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/photo_mash"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/space_1" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="10dp" />
-
-    <com.thesis.sportologia.views.ContentTabsView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentTabsText1="@string/posts"
-        app:contentTabsText2="@string/services"
-        app:contentTabsText3="@string/events"
-        app:contentTabsButtonsNumber="3"
-        app:contentTabsActiveByDefault="1"
-        app:contentTabsSpinnerSupport="true"
-        app:contentTabsCounterSupport="true"/>
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
@@ -289,6 +312,6 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
-    </ScrollView>
+    </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

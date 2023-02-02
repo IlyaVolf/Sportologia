@@ -10,7 +10,7 @@
         android:id="@+id/background"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@drawable/button_custom_basic"
+        android:background="@drawable/background_basic"
         android:backgroundTint="@color/element_primary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

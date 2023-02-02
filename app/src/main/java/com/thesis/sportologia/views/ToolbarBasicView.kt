@@ -2,7 +2,13 @@ package com.thesis.sportologia.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ViewToolbarBasicBinding
@@ -23,7 +29,7 @@ class ToolbarBasicView(
 
     private val binding: ViewToolbarBasicBinding
 
-    private var listener: OnToolbarActionListener? = null
+    private var listeners = mutableListOf<OnToolbarActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
@@ -40,6 +46,7 @@ class ToolbarBasicView(
         inflater.inflate(R.layout.view_toolbar_basic, this, true)
         binding = ViewToolbarBasicBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
+        initListeners()
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
@@ -72,15 +79,23 @@ class ToolbarBasicView(
 
     private fun initListeners() {
         binding.leftButton.setOnClickListener {
-            this.listener?.invoke(OnToolbarBasicAction.LEFT)
+            listeners.forEach { listener ->
+                listener?.invoke(OnToolbarBasicAction.LEFT)
+            }
         }
         binding.rightButton.setOnClickListener {
-            this.listener?.invoke(OnToolbarBasicAction.RIGHT)
+            listeners.forEach { listener ->
+                listener?.invoke(OnToolbarBasicAction.RIGHT)
+            }
         }
     }
 
     fun setListener(listener: OnToolbarActionListener?) {
-        this.listener = listener
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: OnToolbarActionListener?) {
+        listeners.remove(listener)
     }
 
 }
