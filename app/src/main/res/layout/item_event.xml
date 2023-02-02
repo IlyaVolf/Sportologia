@@ -20,7 +20,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="15dp" />
+        android:layout_height="12dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -244,6 +244,7 @@
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/categories"
         style="@style/TextStyleRegular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -261,6 +262,7 @@
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/description"
         style="@style/TextStyleRegular"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -326,7 +328,8 @@
             android:src="@drawable/icon_star"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/background_inverted"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

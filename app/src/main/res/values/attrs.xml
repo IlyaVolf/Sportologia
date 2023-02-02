@@ -72,4 +72,8 @@
         <attr name="iconColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="RatingStarsView">
+        <attr name="rating" format="integer" />
+    </declare-styleable>
+
 </resources>

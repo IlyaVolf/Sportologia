@@ -20,6 +20,7 @@
     <color name="grey_medium">#FF5E5E5E</color>
     <color name="grey_default">#FF888888</color>
     <color name="grey_default_light">#A0A0A0</color>
+    <color name="grey_default_extra_light">#FFBCBCBC</color>
     <color name="grey_light">#FFE8E8E8</color>
     <color name="grey_blue_dark">#FF262629</color>
     <color name="grey_blue_light">#FFBABCCA</color>
@@ -33,12 +34,15 @@
 
     <!-- Elements -->
     <color name="background">@color/grey_extra_dark</color>
+    <color name="background_inverted">@color/white</color>
     <color name="button_press">@color/white_50a</color>
     <color name="button_press_light">@color/white_20a</color>
     <color name="element_primary">@color/grey_very_dark</color>
     <color name="element_primary_inverted">@color/grey_light</color>
     <color name="element_secondary">@color/grey_blue_dark</color>
     <color name="element_secondary_inverted">@color/grey_blue_light</color>
+    <color name="element_tertiary">@color/grey_medium</color>
+    <color name="element_tertiary_inverted">@color/grey_default_extra_light</color>
     <color name="text_main">@color/white</color>
     <color name="text_secondary">@color/grey_default</color>
     <color name="text_hint">@color/grey_default</color>
