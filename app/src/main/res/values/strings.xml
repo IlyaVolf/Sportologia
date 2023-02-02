@@ -88,5 +88,12 @@
     <string name="events_users">Пользователи</string>
     <string name="usernameDefault">Иван Иванов</string>
 
+    <!-- Events Page -->
+    <string name="event_organizer">Организатор</string>
+    <string name="event_date">Дата</string>
+    <string name="event_address">Адрес</string>
+    <string name="event_price">Стоимость</string>
+    <string name="event_categories">Категории</string>
+    <string name="event_description">Описание</string>
 
 </resources>
