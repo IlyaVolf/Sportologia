@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.thesis.sportologia.databinding.FragmentProfileBinding
-import com.thesis.sportologia.views.ContentTabsView
-import com.thesis.sportologia.views.SpinnerBasicView
-import com.thesis.sportologia.views.SpinnerOnlyOutlinedView
+import com.thesis.sportologia.views.*
+import java.net.URI
 
 class ProfileFragment : Fragment() {
     private lateinit var binding: FragmentProfileBinding
@@ -30,6 +29,40 @@ class ProfileFragment : Fragment() {
         val choices = listOf(getString(R.string.posts_all), getString(R.string.posts_upcoming))
         val spinner = binding.root.findViewById<SpinnerOnlyOutlinedView>(R.id.spinner)
         spinner.initAdapter(choices)
+
+        val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
+        post.setListener {  }
+        post.setUsername("Игорь Чиёсов")
+        post.setText("Привет")
+        post.setLikes(311331, true)
+        post.setFavs(true)
+        post.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+
+
+        val review = binding.root.findViewById<ItemReviewView>(R.id.item_review)
+        review.setListener {  }
+        review.setUsername("Игорь Чиёсов")
+        review.setTitle("Много воды")
+        review.setDescription("Я Игорь, я люблю Андрея")
+        review.setRating(2)
+        review.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+
+        val event = binding.root.findViewById<ItemEventView>(R.id.item_event)
+        event.setListener {  }
+        event.setLikes(25363636, true)
+        event.setFavs(false)
+        event.setOrganizerName("Игорь Чиёсов")
+        event.setDescription(getString(R.string.text))
+        event.setPrice("0", getString(R.string.ruble_abbreviation))
+        event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+
+        val service = binding.root.findViewById<ItemServiceView>(R.id.item_service)
+        service.setListener {  }
+        service.setFavs(false)
+        service.setOrganizerName("Игорь Чиёсов")
+        service.setDescription(getString(R.string.text))
+        service.setPrice("4224", getString(R.string.ruble_abbreviation))
+        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 
         return binding.root
     }

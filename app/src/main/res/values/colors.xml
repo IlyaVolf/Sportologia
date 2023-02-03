@@ -30,6 +30,8 @@
     <color name="purple_very_dark">#FF291195</color>
     <color name="purple_start">#FF6834A4</color>
     <color name="purple_end">#FF3820B2</color>
+    <color name="pink">#FFDE4369</color>
+    <color name="pink_transit">#C04564</color>
     <!-- для градиента был 4F29AB -->
 
     <!-- Elements -->

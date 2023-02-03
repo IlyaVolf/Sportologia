@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -291,9 +290,9 @@
                 android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
-                app:spinnerOnlyIsHintEnabled="false"
+                android:layout_weight="1"
                 app:spinnerOnlyHint="adad"
-                android:layout_weight="1" />
+                app:spinnerOnlyIsHintEnabled="false" />
 
             <Space
                 android:layout_width="12dp"
@@ -305,6 +304,30 @@
                 android:layout_weight="1" />
 
         </LinearLayout>
+
+        <com.thesis.sportologia.views.ItemPostView
+            android:id="@+id/item_post"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.thesis.sportologia.views.ItemReviewView
+            android:id="@+id/item_review"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.thesis.sportologia.views.ItemEventView
+            android:id="@+id/item_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <com.thesis.sportologia.views.ItemServiceView
+            android:id="@+id/item_service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"

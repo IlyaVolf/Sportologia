@@ -13,17 +13,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1">
 
         <TextView
-            android:id="@+id/event_name"
+            android:id="@+id/service_type"
+            style="@style/TextStyleSecondary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/service_training_program"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/service_name"
             style="@style/TextStyleBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Соревнования по боксу"
+            android:text="Поддерживаем себя в тонусе"
             android:textSize="18sp" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/more"
@@ -44,14 +59,120 @@
         android:layout_width="match_parent"
         android:layout_height="12dp" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/stats_block"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/background_transparent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/acquired_number_block"
+            android:layout_width="96dp"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@id/reviews_number_block"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_acquired_number"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/acquired_number"
+                style="@style/TextStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="94"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/reviews_number_block"
+            android:layout_width="96dp"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_reviews_number"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/reviews_number"
+                style="@style/TextStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="9"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rating_block"
+            android:layout_width="96dp"
+            android:layout_height="35dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/reviews_number_block"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                style="@style/TextStyleSecondary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/service_rating"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/rating_average"
+                style="@style/TextStyleBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.3"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_arrow_right"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
     <LinearLayout
         android:id="@+id/organizer_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
         android:foreground="@drawable/background_transparent"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
@@ -113,113 +234,6 @@
         android:layout_height="5dp" />
 
     <LinearLayout
-        android:id="@+id/date_block"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/icon_calendar"
-            app:tint="@color/text_main" />
-
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/space_2"
-            app:layout_constraintRight_toLeftOf="@id/space_3"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                style="@style/TextStyleSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/event_date"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/date"
-                style="@style/TextStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="10 января 10:00-15:00" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="5dp" />
-
-    <LinearLayout
-        android:id="@+id/address_block"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:clickable="true"
-        android:focusable="true"
-        android:foreground="@drawable/background_transparent"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/icon_map"
-            app:tint="@color/text_main" />
-
-        <Space
-            android:layout_width="12dp"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/space_2"
-            app:layout_constraintRight_toLeftOf="@id/space_3"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                style="@style/TextStyleSecondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/event_address"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/address"
-                style="@style/TextStyleBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Новосибирск, ул. Красный проспект д. 12" />
-
-        </LinearLayout>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_arrow_right" />
-
-    </LinearLayout>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="5dp" />
-
-    <LinearLayout
-        android:id="@+id/price_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
@@ -325,37 +339,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="@drawable/background_like"
-            android:src="@drawable/icon_heart"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <Space
-            android:id="@+id/space_1"
-            android:layout_width="6dp"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/like"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/likes_count"
-            style="@style/TextStyleBold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="8"
-            android:textColor="@color/text_secondary"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/space_1"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/star"

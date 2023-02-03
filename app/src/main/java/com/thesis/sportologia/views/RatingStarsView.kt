@@ -95,6 +95,7 @@ class RatingStarsView(
         if (rating in 1..5) {
             this.rating = rating
         }
+        drawStars()
     }
 
     override fun onSaveInstanceState(): Parcelable {

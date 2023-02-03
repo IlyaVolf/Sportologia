@@ -15,7 +15,7 @@ class MainActivity : AppCompatActivity() {
 
         val binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
-        val fragment = RegistrationFragment()
+        val fragment = ProfileFragment()
 
         if (savedInstanceState == null) {
             supportFragmentManager

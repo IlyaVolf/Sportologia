@@ -76,4 +76,9 @@
         <attr name="rating" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="ItemPostView" />
+    <declare-styleable name="ItemReviewView" />
+    <declare-styleable name="ItemEventView" />
+    <declare-styleable name="ItemServiceView" />
+
 </resources>

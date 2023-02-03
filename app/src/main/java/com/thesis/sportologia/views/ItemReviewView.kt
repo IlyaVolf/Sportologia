@@ -1,34 +1,38 @@
 package com.thesis.sportologia.views
 
 import android.content.Context
+import android.media.Image
 import android.os.Parcel
 import android.os.Parcelable
+import android.text.BoringLayout
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.*
+import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ViewEditTextBasicBinding
+import com.thesis.sportologia.databinding.ItemReviewBinding
+import java.net.URI
+import kotlin.properties.Delegates
 
 
-typealias OnEditTextBasicActionListener = (OnEditTextBasicAction) -> Unit
+typealias OnItemReviewActionListener = (OnItemReviewAction) -> Unit
 
-enum class OnEditTextBasicAction {
-    POSITIVE
+enum class OnItemReviewAction {
+    AUTHOR_BLOCK,
 }
 
-class EditTextBasicView(
+class ItemReviewView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
     defStyleRes: Int
-) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
+) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewEditTextBasicBinding
+    private val binding: ItemReviewBinding
 
-    private var listener: OnEditTextBasicActionListener? = null
+    private var listeners = mutableListOf<OnItemReviewActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
@@ -42,49 +46,72 @@ class EditTextBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.view_edit_text_basic, this, true)
-        binding = ViewEditTextBasicBinding.bind(this)
+        inflater.inflate(R.layout.item_review, this, true)
+        binding = ItemReviewBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
+        initListeners()
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
-            attrs, R.styleable.EditTextBasicView, defStyleAttr, defStyleRes
+            attrs, R.styleable.ItemReviewView, defStyleAttr, defStyleRes
         )
-
-        val title = typedArray.getString(R.styleable.EditTextBasicView_editTextTitle)
-        binding.title.text = title
-
-        val lines = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLines, 0)
-        if (lines > 0) {
-            binding.textBlock.maxLines = lines
-        }
-
-        val limit = typedArray.getInteger(R.styleable.EditTextBasicView_editTextLimit, 0)
-        if (limit > 0) {
-            binding.textBlock.filters = arrayOf<InputFilter>(LengthFilter(limit))
-        }
-
-        val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
-        binding.textBlock.hint = hint
 
         typedArray.recycle()
     }
 
+    fun setRating(rating: Int) {
+        binding.rating.setRating(rating)
+    }
+
+    fun setTitle(text: String) {
+        binding.title.text = text
+    }
+
+    fun setDescription(text: String) {
+        binding.text.text = text
+    }
+
+    fun setAvatar(uriImage: URI) {
+        Picasso.get()
+            .load(uriImage.toString())
+            .error(R.drawable.avatar)
+            .into(binding.avatar)
+    }
+
+    fun setUsername(username: String) {
+        binding.userName.text = username
+    }
+
+    // TODO parser
+    fun setDate(date: String) {
+        binding.date.text = date
+    }
+
+    // TODO photos
+    fun setPhotos() {
+    }
+
     private fun initListeners() {
-        binding.root.setOnClickListener {
-            this.listener?.invoke(OnEditTextBasicAction.POSITIVE)
+        binding.text.setOnClickListener {
+            listeners.forEach { listener ->
+                listener?.invoke(OnItemReviewAction.AUTHOR_BLOCK)
+            }
         }
     }
 
-    fun setListener(listener: OnEditTextBasicActionListener?) {
-        this.listener = listener
+    fun setListener(listener: OnItemReviewActionListener?) {
+        listeners.add(listener)
+    }
+
+    fun removeListener(listener: OnItemReviewActionListener?) {
+        listeners.remove(listener)
     }
 
     // SAVE
 
-    override fun onSaveInstanceState(): Parcelable {
+    /*override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
         savedState.enteredText = binding.textBlock.text.toString()
@@ -131,6 +158,6 @@ class EditTextBasicView(
                 }
             }
         }
-    }
+    }*/
 
 }

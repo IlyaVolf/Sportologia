@@ -34,7 +34,7 @@
             android:id="@+id/drawable"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/icon_star"
+            android:src="@drawable/icon_star_unpressed"
             app:tint="@color/text_main"/>
 
         <Space
