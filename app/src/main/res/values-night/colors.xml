@@ -11,17 +11,21 @@
 
     <!-- Custom -->
     <color name="white_20a">#33FFFFFF</color>
-    <color name="black_20a">#1A7A7A7A</color>
+    <color name="black_10a">#1A000000</color>
+    <color name="black_20a">#33000000</color>
     <color name="black_50a">#80000000</color>
     <color name="white_50a">#80FFFFFF</color>
-    <color name="grey_extra_dark">#FF0C0C0C</color>
-    <color name="grey_very_dark">#FF2E2E2E</color>
-    <color name="grey_dark">#FF404040</color>
-    <color name="grey_medium">#FF5E5E5E</color>
-    <color name="grey_default">#FF888888</color>
-    <color name="grey_default_light">#A0A0A0</color>
-    <color name="grey_default_extra_light">#FFBCBCBC</color>
-    <color name="grey_light">#FFE8E8E8</color>
+    <color name="grey_100">#FF0C0C0C</color>
+    <color name="grey_90">#FF242424</color>
+    <color name="grey_80">#FF2E2E2E</color>
+    <!--     <color name="grey_very_dark">#FF2E2E2E</color> -->
+    <color name="grey_70">#FF404040</color>
+    <color name="grey_60">#FF5E5E5E</color>
+    <color name="grey_50">#FF888888</color>
+    <color name="grey_40">#A0A0A0</color>
+    <color name="grey_30">#FFBCBCBC</color>
+    <color name="grey_20">#FFE8E8E8</color> <!-- grey_light -->
+    <color name="grey_10">#FFEDEDED</color>
     <color name="grey_blue_dark">#FF262629</color>
     <color name="grey_blue_light">#FFBABCCA</color>
     <!--     <color name="purple_medium">#FF6834A4</color> -->
@@ -34,17 +38,19 @@
     <!-- для градиента был 4F29AB -->
 
     <!-- Elements -->
-    <color name="background">@color/grey_extra_dark</color>
+    <color name="background">@color/grey_100</color>
     <color name="background_inverted">@color/white</color>
+    <color name="card">@color/grey_90</color>
+    <color name="card_inverted">@color/grey_10</color>
     <color name="button_press">@color/white_50a</color>
     <color name="button_press_light">@color/white_20a</color>
-    <color name="element_primary">@color/grey_very_dark</color>
-    <color name="element_primary_inverted">@color/grey_light</color>
+    <color name="element_primary">@color/grey_80</color>
+    <color name="element_primary_inverted">@color/grey_20</color>
     <color name="element_secondary">@color/grey_blue_dark</color>
     <color name="element_secondary_inverted">@color/grey_blue_light</color>
-    <color name="element_tertiary">@color/grey_medium</color>
-    <color name="element_tertiary_inverted">@color/grey_default_extra_light</color>
+    <color name="element_tertiary">@color/grey_60</color>
+    <color name="element_tertiary_inverted">@color/grey_30</color>
     <color name="text_main">@color/white</color>
-    <color name="text_secondary">@color/grey_default</color>
-    <color name="text_hint">@color/grey_default</color>
+    <color name="text_secondary">@color/grey_50</color>
+    <color name="text_hint">@color/grey_50</color>
 </resources>

@@ -15,7 +15,7 @@
         android:spinnerMode="dropdown"
         android:dropDownSelector="@drawable/background_basic"
         android:dropDownWidth="match_parent"
-        android:background="@drawable/dropdown_custom_transparent"
+        android:background="@drawable/dropdown_custom_transparent_2"
         android:popupBackground="@drawable/background_short"
         android:textAlignment="textStart"
         app:layout_constraintTop_toBottomOf="@id/space_1"

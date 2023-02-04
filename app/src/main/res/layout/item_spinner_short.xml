@@ -2,12 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingHorizontal="@dimen/margin_sides"
+    android:gravity="right"
+    android:paddingLeft="@dimen/margin_sides"
+    android:paddingRight="32dp"
     android:paddingVertical="2dp">
 
     <TextView
         android:id="@+id/dropdown_text"
         style="@style/TextStyleRegular"
+        android:textColor="@color/purple_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="test"/>

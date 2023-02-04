@@ -22,16 +22,26 @@
                 android:layout_marginTop="17dp"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/avatar"
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/avatar_holder"
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="@drawable/photo_custom_round"
-                    android:src="@drawable/avatar"
+                    app:cardCornerRadius="360dp"
+                    app:cardElevation="0dp"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/avatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="@drawable/photo_custom_round"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/avatar_photo" />
+
+                </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:id="@+id/followings_layout"
@@ -61,13 +71,19 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/followings"
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMaxTextSize="12sp"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeStepGranularity="1sp"
                         android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/followers_layout"
                     android:layout_width="75dp"
-                    android:layout_height="42dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="42dp"
                     android:background="@drawable/background_transparent"
                     android:clickable="true"
                     android:focusable="true"
@@ -92,6 +108,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:text="@string/followers"
+                        android:maxLines="1"
+                        app:autoSizeTextType="uniform"
+                        app:autoSizeMaxTextSize="12sp"
+                        app:autoSizeMinTextSize="8sp"
+                        app:autoSizeStepGranularity="1sp"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -286,6 +307,11 @@
             android:paddingHorizontal="@dimen/margin_sides"
             android:paddingVertical="6dp">
 
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
             <com.thesis.sportologia.views.SpinnerOnlyOutlinedView
                 android:id="@+id/spinner"
                 android:layout_width="0dp"
@@ -297,11 +323,6 @@
             <Space
                 android:layout_width="12dp"
                 android:layout_height="match_parent" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
 
         </LinearLayout>
 

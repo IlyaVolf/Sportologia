@@ -76,6 +76,20 @@
         <attr name="rating" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="PhotosBlockView">
+        <attr name="photosNumber" format="integer" />
+        <attr name="photo_1" format="reference" />
+        <attr name="photo_2" format="reference" />
+        <attr name="photo_3" format="reference" />
+        <attr name="photo_4" format="reference" />
+        <attr name="photo_5" format="reference" />
+        <attr name="photo_6" format="reference" />
+        <attr name="photo_7" format="reference" />
+        <attr name="photo_8" format="reference" />
+        <attr name="photo_9" format="reference" />
+        <attr name="photo_10" format="reference" />
+    </declare-styleable>
+
     <declare-styleable name="ItemPostView" />
     <declare-styleable name="ItemReviewView" />
     <declare-styleable name="ItemEventView" />

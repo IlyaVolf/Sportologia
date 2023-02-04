@@ -35,7 +35,8 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="a" />
+                android:maxLines="1"
+                android:text="First" />
 
             <TextView
                 android:id="@+id/count_1"
@@ -43,6 +44,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text=" (x)" />
 
             <Space
@@ -96,6 +98,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="Second" />
 
             <TextView
@@ -104,6 +107,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text=" (y)" />
 
             <Space
@@ -157,6 +161,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="Third" />
 
             <TextView
@@ -165,6 +170,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text=" (z)" />
 
             <Space
@@ -218,6 +224,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text="Fourth" />
 
             <TextView
@@ -226,6 +233,7 @@
                 android:textSize="13sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
                 android:text=" (w)" />
 
             <Space

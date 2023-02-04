@@ -29,13 +29,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="12dp" />
 
-            <ImageView
+            <androidx.cardview.widget.CardView
+                android:id="@+id/avatar_holder"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:foreground="@drawable/photo_custom_round"
-                android:clickable="true"
-                android:focusable="true"
-                android:src="@drawable/avatar" />
+                app:cardCornerRadius="360dp"
+                app:cardElevation="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/photo_custom_round"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avatar_photo" />
+
+            </androidx.cardview.widget.CardView>
 
             <Space
                 android:layout_width="match_parent"
