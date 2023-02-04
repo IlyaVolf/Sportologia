@@ -1,9 +1,6 @@
 package com.thesis.sportologia.views
 
 import android.content.Context
-import android.content.res.ColorStateList
-import android.os.Parcel
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -21,7 +18,9 @@ class PhotosBlockView(
 
     private val binding: ViewPhotosBlockBinding
 
+    private var isMainPhotoSquareLimited by Delegates.notNull<Boolean>()
     private var photosNumber by Delegates.notNull<Int>()
+
     private var photo1 by Delegates.notNull<Int>()
     private var photo2 by Delegates.notNull<Int>()
     private var photo3 by Delegates.notNull<Int>()
@@ -56,17 +55,25 @@ class PhotosBlockView(
             attrs, R.styleable.PhotosBlockView, defStyleAttr, defStyleRes
         )
 
-        photosNumber = typedArray.getInteger(R.styleable.PhotosBlockView_photosNumber, 0)
-        photo1 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_1, 0)
-        photo2 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_2, 0)
-        photo3 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_3, 0)
-        photo4 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_4, 0)
-        photo5 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_5, 0)
-        photo6 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_6, 0)
-        photo7 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_7, 0)
-        photo8 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_8, 0)
-        photo9 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_9, 0)
-        photo10 = typedArray.getResourceId(R.styleable.PhotosBlockView_photo_10, 0)
+        isMainPhotoSquareLimited =
+            typedArray.getBoolean(R.styleable.PhotosBlockView_pb_isMainPhotoSquareLimited, false)
+        val pn = typedArray.getInteger(R.styleable.PhotosBlockView_pb_photosNumber, 0)
+        photosNumber = if (pn in 0..10) {
+            pn
+        } else {
+            0
+        }
+
+        photo1 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_1, 0)
+        photo2 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_2, 0)
+        photo3 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_3, 0)
+        photo4 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_4, 0)
+        photo5 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_5, 0)
+        photo6 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_6, 0)
+        photo7 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_7, 0)
+        photo8 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_8, 0)
+        photo9 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_9, 0)
+        photo10 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_10, 0)
 
         drawPhotos()
 
@@ -89,6 +96,7 @@ class PhotosBlockView(
         binding.row3.layoutParams.height =
             TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics)
                 .toInt()
+        binding.photo1Square.visibility = GONE
         binding.photo1.visibility = GONE
         binding.photo2.visibility = GONE
         binding.photo3.visibility = GONE
@@ -109,22 +117,29 @@ class PhotosBlockView(
         binding.space2.visibility = GONE
         binding.space3.visibility = GONE
 
+        val bindingPhoto1 = if (isMainPhotoSquareLimited) binding.photo1Square else binding.photo1
+
         when (photosNumber) {
             0 -> {
             }
             1 -> {
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
             }
             2 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 40f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        160f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
 
-                binding.photo1.visibility = VISIBLE
-                binding.photo1.setImageResource(photo1)
-
+                bindingPhoto1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
                 binding.photo2.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
             }
@@ -136,8 +151,8 @@ class PhotosBlockView(
 
                 binding.space11.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -150,8 +165,8 @@ class PhotosBlockView(
                 binding.space11.visibility = VISIBLE
                 binding.space12.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -163,14 +178,20 @@ class PhotosBlockView(
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -178,8 +199,8 @@ class PhotosBlockView(
                 binding.space2.visibility = VISIBLE
                 binding.space21.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -193,13 +214,19 @@ class PhotosBlockView(
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -208,8 +235,8 @@ class PhotosBlockView(
                 binding.space21.visibility = VISIBLE
                 binding.space22.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -224,13 +251,19 @@ class PhotosBlockView(
             7 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -240,8 +273,8 @@ class PhotosBlockView(
                 binding.space21.visibility = VISIBLE
                 binding.space22.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -259,19 +292,28 @@ class PhotosBlockView(
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
                 binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -283,8 +325,8 @@ class PhotosBlockView(
                 binding.space31.visibility = VISIBLE
                 binding.space32.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -304,18 +346,27 @@ class PhotosBlockView(
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
                 binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -328,8 +379,8 @@ class PhotosBlockView(
                 binding.space31.visibility = VISIBLE
                 binding.space32.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)
@@ -350,18 +401,27 @@ class PhotosBlockView(
             10 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
                 binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 100f, resources.displayMetrics)
-                        .toInt()
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -375,8 +435,8 @@ class PhotosBlockView(
                 binding.space31.visibility = VISIBLE
                 binding.space32.visibility = VISIBLE
 
-                binding.photo1.setImageResource(photo1)
-                binding.photo1.visibility = VISIBLE
+                bindingPhoto1.setImageResource(photo1)
+                bindingPhoto1.visibility = VISIBLE
                 binding.photo2.setImageResource(photo2)
                 binding.photo2.visibility = VISIBLE
                 binding.photo3.setImageResource(photo3)

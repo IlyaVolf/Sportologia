@@ -6,11 +6,11 @@
     android:layout_height="wrap_content"
     android:background="@drawable/background_card"
     android:orientation="vertical"
-    android:paddingHorizontal="@dimen/margin_sides"
     android:paddingTop="12dp"
     android:paddingBottom="16dp">
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -45,6 +45,7 @@
         android:layout_height="12dp" />
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/organizer_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,6 +114,7 @@
         android:layout_height="5dp" />
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/date_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -162,6 +164,7 @@
         android:layout_height="5dp" />
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/address_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -219,6 +222,7 @@
         android:layout_height="5dp" />
 
     <LinearLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/price_block"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -268,6 +272,7 @@
         android:layout_height="12dp" />
 
     <TextView
+        android:layout_marginHorizontal="@dimen/margin_sides"
         style="@style/TextStyleSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -275,6 +280,7 @@
         android:textSize="12sp" />
 
     <TextView
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/categories"
         style="@style/TextStyleRegular"
         android:layout_width="match_parent"
@@ -286,6 +292,7 @@
         android:layout_height="5dp" />
 
     <TextView
+        android:layout_marginHorizontal="@dimen/margin_sides"
         style="@style/TextStyleSecondary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -293,6 +300,7 @@
         android:textSize="12sp" />
 
     <TextView
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:id="@+id/description"
         style="@style/TextStyleRegular"
         android:layout_width="match_parent"
@@ -304,25 +312,29 @@
         android:layout_width="match_parent"
         android:layout_height="5dp" />
 
-    <LinearLayout
-        android:id="@+id/photos_block"
+    <com.thesis.sportologia.views.PhotosBlockView
+        android:id="@+id/photosBlock"
         android:layout_width="match_parent"
-        android:layout_height="74dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/photo_mash" />
-
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        app:pb_isMainPhotoSquareLimited="true"
+        app:pb_photo_1="@drawable/authorization_image"
+        app:pb_photo_2="@drawable/authorization_image"
+        app:pb_photo_3="@drawable/photo_house"
+        app:pb_photo_4="@drawable/authorization_image"
+        app:pb_photo_5="@drawable/authorization_image"
+        app:pb_photo_6="@drawable/photo_house"
+        app:pb_photo_7="@drawable/photo_house"
+        app:pb_photo_8="@drawable/photo_house"
+        app:pb_photo_9="@drawable/photo_house"
+        app:pb_photo_10="@drawable/photo_mash"
+        app:pb_photosNumber="3" />
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="15dp" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_marginHorizontal="@dimen/margin_sides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

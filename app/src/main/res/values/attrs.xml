@@ -76,18 +76,27 @@
         <attr name="rating" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="PhotosBlockPageView">
+        <attr name="pbp_photosNumber" format="integer" />
+        <attr name="pbp_photo_1" format="reference" />
+        <attr name="pbp_photo_2" format="reference" />
+        <attr name="pbp_photo_3" format="reference" />
+        <attr name="pbp_photo_4" format="reference" />
+    </declare-styleable>
+
     <declare-styleable name="PhotosBlockView">
-        <attr name="photosNumber" format="integer" />
-        <attr name="photo_1" format="reference" />
-        <attr name="photo_2" format="reference" />
-        <attr name="photo_3" format="reference" />
-        <attr name="photo_4" format="reference" />
-        <attr name="photo_5" format="reference" />
-        <attr name="photo_6" format="reference" />
-        <attr name="photo_7" format="reference" />
-        <attr name="photo_8" format="reference" />
-        <attr name="photo_9" format="reference" />
-        <attr name="photo_10" format="reference" />
+        <attr name="pb_photosNumber" format="integer" />
+        <attr name="pb_isMainPhotoSquareLimited" format="boolean" />
+        <attr name="pb_photo_1" format="reference" />
+        <attr name="pb_photo_2" format="reference" />
+        <attr name="pb_photo_3" format="reference" />
+        <attr name="pb_photo_4" format="reference" />
+        <attr name="pb_photo_5" format="reference" />
+        <attr name="pb_photo_6" format="reference" />
+        <attr name="pb_photo_7" format="reference" />
+        <attr name="pb_photo_8" format="reference" />
+        <attr name="pb_photo_9" format="reference" />
+        <attr name="pb_photo_10" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ItemPostView" />

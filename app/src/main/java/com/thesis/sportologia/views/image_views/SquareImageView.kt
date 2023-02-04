@@ -1,4 +1,4 @@
-package com.thesis.sportologia.views
+package com.thesis.sportologia.views.image_views
 
 import android.content.Context
 import android.util.AttributeSet
@@ -19,6 +19,10 @@ class SquareImageView : AppCompatImageView {
 
         val size = Math.min(measuredWidth, measuredHeight)
 
-        setMeasuredDimension(size, size)
+        if ((measuredHeight.toFloat() / measuredWidth.toFloat()) > 1) {
+            setMeasuredDimension(measuredWidth, measuredWidth)
+        } else {
+            setMeasuredDimension(measuredWidth, measuredHeight)
+        }
     }
 }

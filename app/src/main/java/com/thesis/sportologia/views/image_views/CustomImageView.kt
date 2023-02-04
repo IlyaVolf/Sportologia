@@ -1,4 +1,4 @@
-package com.thesis.sportologia.views
+package com.thesis.sportologia.views.image_views
 
 import android.content.Context
 import android.util.AttributeSet
