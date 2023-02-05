@@ -20,6 +20,7 @@ import kotlin.properties.Delegates
 typealias OnItemServiceActionListener = (OnItemServiceAction) -> Unit
 
 enum class OnItemServiceAction {
+    INFO_BLOCK,
     STATS_BLOCK,
     ORGANIZER_BLOCK,
     PHOTOS_BLOCK,
@@ -63,6 +64,10 @@ class ItemServiceView(
         val typedArray = context.obtainStyledAttributes(
             attrs, R.styleable.ItemServiceView, defStyleAttr, defStyleRes
         )
+
+        val isMainPhotoSquareLimited =
+            typedArray.getBoolean(R.styleable.ItemServiceView_is_isMainPhotoSquareLimited, false)
+        binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
 
         typedArray.recycle()
     }
@@ -129,10 +134,19 @@ class ItemServiceView(
     }
 
     // TODO photos
-    fun setPhotos() {
+    fun setPhotos(uriList: List<URI>) {
+    }
+
+    fun setPhotos(id: Int, uri: URI) {
     }
 
     private fun initListeners() {
+        binding.infoBlock.setOnClickListener {
+            listeners.forEach { listener ->
+                listener?.invoke(OnItemServiceAction.INFO_BLOCK)
+            }
+        }
+
         binding.statsBlock.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemServiceAction.STATS_BLOCK)

@@ -94,6 +94,11 @@
         <item name="android:padding">12dp</item>
     </style>
 
+    <style name="ButtonStyleFilter" parent="TextStyleRegular">
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:textColor">@color/purple_medium</item>
+    </style>
+
     <style name="DialogStyleBasic" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:windowBackground">@drawable/dialog_custom_basic</item>
         <item name="colorAccent">@color/purple_medium</item>

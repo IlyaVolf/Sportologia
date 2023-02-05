@@ -23,6 +23,7 @@
     <string name="action_unsubscribe">Отписаться</string>
     <string name="action_unsubscribe_2">В подписках</string>
     <string name="action_open">Открыть</string>
+    <string name="action_close">Закрыть</string>
     <string name="action_purchase">Приобрести</string>
     <string name="action_reset">Сбросить</string>
     <string name="action_clear">Очистить</string>
@@ -103,7 +104,9 @@
     <string name="event_description">Описание</string>
 
     <!-- Services Page -->
+    <string name="service">Услуга</string>
     <string name="service_training_program">Тренировочная программа</string>
+    <string name="service_training_program_short">Трен. программа</string>
     <string name="service_price">Стоимость</string>
     <string name="service_categories">Категории</string>
     <string name="service_description">Описание</string>

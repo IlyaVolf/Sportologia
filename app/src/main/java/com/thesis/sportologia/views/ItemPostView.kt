@@ -66,6 +66,10 @@ class ItemPostView(
             attrs, R.styleable.ItemPostView, defStyleAttr, defStyleRes
         )
 
+        val isMainPhotoSquareLimited =
+            typedArray.getBoolean(R.styleable.ItemPostView_ip_isMainPhotoSquareLimited, false)
+        binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
+
         typedArray.recycle()
     }
 

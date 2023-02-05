@@ -80,6 +80,11 @@ class PhotosBlockView(
         typedArray.recycle()
     }
 
+    fun setMainPhotoSquareLimit(flag: Boolean) {
+        isMainPhotoSquareLimited = flag
+    }
+
+
     private fun drawPhotos() {
         binding.row1.visibility = GONE
         binding.row1.weightSum = 120f

@@ -345,7 +345,8 @@
         <com.thesis.sportologia.views.ItemServiceView
             android:id="@+id/item_service"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:is_isMainPhotoSquareLimited="false" />
 
         <Space
             android:layout_width="match_parent"

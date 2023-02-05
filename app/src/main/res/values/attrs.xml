@@ -17,11 +17,11 @@
         <attr name="contentTabsText3" format="string" />
         <attr name="contentTabsText4" format="string" />
 
-        <attr name="contentTabsTextSizeSp" format="string"/>
+        <attr name="contentTabsTextSizeSp" format="string" />
 
-        <attr name="contentTabsButtonsNumber" format="integer"/>
+        <attr name="contentTabsButtonsNumber" format="integer" />
 
-        <attr name="contentTabsActiveByDefault" format="integer"/>
+        <attr name="contentTabsActiveByDefault" format="integer" />
 
         <attr name="contentTabsSpinnerSupport" format="boolean" />
         <attr name="contentTabsCounterSupport" format="boolean" />
@@ -99,9 +99,15 @@
         <attr name="pb_photo_10" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="ItemPostView" />
+    <declare-styleable name="ItemPostView">
+        <attr name="ip_isMainPhotoSquareLimited" format="boolean" />
+    </declare-styleable>
     <declare-styleable name="ItemReviewView" />
-    <declare-styleable name="ItemEventView" />
-    <declare-styleable name="ItemServiceView" />
+    <declare-styleable name="ItemEventView" >
+        <attr name="ie_isMainPhotoSquareLimited" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="ItemServiceView">
+        <attr name="is_isMainPhotoSquareLimited" format="boolean" />
+    </declare-styleable>
 
 </resources>

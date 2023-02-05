@@ -69,6 +69,10 @@ class ItemEventView(
             attrs, R.styleable.ItemEventView, defStyleAttr, defStyleRes
         )
 
+        val isMainPhotoSquareLimited =
+            typedArray.getBoolean(R.styleable.ItemEventView_ie_isMainPhotoSquareLimited, false)
+        binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
+
         typedArray.recycle()
     }
 

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_margin="@dimen/margin_sides"
+    android:background="@drawable/background_basic"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search_bar"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@drawable/background_search" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style = "@style/ButtonStyleFilter"
+        android:layout_margin="5dp"
+        android:text="Фильтр"
+        android:background="@drawable/background_basic"
+        android:layout_width="75dp"
+        android:layout_height="37dp" />
+
+</LinearLayout>

@@ -10,9 +10,13 @@
     android:paddingBottom="16dp">
 
     <LinearLayout
+        android:id="@+id/info_block"
         android:layout_marginHorizontal="@dimen/margin_sides"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="@drawable/background_transparent"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -47,11 +51,10 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="@drawable/background_transparent"
-            android:src="@drawable/icon_more"
+            android:src="@drawable/icon_info"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/background_inverted" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </LinearLayout>
 
@@ -325,11 +328,11 @@
         android:layout_width="match_parent"
         android:layout_height="5dp" />
 
+    <!-- app:pb_isMainPhotoSquareLimited="true" -->
     <com.thesis.sportologia.views.PhotosBlockView
         android:id="@+id/photosBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:pb_isMainPhotoSquareLimited="true"
         app:pb_photo_1="@drawable/authorization_image"
         app:pb_photo_2="@drawable/authorization_image"
         app:pb_photo_3="@drawable/photo_house"
