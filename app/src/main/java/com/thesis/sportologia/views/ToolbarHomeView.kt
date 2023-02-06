@@ -11,25 +11,25 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ViewToolbarBasicBinding
+import com.thesis.sportologia.databinding.ViewToolbarHomeBinding
 
-typealias OnToolbarBasicActionListener = (OnToolbarBasicAction) -> Unit
+typealias OnToolbarHomeActionListener = (OnToolbarHomeAction) -> Unit
 
-enum class OnToolbarBasicAction {
+enum class OnToolbarHomeAction {
     LEFT,
     RIGHT
 }
 
-class ToolbarBasicView(
+class ToolbarHomeView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewToolbarBasicBinding
+    private val binding: ViewToolbarHomeBinding
 
-    private var listeners = mutableListOf<OnToolbarBasicActionListener?>()
+    private var listeners = mutableListOf<OnToolbarHomeActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
@@ -43,8 +43,8 @@ class ToolbarBasicView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.view_toolbar_basic, this, true)
-        binding = ViewToolbarBasicBinding.bind(this)
+        inflater.inflate(R.layout.view_toolbar_home, this, true)
+        binding = ViewToolbarHomeBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
         initListeners()
     }
@@ -52,49 +52,49 @@ class ToolbarBasicView(
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
-            attrs, R.styleable.ToolbarBasicView, defStyleAttr, defStyleRes
+            attrs, R.styleable.ToolbarHomeView, defStyleAttr, defStyleRes
         )
 
-        val title = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarTitle)
+        val title = typedArray.getText(R.styleable.ToolbarHomeView_th_toolbarTitle)
         binding.title.text = title ?: "Title"
 
-        val leftButtonText = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarLeftButton)
-        if (leftButtonText == null) {
-            binding.leftButton.visibility = GONE
+        val avatar = typedArray.getResourceId(R.styleable.ToolbarHomeView_th_toolbarAvatar, 0)
+        if (avatar == 0) {
+            binding.avatarHolder.visibility = GONE
         } else {
-            binding.leftButton.visibility = VISIBLE
-            binding.leftButton.text = leftButtonText
+            binding.avatarHolder.visibility = VISIBLE
+            binding.avatar.setImageResource(avatar)
         }
 
-        val rightButtonText = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarRightButton)
-        if (rightButtonText == null) {
-            binding.rightButton.visibility = GONE
+        val icon = typedArray.getResourceId(R.styleable.ToolbarHomeView_th_toolbarRightButton, 0)
+        if (icon == 0) {
+            binding.icon.visibility = GONE
         } else {
-            binding.rightButton.visibility = VISIBLE
-            binding.rightButton.text = rightButtonText
+            binding.icon.visibility = VISIBLE
+            binding.icon.setImageResource(icon)
         }
 
         typedArray.recycle()
     }
 
     private fun initListeners() {
-        binding.leftButton.setOnClickListener {
+        binding.avatar.setOnClickListener {
             listeners.forEach { listener ->
-                listener?.invoke(OnToolbarBasicAction.LEFT)
+                listener?.invoke(OnToolbarHomeAction.LEFT)
             }
         }
-        binding.rightButton.setOnClickListener {
+        binding.icon.setOnClickListener {
             listeners.forEach { listener ->
-                listener?.invoke(OnToolbarBasicAction.RIGHT)
+                listener?.invoke(OnToolbarHomeAction.RIGHT)
             }
         }
     }
 
-    fun setListener(listener: OnToolbarBasicActionListener?) {
+    fun setListener(listener: OnToolbarHomeActionListener?) {
         listeners.add(listener)
     }
 
-    fun removeListener(listener: OnToolbarBasicActionListener?) {
+    fun removeListener(listener: OnToolbarHomeActionListener?) {
         listeners.remove(listener)
     }
 

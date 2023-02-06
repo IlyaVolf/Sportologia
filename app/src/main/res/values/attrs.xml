@@ -6,9 +6,15 @@
     </declare-styleable>
 
     <declare-styleable name="ToolbarBasicView">
-        <attr name="toolbarLeftButton" format="string" />
-        <attr name="toolbarTitle" format="string" />
-        <attr name="toolbarRightButton" format="string" />
+        <attr name="tb_toolbarLeftButton" format="string" />
+        <attr name="tb_toolbarTitle" format="string" />
+        <attr name="tb_toolbarRightButton" format="string" />
+    </declare-styleable>
+
+    <declare-styleable name="ToolbarHomeView">
+        <attr name="th_toolbarAvatar" format="reference" />
+        <attr name="th_toolbarTitle" format="string" />
+        <attr name="th_toolbarRightButton" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ContentTabsView">

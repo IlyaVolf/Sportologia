@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.thesis.sportologia.views.ToolbarHomeView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:th_toolbarTitle="@string/registration"
+        app:th_toolbarAvatar="@drawable/avatar_photo"
+        app:th_toolbarRightButton="@drawable/icon_settings" />
+
+    <com.thesis.sportologia.views.ContentTabsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentTabsButtonsNumber="2"
+        app:contentTabsSpinnerSupport="true"
+        app:contentTabsActiveByDefault="2"
+        app:contentTabsText1="@string/posts"
+        app:contentTabsText2="@string/events" />
+
+</LinearLayout>

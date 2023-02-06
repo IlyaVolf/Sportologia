@@ -11,6 +11,7 @@
     <com.thesis.sportologia.views.ContentTabsView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:contentTabsActiveByDefault="4"
         app:contentTabsText1="@string/search_athletes"
         app:contentTabsText2="@string/search_organizations"
         app:contentTabsText3="@string/search_events"
