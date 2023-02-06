@@ -119,4 +119,14 @@
     <string name="ruble_abbreviation">Руб.</string>
     <string name="dollar_abbreviation">$</string>
 
+    <!-- Search Page -->
+    <string name="search_athletes">Спортсмены</string>
+    <string name="search_organizations">Организации</string>
+    <string name="search_events">Мероприятия</string>
+    <string name="search_services">Услуги</string>
+
+    <!-- Filters Page -->
+    <string name="restrictions">Ограничения</string>
+    <string name="sorting">Сортировка</string>
+
 </resources>

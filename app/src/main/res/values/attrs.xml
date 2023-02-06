@@ -76,6 +76,11 @@
         <attr name="rating" format="integer" />
     </declare-styleable>
 
+    <declare-styleable name="ChosenFilterView">
+        <attr name="cf_isRestrictionsBlockEnabled" format="boolean" />
+        <attr name="cf_isSortingBlockEnabled" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="PhotosBlockPageView">
         <attr name="pbp_photosNumber" format="integer" />
         <attr name="pbp_photo_1" format="reference" />
