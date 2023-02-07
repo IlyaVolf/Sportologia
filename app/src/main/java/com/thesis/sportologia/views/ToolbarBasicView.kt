@@ -29,6 +29,8 @@ class ToolbarBasicView(
 
     private val binding: ViewToolbarBasicBinding
 
+    private var isUnderlined = true
+
     private var listeners = mutableListOf<OnToolbarBasicActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -57,6 +59,14 @@ class ToolbarBasicView(
 
         val title = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarTitle)
         binding.title.text = title ?: "Title"
+
+        isUnderlined =
+            typedArray.getBoolean(R.styleable.ToolbarBasicView_tb_isToolbarUnderlined, true)
+        if (isUnderlined) {
+            binding.underline.visibility = VISIBLE
+        } else {
+            binding.underline.visibility = INVISIBLE
+        }
 
         val leftButtonText = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarLeftButton)
         if (leftButtonText == null) {

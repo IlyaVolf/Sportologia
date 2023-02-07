@@ -6,6 +6,7 @@
     </declare-styleable>
 
     <declare-styleable name="ToolbarBasicView">
+        <attr name="tb_isToolbarUnderlined" format="boolean"/>
         <attr name="tb_toolbarLeftButton" format="string" />
         <attr name="tb_toolbarTitle" format="string" />
         <attr name="tb_toolbarRightButton" format="string" />

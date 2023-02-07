@@ -50,6 +50,8 @@
     <color name="element_secondary_inverted">@color/grey_blue_light</color>
     <color name="element_tertiary">@color/grey_60</color>
     <color name="element_tertiary_inverted">@color/grey_30</color>
+    <color name="element_quaternary">@color/grey_70</color>
+    <color name="element_quaternary_inverted">@color/grey_30</color>
     <color name="text_main">@color/white</color>
     <color name="text_secondary">@color/grey_50</color>
     <color name="text_hint">@color/grey_50</color>
