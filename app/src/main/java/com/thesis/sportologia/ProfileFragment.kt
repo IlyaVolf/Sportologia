@@ -52,7 +52,7 @@ class ProfileFragment : Fragment() {
         event.setLikes(25363636, true)
         event.setFavs(false)
         event.setOrganizerName("Игорь Чиёсов")
-        event.setDescription(getString(R.string.text))
+        event.setDescription(getString(R.string.test_text))
         event.setPrice("0", getString(R.string.ruble_abbreviation))
         event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 
@@ -60,7 +60,7 @@ class ProfileFragment : Fragment() {
         service.setListener {  }
         service.setFavs(false)
         service.setOrganizerName("Игорь Чиёсов")
-        service.setDescription(getString(R.string.text))
+        service.setDescription(getString(R.string.test_text))
         service.setPrice("4224", getString(R.string.ruble_abbreviation))
         service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 

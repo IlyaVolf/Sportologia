@@ -322,7 +322,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="1000"
-        android:text="@string/text" />
+        android:text="@string/test_text" />
 
     <Space
         android:layout_width="match_parent"

@@ -72,6 +72,24 @@ class EditTextBasicView(
         typedArray.recycle()
     }
 
+    fun setTitle(title: String) {
+        binding.title.text = title
+    }
+
+    fun setText(text: String) {
+        binding.textBlock.post {
+            binding.textBlock.setText(text)
+        }
+    }
+
+    fun getTitle(title: String): String {
+        return binding.title.text.toString()
+    }
+
+    fun getText(text: String): String {
+        return binding.textBlock.text.toString()
+    }
+
     private fun initListeners() {
         binding.root.setOnClickListener {
             this.listener?.invoke(OnEditTextBasicAction.POSITIVE)

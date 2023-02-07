@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.thesis.sportologia.views.ToolbarBasicView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tb_toolbarLeftButton="@string/action_cancel"
+        app:tb_toolbarRightButton="@string/action_send"
+        app:tb_toolbarTitle="@string/my_review" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/margin_sides"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="18dp" />
+
+            <com.thesis.sportologia.views.SelectStarsView
+                android:id="@+id/rating_fro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:rating="4" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <com.thesis.sportologia.views.EditTextBasicView
+                android:id="@+id/title_fro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/optional"
+                app:editTextLimit="100"
+                app:editTextLines="2"
+                app:editTextTitle="@string/title" />
+
+            <com.thesis.sportologia.views.EditTextBasicView
+                android:id="@+id/text_fro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/optional"
+                app:editTextLimit="1500"
+                app:editTextLines="100"
+                app:editTextTitle="@string/text" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

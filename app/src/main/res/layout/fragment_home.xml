@@ -9,17 +9,55 @@
     <com.thesis.sportologia.views.ToolbarHomeView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:th_toolbarTitle="@string/registration"
         app:th_toolbarAvatar="@drawable/avatar_photo"
-        app:th_toolbarRightButton="@drawable/icon_settings" />
+        app:th_toolbarRightButton="@drawable/icon_settings"
+        app:th_toolbarTitle="@string/home" />
 
-    <com.thesis.sportologia.views.ContentTabsView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentTabsButtonsNumber="2"
-        app:contentTabsSpinnerSupport="true"
-        app:contentTabsActiveByDefault="2"
-        app:contentTabsText1="@string/posts"
-        app:contentTabsText2="@string/events" />
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.thesis.sportologia.views.ContentTabsView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:contentTabsActiveByDefault="2"
+                app:contentTabsButtonsNumber="2"
+                app:contentTabsSpinnerSupport="false"
+                app:contentTabsText1="@string/posts"
+                app:contentTabsText2="@string/events" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/margin_sides"
+                android:paddingVertical="6dp">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <com.thesis.sportologia.views.SpinnerOnlyOutlinedView
+                    android:id="@+id/spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    app:spinnerOnlyHint="Все"
+                    app:spinnerOnlyIsHintEnabled="false" />
+
+            </LinearLayout>
+
+            <com.thesis.sportologia.views.ItemEventView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
