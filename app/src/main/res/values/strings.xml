@@ -19,6 +19,7 @@
     <string name="action_back">Назад</string>
     <string name="action_ok">Ок</string>
     <string name="action_cancel">Отмена</string>
+    <string name="action_create">Создать</string>
     <string name="action_subscribe">Подписаться</string>
     <string name="action_unsubscribe">Отписаться</string>
     <string name="action_unsubscribe_2">В подписках</string>
@@ -88,6 +89,13 @@
     <string name="services">Услуги</string>
     <string name="events">Мероприятия</string>
 
+    <!-- Own Profile Page -->
+    <string name="edit">Редактировать</string>
+    <string name="fav">Избранное</string>
+    <string name="create_post">Создать запись</string>
+    <string name="create_service">Создать услугу</string>
+    <string name="create_event">Создать мероприятие</string>
+
     <!-- Home Page -->
     <string name="home">Главная</string>
     <string name="posts_all">Все</string>
@@ -142,5 +150,55 @@
     
     <!-- Service Reviews Page -->
     <string name="out_of_5">Из 5</string>
+
+    <!-- Content data -->
+    <string name="posts_empty">Нет публикаций</string>
+    <string name="services_empty">Нет услуг</string>
+    <string name="events_empty">Нет мероприятий</string>
+    <string name="photos_empty">Нет фото</string>
+
+    <string name="post_new">Новая публикация</string>
+    <string name="service_new">Новая услуга</string>
+    <string name="program_new">Новая программа</string>
+    <string name="exercise_new">Новое упражнение</string>
+    <string name="event_new">Новое мероприятие</string>
+
+    <!-- Create Event Page -->
+    <string name="event_name">Название мероприятия</string>
+
+    <string name="event_name_hint">Укажите название мероприятия</string>
+    <string name="event_date_hint">Укажите дату проведения мероприятия</string>
+    <string name="event_address_hint">Укажите адрес мероприятия</string>
+    <string name="event_price_hint">Укажите стоимость мероприятия</string>
+    <string name="event_categories_hint">Укажите категорию мероприятия</string>
+    <string name="event_description_hint">Введите описание мероприятия</string>
+
+    <!-- Create Program Page -->
+    <string name="service_type">Вид услуги</string>
+    <string name="training_program">Тренировочная программа</string>
+    <string name="program_name">Название программы</string>
+    <string name="program_price">Стоимость</string>
+    <string name="program_aim">Цель</string>
+    <string name="program_description">Описание</string>
+    <string name="program_info_for_clients">Информация для клиентов</string>
+
+    <string name="program_name_hint">Укажите название программы</string>
+    <string name="program_aim_hint">Укажите нацеленность программы</string>
+    <string name="program_price_hint">Укажите стоимость программы</string>
+    <string name="program_description_hint">Введите описание программы</string>
+    <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
+
+    <!-- Create Exercise Page -->
+    <string name="exercise_name">Название</string>
+    <string name="exercise_description">Описание</string>
+    <string name="exercise_sets_number">Число подходов</string>
+    <string name="exercise_reps_number">Число повторений</string>
+    <string name="exercise_regularity">Регулярность</string>
+
+    <string name="exercise_name_hint">Укажите название упражнения</string>
+    <string name="exercise_description_hint">Укажите описание упражнения</string>
+    <string name="exercise_sets_number_hint">Укажите число подходов</string>
+    <string name="exercise_reps_number_hint">Укажите число повторений</string>
+    <string name="exercise_regularity_hint">Укажите регулярность</string>
 
 </resources>

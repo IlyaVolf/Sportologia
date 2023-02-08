@@ -2,7 +2,7 @@
 <resources>
 
     <declare-styleable name="ButtonRoundView">
-        <attr name="drawable" format="reference" />
+        <attr name="br_drawable" format="reference" />
     </declare-styleable>
 
     <declare-styleable name="ToolbarBasicView">
@@ -35,6 +35,7 @@
     </declare-styleable>
 
     <declare-styleable name="EditTextBasicView">
+        <attr name="editTextInputType" format="string" />
         <attr name="editTextHint" format="string" />
         <attr name="editTextTitle" format="string" />
         <attr name="editTextLines" format="integer" />

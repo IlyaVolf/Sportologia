@@ -5,6 +5,7 @@ import android.os.Parcel
 import android.os.Parcelable
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
+import android.text.InputType
 import android.util.AttributeSet
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,16 @@ typealias OnEditTextBasicActionListener = (OnEditTextBasicAction) -> Unit
 
 enum class OnEditTextBasicAction {
     POSITIVE
+}
+
+fun inputTypeMap(inputType: String): Int {
+    return when (inputType) {
+        "text" -> InputType.TYPE_CLASS_TEXT
+        "number" -> InputType.TYPE_NUMBER_FLAG_DECIMAL
+        "textEmailAddress" -> InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
+        "textPassword" -> InputType.TYPE_TEXT_VARIATION_PASSWORD
+        else -> InputType.TYPE_CLASS_TEXT
+    }
 }
 
 class EditTextBasicView(
@@ -68,6 +79,9 @@ class EditTextBasicView(
 
         val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
         binding.textBlock.hint = hint
+
+        val inputType = typedArray.getString(R.styleable.EditTextBasicView_editTextInputType) ?: "text"
+        binding.textBlock.inputType = inputTypeMap(inputType)
 
         typedArray.recycle()
     }

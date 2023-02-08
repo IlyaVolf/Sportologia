@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <com.thesis.sportologia.views.ToolbarBasicView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tb_toolbarLeftButton="@string/action_back"
+        app:tb_isToolbarUnderlined="false"
+        app:tb_toolbarTitle="@string/fav"/>
+
+    <com.thesis.sportologia.views.ContentTabsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentTabsButtonsNumber="3"
+        app:contentTabsCounterSupport="true"
+        app:contentTabsActiveByDefault="3"
+        app:contentTabsText1="@string/posts"
+        app:contentTabsText2="@string/search_services"
+        app:contentTabsText3="@string/search_events" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp"/>
+
+            <com.thesis.sportologia.views.ItemServiceView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:is_isMainPhotoSquareLimited="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

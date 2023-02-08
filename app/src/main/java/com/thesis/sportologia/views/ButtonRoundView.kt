@@ -50,7 +50,7 @@ class ButtonRoundView(
         with(binding) {
             val icon =
                 typedArray.getResourceId(
-                    R.styleable.ButtonRoundView_drawable,
+                    R.styleable.ButtonRoundView_br_drawable,
                     R.drawable.icon_snippet_white
                 )
             button.setImageResource(icon)

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.thesis.sportologia.views.ToolbarBasicView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tb_toolbarLeftButton="@string/action_cancel"
+            app:tb_toolbarRightButton="@string/action_create"
+            app:tb_toolbarTitle="@string/event_new" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginHorizontal="@dimen/margin_sides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+                <com.thesis.sportologia.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_name"
+                    app:editTextHint="@string/event_name_hint"/>
+
+                <com.thesis.sportologia.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_date"
+                    app:editTextHint="@string/event_date_hint"/>
+
+                <com.thesis.sportologia.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_address"
+                    app:editTextHint="@string/event_address_hint"/>
+
+                <com.thesis.sportologia.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_price"
+                    app:editTextHint="@string/event_price_hint"/>
+
+                <com.thesis.sportologia.views.MultiChoiceBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:multiChoiceTitle="@string/event_categories"
+                    app:multiChoiceHint="@string/event_categories_hint"/>
+
+                <com.thesis.sportologia.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_description"
+                    app:editTextHint="@string/event_description_hint"/>
+
+                <!-- TODO добавить фото -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <com.thesis.sportologia.views.ButtonRoundView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_sides"
+        android:layout_marginBottom="36dp"
+        app:br_drawable="@drawable/icon_album"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

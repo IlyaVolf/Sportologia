@@ -131,9 +131,6 @@
                             android:progressDrawable="@drawable/progress_bar_horizontal"
                             android:layout_gravity="center"
                             android:progress="30"
-                            app:layout_widthPercent="80%"
-                            app:layout_heightPercent="8%"
-                            app:layout_marginTopPercent="5%"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"/>
@@ -211,9 +208,6 @@
                             android:progressDrawable="@drawable/progress_bar_horizontal"
                             android:layout_gravity="center"
                             android:progress="30"
-                            app:layout_widthPercent="80%"
-                            app:layout_heightPercent="8%"
-                            app:layout_marginTopPercent="5%"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"/>
@@ -291,9 +285,6 @@
                             android:progressDrawable="@drawable/progress_bar_horizontal"
                             android:layout_gravity="center"
                             android:progress="30"
-                            app:layout_widthPercent="80%"
-                            app:layout_heightPercent="8%"
-                            app:layout_marginTopPercent="5%"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"/>
@@ -371,9 +362,6 @@
                             android:progressDrawable="@drawable/progress_bar_horizontal"
                             android:layout_gravity="center"
                             android:progress="30"
-                            app:layout_widthPercent="80%"
-                            app:layout_heightPercent="8%"
-                            app:layout_marginTopPercent="5%"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"/>
@@ -451,9 +439,6 @@
                             android:progressDrawable="@drawable/progress_bar_horizontal"
                             android:layout_gravity="center"
                             android:progress="30"
-                            app:layout_widthPercent="80%"
-                            app:layout_heightPercent="8%"
-                            app:layout_marginTopPercent="5%"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"/>
