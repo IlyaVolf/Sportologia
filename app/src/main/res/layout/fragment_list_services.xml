@@ -20,7 +20,14 @@
         app:icon="@drawable/icon_plus"
         app:text="@string/create_service" />
 
+    <com.thesis.sportologia.views.ChosenFilterView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cf_isRestrictionsBlockEnabled="true"
+        app:cf_isSortingBlockEnabled="true"/>
+
     <Space
+        android:id="@+id/space_list"
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
@@ -37,8 +44,11 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/services_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1"
+        tools:listitem="@layout/item_service"/>
 
 </LinearLayout>

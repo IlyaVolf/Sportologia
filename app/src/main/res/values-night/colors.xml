@@ -29,6 +29,8 @@
     <color name="grey_blue_dark">#FF262629</color>
     <color name="grey_blue_light">#FFBABCCA</color>
     <!--     <color name="purple_medium">#FF6834A4</color> -->
+    <color name="purple_medium_20a">#336E17E8</color>
+    <color name="purple_light">#FFDCE2FF</color>
     <color name="purple_medium">#FF7228DA</color>
     <color name="purple_dark">#FF3A20B1</color>
     <color name="purple_very_dark">#FF291195</color>

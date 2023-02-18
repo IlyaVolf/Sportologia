@@ -32,6 +32,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <include layout="@layout/fragment_list_services" />
+
             <com.thesis.sportologia.views.ItemServiceView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -30,8 +30,9 @@
     <string name="action_clear">Очистить</string>
     <string name="action_all">Все</string>
     <string name="action_cancel_verb">Отменить</string>
-    <string name="action_accept">Применить</string>
+    <string name="action_apply">Применить</string>
     <string name="action_send">Отправить</string>
+    <string name="action_save">Сохранить</string>
 
     <!-- Categories -->
     <string name="category_running">Бег</string>
@@ -147,12 +148,14 @@
     <string name="title">Заголовок</string>
     <string name="text">Текст</string>
     <string name="optional">(Опционально)</string>
-    
+
     <!-- Service Reviews Page -->
     <string name="out_of_5">Из 5</string>
 
     <!-- Content data -->
     <string name="posts_empty">Нет публикаций</string>
+    <string name="athletes_empty">Нет спортсменов</string>
+    <string name="organizations_empty">Нет организаций</string>
     <string name="services_empty">Нет услуг</string>
     <string name="events_empty">Нет мероприятий</string>
     <string name="photos_empty">Нет фото</string>
@@ -181,6 +184,7 @@
     <string name="program_aim">Цель</string>
     <string name="program_description">Описание</string>
     <string name="program_info_for_clients">Информация для клиентов</string>
+    <string name="exercise_add">Добавить упражнение</string>
 
     <string name="program_name_hint">Укажите название программы</string>
     <string name="program_aim_hint">Укажите нацеленность программы</string>
@@ -189,6 +193,8 @@
     <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
 
     <!-- Create Exercise Page -->
+    <string name="exercises">Упражнения</string>
+    <string name="exercise">Упражнение</string>
     <string name="exercise_name">Название</string>
     <string name="exercise_description">Описание</string>
     <string name="exercise_sets_number">Число подходов</string>
@@ -200,5 +206,8 @@
     <string name="exercise_sets_number_hint">Укажите число подходов</string>
     <string name="exercise_reps_number_hint">Укажите число повторений</string>
     <string name="exercise_regularity_hint">Укажите регулярность</string>
+
+    <!-- Filter Page -->
+    <string name="filter">Фильтр</string>
 
 </resources>

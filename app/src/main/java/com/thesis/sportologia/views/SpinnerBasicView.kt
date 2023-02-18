@@ -182,7 +182,7 @@ class SpinnerBasicView @JvmOverloads constructor(
                 ), true
             )
 
-            if (currentValue == hint) {
+            if (currentValue == hint && binding.spinnerBlock.getChildAt(0) != null) {
                 binding.spinnerBlock.getChildAt(0).findViewById<TextView>(R.id.dropdown_text)
                     .setTextColor(context.getColor(R.color.text_hint))
             }

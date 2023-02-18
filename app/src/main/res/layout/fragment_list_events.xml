@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <com.thesis.sportologia.views.ButtonBasicView
+        android:id="@+id/create_post_button"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_weight="1"
+        android:paddingHorizontal="@dimen/margin_sides"
+        app:icon="@drawable/icon_plus"
+        app:text="@string/create_event" />
+
+    <com.thesis.sportologia.views.ChosenFilterView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cf_isRestrictionsBlockEnabled="true"
+        app:cf_isSortingBlockEnabled="true"/>
+
+    <Space
+        android:id="@+id/space_list"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <include
+        android:id="@+id/events_filter"
+        layout="@layout/view_content_filter" />
+
+    <TextView
+        android:id="@+id/events_empty_block"
+        style="@style/TextStyleSecondary"
+        android:layout_width="match_parent"
+        android:layout_height="23dp"
+        android:gravity="center"
+        android:text="@string/events_empty" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/events_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:overScrollMode="never"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="1"
+        tools:listitem="@layout/item_event"/>
+
+</LinearLayout>

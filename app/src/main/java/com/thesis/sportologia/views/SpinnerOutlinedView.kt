@@ -12,22 +12,23 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.forEach
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ViewSpinnerOnlyOutlinedBinding
+import com.thesis.sportologia.databinding.ViewSpinnerOutlinedBinding
 
 
-typealias OnSpinnerOnlyOutlinedActionListener = (String) -> Unit
+typealias OnSpinnerOutlinedActionListener = (String) -> Unit
 
-class SpinnerOnlyOutlinedView @JvmOverloads constructor(
+class SpinnerOutlinedView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewSpinnerOnlyOutlinedBinding
+    private val binding: ViewSpinnerOutlinedBinding
 
-    private var listeners = mutableListOf<OnSpinnerOnlyOutlinedActionListener?>()
+    private var listeners = mutableListOf<OnSpinnerOutlinedActionListener?>()
 
     private lateinit var adapter: ArrayAdapter<String>
 
@@ -36,8 +37,6 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
     private lateinit var currentValue: String
 
     private var hint = ""
-
-    private var isHintEnabled = false
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         context,
@@ -51,9 +50,9 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.view_spinner_only_outlined, this, true)
+        inflater.inflate(R.layout.view_spinner_outlined, this, true)
 
-        binding = ViewSpinnerOnlyOutlinedBinding.bind(this)
+        binding = ViewSpinnerOutlinedBinding.bind(this)
 
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
@@ -61,23 +60,12 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
-            attrs, R.styleable.SpinnerOnlyOutlinedView, defStyleAttr, defStyleRes
+            attrs, R.styleable.SpinnerOutlinedView, defStyleAttr, defStyleRes
         )
 
-        isHintEnabled =
-            typedArray.getBoolean(
-                R.styleable.SpinnerOnlyOutlinedView_spinnerOnlyIsHintEnabled,
-                false
-            )
-
-        val spinnerHilt = typedArray.getString(R.styleable.SpinnerOnlyOutlinedView_spinnerOnlyHint)
-        if (spinnerHilt == null) {
-            isHintEnabled = false
-        }
-        hint = spinnerHilt ?: ""
-        if (isHintEnabled) {
-            currentValue = hint
-        }
+        val hint = typedArray.getString(R.styleable.SpinnerOutlinedView_spinnerOutlinedHint)
+        this.hint = hint ?: ""
+        this.currentValue = this.hint
 
         typedArray.recycle()
     }
@@ -87,21 +75,15 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
         //Toast.makeText(context, "AGAIN" + hint, Toast.LENGTH_SHORT).show()
         //Log.d("BUGFIX", "INIT ADAPTER $hint")
         data = list.toMutableList()
-        if (isHintEnabled) {
-            data.add(0, hint)
-        }
+        data.add(0, hint)
 
         adapter = object : ArrayAdapter<String>(
-            context, R.layout.item_spinner_short, R.id.dropdown_text, data
+            context, R.layout.item_spinner, R.id.dropdown_text, data
         ) {
             override fun isEnabled(position: Int): Boolean {
                 // Disable the first item from Spinner
                 // First item will be used for hint
-                return if (isHintEnabled) {
-                    position != 0
-                } else {
-                    true
-                }
+                return position != 0
             }
 
             override fun getDropDownView(
@@ -111,12 +93,10 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
             ): View {
                 val view =
                     super.getDropDownView(position, convertView, parent)
-                if (isHintEnabled) {
-                    if (position == 0) {
-                        view.findViewById<TextView>(R.id.dropdown_text).setTextColor(
-                            context.getColor(R.color.text_hint)
-                        )
-                    }
+                if (position == 0) {
+                    view.findViewById<TextView>(R.id.dropdown_text).setTextColor(
+                        context.getColor(R.color.text_hint)
+                    )
                 }
                 return view
             }
@@ -134,13 +114,9 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
                 if (view != null) {
 
                     val value = parent.getItemAtPosition(position).toString()
-                    if (isHintEnabled) {
-                        if (value == data[0]) {
-                            view.findViewById<TextView>(R.id.dropdown_text)
-                                .setTextColor(context.getColor(R.color.text_hint))
-                        } else {
-                            currentValue = value
-                        }
+                    if (value == data[0]) {
+                        view.findViewById<TextView>(R.id.dropdown_text)
+                            .setTextColor(context.getColor(R.color.text_hint))
                     } else {
                         currentValue = value
                     }
@@ -162,12 +138,12 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
         return currentValue
     }
 
-    fun setListener(listener: OnSpinnerOnlyOutlinedActionListener?) {
+    fun setListener(listener: OnSpinnerOutlinedActionListener?) {
         listeners.add(listener)
     }
 
 
-    fun removeListener(listener: OnSpinnerOnlyOutlinedActionListener?) {
+    fun removeListener(listener: OnSpinnerOutlinedActionListener?) {
         listeners.remove(listener)
     }
 
@@ -175,6 +151,7 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
         this.adapter = adapter
         binding.spinnerBlock.adapter = adapter
     }
+
 
     /// Save
 
@@ -202,7 +179,7 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
                 ), true
             )
 
-            if (currentValue == hint  && binding.spinnerBlock.getChildAt(0) != null) {
+            if (currentValue == hint && binding.spinnerBlock.getChildAt(0) != null) {
                 binding.spinnerBlock.getChildAt(0).findViewById<TextView>(R.id.dropdown_text)
                     .setTextColor(context.getColor(R.color.text_hint))
             }

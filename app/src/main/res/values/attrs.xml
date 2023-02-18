@@ -47,6 +47,10 @@
         <attr name="spinnerTitle" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="SpinnerOutlinedView">
+        <attr name="spinnerOutlinedHint" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="SpinnerOnlyOutlinedView">
         <attr name="spinnerOnlyHint" format="string" />
         <attr name="spinnerOnlyIsHintEnabled" format="boolean" />

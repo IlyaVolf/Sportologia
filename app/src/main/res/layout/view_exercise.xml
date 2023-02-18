@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/TextStyleBold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:text="@string/exercises"
+        app:layout_constraintBottom_toTopOf="@id/space_1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Space
+        android:id="@+id/space_1"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintBottom_toTopOf="@id/text_block"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_basic"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/margin_sides"
+        app:layout_constraintBottom_toTopOf="@id/space_2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/space_1">
+
+
+        <LinearLayout
+            android:id="@+id/exercises_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp"/>
+
+            <include layout="@layout/item_exercise" />
+
+            <!-- TODO recycler view -->
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exercises_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/bar_separator"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/element_tertiary" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/create_exercise"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextStyleRegular"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:minHeight="41dp"
+                android:text="@string/exercise_add"
+                android:textColor="@color/purple_medium" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/icon_plus"
+                app:tint="@color/purple_medium" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <Space
+        android:id="@+id/space_2"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_block" />
+
+</merge>
