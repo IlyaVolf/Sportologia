@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.thesis.sportologia.ui.SearchFragment">
 
     <include layout="@layout/view_search_bar" />
 
-    <com.thesis.sportologia.views.ContentTabsView
+    <com.thesis.sportologia.ui.views.ContentTabsView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentTabsActiveByDefault="4"
@@ -17,7 +18,7 @@
         app:contentTabsText3="@string/search_events"
         app:contentTabsText4="@string/search_services"/>
 
-    <com.thesis.sportologia.views.ChosenFilterView
+    <com.thesis.sportologia.ui.views.ChosenFilterView
         app:cf_isRestrictionsBlockEnabled="true"
         app:cf_isSortingBlockEnabled="true"
         android:layout_width="match_parent"
@@ -34,7 +35,7 @@
 
             <include layout="@layout/fragment_list_services" />
 
-            <com.thesis.sportologia.views.ItemServiceView
+            <com.thesis.sportologia.ui.views.ItemServiceView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:is_isMainPhotoSquareLimited="false" />

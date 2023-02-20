@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.thesis.sportologia.views.ToolbarBasicView
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:tb_toolbarLeftButton="@string/action_cancel"
@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="18dp" />
 
-            <com.thesis.sportologia.views.SelectStarsView
+            <com.thesis.sportologia.ui.views.SelectStarsView
                 android:id="@+id/rating_fro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="12dp" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/title_fro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 app:editTextLines="2"
                 app:editTextTitle="@string/title" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/text_fro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

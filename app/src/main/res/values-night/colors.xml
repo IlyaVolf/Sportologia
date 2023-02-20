@@ -26,7 +26,9 @@
     <color name="grey_30">#FFBCBCBC</color>
     <color name="grey_20">#FFE8E8E8</color> <!-- grey_light -->
     <color name="grey_10">#FFEDEDED</color>
-    <color name="grey_blue_dark">#FF262629</color>
+    <!-- <color name="grey_blue_dark">#FF262629</color> -->
+    <!--  <color name="grey_blue_dark">#FF3A3A3E</color>  -->
+    <color name="grey_blue_dark">#FF454550</color>
     <color name="grey_blue_light">#FFBABCCA</color>
     <!--     <color name="purple_medium">#FF6834A4</color> -->
     <color name="purple_medium_20a">#336E17E8</color>

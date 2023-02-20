@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.SplashActivity">
 
     <!-- tools:context="scientists.house.affiche.app.SplashActivity" -->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/splashContainer"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        app:defaultNavHost="true"/>
-    <!-- app:navGraph="@navigation/splash_graph" -->
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/splash_graph" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

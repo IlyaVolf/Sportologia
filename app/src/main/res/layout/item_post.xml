@@ -123,7 +123,7 @@
         android:layout_width="match_parent"
         android:layout_height="5dp" />
 
-    <com.thesis.sportologia.views.PhotosBlockView
+    <com.thesis.sportologia.ui.views.PhotosBlockView
         android:id="@+id/photosBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

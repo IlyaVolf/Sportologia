@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
-    <com.thesis.sportologia.views.ButtonBasicView
+    <com.thesis.sportologia.ui.views.ButtonBasicView
         android:id="@+id/create_post_button"
         android:paddingHorizontal="@dimen/margin_sides"
         android:layout_width="match_parent"

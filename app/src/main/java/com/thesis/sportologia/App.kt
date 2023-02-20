@@ -2,10 +2,7 @@ package com.thesis.sportologia
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
-import android.os.Build
 import com.thesis.sportologia.utils.image_loader.GlideLoaderCreator
 import com.thesis.sportologia.utils.image_loader.ImageLoader
 import dagger.hilt.android.HiltAndroidApp

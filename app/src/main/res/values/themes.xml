@@ -115,4 +115,12 @@
         <item name="android:textColor">@drawable/button_style_text</item>
     </style>
 
+    <style name="BottomNavigationView" parent="@style/TextStyleRegular">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BottomNavigationView.Active" parent="@style/TextStyleBold">
+        <item name="android:textSize">12sp</item>
+    </style>
+
 </resources>

@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:context="com.thesis.sportologia.ui.ProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -205,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.thesis.sportologia.views.ButtonBasicView
+                <com.thesis.sportologia.ui.views.ButtonBasicView
                     android:id="@+id/left_button"
                     android:layout_width="0dp"
                     android:layout_height="37dp"
@@ -276,7 +277,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/photo_label" />
 
-            <com.thesis.sportologia.views.PhotosBlockPageView
+            <com.thesis.sportologia.ui.views.PhotosBlockPageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:pbp_photosNumber="4"
@@ -294,7 +295,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <com.thesis.sportologia.views.ContentTabsView
+        <com.thesis.sportologia.ui.views.ContentTabsView
             android:id="@+id/contentTabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -317,7 +318,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
 
-            <com.thesis.sportologia.views.SpinnerOnlyOutlinedView
+            <com.thesis.sportologia.ui.views.SpinnerOnlyOutlinedView
                 android:id="@+id/spinner"
                 android:layout_width="0dp"
                 android:layout_height="24dp"
@@ -327,22 +328,22 @@
 
         </LinearLayout>
 
-        <com.thesis.sportologia.views.ItemPostView
+        <com.thesis.sportologia.ui.views.ItemPostView
             android:id="@+id/item_post"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.thesis.sportologia.views.ItemReviewView
+        <com.thesis.sportologia.ui.views.ItemReviewView
             android:id="@+id/item_review"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.thesis.sportologia.views.ItemEventView
+        <com.thesis.sportologia.ui.views.ItemEventView
             android:id="@+id/item_event"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.thesis.sportologia.views.ItemServiceView
+        <com.thesis.sportologia.ui.views.ItemServiceView
             android:id="@+id/item_service"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/services_acquired"
+    app:startDestination="@id/servicesAcquiredFragment">
+
+    <fragment
+        android:id="@+id/servicesAcquiredFragment"
+        android:name="com.thesis.sportologia.ui.ServicesAcquiredFragment"
+        android:label="fragment_services_acquired"
+        tools:layout="@layout/fragment_services_acquired" />
+</navigation>

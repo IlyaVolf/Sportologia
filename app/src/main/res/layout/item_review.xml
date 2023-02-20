@@ -84,7 +84,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="2dp" />
 
-                <com.thesis.sportologia.views.RatingStarsView
+                <com.thesis.sportologia.ui.views.RatingStarsView
                     android:id="@+id/rating"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

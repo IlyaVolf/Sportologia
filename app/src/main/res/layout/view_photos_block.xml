@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.thesis.sportologia.views.image_views.CustomImageView
+    <com.thesis.sportologia.ui.image_views.CustomImageView
         android:id="@+id/photo_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,7 +14,7 @@
         android:scaleType="centerCrop"
         android:src="@drawable/photo_house" />
 
-    <com.thesis.sportologia.views.image_views.SquareImageView
+    <com.thesis.sportologia.ui.image_views.SquareImageView
         android:id="@+id/photo_1_square"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

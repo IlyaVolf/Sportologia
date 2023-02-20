@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:statusBarColor="@color/white">
 
-    <com.thesis.sportologia.views.ToolbarBasicView
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tb_toolbarTitle="@string/registration"
@@ -54,14 +54,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="12dp" />
 
-            <com.thesis.sportologia.views.SpinnerBasicView
+            <com.thesis.sportologia.ui.views.SpinnerBasicView
                 android:id="@+id/account_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:spinnerHint="@string/hint_account_type"
                 app:spinnerTitle="@string/account_type" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/athlete_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 app:editTextLines="2"
                 app:editTextTitle="@string/athlete_name" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/organization_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -79,14 +79,14 @@
                 app:editTextLines="2"
                 app:editTextTitle="@string/organization_name" />
 
-            <com.thesis.sportologia.views.SpinnerBasicView
+            <com.thesis.sportologia.ui.views.SpinnerBasicView
                 android:id="@+id/gender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:spinnerHint="@string/hint_gender"
                 app:spinnerTitle="@string/gender" />
 
-            <com.thesis.sportologia.views.DateBasicView
+            <com.thesis.sportologia.ui.views.DateBasicView
                 android:id="@+id/birth_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
                 app:dateHint="@string/hint_age"
                 app:dateTitle="@string/age" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -104,21 +104,21 @@
                 app:editTextLines="10"
                 app:editTextTitle="@string/description" />
 
-            <com.thesis.sportologia.views.MultiChoiceBasicView
+            <com.thesis.sportologia.ui.views.MultiChoiceBasicView
                 android:id="@+id/interests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:multiChoiceHint="@string/hint_athlete_interests"
                 app:multiChoiceTitle="@string/athlete_categories" />
 
-            <com.thesis.sportologia.views.MultiChoiceBasicView
+            <com.thesis.sportologia.ui.views.MultiChoiceBasicView
                 android:id="@+id/specializations"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:multiChoiceTitle="@string/organization_categories"
                 app:multiChoiceHint="@string/hint_organization_specializations" />
 
-            <com.thesis.sportologia.views.EditTextBasicView
+            <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

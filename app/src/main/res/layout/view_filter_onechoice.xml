@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="15dp" />
 
-    <com.thesis.sportologia.views.SpinnerOutlinedView
+    <com.thesis.sportologia.ui.views.SpinnerOutlinedView
         android:id="@+id/filter_spinner_onechocie"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>

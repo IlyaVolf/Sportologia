@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
-    <com.thesis.sportologia.views.ButtonBasicView
+    <com.thesis.sportologia.ui.views.ButtonBasicView
         android:id="@+id/create_post_button"
         android:layout_width="match_parent"
         android:layout_height="37dp"
@@ -19,7 +19,7 @@
         app:icon="@drawable/icon_plus"
         app:text="@string/create_event" />
 
-    <com.thesis.sportologia.views.ChosenFilterView
+    <com.thesis.sportologia.ui.views.ChosenFilterView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cf_isRestrictionsBlockEnabled="true"

@@ -16,7 +16,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.thesis.sportologia.views.image_views.SquareImageView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
             android:id="@+id/photo_1"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -30,7 +30,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <com.thesis.sportologia.views.image_views.SquareImageView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
             android:id="@+id/photo_2"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <com.thesis.sportologia.views.image_views.SquareImageView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
             android:id="@+id/photo_3"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -58,7 +58,7 @@
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <com.thesis.sportologia.views.image_views.SquareImageView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
             android:id="@+id/photo_4"
             android:layout_width="0dp"
             android:layout_height="match_parent"

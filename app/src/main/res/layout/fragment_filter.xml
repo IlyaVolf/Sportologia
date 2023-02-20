@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.thesis.sportologia.views.ToolbarBasicView
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:id="@+id/ff_tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -43,6 +43,12 @@
     <!-- Content Default -->
     <string name="test_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 
+    <!-- Tabs -->
+    <string name="tab_home">Главная</string>
+    <string name="tab_services">Услуги</string>
+    <string name="tab_search">Поиск</string>
+    <string name="tab_profile">Профиль</string>
+
     <!-- Sign-In and Sign-Up Pages -->
     <string name="email">Эл. почта</string>
     <string name="password">Пароль</string>
@@ -116,6 +122,8 @@
 
     <!-- Services Page -->
     <string name="service">Услуга</string>
+    <string name="my_services">Мои услуги</string>
+    <string name="acquired_services">Приобретённые услуги</string>
     <string name="service_training_program">Тренировочная программа</string>
     <string name="service_training_program_short">Трен. программа</string>
     <string name="service_price">Стоимость</string>

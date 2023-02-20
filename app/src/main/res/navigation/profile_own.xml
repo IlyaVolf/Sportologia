@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/profile_own"
+    app:startDestination="@id/profileOwnFragment">
+
+    <fragment
+        android:id="@+id/profileOwnFragment"
+        android:name="com.thesis.sportologia.ui.ProfileOwnFragment"
+        android:label="fragment_profile_own"
+        tools:layout="@layout/fragment_profile_own" />
+</navigation>
