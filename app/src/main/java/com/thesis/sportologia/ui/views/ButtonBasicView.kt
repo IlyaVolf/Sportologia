@@ -71,14 +71,14 @@ class ButtonBasicView(
             val iconColor =
                 typedArray.getColor(
                     R.styleable.ButtonBasicView_iconColor,
-                    ContextCompat.getColor(context, R.color.black)
+                    ContextCompat.getColor(context, R.color.background_inverted)
                 )
             drawable.setColorFilter(iconColor)
 
             val textColor =
                 typedArray.getColor(
                     R.styleable.ButtonBasicView_textColor,
-                    ContextCompat.getColor(context, R.color.black)
+                    ContextCompat.getColor(context, R.color.background_inverted)
                 )
             binding.text.setTextColor(ColorStateList.valueOf(textColor))
         }
