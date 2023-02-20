@@ -64,7 +64,7 @@ class ButtonBasicView(
             val backgroundColor =
                 typedArray.getColor(
                     R.styleable.ButtonBasicView_backgroundColor,
-                    ContextCompat.getColor(context, R.color.grey_20)
+                    ContextCompat.getColor(context, R.color.element_primary)
                 )
             background.backgroundTintList = ColorStateList.valueOf(backgroundColor)
 

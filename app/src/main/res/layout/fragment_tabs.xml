@@ -21,7 +21,7 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="0dp"
         android:layout_height="62dp"
-        app:backgroundTint="@color/background"
+        android:background="@drawable/bottom_nav_background"
         app:elevation="10dp"
         app:itemIconSize="32dp"
         app:itemPaddingTop="8dp"

@@ -29,10 +29,6 @@ class ProfileOwnFragment : Fragment() {
         contentTabs.setButtonText(1, "Игорь")
         contentTabs.setCount(1, 23)
 
-        val choices = listOf(getString(R.string.posts_all), getString(R.string.posts_upcoming))
-        val spinner = binding.root.findViewById<SpinnerOnlyOutlinedView>(R.id.spinner)
-        spinner.initAdapter(choices)
-
         val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
         post.setListener {  }
         post.setUsername("Игорь Чиёсов")
