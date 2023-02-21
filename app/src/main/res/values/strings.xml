@@ -60,7 +60,7 @@
     <string name="hint_email">Введите адрес эл. почты</string>
     <string name="hint_password">Введите пароль</string>
 
-    <!-- Registration Page -->
+    <!-- Registration and Profile Settings Page -->
     <string name="registration">Регистрация</string>
     <string name="account_type">Тип учётной записи</string>
     <string name="athlete">Спортсмен</string>
@@ -75,6 +75,7 @@
     <string name="athlete_categories">Интересы</string>
     <string name="organization_categories">Специализации</string>
     <string name="address">Адрес</string>
+    <string name="profile_settings">Настройки профиля</string>
 
     <string name="hint_account_type">Укажите тип учётной записи</string>
     <string name="hint_athlete_name">Введите имя пользователя</string>
@@ -162,6 +163,7 @@
 
     <!-- Content data -->
     <string name="posts_empty">Нет публикаций</string>
+    <string name="users_empty">Нет пользователей</string>
     <string name="athletes_empty">Нет спортсменов</string>
     <string name="organizations_empty">Нет организаций</string>
     <string name="services_empty">Нет услуг</string>
@@ -217,5 +219,8 @@
 
     <!-- Filter Page -->
     <string name="filter">Фильтр</string>
+
+    <!-- Settings Page -->
+    <string name="settings">Настройки</string>
 
 </resources>

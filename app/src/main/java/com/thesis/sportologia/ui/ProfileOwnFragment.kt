@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
 import com.thesis.sportologia.ui.views.*
@@ -21,16 +23,28 @@ class ProfileOwnFragment : Fragment() {
     ): View {
         binding = FragmentProfileOwnBinding.inflate(inflater, container, false)
 
+        val profileSettingsButton = binding.profileSettingsButton.setOnClickListener {
+            onProfileSettingsButtonPressed()
+        }
+
+        val favouritesButton = binding.favouritesButton.setOnClickListener {
+            onFavouritesButtonPressed()
+        }
+
+        val openPhotosButton = binding.openPhotosButton.setOnClickListener {
+            onOpenPhotosButtonPressed()
+        }
+
         val contentTabs = binding.root.findViewById<ContentTabsView>(R.id.contentTabs)
         contentTabs.setListener {
-            
+
         }
 
         contentTabs.setButtonText(1, "Игорь")
         contentTabs.setCount(1, 23)
 
         val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
-        post.setListener {  }
+        post.setListener { }
         post.setUsername("Игорь Чиёсов")
         post.setText("Привет")
         post.setLikes(311331, true)
@@ -39,7 +53,7 @@ class ProfileOwnFragment : Fragment() {
 
 
         val review = binding.root.findViewById<ItemReviewView>(R.id.item_review)
-        review.setListener {  }
+        review.setListener { }
         review.setUsername("Игорь Чиёсов")
         review.setTitle("Много воды")
         review.setDescription("Я Игорь, я люблю Андрея")
@@ -47,7 +61,7 @@ class ProfileOwnFragment : Fragment() {
         review.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 
         val event = binding.root.findViewById<ItemEventView>(R.id.item_event)
-        event.setListener {  }
+        event.setListener { }
         event.setLikes(25363636, true)
         event.setFavs(false)
         event.setOrganizerName("Игорь Чиёсов")
@@ -56,7 +70,7 @@ class ProfileOwnFragment : Fragment() {
         event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 
         val service = binding.root.findViewById<ItemServiceView>(R.id.item_service)
-        service.setListener {  }
+        service.setListener { }
         service.setFavs(false)
         service.setOrganizerName("Игорь Чиёсов")
         service.setDescription(getString(R.string.test_text))
@@ -64,5 +78,44 @@ class ProfileOwnFragment : Fragment() {
         service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
 
         return binding.root
+    }
+
+    private fun onProfileSettingsButtonPressed() {
+        findNavController().navigate(R.id.action_profileOwnFragment_to_profileSettingsFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
+
+    private fun onFavouritesButtonPressed() {
+        findNavController().navigate(R.id.action_profileOwnFragment_to_favouritesFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
+
+    private fun onOpenPhotosButtonPressed() {
+        findNavController().navigate(R.id.action_profileOwnFragment_to_photosFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
     }
 }

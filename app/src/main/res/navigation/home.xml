@@ -9,5 +9,10 @@
         android:id="@+id/homeFragment"
         android:name="com.thesis.sportologia.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_profile_own"
+            app:destination="@id/profile_own" />
+    </fragment>
+    <include app:graph="@navigation/profile_own" />
 </navigation>

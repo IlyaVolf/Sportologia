@@ -38,7 +38,7 @@
         android:id="@+id/events_empty_block"
         style="@style/TextStyleSecondary"
         android:layout_width="match_parent"
-        android:layout_height="23dp"
+        android:layout_height="32dp"
         android:gravity="center"
         android:text="@string/events_empty" />
 

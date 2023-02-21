@@ -4,16 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.thesis.sportologia.ui.FavouritesFragment">
 
-    <com.thesis.sportologia.views.ToolbarBasicView
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tb_toolbarLeftButton="@string/action_back"
         app:tb_isToolbarUnderlined="false"
         app:tb_toolbarTitle="@string/fav"/>
 
-    <com.thesis.sportologia.views.ContentTabsView
+    <com.thesis.sportologia.ui.views.ContentTabsView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:contentTabsButtonsNumber="3"
@@ -36,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"/>
 
-            <com.thesis.sportologia.views.ItemServiceView
+            <com.thesis.sportologia.ui.views.ItemServiceView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:is_isMainPhotoSquareLimited="false" />

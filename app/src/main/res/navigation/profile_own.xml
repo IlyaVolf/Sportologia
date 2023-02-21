@@ -9,5 +9,110 @@
         android:id="@+id/profileOwnFragment"
         android:name="com.thesis.sportologia.ui.ProfileOwnFragment"
         android:label="fragment_profile_own"
-        tools:layout="@layout/fragment_profile_own" />
+        tools:layout="@layout/fragment_profile_own" >
+        <action
+            android:id="@+id/action_profileOwnFragment_to_createPostFragment"
+            app:destination="@id/createPostFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_createServiceFragment"
+            app:destination="@id/createServiceFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_favouritesFragment"
+            app:destination="@id/favouritesFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_profileSettingsFragment"
+            app:destination="@id/profileSettingsFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_followersFragment"
+            app:destination="@id/followersFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_followingsFragment"
+            app:destination="@id/followingsFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_photosFragment"
+            app:destination="@id/photosFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.thesis.sportologia.ui.CreateEventFragment"
+        android:label="fragment_create_event"
+        tools:layout="@layout/fragment_create_event" />
+    <fragment
+        android:id="@+id/createPostFragment"
+        android:name="com.thesis.sportologia.ui.CreatePostFragment"
+        android:label="fragment_create_post"
+        tools:layout="@layout/fragment_create_post" />
+    <fragment
+        android:id="@+id/createServiceFragment"
+        android:name="com.thesis.sportologia.ui.CreateServiceFragment"
+        android:label="fragment_create_service"
+        tools:layout="@layout/fragment_create_service" >
+        <action
+            android:id="@+id/action_createServiceFragment_to_profileOwnFragment"
+            app:destination="@id/profileOwnFragment" />
+        <action
+            android:id="@+id/action_createServiceFragment_to_createServiceDetailedFragment"
+            app:destination="@id/createServiceDetailedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createServiceDetailedFragment"
+        android:name="com.thesis.sportologia.ui.CreateServiceDetailedFragment"
+        android:label="fragment_create_service_detailed"
+        tools:layout="@layout/fragment_create_service_detailed" >
+        <action
+            android:id="@+id/action_createServiceDetailedFragment_to_createServiceFragment"
+            app:destination="@id/createServiceFragment" />
+        <action
+            android:id="@+id/action_createServiceDetailedFragment_to_createExerciseFragment"
+            app:destination="@id/createExerciseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createExerciseFragment"
+        android:name="com.thesis.sportologia.ui.CreateExerciseFragment"
+        android:label="fragment_create_exercise"
+        tools:layout="@layout/fragment_create_exercise" >
+        <action
+            android:id="@+id/action_createExerciseFragment_to_createServiceDetailedFragment"
+            app:destination="@id/createServiceDetailedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.thesis.sportologia.ui.FavouritesFragment"
+        android:label="fragment_favourites"
+        tools:layout="@layout/fragment_favourites" >
+        <action
+            android:id="@+id/action_favouritesFragment_to_profileOwnFragment"
+            app:destination="@id/profileOwnFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
+        android:label="fragment_profile_settings"
+        tools:layout="@layout/fragment_profile_settings" >
+        <action
+            android:id="@+id/action_profileSettingsFragment_to_profileOwnFragment"
+            app:destination="@id/profileOwnFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/followersFragment"
+        android:name="com.thesis.sportologia.ui.FollowersFragment"
+        android:label="fragment_followers"
+        tools:layout="@layout/fragment_followers" />
+    <fragment
+        android:id="@+id/followingsFragment"
+        android:name="com.thesis.sportologia.ui.FollowingsFragment"
+        android:label="fragment_followings"
+        tools:layout="@layout/fragment_followings" />
+    <fragment
+        android:id="@+id/photosFragment"
+        android:name="com.thesis.sportologia.ui.PhotosFragment"
+        android:label="fragment_photos"
+        tools:layout="@layout/fragment_photos" >
+        <action
+            android:id="@+id/action_photosFragment_to_profileOwnFragment"
+            app:destination="@id/profileOwnFragment" />
+    </fragment>
 </navigation>

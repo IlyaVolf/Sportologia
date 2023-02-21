@@ -7,13 +7,14 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:statusBarColor="@color/white"
-    tools:context="com.thesis.sportologia.ui.RegistrationFragment">
+    tools:context="com.thesis.sportologia.ui.ProfileSettingsFragment">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tb_toolbarTitle="@string/registration"
-        app:tb_toolbarRightButton="@string/action_complete" />
+        app:tb_toolbarLeftButton="@string/action_cancel"
+        app:tb_toolbarTitle="@string/profile_settings"
+        app:tb_toolbarRightButton="@string/action_save" />
 
     <ScrollView
         android:layout_width="match_parent"

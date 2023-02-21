@@ -207,7 +207,7 @@
                 android:orientation="horizontal">
 
                 <com.thesis.sportologia.ui.views.ButtonBasicView
-                    android:id="@+id/left_button"
+                    android:id="@+id/profile_settings_button"
                     android:layout_width="0dp"
                     android:layout_height="37dp"
                     android:layout_weight="1"
@@ -220,7 +220,7 @@
                     android:layout_height="match_parent" />
 
                 <com.thesis.sportologia.ui.views.ButtonBasicView
-                    android:id="@+id/right_button"
+                    android:id="@+id/favourites_button"
                     android:layout_width="0dp"
                     android:layout_height="37dp"
                     android:layout_weight="1"

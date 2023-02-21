@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thesis.sportologia.ui.CreatePostFragment">
+    tools:context="com.thesis.sportologia.ui.PhotosFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,36 +16,13 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.thesis.sportologia.ui.views.ToolbarBasicView
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tb_toolbarLeftButton="@string/action_cancel"
-            app:tb_toolbarRightButton="@string/action_create"
-            app:tb_toolbarTitle="@string/post_new" />
+            app:tb_toolbarLeftButton="@string/action_back"
+            app:tb_toolbarTitle="@string/photos" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    style="@style/TextStyleRegular"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/margin_sides"
-                    android:layout_marginVertical="12dp"
-                    android:background="@null"
-                    android:hint="Введите текст"
-                    android:maxLength="2000" />
-
-                <!-- TODO добавить фото -->
-
-            </LinearLayout>
-
-        </ScrollView>
+        <include layout="@layout/fragment_list_photos"/>
 
     </LinearLayout>
 
