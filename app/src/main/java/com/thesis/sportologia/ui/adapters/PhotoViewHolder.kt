@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.apdaters
+package com.thesis.sportologia.ui.adapters
 
 import com.thesis.sportologia.databinding.ItemPhotoBinding
 import com.thesis.sportologia.model.entities.Photo

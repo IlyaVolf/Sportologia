@@ -28,6 +28,9 @@
         <action
             android:id="@+id/action_profileOwnFragment_to_photosFragment"
             app:destination="@id/photosFragment" />
+        <action
+            android:id="@+id/action_profileOwnFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEventFragment"
@@ -95,4 +98,9 @@
             android:id="@+id/action_photosFragment_to_profileOwnFragment"
             app:destination="@id/profileOwnFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.thesis.sportologia.ui.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

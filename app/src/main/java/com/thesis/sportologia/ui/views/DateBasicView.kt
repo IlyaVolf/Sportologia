@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ViewDateBasicBinding
+import com.thesis.sportologia.utils.parseDate
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -82,7 +83,7 @@ class DateBasicView(
             dateAndTime[Calendar.DAY_OF_MONTH] = dayOfMonth
 
             if (validateDate()) {
-                binding.textBlock.text = parseDate()
+                binding.textBlock.text = parseDate(dateAndTime)
             }
         }
 
@@ -93,7 +94,7 @@ class DateBasicView(
         typedArray.recycle()
     }
 
-    // TODO other languages support
+    /*// TODO other languages support
     private fun parseDate(): String {
         return DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
             .withLocale(Locale("ru"))
@@ -104,7 +105,7 @@ class DateBasicView(
                     dateAndTime.get(Calendar.DAY_OF_MONTH)
                 )
             )
-    }
+    }*/
 
     private fun validateDate(): Boolean {
         if (isBefore) {

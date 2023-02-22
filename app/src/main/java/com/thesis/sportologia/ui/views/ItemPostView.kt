@@ -28,6 +28,7 @@ enum class OnItemPostAction {
 }
 
 class ItemPostView(
+    readyBinding: ItemPostBinding? = null,
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
@@ -43,6 +44,7 @@ class ItemPostView(
     private var listeners = mutableListOf<OnItemPostActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        null,
         context,
         attrs,
         defStyleAttr,
@@ -52,10 +54,37 @@ class ItemPostView(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+
+    constructor(
+        readyBinding: ItemPostBinding?,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(
+        readyBinding,
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(readyBinding: ItemPostBinding?, context: Context, attrs: AttributeSet?) : this(
+        readyBinding,
+        context,
+        attrs,
+        0
+    )
+
+    constructor(readyBinding: ItemPostBinding?, context: Context) : this(
+        readyBinding,
+        context,
+        null
+    )
+
     init {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.item_post, this, true)
-        binding = ItemPostBinding.bind(this)
+        binding = readyBinding ?: ItemPostBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
         initListeners()
     }
@@ -98,6 +127,18 @@ class ItemPostView(
         }
     }
 
+    fun getLikes(): String {
+        return likesCount
+    }
+
+    fun getIsLiked(): Boolean {
+        return isLiked
+    }
+
+    fun getIsAddedToFavs(): Boolean {
+        return isAddedToFavs
+    }
+
     // TODO временный метод. Нужно через setLikes после + ответа с сервера
     private fun toggleLike() {
         isLiked = !isLiked
@@ -132,6 +173,10 @@ class ItemPostView(
             binding.star.setImageResource(R.drawable.icon_star_unpressed)
             binding.star.setColorFilter(context.getColor(R.color.background_inverted))
         }
+    }
+
+    fun getBinding(): ItemPostBinding {
+        return binding
     }
 
     fun setText(text: String) {

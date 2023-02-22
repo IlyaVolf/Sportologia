@@ -125,7 +125,7 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
         viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
             val errorText =
                 when (it) {
-                    Error.EMPTY_POST -> getString(R.string.error_empty_post)
+                    ErrorType.EMPTY_POST -> getString(R.string.error_empty_post)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()

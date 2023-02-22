@@ -13,7 +13,7 @@ import androidx.viewbinding.ViewBinding
  * @property context [Context]
  * @property resources ресурсы приложения
  * */
-abstract class BaseViewHolder<T>(val itemViewBinding: ViewBinding) :
+abstract class BaseViewHolder<T>(private val itemViewBinding: ViewBinding) :
     RecyclerView.ViewHolder(itemViewBinding.root) {
 
     /**

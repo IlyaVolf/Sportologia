@@ -12,11 +12,9 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
-import com.thesis.sportologia.ui.apdaters.HomePagerAdapter
-import com.thesis.sportologia.ui.views.*
+import com.thesis.sportologia.ui.adapters.HomePagerAdapter
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URI
 
 @AndroidEntryPoint
 class ProfileOwnFragment : Fragment() {
