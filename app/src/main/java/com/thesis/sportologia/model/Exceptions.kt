@@ -6,6 +6,8 @@ open class AppException : RuntimeException {
     constructor(cause: Throwable) : super(cause)
 }
 
+class EmptyTextException() : AppException()
+
 class ConnectionException(cause: Throwable) : AppException(cause = cause)
 
 open class BackendException(

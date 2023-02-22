@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.thesis.sportologia.ui.views.ToolbarBasicView
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tb_toolbarLeftButton="@string/action_cancel"
@@ -23,6 +24,7 @@
             app:tb_toolbarTitle="@string/post_new" />
 
         <ScrollView
+            android:id="@+id/text_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -32,6 +34,7 @@
                 android:orientation="vertical">
 
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/text"
                     style="@style/TextStyleRegular"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,9 +50,20 @@
 
         </ScrollView>
 
+        <include
+            android:id="@+id/fcp_loading"
+            layout="@layout/view_loading"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/fcp_error"
+            layout="@layout/view_error"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <com.thesis.sportologia.ui.views.ButtonRoundView
+        android:id="@+id/add_photos_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_sides"

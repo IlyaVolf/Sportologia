@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.apdaters
+package com.thesis.sportologia.ui.base
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView

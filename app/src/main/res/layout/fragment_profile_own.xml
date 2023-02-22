@@ -295,65 +295,25 @@
             android:layout_width="match_parent"
             android:layout_height="10dp" />
 
-        <com.thesis.sportologia.ui.views.ContentTabsView
-            android:id="@+id/contentTabs"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:contentTabsActiveByDefault="1"
-            app:contentTabsButtonsNumber="3"
-            app:contentTabsCounterSupport="true"
-            app:contentTabsText1="@string/posts"
-            app:contentTabsText2="@string/services"
-            app:contentTabsText3="@string/events"
-            app:contentTabsTextSizeSp="12" />
+            android:layout_height="29dp"
+            app:tabIndicatorColor="@color/purple_dark"
+            app:tabSelectedTextColor="@color/background_inverted"
+            app:tabTextColor="@color/element_tertiary_inverted"
+            app:tabBackground="@color/background"
+            app:tabRippleColor="@color/purple_200"
+            app:tabIndicatorHeight="1dp"
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
+            app:tabTextAppearance="@style/TextStyleBold"/>
 
-        <com.thesis.sportologia.ui.views.ButtonBasicView
-            android:paddingHorizontal="@dimen/margin_sides"
-            android:id="@+id/create_post"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="37dp"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            app:icon="@drawable/icon_plus"
-            app:text="@string/create_post" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="8dp" />
-
-        <com.thesis.sportologia.ui.views.ItemPostView
-            android:id="@+id/item_post"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.thesis.sportologia.ui.views.ItemReviewView
-            android:id="@+id/item_review"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.thesis.sportologia.ui.views.ItemEventView
-            android:id="@+id/item_event"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.thesis.sportologia.ui.views.ItemServiceView
-            android:id="@+id/item_service"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:is_isMainPhotoSquareLimited="false" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </androidx.recyclerview.widget.RecyclerView>
+            android:background="@color/background" />
 
     </LinearLayout>
 

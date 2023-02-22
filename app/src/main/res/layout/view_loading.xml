@@ -4,6 +4,8 @@
     android:layout_height="match_parent">
 
     <ProgressBar
+        android:theme="@style/ProgressBarStyle"
+        android:progressTint="@color/purple_medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />

@@ -15,6 +15,7 @@
         android:background="@drawable/background_search" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/filter_button"
         style = "@style/ButtonStyleFilter"
         android:layout_margin="5dp"
         android:text="Фильтр"

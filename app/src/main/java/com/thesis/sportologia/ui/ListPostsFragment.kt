@@ -4,37 +4,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentSearchBinding
+import com.thesis.sportologia.databinding.FragmentListPostsBinding
+import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URI
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
-    private lateinit var binding: FragmentSearchBinding
+class ListPostsFragment : Fragment() {
+
+    private lateinit var binding: FragmentListPostsBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
-        binding.searchBar.filterButton.setOnClickListener {
-            onOpenFilterButtonPressed()
+        binding.createPostButton.setOnClickListener {
+            onCreatePostButtonPressed()
         }
 
         return binding.root
     }
 
-    private fun onOpenFilterButtonPressed() {
-        findTopNavController().navigate(R.id.filterFragment,
+    private fun onCreatePostButtonPressed() {
+        findTopNavController().navigate(R.id.create_post,
             null,
             navOptions {
-                // https://www.youtube.com/watch?v=lejBUeOSnf8
                 anim {
                     enter = R.anim.enter
                     exit = R.anim.exit
@@ -43,4 +45,5 @@ class SearchFragment : Fragment() {
                 }
             })
     }
+
 }

@@ -2,6 +2,7 @@ package com.thesis.sportologia.ui.apdaters
 
 import com.thesis.sportologia.databinding.ItemPhotoBinding
 import com.thesis.sportologia.model.entities.Photo
+import com.thesis.sportologia.ui.base.BaseViewHolder
 import com.thesis.sportologia.utils.loadImage
 
 class PhotoViewHolder(

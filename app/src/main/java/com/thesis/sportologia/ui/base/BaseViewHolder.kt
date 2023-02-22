@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.apdaters
+package com.thesis.sportologia.ui.base
 import android.content.Context
 import android.content.res.Resources
 import androidx.annotation.StringRes

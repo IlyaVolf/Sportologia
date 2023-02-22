@@ -7,15 +7,24 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
+import com.thesis.sportologia.ui.apdaters.HomePagerAdapter
 import com.thesis.sportologia.ui.views.*
+import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URI
 
 @AndroidEntryPoint
 class ProfileOwnFragment : Fragment() {
     private lateinit var binding: FragmentProfileOwnBinding
+
+    private lateinit var adapter: HomePagerAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,15 +44,19 @@ class ProfileOwnFragment : Fragment() {
             onOpenPhotosButtonPressed()
         }
 
-        val contentTabs = binding.root.findViewById<ContentTabsView>(R.id.contentTabs)
+        /*val createPostButton = binding.createPostButton.setOnClickListener{
+            onCreatePostButtonPressed()
+        }*/
+
+        /* val contentTabs = binding.root.findViewById<ContentTabsView>(R.id.contentTabs)
         contentTabs.setListener {
 
         }
 
         contentTabs.setButtonText(1, "Игорь")
-        contentTabs.setCount(1, 23)
+        contentTabs.setCount(1, 23)*/
 
-        val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
+        /*val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
         post.setListener { }
         post.setUsername("Игорь Чиёсов")
         post.setText("Привет")
@@ -75,13 +88,34 @@ class ProfileOwnFragment : Fragment() {
         service.setOrganizerName("Игорь Чиёсов")
         service.setDescription(getString(R.string.test_text))
         service.setPrice("4224", getString(R.string.ruble_abbreviation))
-        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))*/
+
+
+        ////////////////////////////
+
+        adapter = HomePagerAdapter(this)
+        viewPager = binding.pager
+        viewPager.adapter = adapter
+
+
+        tabLayout = binding.tabLayout
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.posts) // + "amount"
+                1 -> getString(R.string.services)
+                2 -> getString(R.string.events)
+                else -> ""
+            }
+        }.attach()
+
+        ///////////////////////////
 
         return binding.root
     }
 
     private fun onProfileSettingsButtonPressed() {
-        findNavController().navigate(R.id.action_profileOwnFragment_to_profileSettingsFragment,
+        findTopNavController().navigate(R.id.profileSettingsFragment,
             null,
             navOptions {
                 anim {

@@ -18,6 +18,7 @@
     <string name="action_next">Далее</string>
     <string name="action_back">Назад</string>
     <string name="action_ok">Ок</string>
+    <string name="action_delete">Удалить</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_create">Создать</string>
     <string name="action_subscribe">Подписаться</string>
@@ -175,6 +176,11 @@
     <string name="program_new">Новая программа</string>
     <string name="exercise_new">Новое упражнение</string>
     <string name="event_new">Новое мероприятие</string>
+
+    <!-- Create Post Page -->
+    <string name="ask_cancel_create_post">Отменить создание записи?</string>
+    <string name="ask_cancel_create_post_warning">Все изменения будут утеряны.</string>
+    <string name="error_empty_post">Ошибка: пустая запись</string>
 
     <!-- Create Event Page -->
     <string name="event_name">Название мероприятия</string>

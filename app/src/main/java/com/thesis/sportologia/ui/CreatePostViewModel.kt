@@ -1,0 +1,102 @@
+package com.thesis.sportologia.ui
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.thesis.sportologia.databinding.FragmentCreatePostBinding
+import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.EmptyTextException
+import com.thesis.sportologia.model.posts.PostsRepository
+import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.ui.base.BaseViewModel
+import com.thesis.sportologia.utils.*
+import com.thesis.sportologia.utils.logger.Logger
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.*
+import javax.inject.Inject
+
+@HiltViewModel
+class CreatePostViewModel @Inject constructor(
+    private val postsRepository: PostsRepository,
+    logger: Logger
+) : BaseViewModel(logger) {
+
+    // TODO
+    private val currentAccount = CurrentAccount()
+
+    private val _holder = ObservableHolder(DataHolder.ready(null))
+    val holder = _holder.share()
+
+    private val _toastMessageEvent = MutableLiveEvent<Error>()
+    val toastMessageEvent = _toastMessageEvent.share()
+
+    private val _goBackEvent = MutableUnitLiveEvent()
+    val goBackEvent = _goBackEvent.share()
+
+    fun createPost(text: String, photosUrls: List<String>) {
+
+        if (!validateText(text)) {
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Main) {
+                    _holder.value = DataHolder.loading()
+                }
+                postsRepository.createPost(
+                    Post(
+                        id = 3, // не тут надо создавать!
+                        authorId = currentAccount.id,
+                        profilePictureUrl = currentAccount.profilePictureUrl,
+                        text = text,
+                        likesCount = 0,
+                        isLiked = false,
+                        isAddedToFavourites = false,
+                        postedDate = Calendar.getInstance(), // по идее в самом коцне надо создавать!
+                        photosUrls = photosUrls
+                    )
+                )
+                withContext(Dispatchers.Main) {
+                    _holder.value = DataHolder.ready(null)
+                    goBack()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _holder.value = DataHolder.error(e)
+                }
+            }
+        }
+
+        return
+    }
+
+    private fun validateText(text: String) : Boolean {
+        if (text == "") {
+            _toastMessageEvent.publishEvent(Error.EMPTY_POST)
+            return false
+        }
+        return true
+    }
+
+    private fun goBack() = _goBackEvent.publishEvent()
+
+    data class CurrentAccount(
+        val id: Int = 0,
+        val profilePictureUrl: String = "https://i.imgur.com/tGbaZCY.jpg",
+    )
+
+}
+
+enum class Error {
+    EMPTY_POST
+}

@@ -123,4 +123,8 @@
         <item name="android:textSize">12sp</item>
     </style>
 
+    <style name="ProgressBarStyle">
+        <item name="colorAccent">@color/purple_dark</item>
+    </style>
+
 </resources>

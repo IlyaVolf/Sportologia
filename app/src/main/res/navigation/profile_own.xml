@@ -11,9 +11,6 @@
         android:label="fragment_profile_own"
         tools:layout="@layout/fragment_profile_own" >
         <action
-            android:id="@+id/action_profileOwnFragment_to_createPostFragment"
-            app:destination="@id/createPostFragment" />
-        <action
             android:id="@+id/action_profileOwnFragment_to_createEventFragment"
             app:destination="@id/createEventFragment" />
         <action
@@ -22,9 +19,6 @@
         <action
             android:id="@+id/action_profileOwnFragment_to_favouritesFragment"
             app:destination="@id/favouritesFragment" />
-        <action
-            android:id="@+id/action_profileOwnFragment_to_profileSettingsFragment"
-            app:destination="@id/profileSettingsFragment" />
         <action
             android:id="@+id/action_profileOwnFragment_to_followersFragment"
             app:destination="@id/followersFragment" />
@@ -40,11 +34,6 @@
         android:name="com.thesis.sportologia.ui.CreateEventFragment"
         android:label="fragment_create_event"
         tools:layout="@layout/fragment_create_event" />
-    <fragment
-        android:id="@+id/createPostFragment"
-        android:name="com.thesis.sportologia.ui.CreatePostFragment"
-        android:label="fragment_create_post"
-        tools:layout="@layout/fragment_create_post" />
     <fragment
         android:id="@+id/createServiceFragment"
         android:name="com.thesis.sportologia.ui.CreateServiceFragment"
@@ -85,15 +74,6 @@
         tools:layout="@layout/fragment_favourites" >
         <action
             android:id="@+id/action_favouritesFragment_to_profileOwnFragment"
-            app:destination="@id/profileOwnFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/profileSettingsFragment"
-        android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
-        android:label="fragment_profile_settings"
-        tools:layout="@layout/fragment_profile_settings" >
-        <action
-            android:id="@+id/action_profileSettingsFragment_to_profileOwnFragment"
             app:destination="@id/profileOwnFragment" />
     </fragment>
     <fragment
