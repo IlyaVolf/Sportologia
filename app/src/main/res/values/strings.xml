@@ -9,7 +9,7 @@
     <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
 
     <!-- Errors -->
-    <string name="error_default_load_error_body">Проверьте соединение с интернетом или зайдите позже</string>
+    <string name="error_default_load_error_body">Ошибка подключения: проверьте соединение с интернетом</string>
     <string name="error_loading">Ошибка при загрузке</string>
     <string name="error_date">Указана неверная дата</string>
 

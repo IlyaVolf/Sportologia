@@ -6,10 +6,12 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.thesis.sportologia.R
+import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.databinding.ViewPhotosBlockBinding
 import kotlin.properties.Delegates
 
 class PhotosBlockView(
+    readyBinding: ViewPhotosBlockBinding? = null,
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
@@ -33,6 +35,7 @@ class PhotosBlockView(
     private var photo10 by Delegates.notNull<Int>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        null,
         context,
         attrs,
         defStyleAttr,
@@ -42,10 +45,35 @@ class PhotosBlockView(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+    constructor(
+        readyBinding: ViewPhotosBlockBinding?,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(
+        readyBinding,
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(
+        readyBinding: ViewPhotosBlockBinding?,
+        context: Context,
+        attrs: AttributeSet?
+    ) : this(readyBinding, context, attrs, 0)
+
+    constructor(readyBinding: ViewPhotosBlockBinding?, context: Context) : this(
+        readyBinding,
+        context,
+        null
+    )
+
     init {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.view_photos_block, this, true)
-        binding = ViewPhotosBlockBinding.bind(this)
+        binding = readyBinding ?: ViewPhotosBlockBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -84,6 +112,9 @@ class PhotosBlockView(
         isMainPhotoSquareLimited = flag
     }
 
+    fun getPhotoNumber(): Int {
+        return photosNumber
+    }
 
     private fun drawPhotos() {
         binding.row1.visibility = GONE

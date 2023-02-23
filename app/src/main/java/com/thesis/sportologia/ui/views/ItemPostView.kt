@@ -1,5 +1,6 @@
 package com.thesis.sportologia.ui.views
 
+import android.app.AlertDialog
 import android.content.Context
 import android.media.Image
 import android.os.Parcel
@@ -11,6 +12,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.*
 import com.squareup.picasso.Picasso
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
 import java.net.URI
@@ -18,6 +20,7 @@ import kotlin.properties.Delegates
 
 
 typealias OnItemPostActionListener = (OnItemPostAction) -> Unit
+typealias OnMoreButtonActionListener = (OnItemPostAction) -> Unit
 
 enum class OnItemPostAction {
     HEADER_BLOCK,
@@ -25,6 +28,12 @@ enum class OnItemPostAction {
     LIKE,
     FAVS,
     MORE
+}
+
+enum class OnMoreButtonAction(val action: String) {
+    EDIT("Редактировать"),
+    DELETE("Удалить"),
+    REPORT( "Пожаловаться"),
 }
 
 class ItemPostView(
@@ -41,7 +50,14 @@ class ItemPostView(
     private var isLiked by Delegates.notNull<Boolean>()
     private var isAddedToFavs by Delegates.notNull<Boolean>()
 
-    private var listeners = mutableListOf<OnItemPostActionListener?>()
+    /*val actionsMore = if (item.authorId == CurrentAccount().id) {
+        arrayOf("Редактировать", "Удалить")
+    } else {
+        arrayOf("Пожаловаться")
+    }*/
+
+    private var onItemPostActionListeners = mutableListOf<OnItemPostActionListener?>()
+    private var onMoreButtonActionListeners = mutableListOf<OnMoreButtonActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
         null,
@@ -86,6 +102,7 @@ class ItemPostView(
         inflater.inflate(R.layout.item_post, this, true)
         binding = readyBinding ?: ItemPostBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
+        initRender()
         initListeners()
     }
 
@@ -100,6 +117,31 @@ class ItemPostView(
         binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
 
         typedArray.recycle()
+    }
+
+    private fun initRender() {
+        if (binding.photosBlock.getPhotoNumber() == 0) {
+            binding.photosBlockSpace.visibility = GONE
+        } else {
+            binding.photosBlockSpace.visibility = VISIBLE
+        }
+
+        binding.more2.setOnClickListener {
+            //createSpinnerDialog()
+        }
+    }
+
+    private fun createSpinnerDialog(actions: Array<String>) {
+        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
+        //builder.setTitle(context.getString(R.string.ask_cancel_create_post))
+        builder.setItems(actions
+        ) { dialog, which ->
+
+        }
+
+        val dialog: AlertDialog = builder.create()
+
+        dialog.show()
     }
 
     fun setLikes(likesCount: Int, isLiked: Boolean) {
@@ -203,52 +245,53 @@ class ItemPostView(
     fun setPhotos() {
     }
 
+
     private fun initListeners() {
         binding.headerBlock.setOnClickListener {
-            listeners.forEach { listener ->
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.HEADER_BLOCK)
             }
         }
 
         binding.text.setOnClickListener {
-            listeners.forEach { listener ->
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.HEADER_BLOCK)
             }
         }
 
         binding.like.setOnClickListener {
-            listeners.forEach { listener ->
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.LIKE)
                 toggleLike()
             }
         }
 
         binding.star.setOnClickListener {
-            listeners.forEach { listener ->
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.FAVS)
                 toggleFavs()
             }
         }
 
         binding.photosBlock.setOnClickListener {
-            listeners.forEach { listener ->
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.PHOTOS_BLOCK)
             }
         }
 
-        binding.more.setOnClickListener {
-            listeners.forEach { listener ->
+        binding.more2.setOnClickListener {
+            onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.MORE)
             }
         }
     }
 
     fun setListener(listener: OnItemPostActionListener?) {
-        listeners.add(listener)
+        onItemPostActionListeners.add(listener)
     }
 
     fun removeListener(listener: OnItemPostActionListener?) {
-        listeners.remove(listener)
+        onItemPostActionListeners.remove(listener)
     }
 
     // SAVE

@@ -1,41 +1,74 @@
 package com.thesis.sportologia.model.posts
 
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.posts.entities.Post
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class InMemoryPostsRepository @Inject constructor() : PostsRepository {
+class InMemoryPostsRepository @Inject constructor(
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+) :
+    PostsRepository {
+
+    val post = Post(
+        id = 0L,
+        authorId = 1,
+        authorName = "Игорь Чиёсов",
+        profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
+        text = "Hello!",
+        likesCount = 5,
+        isAuthorAthlete = true,
+        isLiked = true,
+        isAddedToFavourites = true,
+        postedDate = Calendar.getInstance(),
+        photosUrls = null
+    )
 
     private val posts = mutableListOf(
-        Post(
-            id = 0L,
-            authorId = 1,
-            authorName = "Игорь Чиёсов",
-            profilePictureUrl =  "https://i.imgur.com/tGbaZCY.jpg",
-            text = "Hello!",
-            likesCount = 5,
-            isAuthorAthlete = true,
-            isLiked = true,
-            isAddedToFavourites = true,
-            postedDate = Calendar.getInstance(),
-            photosUrls = null
-        ),
+        post,
         Post(
             id = 1L,
-            authorId =  2,
+            authorId = 2,
             authorName = "Андрей Вайс",
             profilePictureUrl = null,
             text = "Игорь любит Андрея",
-            likesCount= 0,
+            likesCount = 0,
             isAuthorAthlete = false,
             isLiked = false,
             isAddedToFavourites = false,
             postedDate = Calendar.getInstance(),
             photosUrls = null
-        )
+        ),
+        post.copy(id = 2L),
+        post.copy(id = 3L),
+        post.copy(id = 4L),
+        post.copy(id = 5L),
+        post.copy(id = 6L),
+        post.copy(id = 7L),
+        post.copy(id = 8L),
+        post.copy(id = 9L),
+        post.copy(id = 10L),
+        post.copy(id = 11L),
+        post.copy(id = 12L),
+        post.copy(id = 13L),
+        post.copy(id = 14L),
+        post.copy(id = 15L),
+        post.copy(id = 16L),
+        post.copy(id = 17L),
+        post.copy(id = 18L),
+        post.copy(id = 19L),
+        post.copy(id = 20L),
     )
 
     private val followersIds = mutableListOf(2, 3)
@@ -45,12 +78,51 @@ class InMemoryPostsRepository @Inject constructor() : PostsRepository {
         return posts.filter { it.authorId == userId }
     }
 
-    override suspend fun getUserSubscribedOnPosts(userId: Int): List<Post> {
+    suspend fun getUserPosts2(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
+        withContext(
+            ioDispatcher
+        ) {
+            delay(2000)
+
+            val offset = pageIndex * pageSize
+
+            val filteredPosts = posts.filter { it.authorId == userId }.reversed()
+
+            // TODO SORT BY DATE
+
+            if (offset >= filteredPosts.size) {
+                return@withContext listOf<Post>()
+            } else if (offset + pageSize >= filteredPosts.size) {
+                return@withContext filteredPosts.subList(offset, filteredPosts.size)
+            } else {
+                return@withContext filteredPosts.subList(offset, offset + pageSize)
+            }
+        }
+
+    override suspend fun getPagedUserPosts(userId: Int): Flow<PagingData<Post>> {
+        val loader: PostsPageLoader = { pageIndex, pageSize ->
+            getUserPosts2(pageIndex, pageSize, userId)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PostsPagingSource(loader, PAGE_SIZE) }
+        ).flow
+    }
+
+    override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {
         delay(1000)
         val res = mutableListOf<Post>()
 
-        followersIds.forEach {
-            res.addAll(getUserPosts(it))
+        followersIds.forEach { id ->
+            if (athTorgF == null) {
+                res.addAll(posts.filter { it.authorId == id })
+            } else {
+                res.addAll(posts.filter { it.authorId == id && it.isAuthorAthlete == athTorgF })
+            }
         }
 
         return res
@@ -99,5 +171,7 @@ class InMemoryPostsRepository @Inject constructor() : PostsRepository {
         updatePost(post.copy(isAddedToFavourites = false))
     }
 
-
+    private companion object {
+        const val PAGE_SIZE = 5
+    }
 }

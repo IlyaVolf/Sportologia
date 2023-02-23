@@ -7,10 +7,12 @@ import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseAdapter
 import com.thesis.sportologia.ui.base.BaseViewHolder
 import com.thesis.sportologia.ui.views.ItemPostView
-import com.thesis.sportologia.ui.views.OnItemPostAction
+import com.thesis.sportologia.ui.views.OnItemPostActionListener
+import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
 
 class PostAdapter(
-    private val onItemPostAction: OnItemPostAction
+    private val OnItemPostActionListener: OnItemPostActionListener,
+    private val onSpinnerMoreActionListener: OnSpinnerMoreActionListener,
 ) : BaseAdapter<BaseViewHolder<Post>, Post>() {
 
     override fun takeViewHolder(parent: ViewGroup): BaseViewHolder<Post> {
@@ -22,7 +24,7 @@ class PostAdapter(
 
         val itemPost = ItemPostView(viewBinding, parent.context)
 
-        return PostViewHolder(onItemPostAction, itemPost)
+        return PostViewHolder(OnItemPostActionListener, onSpinnerMoreActionListener, itemPost)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Post> =

@@ -129,6 +129,9 @@ class PhotosBlockPageView(
         }
     }
 
+    fun getPhotoNumber(): Int {
+        return photosNumber
+    }
 
     /*override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()!!

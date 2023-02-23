@@ -1,12 +1,16 @@
 package com.thesis.sportologia.model.posts
 
+import androidx.paging.PagingData
 import com.thesis.sportologia.model.posts.entities.Post
+import kotlinx.coroutines.flow.Flow
 
 interface PostsRepository {
 
     suspend fun getUserPosts(userId: Int): List<Post>
 
-    suspend fun getUserSubscribedOnPosts(userId: Int): List<Post>
+    suspend fun getPagedUserPosts(userId: Int): Flow<PagingData<Post>>
+
+    suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post>
 
     suspend fun getUserFavouritePosts(userId: Int): List<Post>
 

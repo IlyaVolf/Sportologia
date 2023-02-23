@@ -25,13 +25,18 @@
             app:text="@string/create_post" />
 
         <Space
-            android:id="@+id/space_list"
+            android:id="@+id/create_post_button_space"
             android:layout_width="match_parent"
             android:layout_height="8dp" />
 
         <include
             android:id="@+id/posts_filter"
             layout="@layout/view_content_filter" />
+
+        <Space
+            android:id="@+id/posts_filter_space"
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
 
         <TextView
             android:id="@+id/posts_empty_block"
@@ -46,21 +51,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
-            android:overScrollMode="never"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
             app:spanCount="1"
+            android:scrollbars="vertical"
             tools:listitem="@layout/item_post" />
 
     </LinearLayout>
 
     <include
-        android:id="@+id/flp_loading"
-        layout="@layout/view_loading"
-        android:visibility="gone" />
-
-    <include
-        android:id="@+id/flp_error"
-        layout="@layout/view_error"
-        android:visibility="gone" />
+        android:id="@+id/load_state_view"
+        layout="@layout/part_default_load_state" />
 
 </LinearLayout>
