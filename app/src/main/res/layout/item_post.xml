@@ -139,7 +139,7 @@
         app:pb_photo_8="@drawable/photo_house"
         app:pb_photo_9="@drawable/photo_house"
         app:pb_photo_10="@drawable/photo_mash"
-        app:pb_photosNumber="1" />
+        app:pb_photosNumber="0" />
 
     <Space
         android:id="@+id/photosBlockSpace"

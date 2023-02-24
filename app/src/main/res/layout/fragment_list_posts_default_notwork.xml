@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/flp_content"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <com.thesis.sportologia.ui.views.ButtonBasicView
+            android:id="@+id/create_post_button"
+            android:layout_width="match_parent"
+            android:layout_height="37dp"
+            android:paddingHorizontal="@dimen/margin_sides"
+            app:icon="@drawable/icon_plus"
+            app:text="@string/create_post" />
+
+        <Space
+            android:id="@+id/create_post_button_space"
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <include
+            android:id="@+id/posts_filter"
+            layout="@layout/view_content_filter" />
+
+        <Space
+            android:id="@+id/posts_filter_space"
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
+        <TextView
+            android:id="@+id/posts_empty_block"
+            style="@style/TextStyleSecondary"
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:gravity="center"
+            android:text="@string/posts_empty" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/posts_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="1"
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_post" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/load_state_view"
+        layout="@layout/part_default_load_state" />
+
+</LinearLayout>

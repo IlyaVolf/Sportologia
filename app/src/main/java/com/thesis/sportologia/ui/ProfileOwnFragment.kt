@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -15,6 +16,7 @@ import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
 import com.thesis.sportologia.ui.adapters.HomePagerAdapter
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class ProfileOwnFragment : Fragment() {
@@ -30,6 +32,7 @@ class ProfileOwnFragment : Fragment() {
     ): View {
         binding = FragmentProfileOwnBinding.inflate(inflater, container, false)
 
+
         val profileSettingsButton = binding.profileSettingsButton.setOnClickListener {
             onProfileSettingsButtonPressed()
         }
@@ -40,6 +43,10 @@ class ProfileOwnFragment : Fragment() {
 
         val openPhotosButton = binding.openPhotosButton.setOnClickListener {
             onOpenPhotosButtonPressed()
+        }
+
+        val openFollowingsButton = binding.followingsLayout.setOnClickListener {
+            onOpenFollowingsButton()
         }
 
         /*val createPostButton = binding.createPostButton.setOnClickListener{
@@ -96,6 +103,91 @@ class ProfileOwnFragment : Fragment() {
         viewPager.adapter = adapter
 
 
+        //val vp = ViewPager2ViewHeightAnimator()
+        /*adapter = HomePagerAdapter(this)
+        viewPager = binding.pager
+        viewPager.adapter = adapter*/
+
+        /*val viewPager = binding.pager
+        binding.pager.isNestedScrollingEnabled = false
+        viewPager.adapter = HomePagerAdapter2(childFragmentManager)*/
+
+        /*val pageAdapter = MyPagerAdapter(childFragmentManager)
+        viewPager = binding.pager
+        viewPager.adapter = pageAdapter*/
+
+        /*viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+
+            override fun onPageScrollStateChanged(state: Int) {
+            }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+            override fun onPageSelected(position: Int) {
+                viewPager.requestLayout()
+            }
+
+        })*/
+
+        //val tabLayout = binding.tabLayout
+        //tabLayout.setupWithViewPager(viewPager)
+
+        /*val viewTreeObserver: ViewTreeObserver = viewPager.viewTreeObserver
+        viewTreeObserver
+            .addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+                override fun onGlobalLayout() {
+                    val layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                    val viewPagerWidth: Int = viewPager.width
+                    val viewPagerHeight = (viewPagerWidth * 16f/9f) as Float
+                    layoutParams.width = viewPagerWidth
+                    layoutParams.height = viewPagerHeight.toInt()
+                    viewPager.layoutParams = layoutParams
+                    viewPager.viewTreeObserver
+                        .removeGlobalOnLayoutListener(this)
+                }
+            })*/
+
+        //vp.viewPager2 = viewPager
+
+        /*viewPager.registerOnPageChangeCallback(object :
+            ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+                if (position > 0 && positionOffset == 0.0f && positionOffsetPixels == 0) {
+                    viewPager.layoutParams.height = viewPager.getChildAt(0).height
+                }
+            }
+        })*/
+
+        /*viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                adapter.notifyDataSetChanged()
+            }
+        })*/
+
+        /*viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position,positionOffset,positionOffsetPixels)
+                if (position>0 && positionOffset==0.0f && positionOffsetPixels==0){
+                    viewPager.layoutParams.height =
+                        viewPager.getChildAt(0).height
+                }
+            }
+        })*/
+
         tabLayout = binding.tabLayout
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -126,7 +218,8 @@ class ProfileOwnFragment : Fragment() {
     }
 
     private fun onFavouritesButtonPressed() {
-        findNavController().navigate(R.id.action_profileOwnFragment_to_favouritesFragment,
+        findNavController().navigate(
+            R.id.action_profileOwnFragment_to_favouritesFragment,
             null,
             navOptions {
                 anim {
@@ -140,6 +233,19 @@ class ProfileOwnFragment : Fragment() {
 
     private fun onOpenPhotosButtonPressed() {
         findNavController().navigate(R.id.action_profileOwnFragment_to_photosFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
+
+    private fun onOpenFollowingsButton() {
+        findNavController().navigate(R.id.action_profileOwnFragment_to_listPostsFragment,
             null,
             navOptions {
                 anim {

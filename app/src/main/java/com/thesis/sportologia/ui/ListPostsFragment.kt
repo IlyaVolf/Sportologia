@@ -1,34 +1,21 @@
 package com.thesis.sportologia.ui
 
-import android.app.AlertDialog
-import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
-import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.views.OnItemPostAction
-import com.thesis.sportologia.ui.views.OnItemPostActionListener
-import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
-import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,12 +26,11 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.net.URI
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
+class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) {
 
     override val viewModel by viewModels<ListPostsViewModel>()
 
@@ -69,6 +55,11 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
     private fun setupUsersList() {
         val adapter = PostsPagerAdapter()
 
@@ -79,6 +70,14 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
 
         // combined adapter which shows both the list of posts + footer indicator when loading pages
         val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
+
+       // binding.postsList.isNestedScrollingEnabled = false // TODO
+
+        /*binding.postsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
+            }
+        })*/
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
         binding.postsList.adapter = adapterWithLoadState
@@ -93,7 +92,9 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
         observeLoadState(adapter)
 
         adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+            if (loadState.source.refresh is LoadState.NotLoading
+                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
+            ) {
                 binding.postsList.isVisible = false
                 binding.postsEmptyBlock.isVisible = true
             } else {
