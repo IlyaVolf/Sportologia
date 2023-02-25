@@ -33,21 +33,37 @@ class ProfileOwnFragment : Fragment() {
         binding = FragmentProfileOwnBinding.inflate(inflater, container, false)
 
 
-        val profileSettingsButton = binding.profileSettingsButton.setOnClickListener {
+        binding.profileSettingsButton.setOnClickListener {
             onProfileSettingsButtonPressed()
         }
 
-        val favouritesButton = binding.favouritesButton.setOnClickListener {
+        binding.favouritesButton.setOnClickListener {
             onFavouritesButtonPressed()
         }
 
-        val openPhotosButton = binding.openPhotosButton.setOnClickListener {
+        binding.openPhotosButton.setOnClickListener {
             onOpenPhotosButtonPressed()
         }
 
-        val openFollowingsButton = binding.followingsLayout.setOnClickListener {
+        binding.followingsLayout.setOnClickListener {
             onOpenFollowingsButton()
         }
+
+        val fragments = arrayListOf(ListPostsFragment(), ListServicesFragment(), ListEventsFragment())
+        adapter = HomePagerAdapter(this, fragments)
+        viewPager = binding.pager
+        viewPager.adapter = adapter
+
+        tabLayout = binding.tabLayout
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.posts) // + "amount"
+                1 -> getString(R.string.services)
+                2 -> getString(R.string.events)
+                else -> ""
+            }
+        }.attach()
 
         /*val createPostButton = binding.createPostButton.setOnClickListener{
             onCreatePostButtonPressed()
@@ -97,10 +113,6 @@ class ProfileOwnFragment : Fragment() {
 
 
         ////////////////////////////
-
-        adapter = HomePagerAdapter(this)
-        viewPager = binding.pager
-        viewPager.adapter = adapter
 
 
         //val vp = ViewPager2ViewHeightAnimator()
@@ -187,17 +199,6 @@ class ProfileOwnFragment : Fragment() {
                 }
             }
         })*/
-
-        tabLayout = binding.tabLayout
-
-        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.posts) // + "amount"
-                1 -> getString(R.string.services)
-                2 -> getString(R.string.events)
-                else -> ""
-            }
-        }.attach()
 
         ///////////////////////////
 

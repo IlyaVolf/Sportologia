@@ -7,16 +7,26 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentHomeBinding
+import com.thesis.sportologia.ui.adapters.HomePagerAdapter
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import java.net.URI
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+
+    private lateinit var adapter: HomePagerAdapter
+    private lateinit var viewPager: ViewPager2
+    private lateinit var tabLayout: TabLayout
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +40,21 @@ class HomeFragment : Fragment() {
                 OnToolbarHomeAction.RIGHT -> onSettingsPressed()
             }
         }
+
+        val fragments = arrayListOf(ListPostsFragment(), ListEventsFragment())
+        adapter = HomePagerAdapter(this, fragments)
+        viewPager = binding.pager
+        viewPager.adapter = adapter
+
+        tabLayout = binding.tabLayout
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when (position) {
+                0 -> getString(R.string.posts)
+                2 -> getString(R.string.events)
+                else -> ""
+            }
+        }.attach()
 
         return binding.root
     }

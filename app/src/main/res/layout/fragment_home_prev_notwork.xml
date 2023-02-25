@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thesis.sportologia.ui.HomeFragment">
+
+    <com.thesis.sportologia.ui.views.ToolbarHomeView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:th_toolbarAvatar="@drawable/avatar_photo"
+        app:th_toolbarRightButton="@drawable/icon_settings"
+        app:th_toolbarTitle="@string/home" />
+
+    <com.thesis.sportologia.ui.views.ContentTabsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentTabsActiveByDefault="2"
+        app:contentTabsButtonsNumber="2"
+        app:contentTabsSpinnerSupport="false"
+        app:contentTabsText1="@string/posts"
+        app:contentTabsText2="@string/events" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/margin_sides"
+                android:paddingVertical="6dp">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <com.thesis.sportologia.ui.views.SpinnerOnlyOutlinedView
+                    android:id="@+id/spinner"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    app:spinnerOnlyHint="Все"
+                    app:spinnerOnlyIsHintEnabled="false" />
+
+            </LinearLayout>
+
+            <com.thesis.sportologia.ui.views.ItemEventView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

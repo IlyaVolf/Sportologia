@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navOptions
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.R
@@ -45,12 +46,12 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
 
         setupUsersList()
 
-        binding.postsFilter.root.isVisible = false
+        /*binding.postsFilter.root.isVisible = false
         binding.postsFilterSpace.isVisible = false
 
         binding.createPostButton.setOnClickListener {
             onCreatePostButtonPressed()
-        }
+        }*/
 
         return binding.root
     }
@@ -71,7 +72,7 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
         // combined adapter which shows both the list of posts + footer indicator when loading pages
         val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
 
-       // binding.postsList.isNestedScrollingEnabled = false // TODO
+        // binding.postsList.isNestedScrollingEnabled = true // TODO
 
         /*binding.postsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -79,8 +80,11 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
             }
         })*/
 
+        val postsHeaderAdapter = PostsHeaderAdapter(this, PostsHeaderMode.OWN_PROFILE_PAGE)
+        val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
+
         binding.postsList.layoutManager = LinearLayoutManager(context)
-        binding.postsList.adapter = adapterWithLoadState
+        binding.postsList.adapter = concatAdapter
         (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
 
         mainLoadStateHolder = DefaultLoadStateAdapter.Holder(
@@ -95,9 +99,12 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
+                //postsHeaderAdapter.setIsEmptyResult(true)
+                //postsHeaderAdapter.notifyItemChanged(0)
                 binding.postsList.isVisible = false
                 binding.postsEmptyBlock.isVisible = true
             } else {
+                //postsHeaderAdapter.setIsEmptyResult(false)
                 binding.postsList.isVisible = true
                 binding.postsEmptyBlock.isVisible = false
             }

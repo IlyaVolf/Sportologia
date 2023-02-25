@@ -7,16 +7,17 @@ import com.thesis.sportologia.ui.ListPostsFragment
 import com.thesis.sportologia.ui.ListServicesFragment
 
 
-class HomePagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
+class HomePagerAdapter(fragment: Fragment, val fragments: ArrayList<Fragment>) : FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int = 3
+    override fun getItemCount(): Int = fragments.size
 
     override fun createFragment(position: Int): Fragment {
 
         return when (position) {
-            0 -> ListPostsFragment()
-            1 -> ListServicesFragment()
-            2 -> ListEventsFragment()
+            0 -> fragments[0]
+            1 -> fragments[1]
+            2 -> fragments[2]
+            3 -> fragments[3]
             else -> throw Exception()
         }
     }

@@ -1,74 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/posts_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:nestedScrollingEnabled="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:scrollbars="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:spanCount="1"
+        tools:listitem="@layout/item_post" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+    <TextView
+        android:id="@+id/posts_empty_block"
+        style="@style/TextStyleSecondary"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:gravity="center"
+        android:text="@string/posts_empty" />
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
+    <include
+        android:id="@+id/load_state_view"
+        layout="@layout/part_default_load_state" />
 
-            <com.thesis.sportologia.ui.views.ButtonBasicView
-                android:id="@+id/create_post_button"
-                android:layout_width="match_parent"
-                android:layout_height="37dp"
-                android:paddingHorizontal="@dimen/margin_sides"
-                app:icon="@drawable/icon_plus"
-                app:text="@string/create_post" />
-
-            <Space
-                android:id="@+id/create_post_button_space"
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <include
-                android:id="@+id/posts_filter"
-                layout="@layout/view_content_filter" />
-
-            <Space
-                android:id="@+id/posts_filter_space"
-                android:layout_width="match_parent"
-                android:layout_height="8dp" />
-
-            <TextView
-                android:id="@+id/posts_empty_block"
-                style="@style/TextStyleSecondary"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:gravity="center"
-                android:text="@string/posts_empty" />
-
-            <include
-                android:id="@+id/load_state_view"
-                layout="@layout/part_default_load_state" />
-
-        </LinearLayout>
-
-
-        <!-- RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/posts_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="true"
-            android:scrollbars="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
-            app:spanCount="1"
-            tools:listitem="@layout/item_post" />
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</LinearLayout>
