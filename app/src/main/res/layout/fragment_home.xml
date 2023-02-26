@@ -31,21 +31,21 @@
                     app:th_toolbarRightButton="@drawable/icon_settings"
                     app:th_toolbarTitle="@string/home" />
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tab_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="29dp"
-                    app:tabBackground="@color/background"
-                    app:tabIndicatorColor="@color/purple_dark"
-                    app:tabIndicatorHeight="1dp"
-                    app:tabRippleColor="@color/purple_200"
-                    app:tabSelectedTextColor="@color/background_inverted"
-                    app:tabTextAppearance="@style/TextStyleBold"
-                    app:tabTextColor="@color/element_tertiary_inverted" />
-
             </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="29dp"
+            android:backgroundTint="@color/background"
+            app:tabIndicatorColor="@color/purple_dark"
+            app:tabIndicatorHeight="1dp"
+            app:tabRippleColor="@color/purple_200"
+            app:tabSelectedTextColor="@color/background_inverted"
+            app:tabTextAppearance="@style/TextStyleBold"
+            app:tabTextColor="@color/element_tertiary_inverted" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

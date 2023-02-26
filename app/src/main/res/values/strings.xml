@@ -223,8 +223,11 @@
     <string name="exercise_reps_number_hint">Укажите число повторений</string>
     <string name="exercise_regularity_hint">Укажите регулярность</string>
 
-    <!-- Filter Page -->
+    <!-- Filters -->
     <string name="filter">Фильтр</string>
+    <string name="filter_posts_all">Все</string>
+    <string name="filter_posts_athletes">Спортсмены</string>
+    <string name="filter_posts_organizations">Организации</string>
 
     <!-- Settings Page -->
     <string name="settings">Настройки</string>

@@ -141,9 +141,9 @@ class ItemEventView(
         binding.description.text = text
     }
 
-    fun setAvatar(uriImage: URI) {
+    fun setAvatar(uriImage: String?) {
         Picasso.get()
-            .load(uriImage.toString())
+            .load(uriImage)
             .error(R.drawable.avatar)
             .into(binding.avatar)
     }

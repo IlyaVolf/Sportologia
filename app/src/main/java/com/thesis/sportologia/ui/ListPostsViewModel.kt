@@ -13,15 +13,18 @@ import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
-@HiltViewModel
 @FlowPreview
 @ExperimentalCoroutinesApi
-class ListPostsViewModel @Inject constructor(
+class ListPostsViewModel @AssistedInject constructor(
+    @Assisted private val mode: ListPostsMode,
     private val postsRepository: PostsRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -29,15 +32,28 @@ class ListPostsViewModel @Inject constructor(
     /*private val _posts = ObservableHolder<List<Post>>(DataHolder.loading())
     val posts = _posts.share()*/
 
-    private val currentAccountId = MutableLiveData(CurrentAccount().id)
+    private val search = MutableLiveData("")
 
-    val postsFlow: Flow<PagingData<Post>>
+    private val athTorgFLiveData = MutableLiveData<Boolean?>(null)
+    var athTorgF: Boolean?
+        get() = athTorgFLiveData.value
+        set(value) {
+            athTorgFLiveData.value = value
+        }
 
-    init {
-        postsFlow = currentAccountId.asFlow()
-            .flatMapLatest {
-                postsRepository.getPagedUserPosts(it)
-            }.cachedIn(viewModelScope)
+    val postsFlow: Flow<PagingData<Post>> = when (mode) {
+        ListPostsMode.PROFILE_OWN_PAGE -> {
+            athTorgFLiveData.asFlow()
+                .flatMapLatest {
+                    postsRepository.getPagedUserPosts(CurrentAccount().id)
+                }.cachedIn(viewModelScope)
+        }
+        ListPostsMode.HOME_PAGE -> {
+            athTorgFLiveData.asFlow()
+                .flatMapLatest {
+                    postsRepository.getPagedUserSubscribedOnPosts(CurrentAccount().id, athTorgF)
+                }.cachedIn(viewModelScope)
+        }
     }
 
     /*fun load() = viewModelScope.launch(Dispatchers.IO) {
@@ -52,5 +68,10 @@ class ListPostsViewModel @Inject constructor(
             }
         }
     }*/
+
+    @AssistedFactory
+    interface Factory {
+        fun create(mode: ListPostsMode): ListPostsViewModel
+    }
 
 }

@@ -19,6 +19,7 @@ import com.thesis.sportologia.databinding.ViewSpinnerOnlyOutlinedBinding
 typealias OnSpinnerOnlyOutlinedActionListener = (String) -> Unit
 
 class SpinnerOnlyOutlinedView @JvmOverloads constructor(
+    readyBinding: ViewSpinnerOnlyOutlinedBinding? = null,
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
@@ -40,6 +41,7 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
     private var isHintEnabled = false
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        null,
         context,
         attrs,
         defStyleAttr,
@@ -49,11 +51,39 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+
+    constructor(
+        readyBinding: ViewSpinnerOnlyOutlinedBinding?,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(
+        readyBinding,
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(readyBinding: ViewSpinnerOnlyOutlinedBinding?, context: Context, attrs: AttributeSet?) : this(
+        readyBinding,
+        context,
+        attrs,
+        0
+    )
+
+    constructor(readyBinding: ViewSpinnerOnlyOutlinedBinding?, context: Context) : this(
+        readyBinding,
+        context,
+        null
+    )
+
+
     init {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.view_spinner_only_outlined, this, true)
 
-        binding = ViewSpinnerOnlyOutlinedBinding.bind(this)
+        binding = readyBinding ?: ViewSpinnerOnlyOutlinedBinding.bind(this)
 
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }

@@ -2,12 +2,9 @@ package com.thesis.sportologia.ui.adapters
 
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.thesis.sportologia.ui.ListEventsFragment
-import com.thesis.sportologia.ui.ListPostsFragment
-import com.thesis.sportologia.ui.ListServicesFragment
 
 
-class HomePagerAdapter(fragment: Fragment, val fragments: ArrayList<Fragment>) : FragmentStateAdapter(fragment) {
+class PagerAdapter(fragment: Fragment, val fragments: ArrayList<Fragment>) : FragmentStateAdapter(fragment) {
 
     override fun getItemCount(): Int = fragments.size
 

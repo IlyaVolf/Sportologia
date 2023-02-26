@@ -12,6 +12,8 @@ interface PostsRepository {
 
     suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post>
 
+    suspend fun getPagedUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): Flow<PagingData<Post>>
+
     suspend fun getUserFavouritePosts(userId: Int): List<Post>
 
     suspend fun createPost(post: Post)

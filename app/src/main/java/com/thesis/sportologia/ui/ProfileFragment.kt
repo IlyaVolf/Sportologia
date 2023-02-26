@@ -39,7 +39,7 @@ class ProfileFragment : Fragment() {
         post.setText("Привет")
         post.setLikes(311331, true)
         post.setFavs(true)
-        post.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+        post.setAvatar("https://i.imgur.com/tGbaZCY.jpg")
 
 
         val review = binding.root.findViewById<ItemReviewView>(R.id.item_review)
@@ -48,7 +48,7 @@ class ProfileFragment : Fragment() {
         review.setTitle("Много воды")
         review.setDescription("Я Игорь, я люблю Андрея")
         review.setRating(2)
-        review.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+        review.setAvatar("https://i.imgur.com/tGbaZCY.jpg")
 
         val event = binding.root.findViewById<ItemEventView>(R.id.item_event)
         event.setListener {  }
@@ -57,7 +57,7 @@ class ProfileFragment : Fragment() {
         event.setOrganizerName("Игорь Чиёсов")
         event.setDescription(getString(R.string.test_text))
         event.setPrice("0", getString(R.string.ruble_abbreviation))
-        event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+        event.setAvatar("https://i.imgur.com/tGbaZCY.jpg")
 
         val service = binding.root.findViewById<ItemServiceView>(R.id.item_service)
         service.setListener {  }
@@ -65,7 +65,7 @@ class ProfileFragment : Fragment() {
         service.setOrganizerName("Игорь Чиёсов")
         service.setDescription(getString(R.string.test_text))
         service.setPrice("4224", getString(R.string.ruble_abbreviation))
-        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+        service.setAvatar("https://i.imgur.com/tGbaZCY.jpg")
 
         return binding.root
     }

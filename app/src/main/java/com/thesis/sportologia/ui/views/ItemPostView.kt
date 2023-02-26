@@ -11,6 +11,7 @@ import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.*
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
@@ -225,11 +226,21 @@ class ItemPostView(
         binding.text.text = text
     }
 
-    fun setAvatar(uriImage: URI) {
-        Picasso.get()
-            .load(uriImage.toString())
-            .error(R.drawable.avatar)
-            .into(binding.avatar)
+    fun setAvatar(uri: String?) {
+        if (uri != null) {
+            if (uri.isNotBlank()) {
+                Glide.with(context)
+                    .load(uri)
+                    .circleCrop()
+                    .placeholder(R.drawable.avatar)
+                    .error(R.drawable.avatar)
+                    .into(binding.avatar)
+            }
+        } else {
+            Glide.with(context)
+                .load(R.drawable.avatar)
+                .into(binding.avatar)
+        }
     }
 
     fun setUsername(username: String) {

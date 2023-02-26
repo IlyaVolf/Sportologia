@@ -26,7 +26,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     public MyPagerAdapter(FragmentManager fm) {
         super(fm);
         this.fragments = new ArrayList<Fragment>();
-        fragments.add(new ListPostsFragment());
+        //fragments.add(new ListPostsFragment());
         fragments.add(new ListServicesFragment());
         fragments.add(new ListEventsFragment());
     }

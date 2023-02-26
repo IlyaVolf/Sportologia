@@ -313,7 +313,7 @@
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="29dp"
-            app:tabBackground="@color/background"
+            android:backgroundTint="@color/background"
             app:tabIndicatorColor="@color/purple_dark"
             app:tabIndicatorHeight="1dp"
             app:tabRippleColor="@color/purple_200"

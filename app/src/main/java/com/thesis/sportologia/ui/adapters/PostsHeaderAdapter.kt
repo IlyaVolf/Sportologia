@@ -1,5 +1,6 @@
 package com.thesis.sportologia.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -9,16 +10,21 @@ import com.thesis.sportologia.utils.findTopNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsHeaderBinding
+import com.thesis.sportologia.ui.ListPostsMode
+import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 
 
-class PostsHeaderAdapter(val fragment: Fragment, private val mode: PostsHeaderMode) :
-    RecyclerView.Adapter<PostsHeaderAdapter.Holder>() {
+class PostsHeaderAdapter(
+    private val postsFilterListener: OnSpinnerOnlyOutlinedActionListener,
+    val fragment: Fragment,
+    private val mode: ListPostsMode
+) : RecyclerView.Adapter<PostsHeaderAdapter.Holder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = FragmentListPostsHeaderBinding.inflate(inflater, parent, false)
 
-        return Holder(fragment, mode, binding)
+        return Holder(postsFilterListener, fragment, mode, binding)
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -30,14 +36,16 @@ class PostsHeaderAdapter(val fragment: Fragment, private val mode: PostsHeaderMo
     }
 
     class Holder(
+        private val postsFilterListener: OnSpinnerOnlyOutlinedActionListener,
         val fragment: Fragment,
-        private val mode: PostsHeaderMode,
+        private val mode: ListPostsMode,
         private val viewBinding: FragmentListPostsHeaderBinding,
     ) : RecyclerView.ViewHolder(viewBinding.root) {
 
         fun bind() {
+
             when (mode) {
-                PostsHeaderMode.HOME_PAGE -> {
+                ListPostsMode.HOME_PAGE -> {
                     viewBinding.postsFilter.root.isVisible = true
                     viewBinding.postsFilterSpace.isVisible = true
 
@@ -47,8 +55,17 @@ class PostsHeaderAdapter(val fragment: Fragment, private val mode: PostsHeaderMo
                     viewBinding.createPostButton.setOnClickListener {
                         onCreatePostButtonPressed()
                     }
+
+                    viewBinding.postsFilter.spinner.initAdapter(
+                        listOf(
+                            fragment.context?.getString(R.string.filter_posts_all) ?: "",
+                            fragment.context?.getString(R.string.filter_posts_athletes) ?: "",
+                            fragment.context?.getString(R.string.filter_posts_organizations) ?: ""
+                        )
+                    )
+                    viewBinding.postsFilter.spinner.setListener(postsFilterListener)
                 }
-                PostsHeaderMode.OWN_PROFILE_PAGE -> {
+                ListPostsMode.PROFILE_OWN_PAGE -> {
                     viewBinding.postsFilter.root.isVisible = false
                     viewBinding.postsFilterSpace.isVisible = false
 
@@ -77,9 +94,4 @@ class PostsHeaderAdapter(val fragment: Fragment, private val mode: PostsHeaderMo
         }
 
     }
-}
-
-enum class PostsHeaderMode {
-    HOME_PAGE,
-    OWN_PROFILE_PAGE
 }

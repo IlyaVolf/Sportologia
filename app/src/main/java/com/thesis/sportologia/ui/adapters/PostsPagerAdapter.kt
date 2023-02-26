@@ -34,7 +34,7 @@ class PostsPagerAdapter : PagingDataAdapter<Post, PostsPagerAdapter.Holder>(Post
 
         itemPost.setText(item.text)
         itemPost.setUsername(item.authorName)
-        itemPost.setAvatar(URI(item.profilePictureUrl))
+        itemPost.setAvatar(item.profilePictureUrl)
         itemPost.setDate(parseDate(item.postedDate))
         itemPost.setLikes(item.likesCount, item.isLiked)
         itemPost.setPhotos()

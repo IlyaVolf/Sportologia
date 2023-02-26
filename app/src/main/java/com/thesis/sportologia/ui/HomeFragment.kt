@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,18 +13,16 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentHomeBinding
-import com.thesis.sportologia.ui.adapters.HomePagerAdapter
+import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import java.net.URI
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
 
-    private lateinit var adapter: HomePagerAdapter
+    private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
@@ -41,8 +40,11 @@ class HomeFragment : Fragment() {
             }
         }
 
-        val fragments = arrayListOf(ListPostsFragment(), ListEventsFragment())
-        adapter = HomePagerAdapter(this, fragments)
+        val fragments = arrayListOf(
+            ListPostsFragment.newInstance(ListPostsMode.HOME_PAGE),
+            ListEventsFragment()
+        )
+        adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
 
@@ -51,10 +53,12 @@ class HomeFragment : Fragment() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.posts)
-                2 -> getString(R.string.events)
+                1 -> getString(R.string.events)
                 else -> ""
             }
         }.attach()
+
+        Log.d("BUGFIX", "Listener: ${adapter.hashCode()}, ${viewPager.hashCode()}")
 
         return binding.root
     }

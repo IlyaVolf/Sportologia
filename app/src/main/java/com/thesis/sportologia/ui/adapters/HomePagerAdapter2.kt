@@ -16,7 +16,7 @@ class HomePagerAdapter2(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> ListPostsFragment()
+            //0 -> ListPostsFragment()
             1 -> ListServicesFragment()
             2 -> ListEventsFragment()
             else -> throw Exception()

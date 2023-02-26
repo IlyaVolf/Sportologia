@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,8 +18,10 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.simpleScan
+import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -27,16 +30,44 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.io.Serializable
+import javax.inject.Inject
+
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) {
+class ListPostsFragment :
+    BaseFragment(R.layout.fragment_list_posts_not_work_2) {
 
-    override val viewModel by viewModels<ListPostsViewModel>()
+    //constructor() : this(ListPostsMode.PROFILE_OWN_PAGE)
+
+    /*@Inject lateinit var factory: ListPostsViewModel.Factory
+
+    override val viewModel by viewModelCreator {
+        factory.create(mode)
+    }*/
+
+    @Inject lateinit var factory: ListPostsViewModel.Factory
+
+    private lateinit var mode: ListPostsMode
+
+    override val viewModel by viewModelCreator {
+        factory.create(mode)
+    }
 
     private lateinit var binding: FragmentListPostsBinding
     private lateinit var mainLoadStateHolder: DefaultLoadStateAdapter.Holder
+
+    companion object {
+        fun newInstance(mode: ListPostsMode): ListPostsFragment {
+            val myFragment = ListPostsFragment()
+            val args = Bundle()
+            args.putSerializable("mode", mode)
+            myFragment.arguments = args
+            return myFragment
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,14 +75,9 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
     ): View {
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
+        mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
+
         setupUsersList()
-
-        /*binding.postsFilter.root.isVisible = false
-        binding.postsFilterSpace.isVisible = false
-
-        binding.createPostButton.setOnClickListener {
-            onCreatePostButtonPressed()
-        }*/
 
         return binding.root
     }
@@ -72,15 +98,22 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
         // combined adapter which shows both the list of posts + footer indicator when loading pages
         val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
 
-        // binding.postsList.isNestedScrollingEnabled = true // TODO
-
-        /*binding.postsList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                if (dy != 0) onScrollChanged(UiAction.Scroll(currentQuery = uiState.value.query))
+        val postFilterListener: OnSpinnerOnlyOutlinedActionListener = {
+            Log.d("BUGFIX", "Listener: $it, $mode, ${viewModel.hashCode()}, ${this.hashCode()}")
+            when (it) {
+                getString(R.string.filter_posts_all) -> {
+                    viewModel.athTorgF = null
+                }
+                getString(R.string.filter_posts_athletes) -> {
+                    viewModel.athTorgF = true
+                }
+                getString(R.string.filter_posts_organizations) -> {
+                    viewModel.athTorgF = false
+                }
             }
-        })*/
+        }
 
-        val postsHeaderAdapter = PostsHeaderAdapter(this, PostsHeaderMode.OWN_PROFILE_PAGE)
+        val postsHeaderAdapter = PostsHeaderAdapter(postFilterListener, this, mode)
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
@@ -99,17 +132,18 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
-                //postsHeaderAdapter.setIsEmptyResult(true)
-                //postsHeaderAdapter.notifyItemChanged(0)
                 binding.postsList.isVisible = false
                 binding.postsEmptyBlock.isVisible = true
             } else {
-                //postsHeaderAdapter.setIsEmptyResult(false)
                 binding.postsList.isVisible = true
                 binding.postsEmptyBlock.isVisible = false
             }
         }
 
+        Log.d("BUGFIX", "Listener: $mode, ${viewModel.hashCode()}, ${this.hashCode()}," +
+                "${postsHeaderAdapter.hashCode()}, ${adapterWithLoadState.hashCode()}")
+
+        handleScrollingToTop(adapter)
         handleListVisibility(adapter)
     }
 
@@ -143,6 +177,18 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
                         || previous is LoadState.Error
                         || (beforePrevious is LoadState.Error && previous is LoadState.NotLoading
                         && current is LoadState.Loading)
+            }
+    }
+
+    private fun handleScrollingToTop(adapter: PostsPagerAdapter) = lifecycleScope.launch {
+        // list should be scrolled to the 1st item (index = 0) if data has been reloaded:
+        // (prev state = Loading, current state = NotLoading)
+        getRefreshLoadStateFlow(adapter)
+            .simpleScan(count = 2)
+            .collectLatest { (previousState, currentState) ->
+                if (previousState is LoadState.Loading && currentState is LoadState.NotLoading) {
+                    binding.postsList.scrollToPosition(0)
+                }
             }
     }
 
@@ -223,18 +269,9 @@ class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts_not_work_2) 
     }
 
     */
+}
 
-    private fun onCreatePostButtonPressed() {
-        findTopNavController().navigate(R.id.create_post,
-            null,
-            navOptions {
-                anim {
-                    enter = R.anim.enter
-                    exit = R.anim.exit
-                    popEnter = R.anim.pop_enter
-                    popExit = R.anim.pop_exit
-                }
-            })
-    }
-
+enum class ListPostsMode {
+    HOME_PAGE,
+    PROFILE_OWN_PAGE
 }

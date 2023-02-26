@@ -82,13 +82,15 @@ class InMemoryPostsRepository @Inject constructor(
         withContext(
             ioDispatcher
         ) {
-            delay(2000)
-
+            delay(1000)
             val offset = pageIndex * pageSize
 
             val filteredPosts = posts.filter { it.authorId == userId }.reversed()
 
             // TODO SORT BY DATE
+
+            // TODO
+            //throw Exception("a")
 
             if (offset >= filteredPosts.size) {
                 return@withContext listOf<Post>()
@@ -104,6 +106,8 @@ class InMemoryPostsRepository @Inject constructor(
             getUserPosts2(pageIndex, pageSize, userId)
         }
 
+        //delay(2000)
+
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
@@ -111,6 +115,55 @@ class InMemoryPostsRepository @Inject constructor(
             ),
             pagingSourceFactory = { PostsPagingSource(loader, PAGE_SIZE) }
         ).flow
+    }
+
+    override suspend fun getPagedUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): Flow<PagingData<Post>> {
+        val loader: PostsPageLoader = { pageIndex, pageSize ->
+            getUserSubscribedOnPosts2(pageIndex, pageSize, userId, athTorgF)
+        }
+
+        //delay(2000)
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PostsPagingSource(loader, PAGE_SIZE) }
+        ).flow
+    }
+
+    suspend fun getUserSubscribedOnPosts2(pageIndex: Int, pageSize: Int, userId: Int, athTorgF: Boolean?): List<Post> = withContext(
+    ioDispatcher
+    ) {
+        val res = mutableListOf<Post>()
+
+        delay(1000)
+
+        // TODO
+        //throw Exception("a")
+
+        val offset = pageIndex * pageSize
+
+        followersIds.forEach { id ->
+            if (athTorgF == null) {
+                res.addAll(posts.filter { it.authorId == id })
+            } else {
+                res.addAll(posts.filter { it.authorId == id && it.isAuthorAthlete == athTorgF })
+            }
+        }
+
+        // TODO МЕТОД ФИГНЯ
+
+        // TODO SORT BY DATE
+
+        if (offset >= res.size) {
+            return@withContext listOf<Post>()
+        } else if (offset + pageSize >= res.size) {
+            return@withContext res.subList(offset, res.size)
+        } else {
+            return@withContext res.subList(offset, offset + pageSize)
+        }
     }
 
     override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {

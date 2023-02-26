@@ -1,19 +1,20 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import androidx.viewpager.widget.ViewPager
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
-import com.thesis.sportologia.ui.adapters.HomePagerAdapter
+import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -22,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProfileOwnFragment : Fragment() {
     private lateinit var binding: FragmentProfileOwnBinding
 
-    private lateinit var adapter: HomePagerAdapter
+    private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
@@ -31,7 +32,6 @@ class ProfileOwnFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentProfileOwnBinding.inflate(inflater, container, false)
-
 
         binding.profileSettingsButton.setOnClickListener {
             onProfileSettingsButtonPressed()
@@ -49,8 +49,12 @@ class ProfileOwnFragment : Fragment() {
             onOpenFollowingsButton()
         }
 
-        val fragments = arrayListOf(ListPostsFragment(), ListServicesFragment(), ListEventsFragment())
-        adapter = HomePagerAdapter(this, fragments)
+        val fragments = arrayListOf(
+            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE),
+            ListServicesFragment(),
+            ListEventsFragment()
+        )
+        adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
 
@@ -64,6 +68,8 @@ class ProfileOwnFragment : Fragment() {
                 else -> ""
             }
         }.attach()
+
+        Log.d("BUGFIX", "Listener: ${adapter.hashCode()}, ${viewPager.hashCode()}")
 
         /*val createPostButton = binding.createPostButton.setOnClickListener{
             onCreatePostButtonPressed()
