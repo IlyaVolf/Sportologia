@@ -1,23 +1,23 @@
 package com.thesis.sportologia.ui
 
 import android.app.AlertDialog
-import android.app.DatePickerDialog
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreatePostBinding
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.dialogs.CancelDialog
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,7 +63,7 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
         builder.setTitle(getString(R.string.ask_cancel_create_post))
         builder.setMessage(getString(R.string.ask_cancel_create_post_warning))
         builder.setNegativeButton(getString(R.string.action_delete)) { dialog, _ ->
-            goBack()
+            goBack(false)
             dialog.cancel()
         }
         builder.setNeutralButton(getString(R.string.action_cancel)) { dialog, _ ->
@@ -113,12 +113,16 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
         }
     }
 
-    private fun goBack() {
+    private fun goBack(isCreated: Boolean) {
+        requireActivity().supportFragmentManager.setFragmentResult(
+            REQUEST_CODE,
+            bundleOf(IS_CREATED to isCreated)
+        )
         findNavController().navigateUp()
     }
 
     private fun observeGoBackEvent() = viewModel.goBackEvent.observeEvent(viewLifecycleOwner) {
-        goBack()
+        goBack(true)
     }
 
     private fun observeToastMessageEvent() =
@@ -130,4 +134,9 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
         }
+
+    companion object {
+        const val REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
+        const val IS_CREATED = "IS_CREATED"
+    }
 }

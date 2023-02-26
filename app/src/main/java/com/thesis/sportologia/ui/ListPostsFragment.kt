@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.navOptions
@@ -20,6 +23,7 @@ import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
+import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,17 +42,10 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 @FlowPreview
 class ListPostsFragment :
-    BaseFragment(R.layout.fragment_list_posts_not_work_2) {
+    BaseFragment(R.layout.fragment_list_posts) {
 
-    //constructor() : this(ListPostsMode.PROFILE_OWN_PAGE)
-
-    /*@Inject lateinit var factory: ListPostsViewModel.Factory
-
-    override val viewModel by viewModelCreator {
-        factory.create(mode)
-    }*/
-
-    @Inject lateinit var factory: ListPostsViewModel.Factory
+    @Inject
+    lateinit var factory: ListPostsViewModel.Factory
 
     private lateinit var mode: ListPostsMode
 
@@ -69,6 +66,7 @@ class ListPostsFragment :
         }
     }
 
+    // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -77,29 +75,48 @@ class ListPostsFragment :
 
         mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
 
-        setupUsersList()
+        setupPostsList()
+
+        observeErrorMessages()
+
+        processResults()
 
         return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.root.requestLayout()
+    private fun processResults() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreatePostFragment.REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val isCreated = data.getBoolean(CreatePostFragment.IS_CREATED)
+            if (isCreated) {
+                viewModel.onPostCreated()
+            }
+        }
     }
 
-    private fun setupUsersList() {
-        val adapter = PostsPagerAdapter()
+    /*override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }*/
+
+    // TODO save scroll position when navigating
+
+    private fun setupPostsList() {
+        val adapter = PostsPagerAdapter(this, mode, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
 
         val footerAdapter = DefaultLoadStateAdapter(tryAgainAction)
+        val headerAdapter = DefaultLoadStateAdapter(tryAgainAction)
 
         // combined adapter which shows both the list of posts + footer indicator when loading pages
-        val adapterWithLoadState = adapter.withLoadStateFooter(footerAdapter)
+        val adapterWithLoadState =
+            adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
         val postFilterListener: OnSpinnerOnlyOutlinedActionListener = {
-            Log.d("BUGFIX", "Listener: $it, $mode, ${viewModel.hashCode()}, ${this.hashCode()}")
             when (it) {
                 getString(R.string.filter_posts_all) -> {
                     viewModel.athTorgF = null
@@ -111,6 +128,7 @@ class ListPostsFragment :
                     viewModel.athTorgF = false
                 }
             }
+            viewModel.refresh()
         }
 
         val postsHeaderAdapter = PostsHeaderAdapter(postFilterListener, this, mode)
@@ -125,8 +143,10 @@ class ListPostsFragment :
             tryAgainAction
         )
 
+        observeErrorMessages()
         observePosts(adapter)
         observeLoadState(adapter)
+        observeInvalidationEvents(adapter)
 
         adapter.addLoadStateListener { loadState ->
             if (loadState.source.refresh is LoadState.NotLoading
@@ -139,9 +159,6 @@ class ListPostsFragment :
                 binding.postsEmptyBlock.isVisible = false
             }
         }
-
-        Log.d("BUGFIX", "Listener: $mode, ${viewModel.hashCode()}, ${this.hashCode()}," +
-                "${postsHeaderAdapter.hashCode()}, ${adapterWithLoadState.hashCode()}")
 
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
@@ -197,78 +214,18 @@ class ListPostsFragment :
             .map { it.refresh }
     }
 
-    // ----
-
-    /*private val onSpinnerMoreActionListener: OnSpinnerMoreActionListener = {
-        when (it) {
-            // ActionsMore.DELETE.action -> viewModel.
-            // ActionsMore.REPORT.action ->
+    private fun observeErrorMessages() {
+        viewModel.errorEvents.observeEvent(this) { messageRes ->
+            Toast.makeText(context, messageRes, Toast.LENGTH_SHORT).show()
         }
     }
 
-    private val onItemClick: OnItemPostActionListener = {
-        when(it) {
+    private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
+        viewModel.invalidateEvents.observeEvent(this) {
+            adapter.refresh()
         }
     }
 
-    private val adapter by lazy(LazyThreadSafetyMode.NONE) {
-        PostAdapter(onItemClick,onSpinnerMoreActionListener)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentListPostsBinding.bind(view)
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.createPostButton.setOnClickListener {
-            onCreatePostButtonPressed()
-        }
-    }
-
-    override fun observeViewModel() {
-        viewModel.posts.observe(viewLifecycleOwner) { holder ->
-            when (holder) {
-                DataHolder.LOADING -> {
-                    binding.flpLoading.root.visibility = VISIBLE
-                    binding.flpError.root.visibility = GONE
-                    binding.flpContent.visibility = GONE
-                }
-                is DataHolder.READY -> {
-                    initUIElements()
-
-                    binding.flpLoading.root.visibility = GONE
-                    binding.flpError.root.visibility = GONE
-                    binding.flpContent.visibility = VISIBLE
-
-                    if (holder.data.isEmpty()) {
-                        binding.postsEmptyBlock.visibility = VISIBLE
-                    } else {
-                        binding.postsEmptyBlock.visibility = GONE
-                    }
-
-                    binding.postsList.adapter = adapter
-                    adapter.setupItems(holder.data)
-                }
-                is DataHolder.ERROR -> {
-                    binding.flpLoading.root.visibility = GONE
-                    binding.flpError.root.visibility = VISIBLE
-                    binding.flpContent.visibility = GONE
-                }
-            }
-        }
-    }
-
-    override fun setupViews() {
-        super.setupViews()
-        binding.flpError.veTryAgain.setOnClickListener {
-            viewModel.load()
-        }
-    }
-
-    private fun initUIElements() {
-        binding.postsFilter.root.visibility = GONE
-    }
-
-    */
 }
 
 enum class ListPostsMode {

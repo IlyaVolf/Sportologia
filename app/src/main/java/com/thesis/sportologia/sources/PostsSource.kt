@@ -1,10 +1,10 @@
-package com.thesis.sportologia.model.posts
+package com.thesis.sportologia.sources
 
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.posts.entities.Post
 import kotlinx.coroutines.flow.Flow
 
-interface PostsRepository {
+interface PostsSource {
 
     // suspend fun getUserPosts(userId: Int): List<Post>
 
@@ -20,10 +20,10 @@ interface PostsRepository {
 
     suspend fun updatePost(post: Post)
 
-    suspend fun deletePost(postId: Long)
+    suspend fun deletePost(post: Post)
 
-    suspend fun setIsLiked(userId: Int, post: Post, isLiked: Boolean)
+    suspend fun setIfLiked(userId: Int, post: Post)
 
-    suspend fun setIsFavourite(userId: Int, post: Post, isFavourite: Boolean)
+    suspend fun setIfFavourite(userId: Int, post: Post, isFavourite: Boolean)
 
 }

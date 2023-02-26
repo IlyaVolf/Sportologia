@@ -9,7 +9,6 @@ typealias PostsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Post
 @Suppress("UnnecessaryVariable")
 class PostsPagingSource(
     private val loader: PostsPageLoader,
-    private val pageSize: Int
 ) : PagingSource<Int, Post>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {

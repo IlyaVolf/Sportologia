@@ -9,9 +9,11 @@
     <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
 
     <!-- Errors -->
+    <string name="error">Ошибка подключения</string>
     <string name="error_default_load_error_body">Ошибка подключения: проверьте соединение с интернетом</string>
     <string name="error_loading">Ошибка при загрузке</string>
     <string name="error_date">Указана неверная дата</string>
+    <string name="error_set_favorite">Не удалось добавить в избранное</string>
 
     <!-- Actions -->
     <string name="action_complete">Завершить</string>
@@ -19,6 +21,8 @@
     <string name="action_back">Назад</string>
     <string name="action_ok">Ок</string>
     <string name="action_delete">Удалить</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_report">Пожаловаться</string>
     <string name="action_cancel">Отмена</string>
     <string name="action_create">Создать</string>
     <string name="action_subscribe">Подписаться</string>

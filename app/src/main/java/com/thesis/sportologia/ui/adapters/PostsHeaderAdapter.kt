@@ -1,6 +1,5 @@
 package com.thesis.sportologia.ui.adapters
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -33,6 +32,19 @@ class PostsHeaderAdapter(
 
     override fun getItemCount(): Int {
         return 1
+    }
+
+    private fun onCreatePostButtonPressed() {
+        fragment.findTopNavController().navigate(R.id.create_post,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            })
     }
 
     class Holder(

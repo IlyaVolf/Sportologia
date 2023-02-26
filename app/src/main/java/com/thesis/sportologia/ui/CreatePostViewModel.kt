@@ -55,14 +55,14 @@ class CreatePostViewModel @Inject constructor(
                         likesCount = 0,
                         isAuthorAthlete = currentAccount.isAthlete,
                         isLiked = false,
-                        isAddedToFavourites = false,
+                        isFavourite = false,
                         postedDate = Calendar.getInstance(), // по идее в самом коцне надо создавать!
                         photosUrls = photosUrls
                     )
                 )
                 withContext(Dispatchers.Main) {
                     _holder.value = DataHolder.ready(null)
-                    goBack()
+                    goBack(true)
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -82,7 +82,7 @@ class CreatePostViewModel @Inject constructor(
         return true
     }
 
-    private fun goBack() = _goBackEvent.publishEvent()
+    private fun goBack(isCreated: Boolean) = _goBackEvent.publishEvent()
 
 }
 

@@ -205,7 +205,7 @@ class ItemPostView(
         }
     }
 
-    // TODO временный метод. Нужно через setFavs после + ответа с сервера
+    /*// TODO временный метод. Нужно через setFavs после + ответа с сервера
     private fun toggleFavs() {
         isAddedToFavs = !isAddedToFavs
 
@@ -216,7 +216,7 @@ class ItemPostView(
             binding.star.setImageResource(R.drawable.icon_star_unpressed)
             binding.star.setColorFilter(context.getColor(R.color.background_inverted))
         }
-    }
+    }*/
 
     fun getBinding(): ItemPostBinding {
         return binding
@@ -273,14 +273,14 @@ class ItemPostView(
         binding.like.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.LIKE)
-                toggleLike()
+                //toggleLike()
             }
         }
 
         binding.star.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.FAVS)
-                toggleFavs()
+                //toggleFavs()
             }
         }
 

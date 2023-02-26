@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.posts
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -21,7 +22,7 @@ class InMemoryPostsRepository @Inject constructor(
 ) :
     PostsRepository {
 
-    val post = Post(
+    val postSample = Post(
         id = 0L,
         authorId = 1,
         authorName = "Игорь Чиёсов",
@@ -30,13 +31,13 @@ class InMemoryPostsRepository @Inject constructor(
         likesCount = 5,
         isAuthorAthlete = true,
         isLiked = true,
-        isAddedToFavourites = true,
+        isFavourite = true,
         postedDate = Calendar.getInstance(),
         photosUrls = null
     )
 
     private val posts = mutableListOf(
-        post,
+        postSample,
         Post(
             id = 1L,
             authorId = 2,
@@ -46,37 +47,49 @@ class InMemoryPostsRepository @Inject constructor(
             likesCount = 0,
             isAuthorAthlete = false,
             isLiked = false,
-            isAddedToFavourites = false,
+            isFavourite = false,
             postedDate = Calendar.getInstance(),
             photosUrls = null
         ),
-        post.copy(id = 2L),
-        post.copy(id = 3L),
-        post.copy(id = 4L),
-        post.copy(id = 5L),
-        post.copy(id = 6L),
-        post.copy(id = 7L),
-        post.copy(id = 8L),
-        post.copy(id = 9L),
-        post.copy(id = 10L),
-        post.copy(id = 11L),
-        post.copy(id = 12L),
-        post.copy(id = 13L),
-        post.copy(id = 14L),
-        post.copy(id = 15L),
-        post.copy(id = 16L),
-        post.copy(id = 17L),
-        post.copy(id = 18L),
-        post.copy(id = 19L),
-        post.copy(id = 20L),
+        Post(
+            id = 2L,
+            authorId = 5,
+            authorName = "Никита Романов",
+            profilePictureUrl = null,
+            text = "Как же вы зодолбали",
+            likesCount = 1,
+            isAuthorAthlete = true,
+            isLiked = true,
+            isFavourite = true,
+            postedDate = Calendar.getInstance(),
+            photosUrls = null
+        ),
+        postSample.copy(id = 3L),
+        postSample.copy(id = 4L),
+        postSample.copy(id = 5L),
+        postSample.copy(id = 6L),
+        postSample.copy(id = 7L),
+        postSample.copy(id = 8L),
+        postSample.copy(id = 9L),
+        postSample.copy(id = 10L),
+        postSample.copy(id = 11L),
+        postSample.copy(id = 12L),
+        postSample.copy(authorName = "Антон Игорев", id = 13L, text = "abcdefghiklmnopqrstvuxwyz"),
+        postSample.copy(id = 14L),
+        postSample.copy(id = 15L),
+        postSample.copy(id = 16L),
+        postSample.copy(id = 17L),
+        postSample.copy(id = 18L),
+        postSample.copy(id = 19L),
+        postSample.copy(id = 20L),
     )
 
-    private val followersIds = mutableListOf(2, 3)
+    private val followersIds = mutableListOf(2, 3, 5)
 
-    override suspend fun getUserPosts(userId: Int): List<Post> {
+    /* override suspend fun getUserPosts(userId: Int): List<Post> {
         delay(1000)
         return posts.filter { it.authorId == userId }
-    }
+    } */
 
     suspend fun getUserPosts2(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
         withContext(
@@ -111,13 +124,18 @@ class InMemoryPostsRepository @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { PostsPagingSource(loader, PAGE_SIZE) }
+            pagingSourceFactory = { PostsPagingSource(loader) }
         ).flow
     }
 
-    override suspend fun getPagedUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): Flow<PagingData<Post>> {
+    override suspend fun getPagedUserSubscribedOnPosts(
+        userId: Int,
+        athTorgF: Boolean?
+    ): Flow<PagingData<Post>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             getUserSubscribedOnPosts2(pageIndex, pageSize, userId, athTorgF)
         }
@@ -127,14 +145,21 @@ class InMemoryPostsRepository @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { PostsPagingSource(loader, PAGE_SIZE) }
+            pagingSourceFactory = { PostsPagingSource(loader) }
         ).flow
     }
 
-    suspend fun getUserSubscribedOnPosts2(pageIndex: Int, pageSize: Int, userId: Int, athTorgF: Boolean?): List<Post> = withContext(
-    ioDispatcher
+    suspend fun getUserSubscribedOnPosts2(
+        pageIndex: Int,
+        pageSize: Int,
+        userId: Int,
+        athTorgF: Boolean?
+    ): List<Post> = withContext(
+        ioDispatcher
     ) {
         val res = mutableListOf<Post>()
 
@@ -166,7 +191,7 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {
+    /*override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {
         delay(1000)
         val res = mutableListOf<Post>()
 
@@ -179,11 +204,11 @@ class InMemoryPostsRepository @Inject constructor(
         }
 
         return res
-    }
+    }*/
 
     override suspend fun getUserFavouritePosts(userId: Int): List<Post> {
         delay(1000)
-        return posts.filter { it.authorId == userId && it.isAddedToFavourites }
+        return posts.filter { it.authorId == userId && it.isFavourite }
     }
 
     override suspend fun createPost(post: Post) {
@@ -195,16 +220,44 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun updatePost(post: Post) {
         delay(1000)
-        deletePost(post)
+        deletePost(post.id)
         createPost(post)
     }
 
-    override suspend fun deletePost(post: Post) {
+    override suspend fun deletePost(postId: Long) {
         delay(1000)
-        posts.removeIf { it.id == post.id }
+        Log.d("BUGFIX", "before ${posts.size} $postId")
+        posts.removeIf { it.id == postId }
+        Log.d("BUGFIX", "after ${posts.size}")
     }
 
-    override suspend fun likePost(userId: Int, post: Post) {
+    override suspend fun setIsLiked(userId: Int, post: Post, isLiked: Boolean) {
+        withContext(ioDispatcher) {
+            delay(1000)
+
+            val postInList = posts.find { it.id == post.id } ?: throw IllegalStateException()
+
+            postInList.isLiked = isLiked
+
+            if (isLiked) {
+                postInList.likesCount++
+            } else {
+                postInList.likesCount--
+            }
+        }
+    }
+
+    override suspend fun setIsFavourite(userId: Int, post: Post, isFavourite: Boolean) =
+        withContext(ioDispatcher) {
+            delay(1000)
+
+            // TODO
+            //throw Exception("a")
+
+            posts.find { it.id == post.id }?.isFavourite = isFavourite
+        }
+
+    /*override suspend fun likePost(userId: Int, post: Post) {
         delay(1000)
         updatePost(post.copy(isLiked = true, likesCount = post.likesCount + 1))
     }
@@ -222,9 +275,9 @@ class InMemoryPostsRepository @Inject constructor(
     override suspend fun removePostFromFavourites(userId: Int, post: Post) {
         delay(1000)
         updatePost(post.copy(isAddedToFavourites = false))
-    }
+    }*/
 
     private companion object {
-        const val PAGE_SIZE = 5
+        const val PAGE_SIZE = 6
     }
 }
