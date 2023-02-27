@@ -100,12 +100,28 @@ class ToolbarBasicView(
         }
     }
 
+    fun setLeftButtonText(text: String) {
+        binding.leftButton.text = text
+    }
+
+    fun setTitle(text: String) {
+        binding.title.text = text
+    }
+
+    fun setRightButtonText(text: String) {
+        binding.rightButton.text = text
+    }
+
     fun setListener(listener: OnToolbarBasicActionListener?) {
         listeners.add(listener)
     }
 
     fun removeListener(listener: OnToolbarBasicActionListener?) {
         listeners.remove(listener)
+    }
+
+    fun removeListeners() {
+        listeners.clear()
     }
 
 }

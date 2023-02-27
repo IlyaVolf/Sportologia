@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -31,6 +30,11 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
 
     private lateinit var binding: FragmentCreatePostBinding
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString(CreateEditPostFragment.TEXT_KEY, binding.text.text.toString())
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,6 +46,11 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
                 OnToolbarBasicAction.LEFT -> onCancelButtonPressed()
                 OnToolbarBasicAction.RIGHT -> onCreateButtonPressed()
             }
+        }
+
+        val savedText = savedInstanceState?.getString(CreateEditPostFragment.TEXT_KEY)
+        if (savedText != null) {
+            binding.text.setText(savedText)
         }
 
         observeGoBackEvent()
@@ -60,13 +69,13 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
 
     private fun createDialog() {
         val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        builder.setTitle(getString(R.string.ask_cancel_create_post))
-        builder.setMessage(getString(R.string.ask_cancel_create_post_warning))
+        builder.setTitle(getString(R.string.ask_cancel_post_warning))
+        //builder.setMessage(getString(R.string.ask_cancel_post_warning))
         builder.setNegativeButton(getString(R.string.action_delete)) { dialog, _ ->
             goBack(false)
             dialog.cancel()
         }
-        builder.setNeutralButton(getString(R.string.action_cancel)) { dialog, _ ->
+        builder.setNeutralButton(getString(R.string.action_back)) { dialog, _ ->
             dialog.cancel()
         }
         val dialog: AlertDialog = builder.create()
@@ -129,7 +138,7 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
         viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
             val errorText =
                 when (it) {
-                    ErrorType.EMPTY_POST -> getString(R.string.error_empty_post)
+                    CreatePostViewModel.ErrorType.EMPTY_POST -> getString(R.string.error_empty_post)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()

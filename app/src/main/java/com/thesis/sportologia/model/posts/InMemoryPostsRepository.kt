@@ -91,7 +91,7 @@ class InMemoryPostsRepository @Inject constructor(
         return posts.filter { it.authorId == userId }
     } */
 
-    suspend fun getUserPosts2(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
+    suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
         withContext(
             ioDispatcher
         ) {
@@ -116,7 +116,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun getPagedUserPosts(userId: Int): Flow<PagingData<Post>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserPosts2(pageIndex, pageSize, userId)
+            getUserPosts(pageIndex, pageSize, userId)
         }
 
         //delay(2000)
@@ -137,7 +137,7 @@ class InMemoryPostsRepository @Inject constructor(
         athTorgF: Boolean?
     ): Flow<PagingData<Post>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserSubscribedOnPosts2(pageIndex, pageSize, userId, athTorgF)
+            getUserSubscribedOnPosts(pageIndex, pageSize, userId, athTorgF)
         }
 
         //delay(2000)
@@ -153,7 +153,7 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    suspend fun getUserSubscribedOnPosts2(
+    suspend fun getUserSubscribedOnPosts(
         pageIndex: Int,
         pageSize: Int,
         userId: Int,
@@ -191,6 +191,60 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
+    override suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<Post>> {
+        val loader: PostsPageLoader = { pageIndex, pageSize ->
+            getUserFavouritePosts(pageIndex, pageSize, athTorgF)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { PostsPagingSource(loader) }
+        ).flow
+    }
+
+    override suspend fun getPost(postId: Long): Post? = withContext(ioDispatcher) {
+        delay(1000)
+
+        return@withContext if (posts.none { it.id == postId }) null else posts.filter { it.id == postId }[0]
+    }
+
+    suspend fun getUserFavouritePosts(
+        pageIndex: Int,
+        pageSize: Int,
+        athTorgF: Boolean?
+    ): List<Post> =
+        withContext(
+            ioDispatcher
+        ) {
+            delay(1000)
+            val offset = pageIndex * pageSize
+
+            // временный и корявый метод! Ибо тут не учитыааются пользователи
+            val filteredPosts = if (athTorgF != null) {
+                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }.reversed()
+            } else {
+                posts.filter { it.isFavourite }.reversed()
+            }
+
+            // TODO SORT BY DATE
+
+            // TODO
+            //throw Exception("a")
+
+            if (offset >= filteredPosts.size) {
+                return@withContext listOf<Post>()
+            } else if (offset + pageSize >= filteredPosts.size) {
+                return@withContext filteredPosts.subList(offset, filteredPosts.size)
+            } else {
+                return@withContext filteredPosts.subList(offset, offset + pageSize)
+            }
+        }
+
     /*override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {
         delay(1000)
         val res = mutableListOf<Post>()
@@ -206,11 +260,6 @@ class InMemoryPostsRepository @Inject constructor(
         return res
     }*/
 
-    override suspend fun getUserFavouritePosts(userId: Int): List<Post> {
-        delay(1000)
-        return posts.filter { it.authorId == userId && it.isFavourite }
-    }
-
     override suspend fun createPost(post: Post) {
         delay(1000)
         posts.add(post)
@@ -218,10 +267,14 @@ class InMemoryPostsRepository @Inject constructor(
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updatePost(post: Post) {
+    override suspend fun updatePost(editedPost: Post) {
         delay(1000)
-        deletePost(post.id)
-        createPost(post)
+
+        posts.find { it.id == editedPost.id }.apply {
+            this!!.text = editedPost.text
+            this.photosUrls = editedPost.photosUrls
+        }
+
     }
 
     override suspend fun deletePost(postId: Long) {

@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow
@@ -12,6 +13,7 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.ui.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.adapters.PostsPagerAdapter
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.entities.PostListItem
@@ -23,13 +25,14 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-@FlowPreview
-@ExperimentalCoroutinesApi
+// TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
 class ListPostsViewModel @AssistedInject constructor(
     @Assisted private val mode: ListPostsMode,
     private val postsRepository: PostsRepository,
     logger: Logger
-) : BaseViewModel(logger), PostsPagerAdapter.Listener {
+) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
+
+    // LiveData для Event (т.е. действий)
 
     private val search = MutableLiveData("")
 
@@ -68,6 +71,12 @@ class ListPostsViewModel @AssistedInject constructor(
                         postsRepository.getPagedUserSubscribedOnPosts(CurrentAccount().id, athTorgF)
                     }.cachedIn(viewModelScope)
             }
+            ListPostsMode.FAVOURITES_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserFavouritePosts(athTorgF)
+                    }.cachedIn(viewModelScope)
+            }
         }
 
         postsFlow = combine(
@@ -78,58 +87,72 @@ class ListPostsViewModel @AssistedInject constructor(
     }
 
     override fun onPostDelete(postListItem: PostListItem) {
-        if (isInProgress(postListItem)) return
+        if (isInProgress(postListItem.id)) return
 
         viewModelScope.launch {
             try {
-                setProgress(postListItem, true)
+                setProgress(postListItem.id, true)
                 delete(postListItem)
             } catch (e: Exception) {
                 showError(R.string.error)
             } finally {
-                setProgress(postListItem, false)
+                setProgress(postListItem.id, false)
             }
         }
     }
 
     override fun onToggleLike(postListItem: PostListItem) {
-        if (isInProgress(postListItem)) return
+        if (isInProgress(postListItem.id)) return
 
         viewModelScope.launch {
             try {
-                setProgress(postListItem, true)
+                setProgress(postListItem.id, true)
                 setLike(postListItem)
             } catch (e: Exception) {
                 showError(R.string.error)
             } finally {
-                setProgress(postListItem, false)
+                setProgress(postListItem.id, false)
             }
         }
     }
 
     override fun onToggleFavouriteFlag(postListItem: PostListItem) {
-        if (isInProgress(postListItem)) return
+        if (isInProgress(postListItem.id)) return
 
         viewModelScope.launch {
             try {
-                setProgress(postListItem, true)
+                setProgress(postListItem.id, true)
                 setFavoriteFlag(postListItem)
             } catch (e: Exception) {
                 showError(R.string.error)
             } finally {
-                setProgress(postListItem, false)
+                setProgress(postListItem.id, false)
             }
         }
+    }
+
+    override fun filterApply(athTorgF: Boolean?) {
+        this.athTorgF = athTorgF
+        refresh()
     }
 
     fun refresh() {
         this.search.postValue(this.search.value)
     }
 
+    fun onPostCreated() {
+        invalidateList()
+    }
+
+    fun onPostEdited() {
+        invalidateList()
+    }
+
     private suspend fun setLike(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isLiked
         postsRepository.setIsLiked(CurrentAccount().id, postListItem.post, newFlagValue)
         localChanges.isLikedFlags[postListItem.id] = newFlagValue
+        //localChanges.isTextFlags[postListItem.id] = postListItem.text + "asgagasagag"
         localChangesFlow.value = OnChange(localChanges)
     }
 
@@ -145,21 +168,17 @@ class ListPostsViewModel @AssistedInject constructor(
         invalidateList()
     }
 
-    fun onPostCreated() {
-        invalidateList()
-    }
-
-    private fun setProgress(postListItem: PostListItem, inProgress: Boolean) {
+    private fun setProgress(postListItemId: Long, inProgress: Boolean) {
         if (inProgress) {
-            localChanges.idsInProgress.add(postListItem.id)
+            localChanges.idsInProgress.add(postListItemId)
         } else {
-            localChanges.idsInProgress.remove(postListItem.id)
+            localChanges.idsInProgress.remove(postListItemId)
         }
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(postListItem: PostListItem) =
-        localChanges.idsInProgress.contains(postListItem.id)
+    private fun isInProgress(postListItemId: Long) =
+        localChanges.idsInProgress.contains(postListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
         _errorEvents.publishEvent(errorMessage)
@@ -173,12 +192,16 @@ class ListPostsViewModel @AssistedInject constructor(
         _invalidateEvents.publishEvent(Unit)
     }
 
-    private fun merge(posts: PagingData<Post>, localChanges: OnChange<LocalChanges>): PagingData<PostListItem> {
+    private fun merge(
+        posts: PagingData<Post>,
+        localChanges: OnChange<LocalChanges>
+    ): PagingData<PostListItem> {
         return posts
             .map { post ->
                 val isInProgress = localChanges.value.idsInProgress.contains(post.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[post.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
+                val localTextFlag = localChanges.value.isTextFlags[post.id]
 
                 val userWithLocalChanges = post
                 if (localFavoriteFlag != null) {
@@ -187,14 +210,13 @@ class ListPostsViewModel @AssistedInject constructor(
                 if (localLikedFlag != null) {
                     userWithLocalChanges.copy(isFavourite = localLikedFlag)
                 }
+                if (localTextFlag != null) {
+                    userWithLocalChanges.copy(text = localTextFlag)
+                }
+
 
                 PostListItem(userWithLocalChanges, isInProgress)
             }
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun create(mode: ListPostsMode): ListPostsViewModel
     }
 
     /**
@@ -211,8 +233,17 @@ class ListPostsViewModel @AssistedInject constructor(
      */
     class LocalChanges {
         val idsInProgress = mutableSetOf<Long>()
+        val isTextFlags = mutableMapOf<Long, String>()
+
+        // TODO фото
         val isLikedFlags = mutableMapOf<Long, Boolean>()
         val isFavouriteFlags = mutableMapOf<Long, Boolean>()
     }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(mode: ListPostsMode): ListPostsViewModel
+    }
+
 
 }

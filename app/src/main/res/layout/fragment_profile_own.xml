@@ -222,7 +222,7 @@
                             android:layout_height="37dp"
                             android:layout_weight="1"
                             app:icon="@drawable/icon_edit"
-                            app:text="@string/edit" />
+                            app:text="@string/edit_verb" />
 
                         <Space
                             android:id="@+id/space_2"

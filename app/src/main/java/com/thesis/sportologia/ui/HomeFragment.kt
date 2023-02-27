@@ -58,8 +58,6 @@ class HomeFragment : Fragment() {
             }
         }.attach()
 
-        Log.d("BUGFIX", "Listener: ${adapter.hashCode()}, ${viewPager.hashCode()}")
-
         return binding.root
     }
 

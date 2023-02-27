@@ -79,8 +79,8 @@
         android:label="fragment_favourites"
         tools:layout="@layout/fragment_favourites" >
         <action
-            android:id="@+id/action_favouritesFragment_to_profileOwnFragment"
-            app:destination="@id/profileOwnFragment" />
+            android:id="@+id/action_favouritesFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/followersFragment"
@@ -96,11 +96,7 @@
         android:id="@+id/photosFragment"
         android:name="com.thesis.sportologia.ui.PhotosFragment"
         android:label="fragment_photos"
-        tools:layout="@layout/fragment_photos" >
-        <action
-            android:id="@+id/action_photosFragment_to_profileOwnFragment"
-            app:destination="@id/profileOwnFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_photos" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.thesis.sportologia.ui.ProfileFragment"

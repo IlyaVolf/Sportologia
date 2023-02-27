@@ -1,18 +1,13 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -21,8 +16,6 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
-import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import com.thesis.sportologia.utils.viewModelCreator
@@ -37,12 +30,14 @@ import kotlinx.coroutines.launch
 import java.io.Serializable
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
 class ListPostsFragment :
     BaseFragment(R.layout.fragment_list_posts) {
+
+    // TODO save scroll position when navigating
+    // TODO avoid list invalidation when edited post
 
     @Inject
     lateinit var factory: ListPostsViewModel.Factory
@@ -57,6 +52,7 @@ class ListPostsFragment :
     private lateinit var mainLoadStateHolder: DefaultLoadStateAdapter.Holder
 
     companion object {
+        // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации
         fun newInstance(mode: ListPostsMode): ListPostsFragment {
             val myFragment = ListPostsFragment()
             val args = Bundle()
@@ -75,23 +71,32 @@ class ListPostsFragment :
 
         mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
 
-        setupPostsList()
+        initResultsProcessing()
+        initPostsList()
 
         observeErrorMessages()
-
-        processResults()
 
         return binding.root
     }
 
-    private fun processResults() {
+    private fun initResultsProcessing() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            CreatePostFragment.REQUEST_CODE,
+            CreateEditPostFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val isCreated = data.getBoolean(CreatePostFragment.IS_CREATED)
-            if (isCreated) {
+            val isSaved = data.getBoolean(CreateEditPostFragment.IS_CREATED)
+            if (isSaved) {
                 viewModel.onPostCreated()
+            }
+        }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditPostFragment.IS_EDITED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val isSaved = data.getBoolean(CreateEditPostFragment.IS_EDITED)
+            if (isSaved) {
+                viewModel.onPostEdited()
             }
         }
     }
@@ -101,9 +106,7 @@ class ListPostsFragment :
         binding.root.requestLayout()
     }*/
 
-    // TODO save scroll position when navigating
-
-    private fun setupPostsList() {
+    private fun initPostsList() {
         val adapter = PostsPagerAdapter(this, mode, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
@@ -116,22 +119,7 @@ class ListPostsFragment :
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val postFilterListener: OnSpinnerOnlyOutlinedActionListener = {
-            when (it) {
-                getString(R.string.filter_posts_all) -> {
-                    viewModel.athTorgF = null
-                }
-                getString(R.string.filter_posts_athletes) -> {
-                    viewModel.athTorgF = true
-                }
-                getString(R.string.filter_posts_organizations) -> {
-                    viewModel.athTorgF = false
-                }
-            }
-            viewModel.refresh()
-        }
-
-        val postsHeaderAdapter = PostsHeaderAdapter(postFilterListener, this, mode)
+        val postsHeaderAdapter = PostsHeaderAdapter(this, mode, viewModel)
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
@@ -203,7 +191,9 @@ class ListPostsFragment :
         getRefreshLoadStateFlow(adapter)
             .simpleScan(count = 2)
             .collectLatest { (previousState, currentState) ->
-                if (previousState is LoadState.Loading && currentState is LoadState.NotLoading) {
+                if (previousState is LoadState.Loading && currentState is LoadState.NotLoading
+                    && viewModel.scrollEvents.value?.get() != null
+                ) {
                     binding.postsList.scrollToPosition(0)
                 }
             }
@@ -230,5 +220,6 @@ class ListPostsFragment :
 
 enum class ListPostsMode {
     HOME_PAGE,
-    PROFILE_OWN_PAGE
+    PROFILE_OWN_PAGE,
+    FAVOURITES_PAGE
 }

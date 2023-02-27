@@ -60,6 +60,7 @@ class ProfileOwnFragment : Fragment() {
 
         tabLayout = binding.tabLayout
 
+        // TODO указать кол-во постов и т.п. через создание самой vm и соответ методов
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = when (position) {
                 0 -> getString(R.string.posts) // + "amount"
@@ -68,8 +69,6 @@ class ProfileOwnFragment : Fragment() {
                 else -> ""
             }
         }.attach()
-
-        Log.d("BUGFIX", "Listener: ${adapter.hashCode()}, ${viewPager.hashCode()}")
 
         /*val createPostButton = binding.createPostButton.setOnClickListener{
             onCreatePostButtonPressed()

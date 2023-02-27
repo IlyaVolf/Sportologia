@@ -47,7 +47,7 @@ class CreatePostViewModel @Inject constructor(
                 }
                 postsRepository.createPost(
                     Post(
-                        id = 3, // не тут надо создавать!
+                        id = -1, // не тут надо создавать!
                         authorName = currentAccount.userName,
                         authorId = currentAccount.id,
                         profilePictureUrl = currentAccount.profilePictureUrl,
@@ -62,7 +62,7 @@ class CreatePostViewModel @Inject constructor(
                 )
                 withContext(Dispatchers.Main) {
                     _holder.value = DataHolder.ready(null)
-                    goBack(true)
+                    goBack()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
@@ -82,10 +82,10 @@ class CreatePostViewModel @Inject constructor(
         return true
     }
 
-    private fun goBack(isCreated: Boolean) = _goBackEvent.publishEvent()
+    private fun goBack() = _goBackEvent.publishEvent()
 
-}
+    enum class ErrorType {
+        EMPTY_POST
+    }
 
-enum class ErrorType {
-    EMPTY_POST
 }

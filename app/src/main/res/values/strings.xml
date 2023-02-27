@@ -38,6 +38,7 @@
     <string name="action_apply">Применить</string>
     <string name="action_send">Отправить</string>
     <string name="action_save">Сохранить</string>
+    <string name="action_discard_changes">Отменить изменения</string>
 
     <!-- Categories -->
     <string name="category_running">Бег</string>
@@ -103,7 +104,7 @@
     <string name="events">Мероприятия</string>
 
     <!-- Own Profile Page -->
-    <string name="edit">Редактировать</string>
+    <string name="edit_verb">Редактировать</string>
     <string name="fav">Избранное</string>
     <string name="create_post">Создать запись</string>
     <string name="create_service">Создать услугу</string>
@@ -181,9 +182,15 @@
     <string name="exercise_new">Новое упражнение</string>
     <string name="event_new">Новое мероприятие</string>
 
-    <!-- Create Post Page -->
+    <!-- Create/Edit/Delete Post Page -->
+    <string name="editing">Редактирование</string>
+    <string name="post">Публикация</string>
+    <string name="edit_post">Редактировать запись</string>
+
     <string name="ask_cancel_create_post">Отменить создание записи?</string>
-    <string name="ask_cancel_create_post_warning">Все изменения будут утеряны.</string>
+    <string name="ask_cancel_edit_post">Отменить редактирование записи?</string>
+    <string name="ask_cancel_post_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_post_warning">Удалить запись?</string>
     <string name="error_empty_post">Ошибка: пустая запись</string>
 
     <!-- Create Event Page -->

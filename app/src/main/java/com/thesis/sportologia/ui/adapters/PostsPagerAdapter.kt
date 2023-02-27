@@ -3,9 +3,9 @@ package com.thesis.sportologia.ui.adapters
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -15,24 +15,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.ui.*
 import com.thesis.sportologia.ui.entities.PostListItem
 import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostAction
-import androidx.navigation.fragment.findNavController
-import com.thesis.sportologia.ui.ListPostsMode
+import com.thesis.sportologia.utils.ResourcesUtils.getString
+import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.parseDate
-import java.net.URI
 
 class PostsPagerAdapter(
     val fragment: Fragment,
     private val mode: ListPostsMode,
-    private val listener: Listener
+    private val listener: MoreButtonListener,
 ) : PagingDataAdapter<PostListItem, PostsPagerAdapter.Holder>(PostsDiffCallback()) {
 
     private lateinit var context: Context
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
+
+        Log.d("BUGFIX", "$position")
+
         val item = getItem(position) ?: return
 
         val itemPost = ItemPostView(holder.binding, context)
@@ -40,7 +42,7 @@ class PostsPagerAdapter(
         itemPost.setListener {
             when (it) {
                 OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressed()
-                OnItemPostAction.MORE -> createSpinnerDialog(listener, item)
+                OnItemPostAction.MORE -> createSpinnerDialog(item)
                 OnItemPostAction.LIKE -> listener.onToggleLike(item)
                 OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(item)
                 else -> {}
@@ -67,8 +69,29 @@ class PostsPagerAdapter(
         val binding: ItemPostBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
+    private fun createOnEditDialog(postListItem: PostListItem) {
+        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
+        builder.setMessage(getString(R.string.ask_delete_post_warning))
+        builder.setNegativeButton(getString(R.string.action_delete)) { dialog, _ ->
+            listener.onPostDelete(postListItem)
+        }
+        builder.setNeutralButton(getString(R.string.action_cancel)) { dialog, _ ->
+            dialog.cancel()
+        }
+        val dialog: AlertDialog = builder.create()
+
+        dialog.show()
+
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
+            .setTextColor(context.getColor(R.color.purple_medium))
+        dialog.getButton(DialogInterface.BUTTON_NEUTRAL)
+            .setTextColor(context.getColor(R.color.purple_medium))
+
+        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
+        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).isAllCaps = false
+    }
+
     private fun createSpinnerDialog(
-        listener: Listener,
         postListItem: PostListItem
     ) {
         val actionsMore = if (postListItem.authorId == CurrentAccount().id) {
@@ -78,15 +101,18 @@ class PostsPagerAdapter(
         }
 
         val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        //builder.setTitle(context.getString(R.string.ask_cancel_create_post))
         builder.setItems(
             actionsMore
         ) { dialog, which ->
             getItem(which)
             if (postListItem.authorId == CurrentAccount().id) {
                 when (which) {
-                    // 0 -> listener.onPostEdit(postListItem)
-                    1 -> listener.onPostDelete(postListItem)
+                    0 -> {
+                        onEditButtonPressed(postListItem.id)
+                    }
+                    1 -> {
+                        createOnEditDialog(postListItem)
+                    }
                 }
             } else {
                 // listener.onReport(postListItem)
@@ -98,11 +124,40 @@ class PostsPagerAdapter(
         dialog.show()
     }
 
+    private fun onEditButtonPressed(postId: Long) {
+        val direction = TabsFragmentDirections.actionTabsFragmentToEditPostFragment(
+            CreateEditPostFragment.PostId(postId)
+        )
+
+        fragment.findTopNavController().navigate(direction,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            })
+    }
+
     private fun onHeaderBlockPressed() {
         when (mode) {
             ListPostsMode.HOME_PAGE -> {
                 fragment.findNavController().navigate(
                     R.id.action_homeFragment_to_profileFragment,
+                    null,
+                    navOptions {
+                        anim {
+                            enter = R.anim.slide_in_right
+                            exit = R.anim.slide_out_left
+                            popEnter = R.anim.slide_in_left
+                            popExit = R.anim.slide_out_right
+                        }
+                    })
+            }
+            ListPostsMode.FAVOURITES_PAGE -> {
+                fragment.findNavController().navigate(
+                    R.id.action_favouritesFragment_to_profileFragment,
                     null,
                     navOptions {
                         anim {
@@ -129,7 +184,7 @@ class PostsPagerAdapter(
         }
     }
 
-    interface Listener {
+    interface MoreButtonListener {
         /**
          * Called when the user taps the "Delete" button in a list item
          */
@@ -144,6 +199,7 @@ class PostsPagerAdapter(
          * Called when the user taps the "Star" button in a list item.
          */
         fun onToggleLike(postListItem: PostListItem)
+
     }
 
 }
