@@ -87,31 +87,6 @@ class ListPostsFragment :
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
 
-        /*val llMarkerInfo = binding.postsList
-        val svMarker = binding.swipeRefreshLayout
-
-//First i register to the listener so I can get the measured size of the marker information's layout
-
-//First i register to the listener so I can get the measured size of the marker information's layout
-        val vto = llMarkerInfo.viewTreeObserver
-        vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
-            override fun onGlobalLayout() {
-
-                //I get the measured width and height of the marker information's layout
-                val width = llMarkerInfo.measuredWidth
-                val height = llMarkerInfo.measuredHeight
-
-                //Set that size to the SwipeToRefresh layout
-                val svParams = LinearLayout.LayoutParams(width, height)
-                svMarker.layoutParams = svParams
-
-                //Unregister the listener so is not called many times
-                if (Build.VERSION.SDK_INT < 16) llMarkerInfo.viewTreeObserver.removeGlobalOnLayoutListener(
-                    this
-                ) else llMarkerInfo.viewTreeObserver.removeOnGlobalLayoutListener(this)
-            }
-        })*/
-
         return binding.root
     }
 
@@ -167,7 +142,6 @@ class ListPostsFragment :
             binding.swipeRefreshLayout,
             tryAgainAction
         )
-
 
         return adapter
     }
