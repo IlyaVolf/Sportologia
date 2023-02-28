@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thesis.sportologia.databinding.PartDefaultLoadStateBinding
 
 /**
@@ -29,7 +30,7 @@ class DefaultLoadStateAdapter(
         val inflater = LayoutInflater.from(parent.context)
         val binding = PartDefaultLoadStateBinding.inflate(inflater, parent, false)
 
-        return Holder(binding, tryAgainAction)
+        return Holder(binding, null, tryAgainAction)
     }
 
     /**
@@ -39,6 +40,7 @@ class DefaultLoadStateAdapter(
      */
     class Holder(
         private val binding: PartDefaultLoadStateBinding,
+        private val swipeRefreshLayout: SwipeRefreshLayout?,
         private val tryAgainAction: TryAgainAction
     ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -48,7 +50,14 @@ class DefaultLoadStateAdapter(
 
         fun bind(loadState: LoadState) = with(binding) {
             flpError.root.isVisible = loadState is LoadState.Error
-            flpLoading.root.isVisible = loadState is LoadState.Loading
+
+            // если есть swipeRefreshLayout, то не зачем показывать свой flpLoading
+            if (swipeRefreshLayout != null) {
+                swipeRefreshLayout.isRefreshing = loadState is LoadState.Loading
+                flpLoading.root.isVisible = false
+            } else {
+                flpLoading.root.isVisible = loadState is LoadState.Loading
+            }
         }
     }
 

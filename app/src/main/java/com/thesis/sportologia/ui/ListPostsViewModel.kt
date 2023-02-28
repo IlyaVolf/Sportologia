@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui
 
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.asFlow

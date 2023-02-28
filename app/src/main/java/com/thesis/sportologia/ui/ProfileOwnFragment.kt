@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
@@ -33,6 +34,38 @@ class ProfileOwnFragment : Fragment() {
     ): View {
         binding = FragmentProfileOwnBinding.inflate(inflater, container, false)
 
+        initRender()
+        /*
+
+        val review = binding.root.findViewById<ItemReviewView>(R.id.item_review)
+        review.setListener { }
+        review.setUsername("Игорь Чиёсов")
+        review.setTitle("Много воды")
+        review.setDescription("Я Игорь, я люблю Андрея")
+        review.setRating(2)
+        review.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+
+        val event = binding.root.findViewById<ItemEventView>(R.id.item_event)
+        event.setListener { }
+        event.setLikes(25363636, true)
+        event.setFavs(false)
+        event.setOrganizerName("Игорь Чиёсов")
+        event.setDescription(getString(R.string.test_text))
+        event.setPrice("0", getString(R.string.ruble_abbreviation))
+        event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
+
+        val service = binding.root.findViewById<ItemServiceView>(R.id.item_service)
+        service.setListener { }
+        service.setFavs(false)
+        service.setOrganizerName("Игорь Чиёсов")
+        service.setDescription(getString(R.string.test_text))
+        service.setPrice("4224", getString(R.string.ruble_abbreviation))
+        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))*/
+
+        return binding.root
+    }
+
+    private fun initRender() {
         binding.profileSettingsButton.setOnClickListener {
             onProfileSettingsButtonPressed()
         }
@@ -69,54 +102,6 @@ class ProfileOwnFragment : Fragment() {
                 else -> ""
             }
         }.attach()
-
-        /*val createPostButton = binding.createPostButton.setOnClickListener{
-            onCreatePostButtonPressed()
-        }*/
-
-        /* val contentTabs = binding.root.findViewById<ContentTabsView>(R.id.contentTabs)
-        contentTabs.setListener {
-
-        }
-
-        contentTabs.setButtonText(1, "Игорь")
-        contentTabs.setCount(1, 23)*/
-
-        /*val post = binding.root.findViewById<ItemPostView>(R.id.item_post)
-        post.setListener { }
-        post.setUsername("Игорь Чиёсов")
-        post.setText("Привет")
-        post.setLikes(311331, true)
-        post.setFavs(true)
-        post.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
-
-
-        val review = binding.root.findViewById<ItemReviewView>(R.id.item_review)
-        review.setListener { }
-        review.setUsername("Игорь Чиёсов")
-        review.setTitle("Много воды")
-        review.setDescription("Я Игорь, я люблю Андрея")
-        review.setRating(2)
-        review.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
-
-        val event = binding.root.findViewById<ItemEventView>(R.id.item_event)
-        event.setListener { }
-        event.setLikes(25363636, true)
-        event.setFavs(false)
-        event.setOrganizerName("Игорь Чиёсов")
-        event.setDescription(getString(R.string.test_text))
-        event.setPrice("0", getString(R.string.ruble_abbreviation))
-        event.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))
-
-        val service = binding.root.findViewById<ItemServiceView>(R.id.item_service)
-        service.setListener { }
-        service.setFavs(false)
-        service.setOrganizerName("Игорь Чиёсов")
-        service.setDescription(getString(R.string.test_text))
-        service.setPrice("4224", getString(R.string.ruble_abbreviation))
-        service.setAvatar(URI("https://i.imgur.com/tGbaZCY.jpg"))*/
-
-        return binding.root
     }
 
     private fun onProfileSettingsButtonPressed() {

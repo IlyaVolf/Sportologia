@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -27,8 +28,8 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.io.Serializable
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
@@ -73,8 +74,7 @@ class ListPostsFragment :
 
         initResultsProcessing()
         initPostsList()
-
-        observeErrorMessages()
+        //initSwipeToRefresh()
 
         return binding.root
     }
@@ -128,6 +128,7 @@ class ListPostsFragment :
 
         mainLoadStateHolder = DefaultLoadStateAdapter.Holder(
             binding.loadStateView,
+            null,
             tryAgainAction
         )
 
@@ -140,6 +141,8 @@ class ListPostsFragment :
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
+                val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 200)
+                binding.postsList.layoutParams = lp
                 binding.postsList.isVisible = false
                 binding.postsEmptyBlock.isVisible = true
             } else {
@@ -151,6 +154,17 @@ class ListPostsFragment :
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
     }
+
+    /*private fun initSwipeToRefresh() {
+        if (mode != ListPostsMode.PROFILE_OWN_PAGE) {
+            binding.swipeRefreshLayout.isEnabled = true
+            binding.swipeRefreshLayout.setOnRefreshListener {
+                viewModel.refresh()
+            }
+        } else {
+            binding.swipeRefreshLayout.isEnabled = false
+        }
+    }*/
 
     private fun observePosts(adapter: PostsPagerAdapter) {
         lifecycleScope.launch {

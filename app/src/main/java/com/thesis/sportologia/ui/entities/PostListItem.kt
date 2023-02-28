@@ -13,7 +13,6 @@ data class PostListItem(
     val profilePictureUrl: String? get() = post.profilePictureUrl
     val text: String get() = post.text
     val likesCount: Int get() = post.likesCount
-    val isAuthorAthlete: Boolean get() = post.isAuthorAthlete
     val isLiked: Boolean get() = post.isLiked
     val isFavourite: Boolean get() = post.isFavourite
     val postedDate: Calendar get() = post.postedDate

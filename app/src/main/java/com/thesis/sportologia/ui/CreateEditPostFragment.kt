@@ -1,8 +1,5 @@
 package com.thesis.sportologia.ui
 
-import android.app.AlertDialog
-import android.content.DialogInterface.BUTTON_NEGATIVE
-import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +17,7 @@ import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
+import com.thesis.sportologia.utils.createSimpleDialog
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,27 +144,26 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
             Mode.EDIT -> getString(R.string.action_discard_changes)
         }
 
-        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        //builder.setTitle(getString(R.string.ask_cancel_post_warning))
-        builder.setMessage(messageText)
-        builder.setNegativeButton(negativeButtonText) { dialog, _ ->
-            goBack(false)
-            dialog.cancel()
-        }
-        builder.setNeutralButton(neutralButtonText) { dialog, _ ->
-            dialog.cancel()
-        }
-        val dialog: AlertDialog = builder.create()
-
-        dialog.show()
-
-        dialog.getButton(BUTTON_NEGATIVE)
-            .setTextColor(context!!.getColor(R.color.purple_medium))
-        dialog.getButton(BUTTON_NEUTRAL)
-            .setTextColor(context!!.getColor(R.color.purple_medium))
-
-        dialog.getButton(BUTTON_NEGATIVE).isAllCaps = false
-        dialog.getButton(BUTTON_NEUTRAL).isAllCaps = false
+        createSimpleDialog(
+            context!!,
+            null,
+            messageText,
+            negativeButtonText,
+            { dialog, _ ->
+                run {
+                    goBack(false)
+                    dialog.cancel()
+                }
+            },
+            neutralButtonText,
+            { dialog, _ ->
+                run {
+                    dialog.cancel()
+                }
+            },
+            null,
+            null,
+            )
     }
 
     override fun observeViewModel() {

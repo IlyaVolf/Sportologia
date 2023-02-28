@@ -1,9 +1,6 @@
 package com.thesis.sportologia.ui.adapters
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -19,9 +16,8 @@ import com.thesis.sportologia.ui.*
 import com.thesis.sportologia.ui.entities.PostListItem
 import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostAction
+import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.ResourcesUtils.getString
-import com.thesis.sportologia.utils.findTopNavController
-import com.thesis.sportologia.utils.parseDate
 
 class PostsPagerAdapter(
     val fragment: Fragment,
@@ -33,28 +29,26 @@ class PostsPagerAdapter(
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
-        Log.d("BUGFIX", "$position")
-
-        val item = getItem(position) ?: return
+        val postListItem = getItem(position) ?: return
 
         val itemPost = ItemPostView(holder.binding, context)
 
         itemPost.setListener {
             when (it) {
                 OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressed()
-                OnItemPostAction.MORE -> createSpinnerDialog(item)
-                OnItemPostAction.LIKE -> listener.onToggleLike(item)
-                OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(item)
+                OnItemPostAction.MORE -> onMoreButtonPressed(postListItem)
+                OnItemPostAction.LIKE -> listener.onToggleLike(postListItem)
+                OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(postListItem)
                 else -> {}
             }
         }
 
-        itemPost.setText(item.text)
-        itemPost.setUsername(item.authorName)
-        itemPost.setAvatar(item.profilePictureUrl)
-        itemPost.setDate(parseDate(item.postedDate))
-        itemPost.setLikes(item.likesCount, item.isLiked)
-        itemPost.setFavs(item.isFavourite)
+        itemPost.setText(postListItem.text)
+        itemPost.setUsername(postListItem.authorName)
+        itemPost.setAvatar(postListItem.profilePictureUrl)
+        itemPost.setDate(parseDate(postListItem.postedDate))
+        itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
+        itemPost.setFavs(postListItem.isFavourite)
         itemPost.setPhotos()
     }
 
@@ -70,58 +64,58 @@ class PostsPagerAdapter(
     ) : RecyclerView.ViewHolder(binding.root)
 
     private fun createOnEditDialog(postListItem: PostListItem) {
-        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        builder.setMessage(getString(R.string.ask_delete_post_warning))
-        builder.setNegativeButton(getString(R.string.action_delete)) { dialog, _ ->
-            listener.onPostDelete(postListItem)
-        }
-        builder.setNeutralButton(getString(R.string.action_cancel)) { dialog, _ ->
-            dialog.cancel()
-        }
-        val dialog: AlertDialog = builder.create()
-
-        dialog.show()
-
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE)
-            .setTextColor(context.getColor(R.color.purple_medium))
-        dialog.getButton(DialogInterface.BUTTON_NEUTRAL)
-            .setTextColor(context.getColor(R.color.purple_medium))
-
-        dialog.getButton(DialogInterface.BUTTON_NEGATIVE).isAllCaps = false
-        dialog.getButton(DialogInterface.BUTTON_NEUTRAL).isAllCaps = false
+        createSimpleDialog(
+            context,
+            null,
+            getString(R.string.ask_delete_post_warning),
+            getString(R.string.action_delete),
+            { _, _ ->
+                run {
+                    listener.onPostDelete(postListItem)
+                }
+            },
+            getString(R.string.action_cancel),
+            { dialog, _ ->
+                run {
+                    dialog.cancel()
+                }
+            },
+            null,
+            null,
+        )
     }
 
-    private fun createSpinnerDialog(
+    private fun onMoreButtonPressed(
         postListItem: PostListItem
     ) {
-        val actionsMore = if (postListItem.authorId == CurrentAccount().id) {
-            arrayOf("Редактировать", "Удалить")
-        } else {
-            arrayOf("Пожаловаться")
-        }
-
-        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        builder.setItems(
-            actionsMore
-        ) { dialog, which ->
-            getItem(which)
+        val actionsMore: Array<Pair<String, DialogOnClickAction?>> =
             if (postListItem.authorId == CurrentAccount().id) {
-                when (which) {
-                    0 -> {
-                        onEditButtonPressed(postListItem.id)
-                    }
-                    1 -> {
-                        createOnEditDialog(postListItem)
-                    }
-                }
+                arrayOf(
+                    Pair(
+                        "Редактировать"
+                    ) { _, _ ->
+                        run {
+                            onEditButtonPressed(postListItem.id)
+                        }
+                    },
+                    Pair("Удалить") { _, _ ->
+                        run {
+                            createOnEditDialog(postListItem)
+                        }
+                    },
+                )
             } else {
-                // listener.onReport(postListItem)
+                arrayOf(
+                    Pair("Пожаловаться") { _, _ -> }
+                )
             }
-        }
 
-        val dialog: AlertDialog = builder.create()
-
-        dialog.show()
+        createSpinnerDialog(
+            context,
+            null,
+            null,
+            actionsMore
+        )
     }
 
     private fun onEditButtonPressed(postId: Long) {

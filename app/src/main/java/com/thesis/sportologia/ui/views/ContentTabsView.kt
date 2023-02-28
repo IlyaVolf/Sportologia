@@ -359,8 +359,6 @@ class ContentTabsView(
 
         val savedActivatedButtonId = savedState.savedActivatedButtonId ?: 1
 
-        Log.d("BUGFIX", "HELLO")
-
         binding.text1.post {
             binding.text1.text = savedText1
         }

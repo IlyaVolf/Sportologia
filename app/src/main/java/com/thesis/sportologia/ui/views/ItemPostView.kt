@@ -126,23 +126,6 @@ class ItemPostView(
         } else {
             binding.photosBlockSpace.visibility = VISIBLE
         }
-
-        binding.more2.setOnClickListener {
-            //createSpinnerDialog()
-        }
-    }
-
-    private fun createSpinnerDialog(actions: Array<String>) {
-        val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
-        //builder.setTitle(context.getString(R.string.ask_cancel_create_post))
-        builder.setItems(actions
-        ) { dialog, which ->
-
-        }
-
-        val dialog: AlertDialog = builder.create()
-
-        dialog.show()
     }
 
     fun setLikes(likesCount: Int, isLiked: Boolean) {

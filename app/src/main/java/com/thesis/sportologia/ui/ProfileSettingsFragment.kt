@@ -27,10 +27,6 @@ class ProfileSettingsFragment : Fragment() {
         val spinnerBlockAccountType =
             binding.root.findViewById<SpinnerBasicView>(R.id.account_type)
 
-        Log.d("BUGFIX", "")
-
-        Log.d("BUGFIX", spinnerBlockAccountType.getCurrentAccountType())
-
         //updateLayout(CurrentAccountType.NONE)
 
         /*when (spinnerBlockAccountType.getCurrentAccountType()) {

@@ -103,7 +103,7 @@ class InMemoryPostsRepository @Inject constructor(
             // TODO SORT BY DATE
 
             // TODO
-            //throw Exception("a")
+            throw Exception("a")
 
             if (offset >= filteredPosts.size) {
                 return@withContext listOf<Post>()
@@ -279,9 +279,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun deletePost(postId: Long) {
         delay(1000)
-        Log.d("BUGFIX", "before ${posts.size} $postId")
         posts.removeIf { it.id == postId }
-        Log.d("BUGFIX", "after ${posts.size}")
     }
 
     override suspend fun setIsLiked(userId: Int, post: Post, isLiked: Boolean) {

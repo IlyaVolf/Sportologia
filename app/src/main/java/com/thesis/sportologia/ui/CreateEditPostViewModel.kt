@@ -51,7 +51,6 @@ class CreateEditPostViewModel @AssistedInject constructor(
     }
 
     fun onSaveButtonPressed(text: String, photosUrls: List<String>) {
-
         if (!validateText(text)) {
             return
         }
@@ -65,25 +64,28 @@ class CreateEditPostViewModel @AssistedInject constructor(
             goBack()
         }
 
+        val reformattedText = reformatText(text)
+
         lateinit var newPost: Post
         when (mode) {
             Mode.CREATE ->
-            newPost = Post(
-                id = -1, // не тут надо создавать!
-                authorName = currentAccount.userName,
-                authorId = currentAccount.id,
-                profilePictureUrl = currentAccount.profilePictureUrl,
-                text = text,
-                likesCount = 0,
-                isAuthorAthlete = currentAccount.isAthlete,
-                isLiked = false,
-                isFavourite = false,
-                postedDate = Calendar.getInstance(), // по идее в самом коцне надо создавать!
-                photosUrls = photosUrls
-            )
-            Mode.EDIT -> _postHolder.value!!.onReady {
-                newPost = it!!.copy(text = text, photosUrls = photosUrls)
-            }
+                newPost = Post(
+                    id = -1, // не тут надо создавать!
+                    authorName = currentAccount.userName,
+                    authorId = currentAccount.id,
+                    profilePictureUrl = currentAccount.profilePictureUrl,
+                    text = reformattedText,
+                    likesCount = 0,
+                    isAuthorAthlete = currentAccount.isAthlete,
+                    isLiked = false,
+                    isFavourite = false,
+                    postedDate = Calendar.getInstance(), // по идее в самом коцне надо создавать!
+                    photosUrls = photosUrls
+                )
+            Mode.EDIT ->
+                _postHolder.value!!.onReady {
+                    newPost = it!!.copy(text = reformattedText, photosUrls = photosUrls)
+                }
         }
 
         viewModelScope.launch(Dispatchers.IO) {
@@ -126,13 +128,22 @@ class CreateEditPostViewModel @AssistedInject constructor(
     }
 
     private fun validateText(text: String): Boolean {
-        // check whether text is empty
+        // check whether the text is empty
         if (text == "") {
             _toastMessageEvent.publishEvent(ErrorType.EMPTY_POST)
             return false
         }
 
         return true
+    }
+
+    private fun reformatText(text: String): String {
+        val newText = StringBuilder()
+
+        // remove empty strings at the start and at the end of the text
+        newText.append(removeEmptyStrings(text))
+
+        return newText.toString()
     }
 
     private fun goBack() = _goBackEvent.publishEvent()

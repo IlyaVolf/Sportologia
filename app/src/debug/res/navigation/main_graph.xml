@@ -33,9 +33,6 @@
             android:id="@+id/action_tabsFragment_to_profileSettingsFragment"
             app:destination="@id/profileSettingsFragment" />
         <action
-            android:id="@+id/action_tabsFragment_to_create_post"
-            app:destination="@id/create_post" />
-        <action
             android:id="@+id/action_tabsFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
         <action
@@ -52,7 +49,6 @@
         android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
         android:label="fragment_profile_settings"
         tools:layout="@layout/fragment_profile_settings" />
-    <include app:graph="@navigation/create_post" />
     <fragment
         android:id="@+id/filterFragment"
         android:name="com.thesis.sportologia.ui.FilterFragment"
