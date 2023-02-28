@@ -1,10 +1,12 @@
 package com.thesis.sportologia.ui
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -13,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.adapters.*
@@ -73,8 +76,41 @@ class ListPostsFragment :
         mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
 
         initResultsProcessing()
-        initPostsList()
-        //initSwipeToRefresh()
+        initSwipeToRefresh()
+        val adapter = initPostsList()
+
+        observeErrorMessages()
+        observePosts(adapter)
+        observeLoadState(adapter)
+        observeInvalidationEvents(adapter)
+
+        handleScrollingToTop(adapter)
+        handleListVisibility(adapter)
+
+        /*val llMarkerInfo = binding.postsList
+        val svMarker = binding.swipeRefreshLayout
+
+//First i register to the listener so I can get the measured size of the marker information's layout
+
+//First i register to the listener so I can get the measured size of the marker information's layout
+        val vto = llMarkerInfo.viewTreeObserver
+        vto.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+
+                //I get the measured width and height of the marker information's layout
+                val width = llMarkerInfo.measuredWidth
+                val height = llMarkerInfo.measuredHeight
+
+                //Set that size to the SwipeToRefresh layout
+                val svParams = LinearLayout.LayoutParams(width, height)
+                svMarker.layoutParams = svParams
+
+                //Unregister the listener so is not called many times
+                if (Build.VERSION.SDK_INT < 16) llMarkerInfo.viewTreeObserver.removeGlobalOnLayoutListener(
+                    this
+                ) else llMarkerInfo.viewTreeObserver.removeOnGlobalLayoutListener(this)
+            }
+        })*/
 
         return binding.root
     }
@@ -106,7 +142,7 @@ class ListPostsFragment :
         binding.root.requestLayout()
     }*/
 
-    private fun initPostsList() {
+    private fun initPostsList(): PostsPagerAdapter {
         val adapter = PostsPagerAdapter(this, mode, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
@@ -128,43 +164,24 @@ class ListPostsFragment :
 
         mainLoadStateHolder = DefaultLoadStateAdapter.Holder(
             binding.loadStateView,
-            null,
+            binding.swipeRefreshLayout,
             tryAgainAction
         )
 
-        observeErrorMessages()
-        observePosts(adapter)
-        observeLoadState(adapter)
-        observeInvalidationEvents(adapter)
 
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                val lp = RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, 200)
-                binding.postsList.layoutParams = lp
-                binding.postsList.isVisible = false
-                binding.postsEmptyBlock.isVisible = true
-            } else {
-                binding.postsList.isVisible = true
-                binding.postsEmptyBlock.isVisible = false
-            }
-        }
-
-        handleScrollingToTop(adapter)
-        handleListVisibility(adapter)
+        return adapter
     }
 
-    /*private fun initSwipeToRefresh() {
-        if (mode != ListPostsMode.PROFILE_OWN_PAGE) {
-            binding.swipeRefreshLayout.isEnabled = true
-            binding.swipeRefreshLayout.setOnRefreshListener {
-                viewModel.refresh()
-            }
-        } else {
-            binding.swipeRefreshLayout.isEnabled = false
-        }
-    }*/
+    private fun initSwipeToRefresh() {
+         if (mode != ListPostsMode.PROFILE_OWN_PAGE) {
+             binding.swipeRefreshLayout.isEnabled = true
+             binding.swipeRefreshLayout.setOnRefreshListener {
+                 viewModel.refresh()
+             }
+         } else {
+             binding.swipeRefreshLayout.isEnabled = false
+         }
+     }
 
     private fun observePosts(adapter: PostsPagerAdapter) {
         lifecycleScope.launch {
@@ -180,6 +197,18 @@ class ListPostsFragment :
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
                 // main indicator in the center of the screen
                 mainLoadStateHolder.bind(state.refresh)
+            }
+        }
+
+        adapter.addLoadStateListener { loadState ->
+            if (loadState.source.refresh is LoadState.NotLoading
+                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
+            ) {
+                binding.postsList.isVisible = false
+                binding.postsEmptyBlock.isVisible = true
+            } else {
+                binding.postsList.isVisible = true
+                binding.postsEmptyBlock.isVisible = false
             }
         }
     }

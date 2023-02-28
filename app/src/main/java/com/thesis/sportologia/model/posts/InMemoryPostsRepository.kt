@@ -91,7 +91,7 @@ class InMemoryPostsRepository @Inject constructor(
         return posts.filter { it.authorId == userId }
     } */
 
-    suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
+    private suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
         withContext(
             ioDispatcher
         ) {
@@ -103,7 +103,7 @@ class InMemoryPostsRepository @Inject constructor(
             // TODO SORT BY DATE
 
             // TODO
-            throw Exception("a")
+            // throw Exception("a")
 
             if (offset >= filteredPosts.size) {
                 return@withContext listOf<Post>()
@@ -153,7 +153,7 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    suspend fun getUserSubscribedOnPosts(
+    private suspend fun getUserSubscribedOnPosts(
         pageIndex: Int,
         pageSize: Int,
         userId: Int,
@@ -267,12 +267,12 @@ class InMemoryPostsRepository @Inject constructor(
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updatePost(editedPost: Post) {
+    override suspend fun updatePost(post: Post) {
         delay(1000)
 
-        posts.find { it.id == editedPost.id }.apply {
-            this!!.text = editedPost.text
-            this.photosUrls = editedPost.photosUrls
+        posts.find { it.id == post.id }.apply {
+            this!!.text = post.text
+            this.photosUrls = post.photosUrls
         }
 
     }

@@ -7,10 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"> -->
+        android:layout_height="match_parent">
+        
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/posts_list"
@@ -23,19 +27,28 @@
             app:spanCount="1"
             tools:listitem="@layout/item_post" />
 
-    <!-- </androidx.swiperefreshlayout.widget.SwipeRefreshLayout> -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp">
 
-    <TextView
-        android:id="@+id/posts_empty_block"
-        style="@style/TextStyleSecondary"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:gravity="center"
-        android:visibility="gone"
-        android:text="@string/posts_empty" />
+                <TextView
+                    android:id="@+id/posts_empty_block"
+                    style="@style/TextStyleSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="@string/posts_empty" />
 
-    <include
-        android:id="@+id/load_state_view"
-        layout="@layout/part_default_load_state" />
+                <include
+                    android:id="@+id/load_state_view"
+                    layout="@layout/part_default_load_state" />
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
