@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostsRepository {
 
-    suspend fun getPagedUserPosts(userId: Int): Flow<PagingData<Post>>
+    suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>>
 
-    suspend fun getPagedUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): Flow<PagingData<Post>>
+    suspend fun getPagedUserSubscribedOnPosts(userId: String, athTorgF: Boolean?): Flow<PagingData<Post>>
 
     suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<Post>>
 
@@ -20,8 +20,8 @@ interface PostsRepository {
 
     suspend fun deletePost(postId: Long)
 
-    suspend fun setIsLiked(userId: Int, post: Post, isLiked: Boolean)
+    suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean)
 
-    suspend fun setIsFavourite(userId: Int, post: Post, isFavourite: Boolean)
+    suspend fun setIsFavourite(userId: String, post: Post, isFavourite: Boolean)
 
 }

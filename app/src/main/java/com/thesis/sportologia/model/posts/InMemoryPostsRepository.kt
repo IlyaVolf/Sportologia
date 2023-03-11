@@ -24,7 +24,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     val postSample = Post(
         id = 0L,
-        authorId = 1,
+        authorId = "1",
         authorName = "Игорь Чиёсов",
         profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
         text = "Hello!",
@@ -40,7 +40,7 @@ class InMemoryPostsRepository @Inject constructor(
         postSample,
         Post(
             id = 1L,
-            authorId = 2,
+            authorId = "2",
             authorName = "Андрей Вайс",
             profilePictureUrl = null,
             text = "Игорь любит Андрея",
@@ -53,7 +53,7 @@ class InMemoryPostsRepository @Inject constructor(
         ),
         Post(
             id = 2L,
-            authorId = 5,
+            authorId = "5",
             authorName = "Никита Романов",
             profilePictureUrl = null,
             text = "Как же вы зодолбали",
@@ -82,16 +82,23 @@ class InMemoryPostsRepository @Inject constructor(
         postSample.copy(id = 18L),
         postSample.copy(id = 19L),
         postSample.copy(id = 20L),
+        postSample.copy(id = 21L),
+        postSample.copy(id = 22L),
+        postSample.copy(id = 23L),
+        postSample.copy(id = 24L),
+        postSample.copy(id = 25L),
+
     )
 
-    private val followersIds = mutableListOf(2, 3, 5)
+    private val followersIds = mutableListOf("2", "3", "5")
 
     /* override suspend fun getUserPosts(userId: Int): List<Post> {
         delay(1000)
         return posts.filter { it.authorId == userId }
     } */
 
-    private suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: Int): List<Post> =
+
+    private suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: String): List<Post> =
         withContext(
             ioDispatcher
         ) {
@@ -103,7 +110,7 @@ class InMemoryPostsRepository @Inject constructor(
             // TODO SORT BY DATE
 
             // TODO
-            // throw Exception("a")
+               // throw Exception("a")
 
             if (offset >= filteredPosts.size) {
                 return@withContext listOf<Post>()
@@ -114,7 +121,7 @@ class InMemoryPostsRepository @Inject constructor(
             }
         }
 
-    override suspend fun getPagedUserPosts(userId: Int): Flow<PagingData<Post>> {
+    override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             getUserPosts(pageIndex, pageSize, userId)
         }
@@ -133,7 +140,7 @@ class InMemoryPostsRepository @Inject constructor(
     }
 
     override suspend fun getPagedUserSubscribedOnPosts(
-        userId: Int,
+        userId: String,
         athTorgF: Boolean?
     ): Flow<PagingData<Post>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
@@ -156,7 +163,7 @@ class InMemoryPostsRepository @Inject constructor(
     private suspend fun getUserSubscribedOnPosts(
         pageIndex: Int,
         pageSize: Int,
-        userId: Int,
+        userId: String,
         athTorgF: Boolean?
     ): List<Post> = withContext(
         ioDispatcher
@@ -282,7 +289,7 @@ class InMemoryPostsRepository @Inject constructor(
         posts.removeIf { it.id == postId }
     }
 
-    override suspend fun setIsLiked(userId: Int, post: Post, isLiked: Boolean) {
+    override suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean) {
         withContext(ioDispatcher) {
             delay(1000)
 
@@ -298,7 +305,7 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
-    override suspend fun setIsFavourite(userId: Int, post: Post, isFavourite: Boolean) =
+    override suspend fun setIsFavourite(userId: String, post: Post, isFavourite: Boolean) =
         withContext(ioDispatcher) {
             delay(1000)
 

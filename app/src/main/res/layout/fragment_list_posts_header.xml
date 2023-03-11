@@ -35,6 +35,6 @@
 
     <include
         android:id="@+id/load_state_view"
-        layout="@layout/part_default_load_state" />
+        layout="@layout/view_load_state" />
 
 </LinearLayout>

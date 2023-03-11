@@ -13,9 +13,12 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.posts.ListPostsFragment
+import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -83,7 +86,7 @@ class ProfileOwnFragment : Fragment() {
         }
 
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE),
+            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE, CurrentAccount().id),
             ListServicesFragment(),
             ListEventsFragment()
         )

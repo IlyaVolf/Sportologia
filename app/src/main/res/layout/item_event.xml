@@ -316,7 +316,7 @@
         android:id="@+id/photosBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:pb_photo_1="@drawable/authorization_image"
+        app:pb_photo_1="@drawable/photo_house"
         app:pb_photo_2="@drawable/authorization_image"
         app:pb_photo_3="@drawable/photo_house"
         app:pb_photo_4="@drawable/authorization_image"

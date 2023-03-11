@@ -1,12 +1,9 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui.posts
 
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -15,11 +12,13 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
+import com.thesis.sportologia.ui.CreateEditPostFragment
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
+import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import com.thesis.sportologia.utils.viewModelCreator
@@ -32,6 +31,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.properties.Delegates
 
 
 @AndroidEntryPoint
@@ -47,20 +47,22 @@ class ListPostsFragment :
     lateinit var factory: ListPostsViewModel.Factory
 
     private lateinit var mode: ListPostsMode
+    private var userId by Delegates.notNull<String>()
 
     override val viewModel by viewModelCreator {
-        factory.create(mode)
+        factory.create(mode, userId)
     }
 
     private lateinit var binding: FragmentListPostsBinding
-    private lateinit var mainLoadStateHolder: DefaultLoadStateAdapter.Holder
+    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     companion object {
         // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации
-        fun newInstance(mode: ListPostsMode): ListPostsFragment {
+        fun newInstance(mode: ListPostsMode, userId: String): ListPostsFragment {
             val myFragment = ListPostsFragment()
             val args = Bundle()
             args.putSerializable("mode", mode)
+            args.putString("userId", userId)
             myFragment.arguments = args
             return myFragment
         }
@@ -74,6 +76,7 @@ class ListPostsFragment :
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
         mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
+        userId = arguments?.getString("userId") ?: throw Exception()
 
         initResultsProcessing()
         initSwipeToRefresh()
@@ -114,7 +117,15 @@ class ListPostsFragment :
 
     /*override fun onResume() {
         super.onResume()
-        binding.root.requestLayout()
+
+        val layoutView = view!!.findViewById<View>(R.id.layout)
+        if (layoutView != null) {
+            val layoutParams = layoutView.layoutParams
+            if (layoutParams != null) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                layoutView.requestLayout()
+            }
+        }
     }*/
 
     private fun initPostsList(): PostsPagerAdapter {
@@ -123,8 +134,8 @@ class ListPostsFragment :
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
 
-        val footerAdapter = DefaultLoadStateAdapter(tryAgainAction)
-        val headerAdapter = DefaultLoadStateAdapter(tryAgainAction)
+        val footerAdapter = LoadStateAdapterPaging(tryAgainAction)
+        val headerAdapter = LoadStateAdapterPaging(tryAgainAction)
 
         // combined adapter which shows both the list of posts + footer indicator when loading pages
         val adapterWithLoadState =
@@ -137,7 +148,7 @@ class ListPostsFragment :
         binding.postsList.adapter = concatAdapter
         (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
 
-        mainLoadStateHolder = DefaultLoadStateAdapter.Holder(
+        mainLoadStateHolder = LoadStateAdapterPage.Holder(
             binding.loadStateView,
             binding.swipeRefreshLayout,
             tryAgainAction

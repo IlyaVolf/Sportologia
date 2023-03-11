@@ -22,5 +22,9 @@
         android:id="@+id/profileFragment"
         android:name="com.thesis.sportologia.ui.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 </navigation>

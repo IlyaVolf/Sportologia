@@ -13,6 +13,8 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
+import com.thesis.sportologia.databinding.ItemPostBinding
+import com.thesis.sportologia.utils.setAvatar
 import java.net.URI
 import kotlin.properties.Delegates
 
@@ -21,8 +23,6 @@ typealias OnItemEventActionListener = (OnItemEventAction) -> Unit
 
 enum class OnItemEventAction {
     ORGANIZER_BLOCK,
-
-    // DATE_BLOCK,
     ADDRESS_BLOCK,
     PHOTOS_BLOCK,
     LIKE,
@@ -31,6 +31,7 @@ enum class OnItemEventAction {
 }
 
 class ItemEventView(
+    readyBinding: ItemEventBinding? = null,
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
@@ -46,6 +47,7 @@ class ItemEventView(
     private var listeners = mutableListOf<OnItemEventActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        null,
         context,
         attrs,
         defStyleAttr,
@@ -55,10 +57,38 @@ class ItemEventView(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+
+    constructor(
+        readyBinding: ItemEventBinding?,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(
+        readyBinding,
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(readyBinding: ItemEventBinding?, context: Context, attrs: AttributeSet?) : this(
+        readyBinding,
+        context,
+        attrs,
+        0
+    )
+
+    constructor(readyBinding: ItemEventBinding?, context: Context) : this(
+        readyBinding,
+        context,
+        null
+    )
+
+
     init {
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.item_event, this, true)
-        binding = ItemEventBinding.bind(this)
+        binding = readyBinding ?: ItemEventBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
         initListeners()
     }
@@ -141,20 +171,17 @@ class ItemEventView(
         binding.description.text = text
     }
 
-    fun setAvatar(uriImage: String?) {
-        Picasso.get()
-            .load(uriImage)
-            .error(R.drawable.avatar)
-            .into(binding.avatar)
+    fun setOrganizerAvatar(uri: String?) {
+        setAvatar(uri, context, binding.avatar)
     }
 
     fun setOrganizerName(username: String) {
         binding.userName.text = username
     }
 
-    // TODO parser
-    fun setDate(date: String) {
-        binding.date.text = date
+    // TODO parser which merges from and to dates
+    fun setDate(dateFrom: String, dateTo: String) {
+        binding.date.text = "$dateFrom $dateTo"
     }
 
     fun setAddress(address: String) {
@@ -162,11 +189,12 @@ class ItemEventView(
     }
 
     // TODO логика преобразования валют в VM
-    fun setPrice(price: String, currencyAbbr: String) {
-        if (price == "0") {
+    fun setPrice(price: Float, currency: String) {
+        if (price == 0f) {
             binding.price.text = context.getString(R.string.free)
         } else {
-            binding.price.text = "$price $currencyAbbr"
+            // TODO нормальный кастинг валюты
+            binding.price.text = "$price $currency"
         }
     }
 

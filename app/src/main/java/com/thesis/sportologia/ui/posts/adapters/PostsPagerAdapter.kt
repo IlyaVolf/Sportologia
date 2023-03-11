@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.adapters
+package com.thesis.sportologia.ui.posts.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -13,7 +13,8 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.ui.*
-import com.thesis.sportologia.ui.entities.PostListItem
+import com.thesis.sportologia.ui.posts.ListPostsMode
+import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostAction
 import com.thesis.sportologia.utils.*
@@ -35,7 +36,7 @@ class PostsPagerAdapter(
 
         itemPost.setListener {
             when (it) {
-                OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressed()
+                OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressed(postListItem.authorId)
                 OnItemPostAction.MORE -> onMoreButtonPressed(postListItem)
                 OnItemPostAction.LIKE -> listener.onToggleLike(postListItem)
                 OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(postListItem)
@@ -45,7 +46,7 @@ class PostsPagerAdapter(
 
         itemPost.setText(postListItem.text)
         itemPost.setUsername(postListItem.authorName)
-        itemPost.setAvatar(postListItem.profilePictureUrl)
+        itemPost.setAuthorAvatar(postListItem.profilePictureUrl)
         itemPost.setDate(parseDate(postListItem.postedDate))
         itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
         itemPost.setFavs(postListItem.isFavourite)
@@ -91,14 +92,12 @@ class PostsPagerAdapter(
         val actionsMore: Array<Pair<String, DialogOnClickAction?>> =
             if (postListItem.authorId == CurrentAccount().id) {
                 arrayOf(
-                    Pair(
-                        "Редактировать"
-                    ) { _, _ ->
+                    Pair(getString(R.string.action_edit)) { _, _ ->
                         run {
                             onEditButtonPressed(postListItem.id)
                         }
                     },
-                    Pair("Удалить") { _, _ ->
+                    Pair(getString(R.string.action_delete)) { _, _ ->
                         run {
                             createOnEditDialog(postListItem)
                         }
@@ -106,7 +105,7 @@ class PostsPagerAdapter(
                 )
             } else {
                 arrayOf(
-                    Pair("Пожаловаться") { _, _ -> }
+                    Pair(getString(R.string.action_report)) { _, _ -> }
                 )
             }
 
@@ -134,12 +133,11 @@ class PostsPagerAdapter(
             })
     }
 
-    private fun onHeaderBlockPressed() {
+    private fun onHeaderBlockPressed(userId: String) {
         when (mode) {
             ListPostsMode.HOME_PAGE -> {
-                fragment.findNavController().navigate(
-                    R.id.action_homeFragment_to_profileFragment,
-                    null,
+                val direction = HomeFragmentDirections.actionHomeFragmentToProfileFragment(userId)
+                fragment.findNavController().navigate(direction,
                     navOptions {
                         anim {
                             enter = R.anim.slide_in_right
@@ -150,9 +148,10 @@ class PostsPagerAdapter(
                     })
             }
             ListPostsMode.FAVOURITES_PAGE -> {
+                val direction =
+                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userId)
                 fragment.findNavController().navigate(
-                    R.id.action_favouritesFragment_to_profileFragment,
-                    null,
+                    direction,
                     navOptions {
                         anim {
                             enter = R.anim.slide_in_right
@@ -163,9 +162,10 @@ class PostsPagerAdapter(
                     })
             }
             ListPostsMode.PROFILE_OWN_PAGE -> {
+                val direction =
+                    ProfileOwnFragmentDirections.actionProfileOwnFragmentToProfileFragment(userId)
                 fragment.findNavController().navigate(
-                    R.id.action_profileOwnFragment_to_profileFragment,
-                    null,
+                    direction,
                     navOptions {
                         anim {
                             enter = R.anim.slide_in_right

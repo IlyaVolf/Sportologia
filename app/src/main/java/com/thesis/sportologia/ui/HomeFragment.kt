@@ -5,15 +5,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentHomeBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.posts.ListPostsFragment
+import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,6 +30,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
+    // TODO нормальная адаптивная высота viewpager'а!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,12 +46,49 @@ class HomeFragment : Fragment() {
         }
 
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.HOME_PAGE),
+            ListPostsFragment.newInstance(ListPostsMode.HOME_PAGE, CurrentAccount().id),
             ListEventsFragment()
         )
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
+
+        /*viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            private val listener = ViewTreeObserver.OnGlobalLayoutListener {
+                val view = fragments[0].view // ... get the view
+                updatePagerHeightForChild(view!!)
+            }
+
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                val view = fragments[0].view// ... get the view
+                // ... IMPORTANT: remove the global layout listener from other views
+                fragments.forEach {
+                    it.view!!.viewTreeObserver.removeOnGlobalLayoutListener(
+                        layoutListener
+                    )
+                }
+                view!!.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+            }
+
+            private fun updatePagerHeightForChild(view: View) {
+                view.post {
+                    val wMeasureSpec =
+                        View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+                    val hMeasureSpec =
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    view.measure(wMeasureSpec, hMeasureSpec)
+
+                    if (viewPager.layoutParams.height != view.measuredHeight) {
+                        // ParentViewGroup is, for example, LinearLayout
+                        // ... or whatever the parent of the ViewPager2 is
+                        viewPager.layoutParams =
+                            (viewPager.layoutParams as ParentViewGroup.LayoutParams)
+                                .also { lp -> lp.height = view.measuredHeight }
+                    }
+                }
+            }
+        })*/
 
         tabLayout = binding.tabLayout
 

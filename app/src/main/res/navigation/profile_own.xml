@@ -104,7 +104,7 @@
         tools:layout="@layout/fragment_profile" >
         <argument
             android:name="userId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/listPostsFragment"

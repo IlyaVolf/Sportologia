@@ -68,6 +68,8 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
     }
 
     private fun createDialog() {
+        // TODO диалоги из utils
+
         val builder = AlertDialog.Builder(context, R.style.DialogStyleBasic)
         builder.setTitle(getString(R.string.ask_cancel_post_warning))
         //builder.setMessage(getString(R.string.ask_cancel_post_warning))

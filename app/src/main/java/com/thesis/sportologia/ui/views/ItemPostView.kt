@@ -1,22 +1,13 @@
 package com.thesis.sportologia.ui.views
 
-import android.app.AlertDialog
 import android.content.Context
-import android.media.Image
-import android.os.Parcel
-import android.os.Parcelable
-import android.text.BoringLayout
-import android.text.InputFilter
-import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.*
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
-import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
-import java.net.URI
+import com.thesis.sportologia.utils.setAvatar
 import kotlin.properties.Delegates
 
 
@@ -209,21 +200,8 @@ class ItemPostView(
         binding.text.text = text
     }
 
-    fun setAvatar(uri: String?) {
-        if (uri != null) {
-            if (uri.isNotBlank()) {
-                Glide.with(context)
-                    .load(uri)
-                    .circleCrop()
-                    .placeholder(R.drawable.avatar)
-                    .error(R.drawable.avatar)
-                    .into(binding.avatar)
-            }
-        } else {
-            Glide.with(context)
-                .load(R.drawable.avatar)
-                .into(binding.avatar)
-        }
+    fun setAuthorAvatar(uri: String?) {
+        setAvatar(uri, context, binding.avatar)
     }
 
     fun setUsername(username: String) {

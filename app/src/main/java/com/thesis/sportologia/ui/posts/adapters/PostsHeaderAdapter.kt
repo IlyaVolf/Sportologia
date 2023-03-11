@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.adapters
+package com.thesis.sportologia.ui.posts.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsHeaderBinding
 import com.thesis.sportologia.ui.CreateEditPostFragment
-import com.thesis.sportologia.ui.ListPostsMode
+import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 

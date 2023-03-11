@@ -14,9 +14,8 @@
 
     <include
         android:id="@+id/flp_error"
-        layout="@layout/view_error"
+        layout="@layout/view_error_paging"
         android:visibility="gone"
         tools:visibility="visible"/>
-
 
 </FrameLayout>

@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import androidx.annotation.DrawableRes
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import com.thesis.sportologia.R
@@ -19,14 +20,14 @@ enum class OnButtonBasicAction {
     POSITIVE
 }
 
-class ButtonBasicView(
+open class ButtonBasicView(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewButtonBasicBinding
+    internal val binding: ViewButtonBasicBinding
 
     private var listener: OnButtonBasicActionListener? = null
 

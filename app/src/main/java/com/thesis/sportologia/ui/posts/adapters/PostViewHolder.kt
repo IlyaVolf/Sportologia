@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.adapters
+package com.thesis.sportologia.ui.posts.adapters
 
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.posts.entities.Post
@@ -7,7 +7,6 @@ import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostActionListener
 import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
 import com.thesis.sportologia.utils.parseDate
-import java.net.URI
 
 class PostViewHolder(
     private val onItemPostActionListener: OnItemPostActionListener,
@@ -27,7 +26,7 @@ class PostViewHolder(
 
         view.setText(item.text)
         view.setUsername(item.authorName)
-        view.setAvatar(item.profilePictureUrl)
+        view.setAuthorAvatar(item.profilePictureUrl)
         view.setDate(parseDate(item.postedDate))
         view.setLikes(item.likesCount, item.isLiked)
         view.setPhotos()

@@ -4,7 +4,7 @@ import java.util.*
 
 data class Post(
     val id: Long,
-    var authorId: Int,
+    var authorId: String,
     var authorName: String,
     var profilePictureUrl: String?,
     var text: String,

@@ -4,23 +4,43 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileBinding
+import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.users.entities.Athlete
+import com.thesis.sportologia.model.users.entities.Organization
+import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.views.*
-import com.thesis.sportologia.utils.findTopNavController
+import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.posts.ListPostsFragment
+import com.thesis.sportologia.ui.posts.ListPostsMode
+import com.thesis.sportologia.ui.users.entities.AthleteItem
+import com.thesis.sportologia.ui.users.entities.OrganizationItem
+import com.thesis.sportologia.ui.users.entities.UserItem
+import com.thesis.sportologia.utils.setAvatar
+import com.thesis.sportologia.utils.toast
+import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URI
+import javax.inject.Inject
 
+// TODO проверка на то, userId совпадает с CurrentUser.id
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
+class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
+
+    @Inject
+    lateinit var factory: ProfileViewModel.Factory
+
+    override val viewModel by viewModelCreator {
+        factory.create(getUserIdArg())
+    }
+
     private lateinit var binding: FragmentProfileBinding
 
     private lateinit var adapter: PagerAdapter
@@ -40,26 +60,19 @@ class ProfileFragment : Fragment() {
         return binding.root
     }
 
-    //private fun getUserIdArg(): Long = args.userId
+    private fun getUserIdArg(): String = args.userId
 
     private fun initRender() {
         binding.toolbar.arrowBack.setOnClickListener {
             findNavController().navigateUp()
         }
 
-        binding.subscribeButton.setOnClickListener {
-        }
-
-        binding.openPhotosButton.setOnClickListener {
-            onOpenPhotosButtonPressed()
-        }
-
-        binding.followingsLayout.setOnClickListener {
-            onOpenFollowingsButton()
+        binding.fpError.veTryAgain.setOnClickListener {
+            viewModel.load()
         }
 
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE),
+            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE, getUserIdArg()),
             ListServicesFragment(),
             ListEventsFragment()
         )
@@ -78,6 +91,94 @@ class ProfileFragment : Fragment() {
                 else -> ""
             }
         }.attach()
+    }
+
+    override fun observeViewModel() {
+        viewModel.userHolder.observe(viewLifecycleOwner) { holder ->
+            when (holder) {
+                DataHolder.LOADING -> {
+                    binding.fpLoading.root.visibility = View.VISIBLE
+                    binding.fpError.root.visibility = View.GONE
+                    binding.fpContentBlock.visibility = View.GONE
+                }
+                is DataHolder.READY -> {
+                    binding.fpLoading.root.visibility = View.GONE
+                    binding.fpError.root.visibility = View.GONE
+                    binding.fpContentBlock.visibility = View.VISIBLE
+
+                    when (holder.data.lastAction) {
+                        UserItem.LastAction.INIT -> {
+                            renderUserDetails(holder.data)
+                        }
+                        UserItem.LastAction.SUBSCRIBE_CHANGED -> {
+                            renderUserDetailsOnSubscriptionAction(holder.data)
+                        }
+                    }
+                }
+                is DataHolder.ERROR -> {
+                    binding.fpLoading.root.visibility = View.GONE
+                    binding.fpError.root.visibility = View.VISIBLE
+                    binding.fpContentBlock.visibility = View.GONE
+
+                    binding.fpError.veText.text = holder.failure.message
+                }
+            }
+        }
+
+        viewModel.subscribeHolder.observe(viewLifecycleOwner) { holder ->
+            when (holder) {
+                DataHolder.LOADING -> {
+                    binding.subscribeButton.isEnabled = false
+                }
+                is DataHolder.READY -> {
+                    binding.subscribeButton.isEnabled = true
+
+                    //renderUserDetailsOnSubscriptionAction(holder.data)
+                }
+                is DataHolder.ERROR -> {
+                    toast(context, getString(R.string.error))
+                    binding.subscribeButton.isEnabled = true
+                }
+            }
+        }
+    }
+
+    private fun renderUserDetailsOnSubscriptionAction(userItem: UserItem) {
+        binding.followersCount.text = userItem.followersCount.toString()
+        binding.subscribeButton.setButtonPressed(userItem.isSubscribed)
+    }
+
+    private fun renderUserDetails(userItem: UserItem) {
+        binding.subscribeButton.setOnClickListener {
+            onSubscribeButtonPressed()
+        }
+
+        binding.openPhotosButton.setOnClickListener {
+            onOpenPhotosButtonPressed()
+        }
+
+        binding.followingsLayout.setOnClickListener {
+            onOpenFollowingsButton()
+        }
+
+        binding.userName.text = userItem.name
+        when (userItem) {
+            is AthleteItem -> binding.userType.text = getString(R.string.athlete)
+            is OrganizationItem -> binding.userType.text = getString(R.string.organization)
+        }
+        // TODO address formatting
+        binding.address.text = userItem.address.toString()
+        binding.description.text = userItem.description
+        binding.followersCount.text = userItem.followersCount.toString()
+        binding.followingsCount.text = userItem.followingsCount.toString()
+
+        setAvatar(userItem.profilePhotoURI, context!!, binding.avatar)
+
+        renderUserDetailsOnSubscriptionAction(userItem)
+    }
+
+    private fun onSubscribeButtonPressed() {
+        viewModel.onSubscribeButtonPressed()
     }
 
     private fun onOpenPhotosButtonPressed() {

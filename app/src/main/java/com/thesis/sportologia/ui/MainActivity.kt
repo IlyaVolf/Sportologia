@@ -21,8 +21,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    // Toast.makeText(context, "$savedActivatedButtonId", Toast.LENGTH_SHORT).show()
-
     // view-model is used for observing username to be displayed in the toolbar
     private val viewModel by viewModels<MainActivityViewModel>()
 

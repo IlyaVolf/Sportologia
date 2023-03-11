@@ -57,7 +57,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/followings"
+                        android:id="@+id/followings_count"
                         style="@style/TextStyleBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -94,7 +94,7 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/followers"
+                        android:id="@+id/followers_count"
                         style="@style/TextStyleBold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

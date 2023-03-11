@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui.posts
 
 
 import androidx.annotation.StringRes
@@ -8,14 +8,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
-import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.posts.entities.Post
-import com.thesis.sportologia.ui.adapters.PostsHeaderAdapter
-import com.thesis.sportologia.ui.adapters.PostsPagerAdapter
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.entities.PostListItem
+import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
+import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
+import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -27,6 +26,7 @@ import kotlinx.coroutines.flow.*
 // TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
 class ListPostsViewModel @AssistedInject constructor(
     @Assisted private val mode: ListPostsMode,
+    @Assisted private val userId: String,
     private val postsRepository: PostsRepository,
     logger: Logger
 ) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
@@ -61,13 +61,13 @@ class ListPostsViewModel @AssistedInject constructor(
             ListPostsMode.PROFILE_OWN_PAGE -> {
                 search.asFlow()
                     .flatMapLatest {
-                        postsRepository.getPagedUserPosts(CurrentAccount().id)
+                        postsRepository.getPagedUserPosts(userId)
                     }.cachedIn(viewModelScope)
             }
             ListPostsMode.HOME_PAGE -> {
                 search.asFlow()
                     .flatMapLatest {
-                        postsRepository.getPagedUserSubscribedOnPosts(CurrentAccount().id, athTorgF)
+                        postsRepository.getPagedUserSubscribedOnPosts(userId, athTorgF)
                     }.cachedIn(viewModelScope)
             }
             ListPostsMode.FAVOURITES_PAGE -> {
@@ -93,7 +93,7 @@ class ListPostsViewModel @AssistedInject constructor(
                 setProgress(postListItem.id, true)
                 delete(postListItem)
             } catch (e: Exception) {
-                showError(R.string.error)
+                showError(R.string.error_loading_title)
             } finally {
                 setProgress(postListItem.id, false)
             }
@@ -108,7 +108,7 @@ class ListPostsViewModel @AssistedInject constructor(
                 setProgress(postListItem.id, true)
                 setLike(postListItem)
             } catch (e: Exception) {
-                showError(R.string.error)
+                showError(R.string.error_loading_title)
             } finally {
                 setProgress(postListItem.id, false)
             }
@@ -123,7 +123,7 @@ class ListPostsViewModel @AssistedInject constructor(
                 setProgress(postListItem.id, true)
                 setFavoriteFlag(postListItem)
             } catch (e: Exception) {
-                showError(R.string.error)
+                showError(R.string.error_loading_title)
             } finally {
                 setProgress(postListItem.id, false)
             }
@@ -149,7 +149,7 @@ class ListPostsViewModel @AssistedInject constructor(
 
     private suspend fun setLike(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isLiked
-        postsRepository.setIsLiked(CurrentAccount().id, postListItem.post, newFlagValue)
+        postsRepository.setIsLiked(userId, postListItem.post, newFlagValue)
         localChanges.isLikedFlags[postListItem.id] = newFlagValue
         //localChanges.isTextFlags[postListItem.id] = postListItem.text + "asgagasagag"
         localChangesFlow.value = OnChange(localChanges)
@@ -157,7 +157,7 @@ class ListPostsViewModel @AssistedInject constructor(
 
     private suspend fun setFavoriteFlag(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isFavourite
-        postsRepository.setIsFavourite(CurrentAccount().id, postListItem.post, newFlagValue)
+        postsRepository.setIsFavourite(userId, postListItem.post, newFlagValue)
         localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }
@@ -241,7 +241,7 @@ class ListPostsViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(mode: ListPostsMode): ListPostsViewModel
+        fun create(mode: ListPostsMode, userId: String): ListPostsViewModel
     }
 
 

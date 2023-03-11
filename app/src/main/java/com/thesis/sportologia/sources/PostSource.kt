@@ -1,4 +1,4 @@
-package com.thesis.sportologia.sources.entities
+package com.thesis.sportologia.sources
 
 import java.util.*
 

@@ -263,6 +263,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         EDIT
     }
 
+    // TODO parcelable
     data class PostId(
         val postId: Long?
     ) : Serializable
