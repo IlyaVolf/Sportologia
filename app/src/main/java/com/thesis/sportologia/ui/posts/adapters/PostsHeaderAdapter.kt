@@ -105,6 +105,13 @@ class PostsHeaderAdapter(
                         onCreatePostButtonPressed()
                     }
                 }
+                ListPostsMode.PROFILE_OTHER_PAGE -> {
+                    viewBinding.postsFilter.root.isVisible = false
+                    viewBinding.postsFilterSpace.isVisible = false
+
+                    viewBinding.createPostButton.isVisible = false
+                    viewBinding.createPostButtonSpace.isVisible = false
+                }
             }
 
         }

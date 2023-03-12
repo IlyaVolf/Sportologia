@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.CreateEditPostFragment
+import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
@@ -113,6 +114,16 @@ class ListPostsFragment :
                 viewModel.onPostEdited()
             }
         }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            ProfileFragment.REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val refresh = data.getBoolean(ProfileFragment.REFRESH)
+            if (refresh) {
+                viewModel.refresh()
+            }
+        }
     }
 
     /*override fun onResume() {
@@ -144,13 +155,19 @@ class ListPostsFragment :
         val postsHeaderAdapter = PostsHeaderAdapter(this, mode, viewModel)
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
+        val swipeRefreshLayout = if (mode == ListPostsMode.PROFILE_OWN_PAGE) {
+            null
+        } else {
+            binding.swipeRefreshLayout
+        }
+
         binding.postsList.layoutManager = LinearLayoutManager(context)
         binding.postsList.adapter = concatAdapter
         (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
 
         mainLoadStateHolder = LoadStateAdapterPage.Holder(
             binding.loadStateView,
-            binding.swipeRefreshLayout,
+            swipeRefreshLayout,
             tryAgainAction
         )
 
@@ -248,6 +265,7 @@ class ListPostsFragment :
 
 enum class ListPostsMode {
     HOME_PAGE,
+    PROFILE_OTHER_PAGE,
     PROFILE_OWN_PAGE,
     FAVOURITES_PAGE
 }

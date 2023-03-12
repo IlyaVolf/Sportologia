@@ -7,6 +7,6 @@
     <include app:graph="@navigation/home" />
     <include app:graph="@navigation/services_acquired" />
     <include app:graph="@navigation/search" />
-    <include app:graph="@navigation/profile_own" />
+    <include app:graph="@navigation/profile" />
 
 </navigation>

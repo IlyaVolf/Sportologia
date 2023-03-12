@@ -32,44 +32,52 @@ class ProfileViewModel @AssistedInject constructor(
     logger: Logger
 ) : BaseViewModel(logger) {
 
-    private val _subscribeHolder = ObservableHolder<Nothing?>(DataHolder.loading())
+    private val _subscribeHolder = ObservableHolder(DataHolder.ready(null))
     val subscribeHolder = _subscribeHolder.share()
 
-    private val _userHolder = ObservableHolder<UserItem>(DataHolder.loading())
+    private val _userHolder = ObservableHolder<UserItem>(DataHolder.init())
     val userHolder = _userHolder.share()
 
     init {
-        load()
+        init()
     }
 
-    fun load() {
+    fun init() = viewModelScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.Main) {
+            _userHolder.value = DataHolder.init()
+        }
         getUser()
     }
 
-    private fun getUser() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            withContext(Dispatchers.Main) {
-                _userHolder.value = DataHolder.loading()
-                _subscribeHolder.value = DataHolder.loading()
-            }
+    fun refresh() = viewModelScope.launch(Dispatchers.IO) {
+        withContext(Dispatchers.Main) {
+            _userHolder.value = DataHolder.loading()
+        }
+        getUser()
+    }
 
+    private suspend fun getUser() {
+        try {
             val user = usersRepository.getUser(userId)
             withContext(Dispatchers.Main) {
                 if (user != null) {
                     when (user) {
                         is Athlete -> {
-                            _userHolder.value = DataHolder.ready(AthleteItem(user.copy(), UserItem.LastAction.INIT))
-                            _subscribeHolder.value = DataHolder.ready(null)
+                            _userHolder.value =
+                                DataHolder.ready(AthleteItem(user.copy(), UserItem.LastAction.INIT))
 
                         }
                         is Organization -> {
-                            _userHolder.value = DataHolder.ready(OrganizationItem(user.copy(), UserItem.LastAction.INIT))
-                            _subscribeHolder.value = DataHolder.ready(null)
+                            _userHolder.value = DataHolder.ready(
+                                OrganizationItem(
+                                    user.copy(),
+                                    UserItem.LastAction.INIT
+                                )
+                            )
                         }
                     }
                 } else {
                     _userHolder.value = DataHolder.error(Exception("no such user"))
-                    _subscribeHolder.value = DataHolder.error(Exception("no such user"))
                 }
             }
         } catch (e: Exception) {
@@ -94,11 +102,9 @@ class ProfileViewModel @AssistedInject constructor(
             }
 
             usersRepository.setIsSubscribe(CurrentAccount().id, userId, newIsSubscribed)
-            //userItemFlow.value
             withContext(Dispatchers.Main) {
-                /*_userHolder.value =
-                    DataHolder.ready(getUserItemOnSubscriptionAction(userItem, newIsSubscribed))*/
-                _userHolder.value = DataHolder.ready(getUserItemOnSubscriptionAction(userItem, newIsSubscribed))
+                _userHolder.value =
+                    DataHolder.ready(getUserItemOnSubscriptionAction(userItem, newIsSubscribed))
                 _subscribeHolder.value = DataHolder.ready(null)
             }
         } catch (e: Exception) {

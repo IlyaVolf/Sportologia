@@ -11,13 +11,13 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_profile_own"
-            app:destination="@id/profile_own" />
+            android:id="@+id/action_homeFragment_to_profile"
+            app:destination="@id/profile" />
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
     </fragment>
-    <include app:graph="@navigation/profile_own" />
+    <include app:graph="@navigation/profile" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.thesis.sportologia.ui.ProfileFragment"
@@ -25,6 +25,7 @@
         tools:layout="@layout/fragment_profile" >
         <argument
             android:name="userId"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="$current_user" />
     </fragment>
 </navigation>

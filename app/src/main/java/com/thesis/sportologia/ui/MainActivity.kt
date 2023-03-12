@@ -7,10 +7,12 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,6 +59,15 @@ class MainActivity : AppCompatActivity() {
         onNavControllerActivated(navController)
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
+
+        /*navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            when(destination.id) {
+                R.id.profileFragment -> {
+                    val argument = NavArgument.Builder().setDefaultValue(CurrentAccount().id).build()
+                    destination.addArgument("userId", argument)
+                }
+            }
+        }*/
 
         /*val fragment = FilterFragment()
 

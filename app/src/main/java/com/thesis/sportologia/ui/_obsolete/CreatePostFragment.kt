@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui._obsolete
 
 import android.app.AlertDialog
 import android.content.DialogInterface.BUTTON_NEGATIVE
@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreatePostBinding
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.ui.CreateEditPostFragment
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent

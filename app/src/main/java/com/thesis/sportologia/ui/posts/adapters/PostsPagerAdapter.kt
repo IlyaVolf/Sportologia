@@ -175,6 +175,21 @@ class PostsPagerAdapter(
                         }
                     })
             }
+            ListPostsMode.PROFILE_OTHER_PAGE -> {
+                // TODO navigation
+                val direction =
+                    ProfileOwnFragmentDirections.actionProfileOwnFragmentToProfileFragment(userId)
+                fragment.findNavController().navigate(
+                    direction,
+                    navOptions {
+                        anim {
+                            enter = R.anim.slide_in_right
+                            exit = R.anim.slide_out_left
+                            popEnter = R.anim.slide_in_left
+                            popExit = R.anim.slide_out_right
+                        }
+                    })
+            }
         }
     }
 

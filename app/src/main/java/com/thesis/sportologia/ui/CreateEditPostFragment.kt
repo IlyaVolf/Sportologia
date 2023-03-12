@@ -222,6 +222,19 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
     }
 
     private fun goBack(isSaved: Boolean) {
+        sendResult(isSaved)
+
+        /*val bundle = if (isSaved) {
+            bundleOf(EDIT_RESULT to EditResult(isSaved, postId, binding.text.text.toString()))
+        } else {
+            bundleOf(EDIT_RESULT to EditResult(isSaved, null, null))
+        }
+        requireActivity().supportFragmentManager.setFragmentResult(REQUEST_CODE, bundle)*/
+
+        findNavController().navigateUp()
+    }
+
+    private fun sendResult(isSaved: Boolean) {
         if (mode == Mode.CREATE) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_CREATED_REQUEST_CODE,
@@ -233,15 +246,6 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
                 bundleOf(IS_EDITED to isSaved)
             )
         }
-
-        /*val bundle = if (isSaved) {
-            bundleOf(EDIT_RESULT to EditResult(isSaved, postId, binding.text.text.toString()))
-        } else {
-            bundleOf(EDIT_RESULT to EditResult(isSaved, null, null))
-        }
-        requireActivity().supportFragmentManager.setFragmentResult(REQUEST_CODE, bundle)*/
-
-        findNavController().navigateUp()
     }
 
     private fun observeGoBackEvent() = viewModel.goBackEvent.observeEvent(viewLifecycleOwner) {

@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.posts.adapters
+package com.thesis.sportologia.ui._obsolete
 
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.posts.entities.Post

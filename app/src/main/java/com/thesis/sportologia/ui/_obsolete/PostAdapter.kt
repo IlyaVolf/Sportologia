@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui.posts.adapters
+package com.thesis.sportologia.ui._obsolete
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

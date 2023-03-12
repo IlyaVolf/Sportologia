@@ -24,7 +24,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     val postSample = Post(
         id = 0L,
-        authorId = "1",
+        authorId = "i_chiesov",
         authorName = "Игорь Чиёсов",
         profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
         text = "Hello!",
@@ -40,10 +40,10 @@ class InMemoryPostsRepository @Inject constructor(
         postSample,
         Post(
             id = 1L,
-            authorId = "2",
-            authorName = "Андрей Вайс",
+            authorId = "stroitel",
+            authorName = "Тренажёрный зал Строитель",
             profilePictureUrl = null,
-            text = "Игорь любит Андрея",
+            text = "Построй тело свой мечты!",
             likesCount = 0,
             isAuthorAthlete = false,
             isLiked = false,
@@ -53,10 +53,10 @@ class InMemoryPostsRepository @Inject constructor(
         ),
         Post(
             id = 2L,
-            authorId = "5",
+            authorId = "nikita",
             authorName = "Никита Романов",
             profilePictureUrl = null,
-            text = "Как же вы зодолбали",
+            text = "Люблю спорт!",
             likesCount = 1,
             isAuthorAthlete = true,
             isLiked = true,
@@ -74,7 +74,7 @@ class InMemoryPostsRepository @Inject constructor(
         postSample.copy(id = 10L),
         postSample.copy(id = 11L),
         postSample.copy(id = 12L),
-        postSample.copy(authorName = "Антон Игорев", id = 13L, text = "abcdefghiklmnopqrstvuxwyz"),
+        postSample.copy(authorName = "Антон Игорев", authorId = "best_mate", id = 13L, text = "abcdefghiklmnopqrstvuxwyz"),
         postSample.copy(id = 14L),
         postSample.copy(id = 15L),
         postSample.copy(id = 16L),
@@ -90,7 +90,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     )
 
-    private val followersIds = mutableListOf("2", "3", "5")
+    private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
 
     /* override suspend fun getUserPosts(userId: Int): List<Post> {
         delay(1000)

@@ -104,7 +104,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun onProfilePicturePressed() {
-        findNavController().navigate(R.id.action_homeFragment_to_profile_own,
+        findNavController().navigate(R.id.action_homeFragment_to_profile,
             null,
             navOptions {
                 /* чтобы заменить фрагмент главного экрана на фрагмент страницы пользователя,

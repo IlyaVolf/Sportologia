@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
+import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.users.entities.Athlete
-import com.thesis.sportologia.model.users.entities.Organization
-import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.posts.ListPostsFragment
@@ -24,15 +23,22 @@ import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.users.entities.AthleteItem
 import com.thesis.sportologia.ui.users.entities.OrganizationItem
 import com.thesis.sportologia.ui.users.entities.UserItem
+import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.setAvatar
 import com.thesis.sportologia.utils.toast
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-// TODO проверка на то, userId совпадает с CurrentUser.id
+
+// TODO проверка на то, userId поста совпадает с текущим открытым экраном, чтобы предовратиеть бесконечный переход!
+// TODO смерджить profile own и этот экран
+// TODO обовление страницы по свайпу
+// TODO слить визуально! загрузку экрана воедино с загрузкой публикаицй
+
+// TODO баг при мене темы - кнопка subscribe не работает!
 @AndroidEntryPoint
-class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
+class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     @Inject
     lateinit var factory: ProfileViewModel.Factory
@@ -41,7 +47,11 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
         factory.create(getUserIdArg())
     }
 
+    private lateinit var mode: Profile
+
     private lateinit var binding: FragmentProfileBinding
+
+    private lateinit var userId: String
 
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -55,24 +65,104 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
     ): View {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
-        initRender()
+        userId = getUserIdArg()
+        mode = if (userId == CurrentAccount().id) {
+            Profile.OWN
+        } else {
+            Profile.OTHER
+        }
+        when (mode) {
+            Profile.OWN -> initRenderProfileOwn()
+            Profile.OTHER -> initRenderProfileOther()
+        }
 
         return binding.root
     }
 
-    private fun getUserIdArg(): String = args.userId
+    private fun getUserIdArg(): String {
+        val userId = args.userId
+        return if (userId == DEFAULT_USER_ID) {
+            CurrentAccount().id
+        } else {
+            userId
+        }
+    }
 
-    private fun initRender() {
+    private fun initRenderProfileOwn() {
+        binding.toolbar.root.visibility = View.GONE
+        binding.subscribeButton.visibility = View.GONE
+        binding.settingsFavsButtonsBlock.visibility = View.VISIBLE
+        binding.subscribeButtonsBlock.visibility = View.GONE
+
+        initProfileSettingsButton()
+        initFavouritesButton()
+        initRefreshLayout()
+        initContentBlock()
+        initErrorProcessing()
+    }
+
+    private fun initRenderProfileOther() {
+        binding.toolbar.root.visibility = View.VISIBLE
+        binding.subscribeButton.visibility = View.VISIBLE
+        binding.settingsFavsButtonsBlock.visibility = View.GONE
+        binding.subscribeButtonsBlock.visibility = View.VISIBLE
+
+        initToolbar()
+        initRefreshLayout()
+        initContentBlock()
+        initErrorProcessing()
+    }
+
+    private fun initErrorProcessing() {
+        binding.fpError.veTryAgain.setOnClickListener {
+            viewModel.init()
+            refreshContentBlock()
+        }
+    }
+
+    private fun initToolbar() {
+        binding.toolbar.title.text = "@$userId"
+
         binding.toolbar.arrowBack.setOnClickListener {
             findNavController().navigateUp()
         }
+    }
 
-        binding.fpError.veTryAgain.setOnClickListener {
-            viewModel.load()
+    private fun initProfileSettingsButton() {
+        binding.profileSettingsButton.setOnClickListener {
+            onProfileSettingsButtonPressed()
+        }
+    }
+
+    private fun initFavouritesButton() {
+        binding.favouritesButton.setOnClickListener {
+            onFavouritesButtonPressed()
+        }
+    }
+
+    private fun initRefreshLayout() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.refresh()
+
+            requireActivity().supportFragmentManager.setFragmentResult(
+                REQUEST_CODE,
+                bundleOf(REFRESH to true)
+            )
         }
 
+        refreshContentBlock()
+    }
+
+    private fun refreshContentBlock() {
+        binding.materialupAppbar.addOnOffsetChangedListener(
+            OnOffsetChangedListener { _, verticalOffset ->
+                binding.swipeRefreshLayout.isEnabled = verticalOffset == 0
+            })
+    }
+
+    private fun initContentBlock() {
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE, getUserIdArg()),
+            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE, userId),
             ListServicesFragment(),
             ListEventsFragment()
         )
@@ -97,13 +187,21 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
         viewModel.userHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
+                    binding.swipeRefreshLayout.isRefreshing = true
+                    binding.fpLoading.root.visibility = View.INVISIBLE
+                    binding.fpError.root.visibility = View.INVISIBLE
+                    binding.fpContentBlock.visibility = View.VISIBLE
+                }
+                DataHolder.INIT -> {
+                    binding.swipeRefreshLayout.isRefreshing = false
                     binding.fpLoading.root.visibility = View.VISIBLE
-                    binding.fpError.root.visibility = View.GONE
-                    binding.fpContentBlock.visibility = View.GONE
+                    binding.fpError.root.visibility = View.INVISIBLE
+                    binding.fpContentBlock.visibility = View.INVISIBLE
                 }
                 is DataHolder.READY -> {
-                    binding.fpLoading.root.visibility = View.GONE
-                    binding.fpError.root.visibility = View.GONE
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.fpLoading.root.visibility = View.INVISIBLE
+                    binding.fpError.root.visibility = View.INVISIBLE
                     binding.fpContentBlock.visibility = View.VISIBLE
 
                     when (holder.data.lastAction) {
@@ -116,9 +214,10 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
                     }
                 }
                 is DataHolder.ERROR -> {
-                    binding.fpLoading.root.visibility = View.GONE
+                    binding.swipeRefreshLayout.isRefreshing = false
+                    binding.fpLoading.root.visibility = View.INVISIBLE
                     binding.fpError.root.visibility = View.VISIBLE
-                    binding.fpContentBlock.visibility = View.GONE
+                    binding.fpContentBlock.visibility = View.INVISIBLE
 
                     binding.fpError.veText.text = holder.failure.message
                 }
@@ -132,8 +231,6 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
                 }
                 is DataHolder.READY -> {
                     binding.subscribeButton.isEnabled = true
-
-                    //renderUserDetailsOnSubscriptionAction(holder.data)
                 }
                 is DataHolder.ERROR -> {
                     toast(context, getString(R.string.error))
@@ -171,14 +268,64 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
         binding.description.text = userItem.description
         binding.followersCount.text = userItem.followersCount.toString()
         binding.followingsCount.text = userItem.followingsCount.toString()
+        binding.categories.text = getCategoriesText(userItem)
 
         setAvatar(userItem.profilePhotoURI, context!!, binding.avatar)
 
         renderUserDetailsOnSubscriptionAction(userItem)
     }
 
+    private fun getCategoriesText(userItem: UserItem): String {
+        val res = StringBuilder()
+
+        var flag = false
+        for (category in userItem.categories) {
+            if (flag) {
+                res.append(", ")
+                flag = false
+            }
+            if (category.value) {
+                res.append(category.key)
+                flag = true
+            }
+        }
+
+        return if (res.toString() == "") {
+            getString(R.string.categories_not_specified)
+        } else {
+            res.toString()
+        }
+    }
+
     private fun onSubscribeButtonPressed() {
         viewModel.onSubscribeButtonPressed()
+    }
+
+    private fun onProfileSettingsButtonPressed() {
+        findTopNavController().navigate(R.id.profileSettingsFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
+
+    private fun onFavouritesButtonPressed() {
+        findNavController().navigate(
+            R.id.action_profileFragment_to_favouritesFragment,
+            null,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
     }
 
     private fun onOpenPhotosButtonPressed() {
@@ -205,5 +352,16 @@ class ProfileFragment  : BaseFragment(R.layout.fragment_profile) {
                     popExit = R.anim.slide_out_right
                 }
             })
+    }
+
+    companion object {
+        const val DEFAULT_USER_ID = "\$current_user"
+        const val REQUEST_CODE = "REFRESH_REQUEST_CODE"
+        const val REFRESH = "REFRESH"
+    }
+
+    enum class Profile {
+        OWN,
+        OTHER
     }
 }

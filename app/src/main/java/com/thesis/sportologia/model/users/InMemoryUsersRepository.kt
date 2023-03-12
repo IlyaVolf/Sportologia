@@ -17,7 +17,7 @@ class InMemoryUsersRepository @Inject constructor() : UsersRepository {
         Athlete(
             true,
             null,
-            "0",
+            "i_volf",
             "Илья Вольф",
             "-----",
             "https://i.imgur.com/tGbaZCY.jpg",
@@ -32,7 +32,7 @@ class InMemoryUsersRepository @Inject constructor() : UsersRepository {
         Athlete(
             true,
             null,
-            "1",
+            "i_chiesov",
             "Игорь Чиёсов",
             "-----",
             null,
@@ -46,7 +46,7 @@ class InMemoryUsersRepository @Inject constructor() : UsersRepository {
         ),
         Organization(
             null,
-            "2",
+            "stroitel",
             "Тренажёрный зал Строитель",
             "=====",
             null,
@@ -76,7 +76,7 @@ class InMemoryUsersRepository @Inject constructor() : UsersRepository {
     ) {
         delay(1000)
 
-        throw Exception()
+        //throw Exception()
 
         Log.d("BUGFIX", "$followerId $followingId ${users.filter { it.id == followingId }}")
 

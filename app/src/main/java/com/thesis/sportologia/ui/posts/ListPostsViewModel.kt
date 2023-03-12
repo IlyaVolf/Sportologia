@@ -64,6 +64,12 @@ class ListPostsViewModel @AssistedInject constructor(
                         postsRepository.getPagedUserPosts(userId)
                     }.cachedIn(viewModelScope)
             }
+            ListPostsMode.PROFILE_OTHER_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserPosts(userId)
+                    }.cachedIn(viewModelScope)
+            }
             ListPostsMode.HOME_PAGE -> {
                 search.asFlow()
                     .flatMapLatest {

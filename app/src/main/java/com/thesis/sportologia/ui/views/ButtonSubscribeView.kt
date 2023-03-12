@@ -35,7 +35,7 @@ class ButtonSubscribeView(
             }
             false -> {
                 binding.drawable.setImageResource(R.drawable.icon_subscribe)
-                binding.drawable.setColorFilter(R.color.background_inverted)
+                binding.drawable.setColorFilter(context.getColor(R.color.background_inverted))
                 binding.text.text = context.getText(R.string.action_subscribe)
                 binding.text.setTextColor(context.getColor(R.color.background_inverted))
                 binding.background.backgroundTintList =

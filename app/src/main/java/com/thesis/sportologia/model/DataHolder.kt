@@ -8,6 +8,11 @@ import kotlin.Result
 sealed class DataHolder<out TData> {
 
     /**
+     * Состояние инициализации (первой загрузки) данных
+     */
+    object INIT : DataHolder<Nothing>()
+
+    /**
      * Состояние загрузки данных
      */
     object LOADING : DataHolder<Nothing>()
@@ -25,6 +30,7 @@ sealed class DataHolder<out TData> {
      * @property failure Информация об ошибке
      */
     class ERROR(val failure: Throwable) : DataHolder<Nothing>()
+
 
     /**
      * @param block Будет вызван в случае готовности данных
@@ -68,14 +74,21 @@ sealed class DataHolder<out TData> {
     inline fun <TResult> fold(
         onReady: (TData) -> TResult,
         onError: (Throwable) -> TResult,
-        onLoading: () -> TResult
+        onLoading: () -> TResult,
+        onInit: () -> TResult,
     ): TResult {
         return when (this) {
             is READY -> onReady(data)
             is ERROR -> onError(failure)
             LOADING -> onLoading()
+            INIT -> onInit()
         }
     }
+
+    /**
+     * Проверка на состояние инициализации
+     */
+    inline val isInit get() = this is INIT
 
     /**
      * Проверка на состояние загрузки
@@ -96,6 +109,11 @@ sealed class DataHolder<out TData> {
      *
      */
     companion object {
+        /**
+         * Создает [DataHolder] в состоянии инициализации данных
+         */
+        fun init() = INIT
+
         /**
          * Создает [DataHolder] в состоянии загрузки данных
          */
