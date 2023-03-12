@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentTabsBinding
@@ -21,5 +22,12 @@ class TabsFragment : Fragment(R.layout.fragment_tabs) {
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
 
         binding.bottomNavigationView.itemIconTintList = null
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            HomeFragment.REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, _ ->
+            binding.bottomNavigationView.selectedItemId = R.id.profile_own
+        }
     }
 }

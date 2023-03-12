@@ -41,6 +41,7 @@ import kotlin.properties.Delegates
 class ListPostsFragment :
     BaseFragment(R.layout.fragment_list_posts) {
 
+    // TODO Переделать в abstract class!
     // TODO save scroll position when navigating
     // TODO avoid list invalidation when edited post
 
@@ -116,7 +117,7 @@ class ListPostsFragment :
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REQUEST_CODE,
+            ProfileFragment.REFRESH_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
             val refresh = data.getBoolean(ProfileFragment.REFRESH)
@@ -155,7 +156,7 @@ class ListPostsFragment :
         val postsHeaderAdapter = PostsHeaderAdapter(this, mode, viewModel)
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
-        val swipeRefreshLayout = if (mode == ListPostsMode.PROFILE_OWN_PAGE) {
+        val swipeRefreshLayout = if (mode == ListPostsMode.PROFILE_OWN_PAGE || mode == ListPostsMode.PROFILE_OTHER_PAGE) {
             null
         } else {
             binding.swipeRefreshLayout
@@ -175,7 +176,7 @@ class ListPostsFragment :
     }
 
     private fun initSwipeToRefresh() {
-         if (mode != ListPostsMode.PROFILE_OWN_PAGE) {
+         if (mode != ListPostsMode.PROFILE_OWN_PAGE && mode != ListPostsMode.PROFILE_OTHER_PAGE) {
              binding.swipeRefreshLayout.isEnabled = true
              binding.swipeRefreshLayout.setOnRefreshListener {
                  viewModel.refresh()

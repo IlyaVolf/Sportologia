@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -32,12 +33,22 @@ class FavouritesFragment : Fragment() {
     ): View {
         binding = FragmentFavouritesBinding.inflate(inflater, container, false)
 
+        initToolbar()
+        initContentBlock()
+        initNavToProfile()
+
+        return binding.root
+    }
+
+    private fun initToolbar() {
         binding.toolbar.setListener {
             if (it == OnToolbarBasicAction.LEFT) {
                 onBackButtonPressed()
             }
         }
+    }
 
+    private fun initContentBlock() {
         val fragments = arrayListOf(
             ListPostsFragment.newInstance(ListPostsMode.FAVOURITES_PAGE, CurrentAccount().id),
             ListServicesFragment(),
@@ -57,11 +68,36 @@ class FavouritesFragment : Fragment() {
                 else -> ""
             }
         }.attach()
+    }
 
-        return binding.root
+    // навигация к другому пользователю
+    private fun initNavToProfile() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_PROFILE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val userIdToGo = data.getString(USER_ID) ?: return@setFragmentResultListener
+                val direction =
+                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userIdToGo)
+                findNavController().navigate(
+                    direction,
+                    navOptions {
+                        anim {
+                            enter = R.anim.slide_in_right
+                            exit = R.anim.slide_out_left
+                            popEnter = R.anim.slide_in_left
+                            popExit = R.anim.slide_out_right
+                        }
+                    })
+        }
     }
 
     private fun onBackButtonPressed() {
         findNavController().navigateUp()
+    }
+
+    companion object {
+        const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_FAVOURITES"
+        const val USER_ID = "USER_ID"
     }
 }

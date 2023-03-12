@@ -1,7 +1,6 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui._obsolete
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentProfileOwnBinding
+import com.thesis.sportologia.ui.ListEventsFragment
+import com.thesis.sportologia.ui.ListServicesFragment
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.posts.ListPostsFragment
 import com.thesis.sportologia.ui.posts.ListPostsMode
@@ -25,7 +23,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProfileOwnFragment : Fragment() {
-    private lateinit var binding: FragmentProfileOwnBinding
+    /**private lateinit var binding: FragmentProfileOwnBinding
 
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -158,5 +156,5 @@ class ProfileOwnFragment : Fragment() {
                     popExit = R.anim.slide_out_right
                 }
             })
-    }
+    }*/
 }

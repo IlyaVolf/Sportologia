@@ -31,9 +31,6 @@
         <action
             android:id="@+id/action_profileFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
-        <action
-            android:id="@+id/action_profileFragment_to_listPostsFragment"
-            app:destination="@id/listPostsFragment" />
         <argument
             android:name="userId"
             app:argType="string"
@@ -101,8 +98,4 @@
         android:name="com.thesis.sportologia.ui.PhotosFragment"
         android:label="fragment_photos"
         tools:layout="@layout/fragment_photos" />
-    <fragment
-        android:id="@+id/listPostsFragment"
-        android:name="com.thesis.sportologia.ui.posts.ListPostsFragment"
-        android:label="ListPostsFragment" />
 </navigation>

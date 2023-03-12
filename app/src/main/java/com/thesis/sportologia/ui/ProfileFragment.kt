@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,6 +64,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("BUGFIX", "${this.hashCode()}")
+
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         userId = getUserIdArg()
@@ -75,6 +78,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             Profile.OWN -> initRenderProfileOwn()
             Profile.OTHER -> initRenderProfileOther()
         }
+
+        initNavToProfile()
 
         return binding.root
     }
@@ -145,7 +150,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             viewModel.refresh()
 
             requireActivity().supportFragmentManager.setFragmentResult(
-                REQUEST_CODE,
+                REFRESH_REQUEST_CODE,
                 bundleOf(REFRESH to true)
             )
         }
@@ -161,8 +166,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun initContentBlock() {
+        val listPostMode = when (mode) {
+            Profile.OWN -> ListPostsMode.PROFILE_OWN_PAGE
+            Profile.OTHER -> ListPostsMode.PROFILE_OTHER_PAGE
+        }
+
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.PROFILE_OWN_PAGE, userId),
+            ListPostsFragment.newInstance(listPostMode, userId),
             ListServicesFragment(),
             ListEventsFragment()
         )
@@ -297,6 +307,30 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         }
     }
 
+    // навигация к другому пользователю
+    private fun initNavToProfile() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_PROFILE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val userIdToGo = data.getString(USER_ID) ?: return@setFragmentResultListener
+            if (userIdToGo != userId) {
+                val direction =
+                    ProfileFragmentDirections.actionProfileFragmentToProfileFragment(userIdToGo)
+                findNavController().navigate(
+                    direction,
+                    navOptions {
+                        anim {
+                            enter = R.anim.slide_in_right
+                            exit = R.anim.slide_out_left
+                            popEnter = R.anim.slide_in_left
+                            popExit = R.anim.slide_out_right
+                        }
+                    })
+            }
+        }
+    }
+
     private fun onSubscribeButtonPressed() {
         viewModel.onSubscribeButtonPressed()
     }
@@ -329,7 +363,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun onOpenPhotosButtonPressed() {
-        findNavController().navigate(R.id.action_profileOwnFragment_to_photosFragment,
+        findNavController().navigate(R.id.action_profileFragment_to_photosFragment,
             null,
             navOptions {
                 anim {
@@ -342,7 +376,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun onOpenFollowingsButton() {
-        findNavController().navigate(R.id.action_profileOwnFragment_to_listPostsFragment,
+        /*findNavController().navigate(R.id.action_profileFragment_to_listPostsFragment,
             null,
             navOptions {
                 anim {
@@ -351,13 +385,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     popEnter = R.anim.slide_in_left
                     popExit = R.anim.slide_out_right
                 }
-            })
+            })*/
     }
 
     companion object {
         const val DEFAULT_USER_ID = "\$current_user"
-        const val REQUEST_CODE = "REFRESH_REQUEST_CODE"
+        const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_PROFILE"
+        const val REFRESH_REQUEST_CODE = "REFRESH_REQUEST_CODE"
         const val REFRESH = "REFRESH"
+        const val USER_ID = "USER_ID"
     }
 
     enum class Profile {

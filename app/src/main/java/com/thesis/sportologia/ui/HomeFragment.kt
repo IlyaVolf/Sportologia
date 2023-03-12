@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -36,15 +37,27 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("BUGFIX", "${this.hashCode()}")
+
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
+        initToolbar()
+        initContentBlock()
+        initNavToProfile()
+
+        return binding.root
+    }
+
+    private fun initToolbar() {
         binding.toolbar.setListener {
             when (it) {
                 OnToolbarHomeAction.LEFT -> onProfilePicturePressed()
                 OnToolbarHomeAction.RIGHT -> onSettingsPressed()
             }
         }
+    }
 
+    private fun initContentBlock() {
         val fragments = arrayListOf(
             ListPostsFragment.newInstance(ListPostsMode.HOME_PAGE, CurrentAccount().id),
             ListEventsFragment()
@@ -99,12 +112,38 @@ class HomeFragment : Fragment() {
                 else -> ""
             }
         }.attach()
-
-        return binding.root
     }
 
+    // навигация к другому пользователю
+    private fun initNavToProfile() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_PROFILE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val userIdToGo = data.getString(USER_ID) ?: return@setFragmentResultListener
+            val direction =
+                HomeFragmentDirections.actionHomeFragmentToProfileNested(userIdToGo)
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }
+    }
+
+    // TODO очищать стек вкладки profile_own
     private fun onProfilePicturePressed() {
-        findNavController().navigate(R.id.action_homeFragment_to_profile,
+        requireActivity().supportFragmentManager.setFragmentResult(
+            REQUEST_CODE,
+            bundleOf()
+        )
+
+        /*findNavController().navigate(R.id.action_homeFragment_to_profile_own,
             null,
             navOptions {
                 /* чтобы заменить фрагмент главного экрана на фрагмент страницы пользователя,
@@ -118,7 +157,7 @@ class HomeFragment : Fragment() {
                     popEnter = R.anim.slide_in_left
                     popExit = R.anim.slide_out_right
                 }
-            })
+            })*/
     }
 
     private fun onSettingsPressed() {
@@ -132,5 +171,11 @@ class HomeFragment : Fragment() {
                     popExit = R.anim.slide_out_right
                 }
             })
+    }
+
+    companion object {
+        const val REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE"
+        const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_HOME"
+        const val USER_ID = "USER_ID"
     }
 }

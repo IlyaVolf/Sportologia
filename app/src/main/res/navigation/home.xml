@@ -9,23 +9,24 @@
         android:id="@+id/homeFragment"
         android:name="com.thesis.sportologia.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_profile"
-            app:destination="@id/profile" />
+            android:id="@+id/action_homeFragment_to_profile_own"
+            app:destination="@id/profile_own">
+            <argument
+                android:name="userId"
+                android:defaultValue="$current_user"
+                app:argType="string" />
+        </action>
         <action
-            android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            android:id="@+id/action_homeFragment_to_profile_nested"
+            app:destination="@id/profile_nested">
+            <argument
+                android:name="userId"
+                android:defaultValue="$current_user"
+                app:argType="string" />
+        </action>
     </fragment>
-    <include app:graph="@navigation/profile" />
-    <fragment
-        android:id="@+id/profileFragment"
-        android:name="com.thesis.sportologia.ui.ProfileFragment"
-        android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
-        <argument
-            android:name="userId"
-            app:argType="string"
-            android:defaultValue="$current_user" />
-    </fragment>
+    <include app:graph="@navigation/profile_own" />
+    <include app:graph="@navigation/profile_nested" />
 </navigation>

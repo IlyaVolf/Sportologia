@@ -3,6 +3,7 @@ package com.thesis.sportologia.ui.posts.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -134,9 +135,15 @@ class PostsPagerAdapter(
     }
 
     private fun onHeaderBlockPressed(userId: String) {
+
         when (mode) {
             ListPostsMode.HOME_PAGE -> {
-                val direction = HomeFragmentDirections.actionHomeFragmentToProfileFragment(userId)
+                fragment.requireActivity().supportFragmentManager.setFragmentResult(
+                    HomeFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(HomeFragment.USER_ID to userId)
+                )
+
+                /*val direction = HomeFragmentDirections.actionHomeFragmentToProfileNested(userId)
                 fragment.findNavController().navigate(direction,
                     navOptions {
                         anim {
@@ -145,11 +152,18 @@ class PostsPagerAdapter(
                             popEnter = R.anim.slide_in_left
                             popExit = R.anim.slide_out_right
                         }
-                    })
+                    })*/
             }
             ListPostsMode.FAVOURITES_PAGE -> {
-                val direction =
-                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userId)
+                fragment.requireActivity().supportFragmentManager.setFragmentResult(
+                    FavouritesFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(FavouritesFragment.USER_ID to userId)
+                )
+
+                /*val direction =
+                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(
+                        userId
+                    )
                 fragment.findNavController().navigate(
                     direction,
                     navOptions {
@@ -159,11 +173,16 @@ class PostsPagerAdapter(
                             popEnter = R.anim.slide_in_left
                             popExit = R.anim.slide_out_right
                         }
-                    })
+                    })*/
             }
             ListPostsMode.PROFILE_OWN_PAGE -> {
-                val direction =
-                    ProfileOwnFragmentDirections.actionProfileOwnFragmentToProfileFragment(userId)
+                fragment.requireActivity().supportFragmentManager.setFragmentResult(
+                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(ProfileFragment.USER_ID to userId)
+                )
+
+                /*val direction =
+                    ProfileFragmentDirections.actionProfileFragmentToProfileFragment(userId)
                 fragment.findNavController().navigate(
                     direction,
                     navOptions {
@@ -173,12 +192,16 @@ class PostsPagerAdapter(
                             popEnter = R.anim.slide_in_left
                             popExit = R.anim.slide_out_right
                         }
-                    })
+                    })*/
             }
             ListPostsMode.PROFILE_OTHER_PAGE -> {
-                // TODO navigation
-                val direction =
-                    ProfileOwnFragmentDirections.actionProfileOwnFragmentToProfileFragment(userId)
+                fragment.requireActivity().supportFragmentManager.setFragmentResult(
+                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(ProfileFragment.USER_ID to userId)
+                )
+
+                /*val direction =
+                    ProfileFragmentDirections.actionProfileFragmentToProfileFragment(userId)
                 fragment.findNavController().navigate(
                     direction,
                     navOptions {
@@ -188,7 +211,7 @@ class PostsPagerAdapter(
                             popEnter = R.anim.slide_in_left
                             popExit = R.anim.slide_out_right
                         }
-                    })
+                    })*/
             }
         }
     }
