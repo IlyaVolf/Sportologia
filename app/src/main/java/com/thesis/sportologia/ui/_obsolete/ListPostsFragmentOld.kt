@@ -1,10 +1,11 @@
-package com.thesis.sportologia.ui.posts
+package com.thesis.sportologia.ui._obsolete
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
@@ -15,13 +16,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.CreateEditPostFragment
+import com.thesis.sportologia.ui.FavouritesFragment
+import com.thesis.sportologia.ui.HomeFragment
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
+import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -30,21 +33,44 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.properties.Delegates
 
 
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
-abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
+class ListPostsFragment :
+    BaseFragment(R.layout.fragment_list_posts) {
 
-    abstract override val viewModel: ListPostsViewModel
-    abstract val isSwipeToRefreshEnabled: Boolean
-    abstract val onHeaderBlockPressedAction: (String) -> Unit
+    // TODO Переделать в abstract class!
+    // TODO save scroll position when navigating
+    // TODO avoid list invalidation when edited post
 
-    protected var userId by Delegates.notNull<String>()
-    protected lateinit var binding: FragmentListPostsBinding
+    @Inject
+    lateinit var factory: ListPostsViewModelOld.Factory
+
+    private lateinit var mode: ListPostsMode
+    private var userId by Delegates.notNull<String>()
+
+    override val viewModel by viewModelCreator {
+        factory.create(mode, userId)
+    }
+
+    private lateinit var binding: FragmentListPostsBinding
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
+
+    companion object {
+        // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации
+        fun newInstance(mode: ListPostsMode, userId: String): ListPostsFragment {
+            val myFragment = ListPostsFragment()
+            val args = Bundle()
+            args.putSerializable("mode", mode)
+            args.putString("userId", userId)
+            myFragment.arguments = args
+            return myFragment
+        }
+    }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
     override fun onCreateView(
@@ -53,6 +79,7 @@ abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
     ): View {
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
+        mode = arguments?.getSerializable("mode") as ListPostsMode? ?: ListPostsMode.HOME_PAGE
         userId = arguments?.getString("userId") ?: throw Exception()
 
         initResultsProcessing()
@@ -102,10 +129,50 @@ abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
         }
     }
 
-    abstract fun initPostHeaderAdapter(): PostsHeaderAdapter
+    /*override fun onResume() {
+        super.onResume()
+
+        val layoutView = view!!.findViewById<View>(R.id.layout)
+        if (layoutView != null) {
+            val layoutParams = layoutView.layoutParams
+            if (layoutParams != null) {
+                layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                layoutView.requestLayout()
+            }
+        }
+    }*/
+
+    // TODO при нажатии на кнпоку назад приложение закрывается
+    private val onHeaderBlockPressedAction : (String) -> Unit = { userId ->
+        when (mode) {
+            ListPostsMode.FAVOURITES_PAGE -> {
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    FavouritesFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(FavouritesFragment.USER_ID to userId)
+                )
+            }
+            ListPostsMode.HOME_PAGE -> {
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    HomeFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(HomeFragment.USER_ID to userId)
+                )
+            }
+            ListPostsMode.PROFILE_OWN_PAGE -> {
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(ProfileFragment.USER_ID to userId)
+                )
+            }
+            ListPostsMode.PROFILE_OTHER_PAGE -> {
+                requireActivity().supportFragmentManager.setFragmentResult(
+                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
+                    bundleOf(ProfileFragment.USER_ID to userId)
+                )
+            }
+        }
+    }
 
     private fun initPostsList(): PostsPagerAdapter {
-
         val adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
@@ -118,13 +185,15 @@ abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.swipeRefreshLayout
-        } else {
-            null
-        }
-        val postsHeaderAdapter = initPostHeaderAdapter()
-        val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
+        val postsHeaderAdapterOld = PostsHeaderAdapterOld(this, mode, viewModel)
+        val concatAdapter = ConcatAdapter(postsHeaderAdapterOld, adapterWithLoadState)
+
+        val swipeRefreshLayout =
+            if (mode == ListPostsMode.PROFILE_OWN_PAGE || mode == ListPostsMode.PROFILE_OTHER_PAGE) {
+                null
+            } else {
+                binding.swipeRefreshLayout
+            }
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
         binding.postsList.adapter = concatAdapter
@@ -140,7 +209,7 @@ abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
     }
 
     private fun initSwipeToRefresh() {
-        if (isSwipeToRefreshEnabled) {
+        if (mode != ListPostsMode.PROFILE_OWN_PAGE && mode != ListPostsMode.PROFILE_OTHER_PAGE) {
             binding.swipeRefreshLayout.isEnabled = true
             binding.swipeRefreshLayout.setOnRefreshListener {
                 viewModel.refresh()
@@ -226,4 +295,11 @@ abstract class ListPostsFragment : BaseFragment(R.layout.fragment_list_posts) {
         }
     }
 
+}
+
+enum class ListPostsMode {
+    HOME_PAGE,
+    PROFILE_OTHER_PAGE,
+    PROFILE_OWN_PAGE,
+    FAVOURITES_PAGE
 }

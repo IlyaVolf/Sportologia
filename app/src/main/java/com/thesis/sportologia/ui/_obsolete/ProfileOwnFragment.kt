@@ -15,8 +15,6 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.ui.ListEventsFragment
 import com.thesis.sportologia.ui.ListServicesFragment
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.posts.ListPostsFragment
-import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 

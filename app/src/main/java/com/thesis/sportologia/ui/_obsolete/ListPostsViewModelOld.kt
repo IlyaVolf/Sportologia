@@ -1,32 +1,38 @@
-package com.thesis.sportologia.ui.posts
+package com.thesis.sportologia.ui._obsolete
 
 
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import androidx.paging.map
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
 import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-abstract class ListPostsViewModel constructor(
-    private val userId: String,
+// TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
+class ListPostsViewModelOld @AssistedInject constructor(
+    @Assisted private val mode: ListPostsMode,
+    @Assisted private val userId: String,
     private val postsRepository: PostsRepository,
     logger: Logger
-) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
+) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapterOld.FilterListener {
 
     // LiveData для Event (т.е. действий)
 
-    internal val search = MutableLiveData("")
+    private val search = MutableLiveData("")
 
     private val athTorgFLiveData = MutableLiveData<Boolean?>(null)
     var athTorgF: Boolean?
@@ -49,9 +55,33 @@ abstract class ListPostsViewModel constructor(
 
     val postsFlow: Flow<PagingData<PostListItem>>
 
-
     init {
-        val originPostsFlow = getDataFlow()
+        val originPostsFlow = when (mode) {
+            ListPostsMode.PROFILE_OWN_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserPosts(userId)
+                    }.cachedIn(viewModelScope)
+            }
+            ListPostsMode.PROFILE_OTHER_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserPosts(userId)
+                    }.cachedIn(viewModelScope)
+            }
+            ListPostsMode.HOME_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserSubscribedOnPosts(userId, athTorgF)
+                    }.cachedIn(viewModelScope)
+            }
+            ListPostsMode.FAVOURITES_PAGE -> {
+                search.asFlow()
+                    .flatMapLatest {
+                        postsRepository.getPagedUserFavouritePosts(athTorgF)
+                    }.cachedIn(viewModelScope)
+            }
+        }
 
         postsFlow = combine(
             originPostsFlow,
@@ -59,8 +89,6 @@ abstract class ListPostsViewModel constructor(
             this::merge
         )
     }
-
-    abstract fun getDataFlow(): Flow<PagingData<Post>>
 
     override fun onPostDelete(postListItem: PostListItem) {
         if (isInProgress(postListItem.id)) return
@@ -215,5 +243,11 @@ abstract class ListPostsViewModel constructor(
         val isLikedFlags = mutableMapOf<Long, Boolean>()
         val isFavouriteFlags = mutableMapOf<Long, Boolean>()
     }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(mode: ListPostsMode, userId: String): ListPostsViewModelOld
+    }
+
 
 }

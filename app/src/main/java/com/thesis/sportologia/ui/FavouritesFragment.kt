@@ -13,9 +13,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentFavouritesBinding
+import com.thesis.sportologia.ui.posts.ListPostsFragmentFavourites
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.posts.ListPostsFragment
-import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -50,7 +49,7 @@ class FavouritesFragment : Fragment() {
 
     private fun initContentBlock() {
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.FAVOURITES_PAGE, CurrentAccount().id),
+            ListPostsFragmentFavourites.newInstance(CurrentAccount().id),
             ListServicesFragment(),
             ListEventsFragment()
         )

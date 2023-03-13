@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -16,9 +15,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentHomeBinding
+import com.thesis.sportologia.ui.posts.ListPostsFragmentHome
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.posts.ListPostsFragment
-import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,7 +57,7 @@ class HomeFragment : Fragment() {
 
     private fun initContentBlock() {
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(ListPostsMode.HOME_PAGE, CurrentAccount().id),
+            ListPostsFragmentHome.newInstance(CurrentAccount().id),
             ListEventsFragment()
         )
         adapter = PagerAdapter(this, fragments)

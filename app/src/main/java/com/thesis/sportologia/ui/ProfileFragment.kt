@@ -17,10 +17,10 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileBinding
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOther
+import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOwn
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.posts.ListPostsFragment
-import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.users.entities.AthleteItem
 import com.thesis.sportologia.ui.users.entities.OrganizationItem
 import com.thesis.sportologia.ui.users.entities.UserItem
@@ -166,13 +166,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun initContentBlock() {
-        val listPostMode = when (mode) {
-            Profile.OWN -> ListPostsMode.PROFILE_OWN_PAGE
-            Profile.OTHER -> ListPostsMode.PROFILE_OTHER_PAGE
+        val listPostsFragment = when (mode) {
+            Profile.OWN -> ListPostsFragmentProfileOwn.newInstance(userId)
+            Profile.OTHER -> ListPostsFragmentProfileOther.newInstance(userId)
         }
 
         val fragments = arrayListOf(
-            ListPostsFragment.newInstance(listPostMode, userId),
+            listPostsFragment,
             ListServicesFragment(),
             ListEventsFragment()
         )

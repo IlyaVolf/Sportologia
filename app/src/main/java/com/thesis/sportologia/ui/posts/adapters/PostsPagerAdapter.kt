@@ -3,9 +3,7 @@ package com.thesis.sportologia.ui.posts.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -14,7 +12,6 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.ui.*
-import com.thesis.sportologia.ui.posts.ListPostsMode
 import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostAction
@@ -23,7 +20,7 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
 
 class PostsPagerAdapter(
     val fragment: Fragment,
-    private val mode: ListPostsMode,
+    private val onHeaderBlockPressedAction: (String) -> Unit,
     private val listener: MoreButtonListener,
 ) : PagingDataAdapter<PostListItem, PostsPagerAdapter.Holder>(PostsDiffCallback()) {
 
@@ -32,19 +29,17 @@ class PostsPagerAdapter(
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
         val postListItem = getItem(position) ?: return
-
         val itemPost = ItemPostView(holder.binding, context)
 
         itemPost.setListener {
             when (it) {
-                OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressed(postListItem.authorId)
+                OnItemPostAction.HEADER_BLOCK -> onHeaderBlockPressedAction(postListItem.authorId)
                 OnItemPostAction.MORE -> onMoreButtonPressed(postListItem)
                 OnItemPostAction.LIKE -> listener.onToggleLike(postListItem)
                 OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(postListItem)
                 else -> {}
             }
         }
-
         itemPost.setText(postListItem.text)
         itemPost.setUsername(postListItem.authorName)
         itemPost.setAuthorAvatar(postListItem.profilePictureUrl)
@@ -87,9 +82,7 @@ class PostsPagerAdapter(
         )
     }
 
-    private fun onMoreButtonPressed(
-        postListItem: PostListItem
-    ) {
+    private fun onMoreButtonPressed(postListItem: PostListItem) {
         val actionsMore: Array<Pair<String, DialogOnClickAction?>> =
             if (postListItem.authorId == CurrentAccount().id) {
                 arrayOf(
@@ -132,88 +125,6 @@ class PostsPagerAdapter(
                     popExit = R.anim.pop_exit
                 }
             })
-    }
-
-    private fun onHeaderBlockPressed(userId: String) {
-
-        when (mode) {
-            ListPostsMode.HOME_PAGE -> {
-                fragment.requireActivity().supportFragmentManager.setFragmentResult(
-                    HomeFragment.GO_TO_PROFILE_REQUEST_CODE,
-                    bundleOf(HomeFragment.USER_ID to userId)
-                )
-
-                /*val direction = HomeFragmentDirections.actionHomeFragmentToProfileNested(userId)
-                fragment.findNavController().navigate(direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })*/
-            }
-            ListPostsMode.FAVOURITES_PAGE -> {
-                fragment.requireActivity().supportFragmentManager.setFragmentResult(
-                    FavouritesFragment.GO_TO_PROFILE_REQUEST_CODE,
-                    bundleOf(FavouritesFragment.USER_ID to userId)
-                )
-
-                /*val direction =
-                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(
-                        userId
-                    )
-                fragment.findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })*/
-            }
-            ListPostsMode.PROFILE_OWN_PAGE -> {
-                fragment.requireActivity().supportFragmentManager.setFragmentResult(
-                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
-                    bundleOf(ProfileFragment.USER_ID to userId)
-                )
-
-                /*val direction =
-                    ProfileFragmentDirections.actionProfileFragmentToProfileFragment(userId)
-                fragment.findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })*/
-            }
-            ListPostsMode.PROFILE_OTHER_PAGE -> {
-                fragment.requireActivity().supportFragmentManager.setFragmentResult(
-                    ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
-                    bundleOf(ProfileFragment.USER_ID to userId)
-                )
-
-                /*val direction =
-                    ProfileFragmentDirections.actionProfileFragmentToProfileFragment(userId)
-                fragment.findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })*/
-            }
-        }
     }
 
     interface MoreButtonListener {
