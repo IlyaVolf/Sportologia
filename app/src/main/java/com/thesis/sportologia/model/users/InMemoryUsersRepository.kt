@@ -64,6 +64,8 @@ class InMemoryUsersRepository @Inject constructor() : UsersRepository {
     override suspend fun getUser(userId: String): User? {
         delay(1000)
 
+        Log.d("BUGFIX", "got user")
+
         // throw Exception()
 
         return if (users.none { it.id == userId }) return null else users.filter { it.id == userId }[0]

@@ -32,11 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 
-// TODO проверка на то, userId поста совпадает с текущим открытым экраном, чтобы предовратиеть бесконечный переход!
-// TODO смерджить profile own и этот экран
-// TODO обовление страницы по свайпу
-// TODO слить визуально! загрузку экрана воедино с загрузкой публикаицй
-
+// TODO сохранять состояния экрана при навигации. Ибо при навигации создаётся новый экземпляр и загрузка повторяется вновь и вновь
 // TODO баг при мене темы - кнопка subscribe не работает!
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
@@ -59,6 +55,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     private lateinit var tabLayout: TabLayout
 
     private val args by navArgs<ProfileFragmentArgs>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -214,14 +211,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     binding.fpError.root.visibility = View.INVISIBLE
                     binding.fpContentBlock.visibility = View.VISIBLE
 
-                    when (holder.data.lastAction) {
-                        UserItem.LastAction.INIT -> {
-                            renderUserDetails(holder.data)
-                        }
-                        UserItem.LastAction.SUBSCRIBE_CHANGED -> {
-                            renderUserDetailsOnSubscriptionAction(holder.data)
-                        }
-                    }
+                    renderUserDetails(holder.data)
+                    // TODO идея, чтобы при подписке все не перезагружать. Но работает так себе
+                    // TODO при переходе от одного экрана  к другому, видимо, все заново грузит
+                    /*    when (holder.data.lastAction) {
+                            UserItem.LastAction.INIT -> {
+                                renderUserDetails(holder.data)
+                            }
+                            UserItem.LastAction.SUBSCRIBE_CHANGED -> {
+                                renderUserDetailsOnSubscriptionAction(holder.data)
+                            }
+                     }*/
                 }
                 is DataHolder.ERROR -> {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -256,6 +256,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun renderUserDetails(userItem: UserItem) {
+        Log.d("BUGFIX", "1313131313")
+
         binding.subscribeButton.setOnClickListener {
             onSubscribeButtonPressed()
         }

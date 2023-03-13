@@ -60,6 +60,7 @@ class HomeFragment : Fragment() {
             ListPostsFragmentHome.newInstance(CurrentAccount().id),
             ListEventsFragment()
         )
+        Log.d("BUGFIX", "afjpafjoafp ${fragments[0].hashCode()}")
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
