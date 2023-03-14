@@ -41,8 +41,9 @@ class EventsPagerAdapter(
             }
         }
 
-        itemEvent.setOrganizerName(eventListItem.organizerName)
+        itemEvent.setEventName(eventListItem.name)
         itemEvent.setDescription(eventListItem.description)
+        itemEvent.setOrganizerName(eventListItem.organizerName)
         itemEvent.setOrganizerAvatar(eventListItem.profilePictureUrl)
         itemEvent.setPrice(eventListItem.price, eventListItem.currency)
         itemEvent.setDate(eventListItem.dateFrom, eventListItem.dateTo)

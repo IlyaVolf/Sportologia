@@ -5,6 +5,8 @@ import java.util.*
 
 data class Event(
     val id: Long,
+    val name: String,
+    var description: String,
     var organizerId: String,
     var organizerName: String,
     var isOrganizerAthlete: Boolean,
@@ -15,7 +17,6 @@ data class Event(
     var price: Float,
     var currency: String,
     var categories: Map<String, Boolean>,
-    var description: String,
     var likesCount: Int,
     var isLiked: Boolean,
     var isFavourite: Boolean,

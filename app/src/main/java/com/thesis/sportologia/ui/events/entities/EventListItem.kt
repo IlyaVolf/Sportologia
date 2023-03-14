@@ -9,6 +9,8 @@ data class EventListItem(
     val isInProgress: Boolean,
 ) {
     val id: Long get() = event.id
+    val name: String get() = event.name
+    val description: String get() = event.description
     val organizerId: String get() = event.organizerId
     val organizerName: String get() = event.organizerName
     val address: Address? get() = event.address // TODO non-null
@@ -17,7 +19,6 @@ data class EventListItem(
     val price: Float get() = event.price
     val currency: String get() = event.currency
     val profilePictureUrl: String? get() = event.profilePictureUrl
-    val description: String get() = event.description
     val likesCount: Int get() = event.likesCount
     val isLiked: Boolean get() = event.isLiked
     val isFavourite: Boolean get() = event.isFavourite

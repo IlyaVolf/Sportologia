@@ -29,12 +29,14 @@ class InMemoryEventsRepository @Inject constructor(
         dateFrom.set(2023, 5, 3, 16, 0, 0)
         dateTo.set(2023, 5, 3, 20, 0, 0)
 
-        dateFrom2.set(2023, 2, 25, 10, 0, 0)
-        dateTo2.set(2023, 2, 28, 20, 0, 0)
+        dateFrom2.set(2023, 1, 25, 10, 0, 0)
+        dateTo2.set(2023, 1, 28, 20, 0, 0)
     }
 
     private val eventSample = Event(
         id = 0L,
+        name = "Сходка лыжников в НГУ",
+        description = "Я Игорю и я провожу лучшие занятия по лыжам",
         organizerId = "i_chiesov",
         organizerName = "Игорь Чиёсов",
         isOrganizerAthlete = true,
@@ -48,7 +50,6 @@ class InMemoryEventsRepository @Inject constructor(
             Pair("забег", true),
             Pair("мастер-класс", false),
         ),
-        description = "Я Игорю и я провожу лучшие занятия для Андрея",
         likesCount = 5,
         isLiked = false,
         isFavourite = false,
@@ -56,9 +57,11 @@ class InMemoryEventsRepository @Inject constructor(
     )
 
     private val events = mutableListOf(
-        eventSample,
+        eventSample.copy(isFavourite = true),
         Event(
             id = 1L,
+            name = "Мастер-класс",
+            description = "Лучший в мире мастер-класс",
             organizerId = "stroitel",
             organizerName = "Тренажёрный зал Строитель",
             isOrganizerAthlete = false,
@@ -72,10 +75,9 @@ class InMemoryEventsRepository @Inject constructor(
                 Pair("забег", false),
                 Pair("мастер-класс", true),
             ),
-            description = "Лучший в мире мастер-класс",
             likesCount = 10,
-            isLiked = true,
-            isFavourite = false,
+            isLiked = false,
+            isFavourite = true,
             photosUrls = null,
         ),
         eventSample.copy(id = 2L),

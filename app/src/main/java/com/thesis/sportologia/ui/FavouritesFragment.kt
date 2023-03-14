@@ -50,24 +50,24 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initContentBlock() {
-        val fragments = arrayListOf(
+        val tabsFragments = arrayListOf(
             ListPostsFragmentFavourites.newInstance(CurrentAccount().id),
             ListServicesFragment(),
             ListEventsFragmentFavourites.newInstance(CurrentAccount().id),
         )
-        adapter = PagerAdapter(this, fragments)
+        val tabsTitles = arrayListOf(
+            getString(R.string.posts),
+            getString(R.string.services),
+            getString(R.string.events),
+        )
+        adapter = PagerAdapter(this, tabsFragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
 
         tabLayout = binding.tabLayout
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = when (position) {
-                0 -> getString(R.string.posts)
-                1 -> getString(R.string.services)
-                2 -> getString(R.string.events)
-                else -> ""
-            }
+            tab.text = tabsTitles[position]
         }.attach()
     }
 
@@ -78,18 +78,18 @@ class FavouritesFragment : Fragment() {
             viewLifecycleOwner
         ) { _, data ->
             val userIdToGo = data.getString(USER_ID) ?: return@setFragmentResultListener
-                val direction =
-                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userIdToGo)
-                findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })
+            val direction =
+                FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userIdToGo)
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
         }
     }
 

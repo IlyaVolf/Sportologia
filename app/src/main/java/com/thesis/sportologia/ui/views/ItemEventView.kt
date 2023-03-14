@@ -171,6 +171,10 @@ class ItemEventView(
         }
     }
 
+    fun setEventName(text: String) {
+        binding.eventName.text = text
+    }
+
     fun setDescription(text: String) {
         binding.eventDescription.text = text
     }
