@@ -18,6 +18,7 @@ import com.thesis.sportologia.utils.logger.Logger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
+// TODO бесконечная загрузка при попытке подписаться через посты и через мероприятия
 abstract class ListEventsViewModel constructor(
     private val userId: String,
     private val eventsRepository: EventsRepository,
@@ -28,7 +29,7 @@ abstract class ListEventsViewModel constructor(
 
     internal val search = MutableLiveData("")
 
-    private val isUpcomingOnlyLiveData = MutableLiveData(false)
+    private val isUpcomingOnlyLiveData = MutableLiveData(true)
     var isUpcomingOnly: Boolean
         get() = isUpcomingOnlyLiveData.value!!
         set(value) {

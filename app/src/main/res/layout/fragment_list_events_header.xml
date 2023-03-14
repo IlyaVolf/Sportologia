@@ -16,7 +16,7 @@
         android:layout_height="37dp"
         android:paddingHorizontal="@dimen/margin_sides"
         app:icon="@drawable/icon_plus"
-        app:text="@string/create_post" />
+        app:text="@string/create_event" />
 
     <Space
         android:id="@+id/create_event_button_space"
