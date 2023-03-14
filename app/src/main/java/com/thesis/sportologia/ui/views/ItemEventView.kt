@@ -188,17 +188,20 @@ class ItemEventView(
     }
 
     fun setDate(dateFromMillis: Long, dateToMillis: Long) {
+        val dateNow = Calendar.getInstance()
         val dateFrom = Calendar.getInstance()
         dateFrom.timeInMillis = dateFromMillis
         val dateTo = Calendar.getInstance()
         dateTo.timeInMillis = dateToMillis
 
+        if (dateNow.timeInMillis > dateToMillis) {
+            binding.eventEndedLabel.visibility = VISIBLE
+        } else {
+            binding.eventEndedLabel.visibility = GONE
+        }
+
         val parsedDates = parseDateRange(dateFrom, dateTo)
         binding.eventDate.text = parsedDates
-    }
-
-    fun processDate(dateFrom: String, dateTo: String): String {
-        return ""
     }
 
     fun setAddress(address: String) {

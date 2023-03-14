@@ -33,7 +33,7 @@
             <FrameLayout
                 android:layout_gravity="top"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp">
+                android:layout_height="32dp">
                 <ImageView
                     android:id="@+id/event_more"
                     android:layout_width="24dp"
@@ -47,6 +47,15 @@
             </FrameLayout>
 
         </LinearLayout>
+
+        <TextView
+            style="@style/TextStyleSecondary"
+            android:textSize="12sp"
+            android:layout_marginHorizontal="@dimen/margin_sides"
+            android:id="@+id/event_ended_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/event_ended"/>
 
         <Space
             android:layout_width="match_parent"

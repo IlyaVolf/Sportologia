@@ -184,6 +184,8 @@
     <string name="events_empty">Нет мероприятий</string>
     <string name="photos_empty">Нет фото</string>
 
+    <string name="event_ended">Мероприятия завершено</string>
+
     <string name="post_new">Новая публикация</string>
     <string name="service_new">Новая услуга</string>
     <string name="program_new">Новая программа</string>

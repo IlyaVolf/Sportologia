@@ -142,7 +142,9 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
 
-        savedState.currentValue = currentValue
+        if (::currentValue.isInitialized) {
+            savedState.currentValue = currentValue
+        }
 
         return savedState
     }
