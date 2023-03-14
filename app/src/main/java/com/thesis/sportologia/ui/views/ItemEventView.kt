@@ -14,8 +14,12 @@ import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
 import com.thesis.sportologia.databinding.ItemPostBinding
+import com.thesis.sportologia.utils.convertPrice
+import com.thesis.sportologia.utils.getCurrencyAbbreviation
+import com.thesis.sportologia.utils.parseDateRange
 import com.thesis.sportologia.utils.setAvatar
 import java.net.URI
+import java.util.Calendar
 import kotlin.properties.Delegates
 
 
@@ -101,7 +105,7 @@ class ItemEventView(
 
         val isMainPhotoSquareLimited =
             typedArray.getBoolean(R.styleable.ItemEventView_ie_isMainPhotoSquareLimited, false)
-        binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
+        binding.eventPhotosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
 
         typedArray.recycle()
     }
@@ -122,12 +126,12 @@ class ItemEventView(
             this.likesCount = likesCount.toString().substring(0, string.length - 6) + "M"
         }
 
-        binding.likesCount.text = this.likesCount
+        binding.eventLikesCount.text = this.likesCount
 
         if (this.isLiked) {
-            binding.like.setColorFilter(context.getColor(R.color.pink))
+            binding.eventLike.setColorFilter(context.getColor(R.color.pink))
         } else {
-            binding.like.setColorFilter(context.getColor(R.color.element_tertiary))
+            binding.eventLike.setColorFilter(context.getColor(R.color.element_tertiary))
         }
     }
 
@@ -136,9 +140,9 @@ class ItemEventView(
         isLiked = !isLiked
 
         if (this.isLiked) {
-            binding.like.setColorFilter(context.getColor(R.color.pink))
+            binding.eventLike.setColorFilter(context.getColor(R.color.pink))
         } else {
-            binding.like.setColorFilter(context.getColor(R.color.element_tertiary))
+            binding.eventLike.setColorFilter(context.getColor(R.color.element_tertiary))
         }
     }
 
@@ -146,11 +150,11 @@ class ItemEventView(
         this.isAddedToFavs = isAddedToFavs
 
         if (this.isAddedToFavs) {
-            binding.star.setImageResource(R.drawable.icon_star_pressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.eventStar.setImageResource(R.drawable.icon_star_pressed)
+            binding.eventStar.setColorFilter(context.getColor(R.color.background_inverted))
         } else {
-            binding.star.setImageResource(R.drawable.icon_star_unpressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.eventStar.setImageResource(R.drawable.icon_star_unpressed)
+            binding.eventStar.setColorFilter(context.getColor(R.color.background_inverted))
         }
     }
 
@@ -159,43 +163,47 @@ class ItemEventView(
         isAddedToFavs = !isAddedToFavs
 
         if (this.isAddedToFavs) {
-            binding.star.setImageResource(R.drawable.icon_star_pressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.eventStar.setImageResource(R.drawable.icon_star_pressed)
+            binding.eventStar.setColorFilter(context.getColor(R.color.background_inverted))
         } else {
-            binding.star.setImageResource(R.drawable.icon_star_unpressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.eventStar.setImageResource(R.drawable.icon_star_unpressed)
+            binding.eventStar.setColorFilter(context.getColor(R.color.background_inverted))
         }
     }
 
     fun setDescription(text: String) {
-        binding.description.text = text
+        binding.eventDescription.text = text
     }
 
     fun setOrganizerAvatar(uri: String?) {
-        setAvatar(uri, context, binding.avatar)
+        setAvatar(uri, context, binding.eventAvatar)
     }
 
     fun setOrganizerName(username: String) {
-        binding.userName.text = username
+        binding.eventUserName.text = username
     }
 
-    // TODO parser which merges from and to dates
-    fun setDate(dateFrom: String, dateTo: String) {
-        binding.date.text = "$dateFrom $dateTo"
+    fun setDate(dateFromMillis: Long, dateToMillis: Long) {
+        val dateFrom = Calendar.getInstance()
+        dateFrom.timeInMillis = dateFromMillis
+        val dateTo = Calendar.getInstance()
+        dateTo.timeInMillis = dateToMillis
+
+        val parsedDates = parseDateRange(dateFrom, dateTo)
+        binding.eventDate.text = parsedDates
+    }
+
+    fun processDate(dateFrom: String, dateTo: String): String {
+        return ""
     }
 
     fun setAddress(address: String) {
-        binding.address.text = address
+        binding.eventAddress.text = address
     }
 
     // TODO логика преобразования валют в VM
     fun setPrice(price: Float, currency: String) {
-        if (price == 0f) {
-            binding.price.text = context.getString(R.string.free)
-        } else {
-            // TODO нормальный кастинг валюты
-            binding.price.text = "$price $currency"
-        }
+        binding.eventPrice.text = convertPrice(context, price, currency)
     }
 
     // TODO photos
@@ -203,39 +211,39 @@ class ItemEventView(
     }
 
     private fun initListeners() {
-        binding.organizerBlock.setOnClickListener {
+        binding.eventOrganizerBlock.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.ORGANIZER_BLOCK)
             }
         }
 
-        binding.addressBlock.setOnClickListener {
+        binding.eventAddressBlock.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.ADDRESS_BLOCK)
             }
         }
 
-        binding.like.setOnClickListener {
+        binding.eventLike.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.LIKE)
                 toggleLike()
             }
         }
 
-        binding.star.setOnClickListener {
+        binding.eventStar.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.FAVS)
                 toggleFavs()
             }
         }
 
-        binding.photosBlock.setOnClickListener {
+        binding.eventPhotosBlock.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.PHOTOS_BLOCK)
             }
         }
 
-        binding.more.setOnClickListener {
+        binding.eventMore.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.MORE)
             }

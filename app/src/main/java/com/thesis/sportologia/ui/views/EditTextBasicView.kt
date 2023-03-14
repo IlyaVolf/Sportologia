@@ -22,8 +22,9 @@ enum class OnEditTextBasicAction {
 
 fun inputTypeMap(inputType: String): Int {
     return when (inputType) {
-        "text" -> InputType.TYPE_CLASS_TEXT
+        "textMultiLine" -> InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_CLASS_TEXT
         "number" -> InputType.TYPE_NUMBER_FLAG_DECIMAL
+        "textSingleLine" -> InputType.TYPE_CLASS_TEXT
         "textEmailAddress" -> InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         "textPassword" -> InputType.TYPE_TEXT_VARIATION_PASSWORD
         else -> InputType.TYPE_CLASS_TEXT
@@ -80,7 +81,7 @@ class EditTextBasicView(
         val hint = typedArray.getString(R.styleable.EditTextBasicView_editTextHint)
         binding.textBlock.hint = hint
 
-        val inputType = typedArray.getString(R.styleable.EditTextBasicView_editTextInputType) ?: "text"
+        val inputType = typedArray.getString(R.styleable.EditTextBasicView_editTextInputType) ?: "textMultiLine"
         binding.textBlock.inputType = inputTypeMap(inputType)
 
         typedArray.recycle()

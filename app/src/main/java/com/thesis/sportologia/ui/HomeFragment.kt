@@ -17,6 +17,8 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentHomeBinding
 import com.thesis.sportologia.ui.posts.ListPostsFragmentHome
 import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.events.ListEventsFragment
+import com.thesis.sportologia.ui.events.ListEventsFragmentHome
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +60,7 @@ class HomeFragment : Fragment() {
     private fun initContentBlock() {
         val fragments = arrayListOf(
             ListPostsFragmentHome.newInstance(CurrentAccount().id),
-            ListEventsFragment()
+            ListEventsFragmentHome.newInstance(CurrentAccount().id),
         )
         Log.d("BUGFIX", "afjpafjoafp ${fragments[0].hashCode()}")
         adapter = PagerAdapter(this, fragments)

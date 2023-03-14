@@ -49,6 +49,11 @@
     <string name="category_body_building">Бодибилдинг</string>
     <string name="category_aerobics">Аэробика</string>
 
+    <!-- Dates -->
+    <string name="date_today">Сегодня</string>
+    <string name="date_yesterday">Вчера</string>
+    <string name="date_at">в</string>
+
     <!-- Content Default -->
     <string name="test_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
 
@@ -196,8 +201,13 @@
     <string name="ask_delete_post_warning">Удалить запись?</string>
     <string name="error_empty_post">Ошибка: пустая запись</string>
 
-    <!-- Create Event Page -->
+    <!-- Create/Edit/Delete Event Page -->
     <string name="event_name">Название мероприятия</string>
+
+    <string name="ask_cancel_create_event">Отменить создание мероприятия?</string>
+    <string name="ask_cancel_edit_event">Отменить редактирование мероприятия?</string>
+    <string name="ask_cancel_event_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_event_warning">Удалить мероприятие?</string>
 
     <string name="event_name_hint">Укажите название мероприятия</string>
     <string name="event_date_hint">Укажите дату проведения мероприятия</string>
@@ -242,6 +252,8 @@
     <string name="filter_posts_all">Все</string>
     <string name="filter_posts_athletes">Спортсмены</string>
     <string name="filter_posts_organizations">Организации</string>
+    <string name="filter_events_all">Все</string>
+    <string name="filter_events_upcoming">Предстоящие</string>
 
     <!-- Settings Page -->
     <string name="settings">Настройки</string>

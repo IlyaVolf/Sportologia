@@ -179,19 +179,19 @@ abstract class ListPostsViewModel constructor(
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
                 val localTextFlag = localChanges.value.isTextFlags[post.id]
 
-                val userWithLocalChanges = post
+                val postWithLocalChanges = post
                 if (localFavoriteFlag != null) {
-                    userWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
-                    userWithLocalChanges.copy(isFavourite = localLikedFlag)
+                    postWithLocalChanges.copy(isFavourite = localLikedFlag)
                 }
                 if (localTextFlag != null) {
-                    userWithLocalChanges.copy(text = localTextFlag)
+                    postWithLocalChanges.copy(text = localTextFlag)
                 }
 
 
-                PostListItem(userWithLocalChanges, isInProgress)
+                PostListItem(postWithLocalChanges, isInProgress)
             }
     }
 

@@ -1,50 +1,52 @@
-package com.thesis.sportologia.ui.posts
+package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.ui.CreateEditPostFragment
+import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.ui.ProfileFragment
-import com.thesis.sportologia.ui.adapters.*
+import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
+import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
+import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
-import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
+import com.thesis.sportologia.ui.events.ListEventsViewModel
+import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
+import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
+import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.net.URI
 import kotlin.properties.Delegates
 
-
 @AndroidEntryPoint
-@ExperimentalCoroutinesApi
-@FlowPreview
-abstract class ListPostsFragment : Fragment() {
+abstract class ListEventsFragment : Fragment() {
 
-    abstract val viewModel: ListPostsViewModel
+    abstract val viewModel: ListEventsViewModel
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onHeaderBlockPressedAction: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
-    protected lateinit var binding: FragmentListPostsBinding
+    protected lateinit var binding: FragmentListEventsBinding
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
@@ -52,16 +54,16 @@ abstract class ListPostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListPostsBinding.inflate(inflater, container, false)
+        binding = FragmentListEventsBinding.inflate(inflater, container, false)
 
         userId = arguments?.getString("userId") ?: throw Exception()
 
         initResultsProcessing()
         initSwipeToRefresh()
-        val adapter = initPostsList()
+        val adapter = initEventsList()
 
         observeErrorMessages()
-        observePosts(adapter)
+        observeEvents(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
 
@@ -72,25 +74,25 @@ abstract class ListPostsFragment : Fragment() {
     }
 
     private fun initResultsProcessing() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            CreateEditPostFragment.IS_CREATED_REQUEST_CODE,
+        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditEventFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val isSaved = data.getBoolean(CreateEditPostFragment.IS_CREATED)
+            val isSaved = data.getBoolean(CreateEditEventFragment.IS_CREATED)
             if (isSaved) {
-                viewModel.onPostCreated()
+                viewModel.onEventCreated()
             }
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            CreateEditPostFragment.IS_EDITED_REQUEST_CODE,
+            CreateEditEventFragment.IS_EDITED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val isSaved = data.getBoolean(CreateEditPostFragment.IS_EDITED)
+            val isSaved = data.getBoolean(CreateEditEventFragment.IS_EDITED)
             if (isSaved) {
-                viewModel.onPostEdited()
+                viewModel.onEventEdited()
             }
-        }
+        }*/
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
             ProfileFragment.REFRESH_REQUEST_CODE,
@@ -103,11 +105,11 @@ abstract class ListPostsFragment : Fragment() {
         }
     }
 
-    abstract fun initPostHeaderAdapter(): PostsHeaderAdapter
+    abstract fun initEventHeaderAdapter(): EventsHeaderAdapter
 
-    private fun initPostsList(): PostsPagerAdapter {
+    private fun initEventsList(): EventsPagerAdapter {
 
-        val adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+        val adapter = EventsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
@@ -115,21 +117,21 @@ abstract class ListPostsFragment : Fragment() {
         val footerAdapter = LoadStateAdapterPaging(tryAgainAction)
         val headerAdapter = LoadStateAdapterPaging(tryAgainAction)
 
-        // combined adapter which shows both the list of posts + footer indicator when loading pages
+        // combined adapter which shows both the list of events + footer indicator when loading pages
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
         val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout
+            binding.eventsSwipeRefreshLayout
         } else {
             null
         }
-        val postsHeaderAdapter = initPostHeaderAdapter()
-        val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
+        val eventsHeaderAdapter = initEventHeaderAdapter()
+        val concatAdapter = ConcatAdapter(eventsHeaderAdapter, adapterWithLoadState)
 
-        binding.postsList.layoutManager = LinearLayoutManager(context)
-        binding.postsList.adapter = concatAdapter
-        (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
+        binding.eventsList.layoutManager = LinearLayoutManager(context)
+        binding.eventsList.adapter = concatAdapter
+        (binding.eventsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
 
         mainLoadStateHolder = LoadStateAdapterPage.Holder(
             binding.loadStateView,
@@ -142,24 +144,24 @@ abstract class ListPostsFragment : Fragment() {
 
     private fun initSwipeToRefresh() {
         if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout.isEnabled = true
-            binding.postsSwipeRefreshLayout.setOnRefreshListener {
+            binding.eventsSwipeRefreshLayout.isEnabled = true
+            binding.eventsSwipeRefreshLayout.setOnRefreshListener {
                 viewModel.refresh()
             }
         } else {
-            binding.postsSwipeRefreshLayout.isEnabled = false
+            binding.eventsSwipeRefreshLayout.isEnabled = false
         }
     }
 
-    private fun observePosts(adapter: PostsPagerAdapter) {
+    private fun observeEvents(adapter: EventsPagerAdapter) {
         lifecycleScope.launch {
-            viewModel.postsFlow.collectLatest { pagingData ->
+            viewModel.eventsFlow.collectLatest { pagingData ->
                 adapter.submitData(pagingData)
             }
         }
     }
 
-    private fun observeLoadState(adapter: PostsPagerAdapter) {
+    private fun observeLoadState(adapter: EventsPagerAdapter) {
         // you can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
@@ -172,16 +174,16 @@ abstract class ListPostsFragment : Fragment() {
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
-                binding.postsList.isVisible = false
-                binding.postsEmptyBlock.isVisible = true
+                binding.eventsList.isVisible = false
+                binding.eventsEmptyBlock.isVisible = true
             } else {
-                binding.postsList.isVisible = true
-                binding.postsEmptyBlock.isVisible = false
+                binding.eventsList.isVisible = true
+                binding.eventsEmptyBlock.isVisible = false
             }
         }
     }
 
-    private fun handleListVisibility(adapter: PostsPagerAdapter) = lifecycleScope.launch {
+    private fun handleListVisibility(adapter: EventsPagerAdapter) = lifecycleScope.launch {
         // list should be hidden if an error is displayed OR if items are being loaded after the error:
         // (current state = Error) OR (prev state = Error)
         //   OR
@@ -189,14 +191,14 @@ abstract class ListPostsFragment : Fragment() {
         getRefreshLoadStateFlow(adapter)
             .simpleScan(count = 3)
             .collectLatest { (beforePrevious, previous, current) ->
-                binding.postsList.isInvisible = current is LoadState.Error
+                binding.eventsList.isInvisible = current is LoadState.Error
                         || previous is LoadState.Error
                         || (beforePrevious is LoadState.Error && previous is LoadState.NotLoading
                         && current is LoadState.Loading)
             }
     }
 
-    private fun handleScrollingToTop(adapter: PostsPagerAdapter) = lifecycleScope.launch {
+    private fun handleScrollingToTop(adapter: EventsPagerAdapter) = lifecycleScope.launch {
         // list should be scrolled to the 1st item (index = 0) if data has been reloaded:
         // (prev state = Loading, current state = NotLoading)
         getRefreshLoadStateFlow(adapter)
@@ -205,12 +207,12 @@ abstract class ListPostsFragment : Fragment() {
                 if (previousState is LoadState.Loading && currentState is LoadState.NotLoading
                     && viewModel.scrollEvents.value?.get() != null
                 ) {
-                    binding.postsList.scrollToPosition(0)
+                    binding.eventsList.scrollToPosition(0)
                 }
             }
     }
 
-    private fun getRefreshLoadStateFlow(adapter: PostsPagerAdapter): Flow<LoadState> {
+    private fun getRefreshLoadStateFlow(adapter: EventsPagerAdapter): Flow<LoadState> {
         return adapter.loadStateFlow
             .map { it.refresh }
     }
@@ -221,7 +223,7 @@ abstract class ListPostsFragment : Fragment() {
         }
     }
 
-    private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
+    private fun observeInvalidationEvents(adapter: EventsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
         }

@@ -1,21 +1,6 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
-import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.tabs.TabLayout
-import com.google.android.material.tabs.TabLayoutMediator
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.R
-import com.thesis.sportologia.ui.ListEventsFragment
-import com.thesis.sportologia.ui.ListServicesFragment
-import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 

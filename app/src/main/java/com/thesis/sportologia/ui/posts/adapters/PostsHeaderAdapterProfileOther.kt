@@ -9,7 +9,7 @@ class PostsHeaderAdapterProfileOther(
     listener: FilterListener
 ) : PostsHeaderAdapter(fragment, listener) {
 
-    override val renderHeader: () -> Unit = {
+    override val renderHeader = {
         binding.postsFilter.root.isVisible = false
         binding.postsFilterSpace.isVisible = false
 

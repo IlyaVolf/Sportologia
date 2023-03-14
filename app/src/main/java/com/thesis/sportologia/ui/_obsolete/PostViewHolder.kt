@@ -27,7 +27,7 @@ class PostViewHolder(
         view.setText(item.text)
         view.setUsername(item.authorName)
         view.setAuthorAvatar(item.profilePictureUrl)
-        view.setDate(parseDate(item.postedDate))
+        view.setDate(item.postedDate)
         view.setLikes(item.likesCount, item.isLiked)
         view.setPhotos()
 

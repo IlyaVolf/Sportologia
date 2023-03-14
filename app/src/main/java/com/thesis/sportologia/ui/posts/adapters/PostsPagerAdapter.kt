@@ -37,13 +37,13 @@ class PostsPagerAdapter(
                 OnItemPostAction.MORE -> onMoreButtonPressed(postListItem)
                 OnItemPostAction.LIKE -> listener.onToggleLike(postListItem)
                 OnItemPostAction.FAVS -> listener.onToggleFavouriteFlag(postListItem)
-                else -> {}
+                OnItemPostAction.PHOTOS_BLOCK -> {}
             }
         }
         itemPost.setText(postListItem.text)
         itemPost.setUsername(postListItem.authorName)
         itemPost.setAuthorAvatar(postListItem.profilePictureUrl)
-        itemPost.setDate(parseDate(postListItem.postedDate))
+        itemPost.setDate(postListItem.postedDate)
         itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
         itemPost.setFavs(postListItem.isFavourite)
         itemPost.setPhotos()

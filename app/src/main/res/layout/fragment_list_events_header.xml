@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -12,24 +11,33 @@
         android:layout_height="8dp" />
 
     <com.thesis.sportologia.ui.views.ButtonBasicView
-        android:id="@+id/create_post_button"
+        android:id="@+id/create_event_button"
         android:layout_width="match_parent"
         android:layout_height="37dp"
         android:paddingHorizontal="@dimen/margin_sides"
         app:icon="@drawable/icon_plus"
-        app:text="@string/create_event" />
+        app:text="@string/create_post" />
 
     <Space
-        android:id="@+id/create_post_button_space"
+        android:id="@+id/create_event_button_space"
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 
     <include
-        android:id="@+id/posts_filter"
+        android:id="@+id/events_chosen_filters"
+        layout="@layout/view_chosen_filters" />
+
+    <Space
+        android:id="@+id/events_chosen_filters_space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <include
+        android:id="@+id/events_filter"
         layout="@layout/view_content_filter" />
 
     <Space
-        android:id="@+id/posts_filter_space"
+        android:id="@+id/events_filter_space"
         android:layout_width="match_parent"
         android:layout_height="8dp" />
 

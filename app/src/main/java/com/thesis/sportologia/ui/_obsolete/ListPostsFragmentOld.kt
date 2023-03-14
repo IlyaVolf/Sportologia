@@ -192,7 +192,7 @@ class ListPostsFragment :
             if (mode == ListPostsMode.PROFILE_OWN_PAGE || mode == ListPostsMode.PROFILE_OTHER_PAGE) {
                 null
             } else {
-                binding.swipeRefreshLayout
+                binding.postsSwipeRefreshLayout
             }
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
@@ -210,12 +210,12 @@ class ListPostsFragment :
 
     private fun initSwipeToRefresh() {
         if (mode != ListPostsMode.PROFILE_OWN_PAGE && mode != ListPostsMode.PROFILE_OTHER_PAGE) {
-            binding.swipeRefreshLayout.isEnabled = true
-            binding.swipeRefreshLayout.setOnRefreshListener {
+            binding.postsSwipeRefreshLayout.isEnabled = true
+            binding.postsSwipeRefreshLayout.setOnRefreshListener {
                 viewModel.refresh()
             }
         } else {
-            binding.swipeRefreshLayout.isEnabled = false
+            binding.postsSwipeRefreshLayout.isEnabled = false
         }
     }
 

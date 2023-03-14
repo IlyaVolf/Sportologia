@@ -20,21 +20,27 @@ class InMemoryEventsRepository @Inject constructor(
     EventsRepository {
 
     private val dateFrom: Calendar = Calendar.getInstance()
-    val dateTo: Calendar = Calendar.getInstance()
+    private val dateTo: Calendar = Calendar.getInstance()
+
+    private val dateFrom2: Calendar = Calendar.getInstance()
+    private val dateTo2: Calendar = Calendar.getInstance()
 
     init {
         dateFrom.set(2023, 5, 3, 16, 0, 0)
         dateTo.set(2023, 5, 3, 20, 0, 0)
+
+        dateFrom2.set(2023, 2, 25, 10, 0, 0)
+        dateTo2.set(2023, 2, 28, 20, 0, 0)
     }
 
     private val eventSample = Event(
         id = 0L,
-        organizerId = "1",
+        organizerId = "i_chiesov",
         organizerName = "Игорь Чиёсов",
         isOrganizerAthlete = true,
         profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
-        dateFrom = dateFrom,
-        dateTo = dateTo,
+        dateFrom = dateFrom.timeInMillis,
+        dateTo = dateTo.timeInMillis,
         address = null,
         price = 1000f,
         currency = "Rubles",
@@ -53,14 +59,14 @@ class InMemoryEventsRepository @Inject constructor(
         eventSample,
         Event(
             id = 1L,
-            organizerId = "2",
+            organizerId = "stroitel",
             organizerName = "Тренажёрный зал Строитель",
             isOrganizerAthlete = false,
-            profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
-            dateFrom = dateFrom,
-            dateTo = dateTo,
+            profilePictureUrl = null,
+            dateFrom = dateFrom2.timeInMillis,
+            dateTo = dateTo2.timeInMillis,
             address = null,
-            price = 1400f,
+            price = 0f,
             currency = "Rubles",
             categories = hashMapOf(
                 Pair("забег", false),
@@ -85,6 +91,7 @@ class InMemoryEventsRepository @Inject constructor(
         eventSample.copy(id = 12L),
         eventSample.copy(
             organizerName = "Антон Игорев",
+            organizerId = "best_mate",
             id = 13L,
             description = "abcdefghiklmnopqrstvuxwyz"
         ),
@@ -102,7 +109,7 @@ class InMemoryEventsRepository @Inject constructor(
         eventSample.copy(id = 25L),
     )
 
-    private val followersIds = mutableListOf("2", "3", "5")
+    private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
 
     /* override suspend fun getUserEvents(userId: Int): List<Event> {
         delay(1000)
@@ -153,10 +160,10 @@ class InMemoryEventsRepository @Inject constructor(
 
     override suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
-        athTorgF: Boolean?
+        isUpcomingOnly: Boolean
     ): Flow<PagingData<Event>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
-            getUserSubscribedOnEvents(pageIndex, pageSize, userId, athTorgF)
+            getUserSubscribedOnEvents(pageIndex, pageSize, userId, isUpcomingOnly)
         }
 
         //delay(2000)
@@ -176,7 +183,7 @@ class InMemoryEventsRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         userId: String,
-        athTorgF: Boolean?
+        isUpcomingOnly: Boolean
     ): List<Event> = withContext(
         ioDispatcher
     ) {
@@ -190,10 +197,10 @@ class InMemoryEventsRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         followersIds.forEach { id ->
-            if (athTorgF == null) {
-                res.addAll(events.filter { it.organizerId == id })
+            if (isUpcomingOnly) {
+                res.addAll(events.filter { it.organizerId == id && it.dateTo > Calendar.getInstance().timeInMillis })
             } else {
-                res.addAll(events.filter { it.organizerId == id && it.isOrganizerAthlete == athTorgF })
+                res.addAll(events.filter { it.organizerId == id })
             }
         }
 
@@ -210,9 +217,9 @@ class InMemoryEventsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouriteEvents(athTorgF: Boolean?): Flow<PagingData<Event>> {
+    override suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
-            getUserFavouriteEvents(pageIndex, pageSize, athTorgF)
+            getUserFavouriteEvents(pageIndex, pageSize, isUpcomingOnly)
         }
 
         return Pager(
@@ -235,7 +242,7 @@ class InMemoryEventsRepository @Inject constructor(
     suspend fun getUserFavouriteEvents(
         pageIndex: Int,
         pageSize: Int,
-        athTorgF: Boolean?
+        isUpcomingOnly: Boolean
     ): List<Event> =
         withContext(
             ioDispatcher
@@ -244,8 +251,8 @@ class InMemoryEventsRepository @Inject constructor(
             val offset = pageIndex * pageSize
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val filteredEvents = if (athTorgF != null) {
-                events.filter { it.isFavourite && it.isOrganizerAthlete == athTorgF }.reversed()
+            val filteredEvents = if (isUpcomingOnly) {
+                events.filter { it.isFavourite && it.dateTo > Calendar.getInstance().timeInMillis }.reversed()
             } else {
                 events.filter { it.isFavourite }.reversed()
             }

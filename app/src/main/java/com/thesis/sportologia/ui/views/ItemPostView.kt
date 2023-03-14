@@ -7,7 +7,9 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
+import com.thesis.sportologia.utils.parseDatePublication
 import com.thesis.sportologia.utils.setAvatar
+import java.util.Calendar
 import kotlin.properties.Delegates
 
 
@@ -106,16 +108,16 @@ class ItemPostView(
 
         val isMainPhotoSquareLimited =
             typedArray.getBoolean(R.styleable.ItemPostView_ip_isMainPhotoSquareLimited, false)
-        binding.photosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
+        binding.postPhotosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
 
         typedArray.recycle()
     }
 
     private fun initRender() {
-        if (binding.photosBlock.getPhotoNumber() == 0) {
-            binding.photosBlockSpace.visibility = GONE
+        if (binding.postPhotosBlock.getPhotoNumber() == 0) {
+            binding.postPhotosBlockSpace.visibility = GONE
         } else {
-            binding.photosBlockSpace.visibility = VISIBLE
+            binding.postPhotosBlockSpace.visibility = VISIBLE
         }
     }
 
@@ -135,12 +137,12 @@ class ItemPostView(
             this.likesCount = likesCount.toString().substring(0, string.length - 6) + "M"
         }
 
-        binding.likesCount.text = this.likesCount
+        binding.postLikesCount.text = this.likesCount
 
         if (this.isLiked) {
-            binding.like.setColorFilter(context.getColor(R.color.pink))
+            binding.postLike.setColorFilter(context.getColor(R.color.pink))
         } else {
-            binding.like.setColorFilter(context.getColor(R.color.element_tertiary))
+            binding.postLike.setColorFilter(context.getColor(R.color.element_tertiary))
         }
     }
 
@@ -161,9 +163,9 @@ class ItemPostView(
         isLiked = !isLiked
 
         if (this.isLiked) {
-            binding.like.setColorFilter(context.getColor(R.color.pink))
+            binding.postLike.setColorFilter(context.getColor(R.color.pink))
         } else {
-            binding.like.setColorFilter(context.getColor(R.color.element_tertiary))
+            binding.postLike.setColorFilter(context.getColor(R.color.element_tertiary))
         }
     }
 
@@ -171,11 +173,11 @@ class ItemPostView(
         this.isAddedToFavs = isAddedToFavs
 
         if (this.isAddedToFavs) {
-            binding.star.setImageResource(R.drawable.icon_star_pressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.postStar.setImageResource(R.drawable.icon_star_pressed)
+            binding.postStar.setColorFilter(context.getColor(R.color.background_inverted))
         } else {
-            binding.star.setImageResource(R.drawable.icon_star_unpressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.postStar.setImageResource(R.drawable.icon_star_unpressed)
+            binding.postStar.setColorFilter(context.getColor(R.color.background_inverted))
         }
     }
 
@@ -184,11 +186,11 @@ class ItemPostView(
         isAddedToFavs = !isAddedToFavs
 
         if (this.isAddedToFavs) {
-            binding.star.setImageResource(R.drawable.icon_star_pressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.postStar.setImageResource(R.drawable.icon_star_pressed)
+            binding.postStar.setColorFilter(context.getColor(R.color.background_inverted))
         } else {
-            binding.star.setImageResource(R.drawable.icon_star_unpressed)
-            binding.star.setColorFilter(context.getColor(R.color.background_inverted))
+            binding.postStar.setImageResource(R.drawable.icon_star_unpressed)
+            binding.postStar.setColorFilter(context.getColor(R.color.background_inverted))
         }
     }*/
 
@@ -197,20 +199,23 @@ class ItemPostView(
     }
 
     fun setText(text: String) {
-        binding.text.text = text
+        binding.postText.text = text
     }
 
     fun setAuthorAvatar(uri: String?) {
-        setAvatar(uri, context, binding.avatar)
+        setAvatar(uri, context, binding.postAvatar)
     }
 
     fun setUsername(username: String) {
-        binding.userName.text = username
+        binding.postUserName.text = username
     }
 
     // TODO parser
-    fun setDate(date: String) {
-        binding.date.text = date
+    fun setDate(dateMillis: Long) {
+        val dateAndTime = Calendar.getInstance()
+        dateAndTime.timeInMillis = dateMillis
+        val parsedDateAndTime = parseDatePublication(context, dateAndTime)
+        binding.postDate.text = parsedDateAndTime
     }
 
     // TODO photos
@@ -219,39 +224,39 @@ class ItemPostView(
 
 
     private fun initListeners() {
-        binding.headerBlock.setOnClickListener {
+        binding.postHeaderBlock.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.HEADER_BLOCK)
             }
         }
 
-        binding.text.setOnClickListener {
+        binding.postText.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.HEADER_BLOCK)
             }
         }
 
-        binding.like.setOnClickListener {
+        binding.postLike.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.LIKE)
                 //toggleLike()
             }
         }
 
-        binding.star.setOnClickListener {
+        binding.postStar.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.FAVS)
                 //toggleFavs()
             }
         }
 
-        binding.photosBlock.setOnClickListener {
+        binding.postPhotosBlock.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.PHOTOS_BLOCK)
             }
         }
 
-        binding.more2.setOnClickListener {
+        binding.postMore.setOnClickListener {
             onItemPostActionListeners.forEach { listener ->
                 listener?.invoke(OnItemPostAction.MORE)
             }

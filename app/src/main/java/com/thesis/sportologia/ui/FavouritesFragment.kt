@@ -15,6 +15,8 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentFavouritesBinding
 import com.thesis.sportologia.ui.posts.ListPostsFragmentFavourites
 import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.events.ListEventsFragment
+import com.thesis.sportologia.ui.events.ListEventsFragmentFavourites
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,7 +53,7 @@ class FavouritesFragment : Fragment() {
         val fragments = arrayListOf(
             ListPostsFragmentFavourites.newInstance(CurrentAccount().id),
             ListServicesFragment(),
-            ListEventsFragment()
+            ListEventsFragmentFavourites.newInstance(CurrentAccount().id),
         )
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager

@@ -3,26 +3,22 @@ package com.thesis.sportologia.ui.events.adapters
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
-import com.thesis.sportologia.ui.*
 import com.thesis.sportologia.ui.events.entities.EventListItem
 import com.thesis.sportologia.ui.views.ItemEventView
 import com.thesis.sportologia.ui.views.OnItemEventAction
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.ResourcesUtils.getString
 
-/** class EventsPagerAdapter(
+class EventsPagerAdapter(
     val fragment: Fragment,
-    private val mode: ListEventsMode,
+    private val onOrganizerBlockPressedAction: (String) -> Unit,
     private val listener: MoreButtonListener,
 ) : PagingDataAdapter<EventListItem, EventsPagerAdapter.Holder>(EventsDiffCallback()) {
 
@@ -36,13 +32,12 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
 
         itemEvent.setListener {
             when (it) {
-                OnItemEventAction.ORGANIZER_BLOCK -> onOrganizerBlockPressed(eventListItem.organizerId)
-                OnItemEventAction.ADDRESS_BLOCK -> {}
-                OnItemEventAction.PHOTOS_BLOCK -> {}
+                OnItemEventAction.ORGANIZER_BLOCK -> onOrganizerBlockPressedAction(eventListItem.organizerId)
                 OnItemEventAction.LIKE -> listener.onToggleLike(eventListItem)
                 OnItemEventAction.FAVS -> listener.onToggleFavouriteFlag(eventListItem)
                 OnItemEventAction.MORE -> onMoreButtonPressed(eventListItem)
-                else -> {}
+                OnItemEventAction.ADDRESS_BLOCK -> {}
+                OnItemEventAction.PHOTOS_BLOCK -> {}
             }
         }
 
@@ -50,7 +45,7 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
         itemEvent.setDescription(eventListItem.description)
         itemEvent.setOrganizerAvatar(eventListItem.profilePictureUrl)
         itemEvent.setPrice(eventListItem.price, eventListItem.currency)
-        itemEvent.setDate(parseDate(eventListItem.dateFrom), parseDate(eventListItem.dateTo))
+        itemEvent.setDate(eventListItem.dateFrom, eventListItem.dateTo)
         itemEvent.setLikes(eventListItem.likesCount, eventListItem.isLiked)
         itemEvent.setFavs(eventListItem.isFavourite)
         itemEvent.setPhotos()
@@ -71,7 +66,7 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
         createSimpleDialog(
             context,
             null,
-            getString(R.string.ask_delete_post_warning),
+            getString(R.string.ask_delete_event_warning),
             getString(R.string.action_delete),
             { _, _ ->
                 run {
@@ -120,10 +115,10 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
         )
     }
 
-    private fun onEditButtonPressed(postId: Long) {
+    private fun onEditButtonPressed(eventId: Long) {
         // TODO CREATEEDIT
         /*val direction = TabsFragmentDirections.actionTabsFragmentToEditEventFragment(
-            CreateEditEventFragment.EventId(postId)
+            CreateEditEventFragment.EventId(eventId)
         )
 
         fragment.findTopNavController().navigate(direction,
@@ -135,51 +130,6 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
                     popExit = R.anim.pop_exit
                 }
             })*/
-    }
-
-    private fun onOrganizerBlockPressed(userId: String) {
-        when (mode) {
-            ListEventsMode.HOME_PAGE -> {
-                val direction = HomeFragmentDirections.actionHomeFragmentToProfileFragment(userId)
-                fragment.findNavController().navigate(direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })
-            }
-            ListEventsMode.FAVOURITES_PAGE -> {
-                val direction =
-                    FavouritesFragmentDirections.actionFavouritesFragmentToProfileFragment(userId)
-                fragment.findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })
-            }
-            ListEventsMode.PROFILE_OWN_PAGE -> {
-                val direction =
-                    ProfileOwnFragmentDirections.actionProfileOwnFragmentToProfileFragment(userId)
-                fragment.findNavController().navigate(
-                    direction,
-                    navOptions {
-                        anim {
-                            enter = R.anim.slide_in_right
-                            exit = R.anim.slide_out_left
-                            popEnter = R.anim.slide_in_left
-                            popExit = R.anim.slide_out_right
-                        }
-                    })
-            }
-        }
     }
 
     interface MoreButtonListener {
@@ -210,4 +160,4 @@ class EventsDiffCallback : DiffUtil.ItemCallback<EventListItem>() {
     override fun areContentsTheSame(oldItem: EventListItem, newItem: EventListItem): Boolean {
         return oldItem == newItem
     }
-} */
+}

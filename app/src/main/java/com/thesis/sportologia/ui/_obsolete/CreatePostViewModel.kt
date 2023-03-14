@@ -56,7 +56,7 @@ class CreatePostViewModel @Inject constructor(
                         isAuthorAthlete = currentAccount.isAthlete,
                         isLiked = false,
                         isFavourite = false,
-                        postedDate = Calendar.getInstance(), // по идее в самом коцне надо создавать!
+                        postedDate = Calendar.getInstance().timeInMillis, // по идее в самом коцне надо создавать!
                         photosUrls = photosUrls
                     )
                 )

@@ -21,6 +21,9 @@ import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOther
 import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOwn
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.events.ListEventsFragment
+import com.thesis.sportologia.ui.events.ListEventsFragmentProfileOther
+import com.thesis.sportologia.ui.events.ListEventsFragmentProfileOwn
 import com.thesis.sportologia.ui.users.entities.AthleteItem
 import com.thesis.sportologia.ui.users.entities.OrganizationItem
 import com.thesis.sportologia.ui.users.entities.UserItem
@@ -167,11 +170,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             Profile.OWN -> ListPostsFragmentProfileOwn.newInstance(userId)
             Profile.OTHER -> ListPostsFragmentProfileOther.newInstance(userId)
         }
+        val listEventsFragment = when (mode) {
+            Profile.OWN -> ListEventsFragmentProfileOwn.newInstance(userId)
+            Profile.OTHER -> ListEventsFragmentProfileOther.newInstance(userId)
+        }
 
         val fragments = arrayListOf(
             listPostsFragment,
             ListServicesFragment(),
-            ListEventsFragment()
+            listEventsFragment
         )
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager

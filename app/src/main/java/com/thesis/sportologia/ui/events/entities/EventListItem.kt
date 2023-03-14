@@ -12,8 +12,8 @@ data class EventListItem(
     val organizerId: String get() = event.organizerId
     val organizerName: String get() = event.organizerName
     val address: Address? get() = event.address // TODO non-null
-    val dateFrom: Calendar get() = event.dateFrom
-    val dateTo: Calendar get() = event.dateTo
+    val dateFrom: Long get() = event.dateFrom
+    val dateTo: Long get() = event.dateTo
     val price: Float get() = event.price
     val currency: String get() = event.currency
     val profilePictureUrl: String? get() = event.profilePictureUrl

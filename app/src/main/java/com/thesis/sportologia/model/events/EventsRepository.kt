@@ -8,9 +8,9 @@ interface EventsRepository {
 
     suspend fun getPagedUserEvents(userId: String): Flow<PagingData<Event>>
 
-    suspend fun getPagedUserSubscribedOnEvents(userId: String, athTorgF: Boolean?): Flow<PagingData<Event>>
+    suspend fun getPagedUserSubscribedOnEvents(userId: String, isUpcomingOnly: Boolean): Flow<PagingData<Event>>
 
-    suspend fun getPagedUserFavouriteEvents(athTorgF: Boolean?): Flow<PagingData<Event>>
+    suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>>
 
     suspend fun getEvent(postId: Long): Event?
 

@@ -32,7 +32,7 @@ class InMemoryPostsRepository @Inject constructor(
         isAuthorAthlete = true,
         isLiked = true,
         isFavourite = true,
-        postedDate = Calendar.getInstance(),
+        postedDate = Calendar.getInstance().timeInMillis,
         photosUrls = null
     )
 
@@ -48,7 +48,7 @@ class InMemoryPostsRepository @Inject constructor(
             isAuthorAthlete = false,
             isLiked = false,
             isFavourite = false,
-            postedDate = Calendar.getInstance(),
+            postedDate = Calendar.getInstance().timeInMillis,
             photosUrls = null
         ),
         Post(
@@ -61,7 +61,7 @@ class InMemoryPostsRepository @Inject constructor(
             isAuthorAthlete = true,
             isLiked = true,
             isFavourite = true,
-            postedDate = Calendar.getInstance(),
+            postedDate = Calendar.getInstance().timeInMillis,
             photosUrls = null
         ),
         postSample.copy(id = 3L),
