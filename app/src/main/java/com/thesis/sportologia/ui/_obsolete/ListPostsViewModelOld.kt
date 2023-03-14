@@ -22,7 +22,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
-// TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
+/** // TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
 class ListPostsViewModelOld @AssistedInject constructor(
     @Assisted private val mode: ListPostsMode,
     @Assisted private val userId: String,
@@ -250,4 +250,4 @@ class ListPostsViewModelOld @AssistedInject constructor(
     }
 
 
-}
+}*/

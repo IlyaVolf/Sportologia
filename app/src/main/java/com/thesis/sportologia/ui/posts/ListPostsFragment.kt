@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,20 +46,39 @@ abstract class ListPostsFragment : Fragment() {
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var binding: FragmentListPostsBinding
+    private lateinit var adapter: PostsPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        userId = arguments?.getString("userId") ?: throw Exception()
+        adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+
+        Log.d("LIFE", "onCreate ${this.hashCode()}")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("LIFE", "onDestroyView ${this.hashCode()}")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("LIFE", "onDestroy ${this.hashCode()}")
+    }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("LIFE", "onCreateView ${this.hashCode()}")
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
-
-        userId = arguments?.getString("userId") ?: throw Exception()
 
         initResultsProcessing()
         initSwipeToRefresh()
-        val adapter = initPostsList()
+        initPostsList()
 
         observeErrorMessages()
         observePosts(adapter)
@@ -105,9 +125,9 @@ abstract class ListPostsFragment : Fragment() {
 
     abstract fun initPostHeaderAdapter(): PostsHeaderAdapter
 
-    private fun initPostsList(): PostsPagerAdapter {
+    private fun initPostsList() {
 
-        val adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+        //val adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
@@ -136,8 +156,6 @@ abstract class ListPostsFragment : Fragment() {
             swipeRefreshLayout,
             tryAgainAction
         )
-
-        return adapter
     }
 
     private fun initSwipeToRefresh() {

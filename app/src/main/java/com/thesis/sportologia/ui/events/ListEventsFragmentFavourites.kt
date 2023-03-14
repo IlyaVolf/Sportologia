@@ -32,7 +32,7 @@ class ListEventsFragmentFavourites : ListEventsFragment() {
     }
 
     override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterFavourites(this, viewModel)
+        return EventsHeaderAdapterFavourites(this, viewModel, viewModel.isUpcomingOnly)
     }
 
     companion object {

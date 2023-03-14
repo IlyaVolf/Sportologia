@@ -174,12 +174,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             Profile.OWN -> ListEventsFragmentProfileOwn.newInstance(userId)
             Profile.OTHER -> ListEventsFragmentProfileOther.newInstance(userId)
         }
-
         val fragments = arrayListOf(
             listPostsFragment,
             ListServicesFragment(),
             listEventsFragment
         )
+
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter

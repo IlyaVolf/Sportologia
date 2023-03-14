@@ -37,7 +37,7 @@ import javax.inject.Inject
 import kotlin.properties.Delegates
 
 
-@AndroidEntryPoint
+/**@AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
 class ListPostsFragment :
@@ -302,4 +302,4 @@ enum class ListPostsMode {
     PROFILE_OTHER_PAGE,
     PROFILE_OWN_PAGE,
     FAVOURITES_PAGE
-}
+}*/

@@ -17,10 +17,4 @@ abstract class UserItem(
     val address: Address? get() = user.address
     val categories: Map<String, Boolean> get() = user.categories
     val isSubscribed: Boolean get() = user.isSubscribed
-    abstract var lastAction: LastAction
-
-    enum class LastAction {
-        INIT,
-        SUBSCRIBE_CHANGED
-    }
 }

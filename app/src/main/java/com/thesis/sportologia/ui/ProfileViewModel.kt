@@ -64,16 +64,11 @@ class ProfileViewModel @AssistedInject constructor(
                     when (user) {
                         is Athlete -> {
                             _userHolder.value =
-                                DataHolder.ready(AthleteItem(user.copy(), UserItem.LastAction.INIT))
+                                DataHolder.ready(AthleteItem(user.copy()))
 
                         }
                         is Organization -> {
-                            _userHolder.value = DataHolder.ready(
-                                OrganizationItem(
-                                    user.copy(),
-                                    UserItem.LastAction.INIT
-                                )
-                            )
+                            _userHolder.value = DataHolder.ready(OrganizationItem(user.copy()))
                         }
                     }
                 } else {
@@ -134,7 +129,6 @@ class ProfileViewModel @AssistedInject constructor(
                         followersCount = followersCount,
                         isSubscribed = isSubscribed
                     ),
-                    UserItem.LastAction.SUBSCRIBE_CHANGED
                 )
             }
             is OrganizationItem -> {
@@ -143,14 +137,11 @@ class ProfileViewModel @AssistedInject constructor(
                         followersCount = followersCount,
                         isSubscribed = isSubscribed
                     ),
-                    UserItem.LastAction.SUBSCRIBE_CHANGED
                 )
             }
             else -> throw Exception()
         }
-
     }
-
 
     @AssistedFactory
     interface Factory {

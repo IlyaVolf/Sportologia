@@ -49,6 +49,14 @@ abstract class PostsHeaderAdapter(
         fragment.context?.getString(R.string.filter_posts_organizations) ?: ""
     )
 
+    protected fun getFilterValue(athTorgF: Boolean?): String {
+        return when (athTorgF) {
+            null -> filterOptionsList[0]
+            true -> filterOptionsList[1]
+            false -> filterOptionsList[2]
+        }
+    }
+
     protected val postsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
         when (it) {
             filterOptionsList[0] -> listener.filterApply(null)

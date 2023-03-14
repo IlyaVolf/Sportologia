@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.ListEventsViewModel
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
+import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
@@ -47,7 +49,15 @@ abstract class ListEventsFragment : Fragment() {
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var binding: FragmentListEventsBinding
+    private lateinit var adapter: EventsPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        userId = arguments?.getString("userId") ?: throw Exception()
+        adapter = EventsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+    }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
     override fun onCreateView(
@@ -60,7 +70,7 @@ abstract class ListEventsFragment : Fragment() {
 
         initResultsProcessing()
         initSwipeToRefresh()
-        val adapter = initEventsList()
+        initEventsList()
 
         observeErrorMessages()
         observeEvents(adapter)
@@ -107,9 +117,7 @@ abstract class ListEventsFragment : Fragment() {
 
     abstract fun initEventHeaderAdapter(): EventsHeaderAdapter
 
-    private fun initEventsList(): EventsPagerAdapter {
-
-        val adapter = EventsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+    private fun initEventsList() {
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
@@ -138,8 +146,6 @@ abstract class ListEventsFragment : Fragment() {
             swipeRefreshLayout,
             tryAgainAction
         )
-
-        return adapter
     }
 
     private fun initSwipeToRefresh() {

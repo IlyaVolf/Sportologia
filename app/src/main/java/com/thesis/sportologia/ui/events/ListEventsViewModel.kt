@@ -109,6 +109,8 @@ abstract class ListEventsViewModel constructor(
     }
 
     override fun filterApply(isUpcomingOnly: Boolean) {
+        if (this.isUpcomingOnly == isUpcomingOnly) return
+
         this.isUpcomingOnly = isUpcomingOnly
         refresh()
     }

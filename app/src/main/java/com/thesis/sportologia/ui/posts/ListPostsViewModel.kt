@@ -108,6 +108,8 @@ abstract class ListPostsViewModel constructor(
     }
 
     override fun filterApply(athTorgF: Boolean?) {
+        if (this.athTorgF == athTorgF) return
+
         this.athTorgF = athTorgF
         refresh()
     }

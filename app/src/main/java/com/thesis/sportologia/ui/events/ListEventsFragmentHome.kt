@@ -36,7 +36,7 @@ class ListEventsFragmentHome : ListEventsFragment() {
     }
 
     override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterHome(this, viewModel)
+        return EventsHeaderAdapterHome(this, viewModel, viewModel.isUpcomingOnly)
     }
 
     companion object {

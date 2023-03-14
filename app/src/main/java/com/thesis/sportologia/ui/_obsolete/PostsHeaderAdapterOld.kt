@@ -14,7 +14,7 @@ import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 
 
-class PostsHeaderAdapterOld(
+/**class PostsHeaderAdapterOld(
     val fragment: Fragment,
     private val mode: ListPostsMode,
     private val listener: FilterListener
@@ -131,4 +131,4 @@ class PostsHeaderAdapterOld(
         }
 
     }
-}
+}*/

@@ -32,7 +32,7 @@ class ListPostsFragmentHome : ListPostsFragment() {
     }
 
     override fun initPostHeaderAdapter(): PostsHeaderAdapter {
-        return PostsHeaderAdapterHome(this, viewModel)
+        return PostsHeaderAdapterHome(this, viewModel, viewModel.athTorgF)
     }
 
     companion object {

@@ -2,11 +2,13 @@ package com.thesis.sportologia.ui.posts.adapters
 
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.thesis.sportologia.ui.posts.ListPostsViewModel
 
 
 class PostsHeaderAdapterHome(
     fragment: Fragment,
-    listener: FilterListener
+    listener: FilterListener,
+    athTorgF: Boolean?,
 ) : PostsHeaderAdapter(fragment, listener) {
 
     override val renderHeader = {
@@ -20,7 +22,7 @@ class PostsHeaderAdapterHome(
             onCreatePostButtonPressed()
         }
 
-        binding.postsFilter.spinner.initAdapter(filterOptionsList)
+        binding.postsFilter.spinner.initAdapter(filterOptionsList, getFilterValue(athTorgF))
         binding.postsFilter.spinner.setListener(postsFilterListener)
     }
 

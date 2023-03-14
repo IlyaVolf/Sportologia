@@ -13,20 +13,22 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ViewSpinnerBasicBinding
+import com.thesis.sportologia.databinding.ViewSpinnerOnlyOutlinedBinding
 
-typealias OnSpinnerBasicActionListener = (String) -> Unit
 
-class SpinnerBasicView @JvmOverloads constructor(
+/**typealias OnSpinnerOnlyOutlinedActionListener = (String) -> Unit
+
+class SpinnerOnlyOutlinedView @JvmOverloads constructor(
+    readyBinding: ViewSpinnerOnlyOutlinedBinding? = null,
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int,
     defStyleRes: Int
 ) : ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewSpinnerBasicBinding
+    private val binding: ViewSpinnerOnlyOutlinedBinding
 
-    private var listeners = mutableListOf<OnSpinnerBasicActionListener?>()
+    private var listeners = mutableListOf<OnSpinnerOnlyOutlinedActionListener?>()
 
     private lateinit var adapter: ArrayAdapter<String>
 
@@ -34,9 +36,12 @@ class SpinnerBasicView @JvmOverloads constructor(
 
     private lateinit var currentValue: String
 
-    private var hint = ""
+    private lateinit var hint: String
+
+    private var isHintEnabled = false
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
+        null,
         context,
         attrs,
         defStyleAttr,
@@ -46,11 +51,39 @@ class SpinnerBasicView @JvmOverloads constructor(
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context) : this(context, null)
 
+
+    constructor(
+        readyBinding: ViewSpinnerOnlyOutlinedBinding?,
+        context: Context,
+        attrs: AttributeSet?,
+        defStyleAttr: Int
+    ) : this(
+        readyBinding,
+        context,
+        attrs,
+        defStyleAttr,
+        0
+    )
+
+    constructor(readyBinding: ViewSpinnerOnlyOutlinedBinding?, context: Context, attrs: AttributeSet?) : this(
+        readyBinding,
+        context,
+        attrs,
+        0
+    )
+
+    constructor(readyBinding: ViewSpinnerOnlyOutlinedBinding?, context: Context) : this(
+        readyBinding,
+        context,
+        null
+    )
+
+
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.view_spinner_basic, this, true)
+        inflater.inflate(R.layout.view_spinner_only_outlined, this, true)
 
-        binding = ViewSpinnerBasicBinding.bind(this)
+        binding = readyBinding ?: ViewSpinnerOnlyOutlinedBinding.bind(this)
 
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
@@ -58,15 +91,23 @@ class SpinnerBasicView @JvmOverloads constructor(
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
-            attrs, R.styleable.SpinnerBasicView, defStyleAttr, defStyleRes
+            attrs, R.styleable.SpinnerOnlyOutlinedView, defStyleAttr, defStyleRes
         )
 
-        val title = typedArray.getString(R.styleable.SpinnerBasicView_spinnerTitle)
-        binding.title.text = title
+        isHintEnabled =
+            typedArray.getBoolean(
+                R.styleable.SpinnerOnlyOutlinedView_spinnerOnlyIsHintEnabled,
+                false
+            )
 
-        val hint = typedArray.getString(R.styleable.SpinnerBasicView_spinnerHint)
-        this.hint = hint ?: ""
-        this.currentValue = this.hint
+        val spinnerHilt = typedArray.getString(R.styleable.SpinnerOnlyOutlinedView_spinnerOnlyHint)
+        if (spinnerHilt == null) {
+            isHintEnabled = false
+        }
+        hint = spinnerHilt ?: ""
+        if (isHintEnabled) {
+            currentValue = hint
+        }
 
         typedArray.recycle()
     }
@@ -76,15 +117,21 @@ class SpinnerBasicView @JvmOverloads constructor(
         //Toast.makeText(context, "AGAIN" + hint, Toast.LENGTH_SHORT).show()
         //Log.d("BUGFIX", "INIT ADAPTER $hint")
         data = list.toMutableList()
-        data.add(0, hint)
+        if (isHintEnabled) {
+            data.add(0, hint)
+        }
 
         adapter = object : ArrayAdapter<String>(
-            context, R.layout.item_spinner, R.id.dropdown_text, data
+            context, R.layout.item_spinner_short, R.id.dropdown_text, data
         ) {
             override fun isEnabled(position: Int): Boolean {
                 // Disable the first item from Spinner
                 // First item will be used for hint
-                return position != 0
+                return if (isHintEnabled) {
+                    position != 0
+                } else {
+                    true
+                }
             }
 
             override fun getDropDownView(
@@ -94,10 +141,12 @@ class SpinnerBasicView @JvmOverloads constructor(
             ): View {
                 val view =
                     super.getDropDownView(position, convertView, parent)
-                if (position == 0) {
-                    view.findViewById<TextView>(R.id.dropdown_text).setTextColor(
-                        context.getColor(R.color.text_hint)
-                    )
+                if (isHintEnabled) {
+                    if (position == 0) {
+                        view.findViewById<TextView>(R.id.dropdown_text).setTextColor(
+                            context.getColor(R.color.text_hint)
+                        )
+                    }
                 }
                 return view
             }
@@ -113,11 +162,15 @@ class SpinnerBasicView @JvmOverloads constructor(
                 view: View?, position: Int, id: Long
             ) {
                 if (view != null) {
+
                     val value = parent.getItemAtPosition(position).toString()
-                    Log.d("FFFF", "onitemselected: $value")
-                    if (value == data[0]) {
-                        view.findViewById<TextView>(R.id.dropdown_text)
-                            .setTextColor(context.getColor(R.color.text_hint))
+                    if (isHintEnabled) {
+                        if (value == data[0]) {
+                            view.findViewById<TextView>(R.id.dropdown_text)
+                                .setTextColor(context.getColor(R.color.text_hint))
+                        } else {
+                            currentValue = value
+                        }
                     } else {
                         currentValue = value
                     }
@@ -139,11 +192,12 @@ class SpinnerBasicView @JvmOverloads constructor(
         return currentValue
     }
 
-    fun setListener(listener: OnSpinnerBasicActionListener?) {
+    fun setListener(listener: OnSpinnerOnlyOutlinedActionListener?) {
         listeners.add(listener)
     }
 
-    fun removeListener(listener: OnSpinnerBasicActionListener?) {
+
+    fun removeListener(listener: OnSpinnerOnlyOutlinedActionListener?) {
         listeners.remove(listener)
     }
 
@@ -155,7 +209,6 @@ class SpinnerBasicView @JvmOverloads constructor(
     /// Save
 
     override fun onSaveInstanceState(): Parcelable {
-        Log.d("FFFF", "save")
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
 
@@ -166,7 +219,6 @@ class SpinnerBasicView @JvmOverloads constructor(
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        Log.d("FFFF", "restore")
         val savedState = state as SavedState
         super.onRestoreInstanceState(savedState.superState)
 
@@ -207,6 +259,7 @@ class SpinnerBasicView @JvmOverloads constructor(
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
+            Log.d("FFFF", "zzzz")
             super.writeToParcel(out, flags)
             out.writeString(currentValue)
         }
@@ -225,4 +278,4 @@ class SpinnerBasicView @JvmOverloads constructor(
         }
     }
 
-}
+}*/

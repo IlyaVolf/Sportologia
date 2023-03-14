@@ -14,6 +14,9 @@ class EventsHeaderAdapterProfileOther(
 
         binding.eventsChosenFilters.root.isVisible = false
         binding.eventsChosenFiltersSpace.isVisible = false
+
+        binding.createEventButton.isVisible = false
+        binding.createEventButtonSpace.isVisible = false
     }
 
 }
