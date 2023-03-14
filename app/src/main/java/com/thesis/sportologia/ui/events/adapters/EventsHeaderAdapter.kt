@@ -39,21 +39,21 @@ abstract class EventsHeaderAdapter(
     }
 
     protected val filterOptionsList = listOf(
-        fragment.context?.getString(R.string.filter_events_all) ?: "",
         fragment.context?.getString(R.string.filter_events_upcoming) ?: "",
+        fragment.context?.getString(R.string.filter_events_all) ?: "",
     )
 
     protected fun getFilterValue(isUpcomingOnly: Boolean): String {
         return when (isUpcomingOnly) {
-            false -> filterOptionsList[0]
-            true -> filterOptionsList[1]
+            true -> filterOptionsList[0]
+            false -> filterOptionsList[1]
         }
     }
 
     protected val eventsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
         when (it) {
-            filterOptionsList[0] -> listener.filterApply(false)
-            filterOptionsList[1] -> listener.filterApply(true)
+            filterOptionsList[0] -> listener.filterApply(true)
+            filterOptionsList[1] -> listener.filterApply(false)
         }
     }
 

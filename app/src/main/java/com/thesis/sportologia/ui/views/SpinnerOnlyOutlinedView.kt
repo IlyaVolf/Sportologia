@@ -64,6 +64,7 @@ class SpinnerOnlyOutlinedView @JvmOverloads constructor(
 
     fun initAdapter(list: List<String>, savedValue: String) {
         Log.d("FFFF", "$savedValue")
+        currentValue = savedValue
         //Toast.makeText(context, "AGAIN" + hint, Toast.LENGTH_SHORT).show()
         //Log.d("BUGFIX", "INIT ADAPTER $hint")
         data = list.toMutableList()
