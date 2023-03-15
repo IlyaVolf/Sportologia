@@ -1,33 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.thesis.sportologia.ui.views.ChosenFilterView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/users_swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cf_isRestrictionsBlockEnabled="true"
-        app:cf_isSortingBlockEnabled="true"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/events_empty_block"
-        style="@style/TextStyleSecondary"
-        android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:gravity="center"
-        android:text="@string/users_empty" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/organization_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:overScrollMode="never"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="1"
-        tools:listitem="@layout/item_user"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/users_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="true"
+                app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                android:scrollbars="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:spanCount="1"
+                tools:listitem="@layout/item_user" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="45dp">
+
+                <TextView
+                    android:id="@+id/users_empty_block"
+                    style="@style/TextStyleSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginVertical="12dp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="@string/users_empty" />
+
+                <include
+                    android:id="@+id/load_state_view"
+                    layout="@layout/view_load_state" />
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

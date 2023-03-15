@@ -19,14 +19,13 @@ import javax.inject.Singleton
 @Singleton
 class InMemoryPostsRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) :
-    PostsRepository {
+) : PostsRepository {
 
     val postSample = Post(
         id = 0L,
         authorId = "i_chiesov",
         authorName = "Игорь Чиёсов",
-        profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
+        profilePictureUrl = null,
         text = "Hello!",
         likesCount = 5,
         isAuthorAthlete = true,
@@ -55,7 +54,7 @@ class InMemoryPostsRepository @Inject constructor(
             id = 2L,
             authorId = "nikita",
             authorName = "Никита Романов",
-            profilePictureUrl = null,
+            profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
             text = "Люблю спорт!",
             likesCount = 1,
             isAuthorAthlete = true,
@@ -74,7 +73,12 @@ class InMemoryPostsRepository @Inject constructor(
         postSample.copy(id = 10L),
         postSample.copy(id = 11L),
         postSample.copy(id = 12L),
-        postSample.copy(authorName = "Антон Игорев", authorId = "best_mate", id = 13L, text = "abcdefghiklmnopqrstvuxwyz"),
+        postSample.copy(
+            authorName = "Антон Игорев",
+            authorId = "best_mate",
+            id = 13L,
+            text = "abcdefghiklmnopqrstvuxwyz"
+        ),
         postSample.copy(id = 14L),
         postSample.copy(id = 15L),
         postSample.copy(id = 16L),
@@ -88,7 +92,7 @@ class InMemoryPostsRepository @Inject constructor(
         postSample.copy(id = 24L),
         postSample.copy(id = 25L),
 
-    )
+        )
 
     private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
 
@@ -110,7 +114,7 @@ class InMemoryPostsRepository @Inject constructor(
             // TODO SORT BY DATE
 
             // TODO
-               // throw Exception("a")
+            // throw Exception("a")
 
             if (offset >= filteredPosts.size) {
                 return@withContext listOf<Post>()
@@ -225,9 +229,7 @@ class InMemoryPostsRepository @Inject constructor(
         pageSize: Int,
         athTorgF: Boolean?
     ): List<Post> =
-        withContext(
-            ioDispatcher
-        ) {
+        withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
 

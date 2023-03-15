@@ -1,18 +1,5 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import androidx.navigation.navOptions
-import com.thesis.sportologia.utils.findTopNavController
-import androidx.recyclerview.widget.RecyclerView
-import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentListPostsHeaderBinding
-import com.thesis.sportologia.ui.CreateEditPostFragment
-import com.thesis.sportologia.ui.TabsFragmentDirections
-import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
-
 
 /**class PostsHeaderAdapterOld(
     val fragment: Fragment,

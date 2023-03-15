@@ -24,13 +24,10 @@ import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.ListEventsFragment
 import com.thesis.sportologia.ui.events.ListEventsFragmentProfileOther
 import com.thesis.sportologia.ui.events.ListEventsFragmentProfileOwn
-import com.thesis.sportologia.ui.users.entities.AthleteItem
-import com.thesis.sportologia.ui.users.entities.OrganizationItem
-import com.thesis.sportologia.ui.users.entities.UserItem
-import com.thesis.sportologia.utils.findTopNavController
-import com.thesis.sportologia.utils.setAvatar
-import com.thesis.sportologia.utils.toast
-import com.thesis.sportologia.utils.viewModelCreator
+import com.thesis.sportologia.ui.users.entities.AthleteListItem
+import com.thesis.sportologia.ui.users.entities.OrganizationListItem
+import com.thesis.sportologia.ui.users.entities.UserListItem
+import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -59,7 +56,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private val args by navArgs<ProfileFragmentArgs>()
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -69,11 +65,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         userId = getUserIdArg()
-        mode = if (userId == CurrentAccount().id) {
-            Profile.OWN
-        } else {
-            Profile.OTHER
-        }
+
+        initMod()
         when (mode) {
             Profile.OWN -> initRenderProfileOwn()
             Profile.OTHER -> initRenderProfileOther()
@@ -82,6 +75,14 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         initNavToProfile()
 
         return binding.root
+    }
+
+    private fun initMod() {
+        mode = if (userId == CurrentAccount().id) {
+            Profile.OWN
+        } else {
+            Profile.OTHER
+        }
     }
 
     private fun getUserIdArg(): String {
@@ -101,6 +102,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
         initProfileSettingsButton()
         initFavouritesButton()
+        initFollowersButton()
+        initFollowingsButton()
         initRefreshLayout()
         initContentBlock()
         initErrorProcessing()
@@ -136,6 +139,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     private fun initProfileSettingsButton() {
         binding.profileSettingsButton.setOnClickListener {
             onProfileSettingsButtonPressed()
+        }
+    }
+
+    private fun initFollowersButton() {
+        binding.followersLayout.setOnClickListener {
+            onFollowersButtonPressed()
+        }
+    }
+
+    private fun initFollowingsButton() {
+        binding.followingsLayout.setOnClickListener {
+            //onFollowersButtonPressed()
         }
     }
 
@@ -222,10 +237,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     // TODO идея, чтобы при подписке все не перезагружать. Но работает так себе
                     // TODO при переходе от одного экрана  к другому, видимо, все заново грузит
                     /*    when (holder.data.lastAction) {
-                            UserItem.LastAction.INIT -> {
+                            UserListItem.LastAction.INIT -> {
                                 renderUserDetails(holder.data)
                             }
-                            UserItem.LastAction.SUBSCRIBE_CHANGED -> {
+                            UserListItem.LastAction.SUBSCRIBE_CHANGED -> {
                                 renderUserDetailsOnSubscriptionAction(holder.data)
                             }
                      }*/
@@ -257,12 +272,12 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         }
     }
 
-    private fun renderUserDetailsOnSubscriptionAction(userItem: UserItem) {
+    private fun renderUserDetailsOnSubscriptionAction(userItem: UserListItem) {
         binding.followersCount.text = userItem.followersCount.toString()
         binding.subscribeButton.setButtonPressed(userItem.isSubscribed)
     }
 
-    private fun renderUserDetails(userItem: UserItem) {
+    private fun renderUserDetails(userItem: UserListItem) {
         Log.d("BUGFIX", "1313131313")
 
         binding.subscribeButton.setOnClickListener {
@@ -279,8 +294,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
         binding.userName.text = userItem.name
         when (userItem) {
-            is AthleteItem -> binding.userType.text = getString(R.string.athlete)
-            is OrganizationItem -> binding.userType.text = getString(R.string.organization)
+            is AthleteListItem -> binding.userType.text = getString(R.string.athlete)
+            is OrganizationListItem -> binding.userType.text = getString(R.string.organization)
         }
         // TODO address formatting
         binding.address.text = userItem.address.toString()
@@ -294,25 +309,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         renderUserDetailsOnSubscriptionAction(userItem)
     }
 
-    private fun getCategoriesText(userItem: UserItem): String {
-        val res = StringBuilder()
+    private fun getCategoriesText(userItem: UserListItem): String {
+        val concatCategories = concatMap(userItem.categories, ", ")
 
-        var flag = false
-        for (category in userItem.categories) {
-            if (flag) {
-                res.append(", ")
-                flag = false
-            }
-            if (category.value) {
-                res.append(category.key)
-                flag = true
-            }
-        }
-
-        return if (res.toString() == "") {
+        return if (concatCategories == ""){
             getString(R.string.categories_not_specified)
         } else {
-            res.toString()
+            concatCategories
         }
     }
 
@@ -384,9 +387,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             })
     }
 
-    private fun onOpenFollowingsButton() {
-        /*findNavController().navigate(R.id.action_profileFragment_to_listPostsFragment,
-            null,
+    private fun onFollowersButtonPressed() {
+        val direction =
+            ProfileFragmentDirections.actionProfileFragmentToFollowersFragment(userId)
+        findNavController().navigate(
+            direction,
             navOptions {
                 anim {
                     enter = R.anim.slide_in_right
@@ -394,7 +399,22 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     popEnter = R.anim.slide_in_left
                     popExit = R.anim.slide_out_right
                 }
-            })*/
+            })
+    }
+
+    private fun onOpenFollowingsButton() {
+        val direction =
+            ProfileFragmentDirections.actionProfileFragmentToFollowingsFragment(userId)
+        findNavController().navigate(
+            direction,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
     }
 
     companion object {

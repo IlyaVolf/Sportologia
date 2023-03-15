@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui.posts
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,13 +7,13 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
+import com.thesis.sportologia.databinding.FragmentCreateEditPostBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.createSimpleDialog
@@ -24,32 +24,32 @@ import java.io.Serializable
 import javax.inject.Inject
 
 
-/**@AndroidEntryPoint
-class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event) {
+@AndroidEntryPoint
+class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) {
 
     // TODO SAVE ON STATE, т.к. текст при повороте / смене темы затирается
     // TODO photosUrls
-    // TODO remove empty string at the end of the event
+    // TODO remove empty string at the end of the post
 
     @Inject
-    lateinit var factory: CreateEditEventViewModel.Factory
+    lateinit var factory: CreateEditPostViewModel.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(eventId)
+        factory.create(postId)
     }
 
-    private var eventId: Long? = null
+    private var postId: Long? = null
 
     private lateinit var mode: Mode
 
-    private val args by navArgs<CreateEditEventFragmentArgs>()
+    private val args by navArgs<CreateEditPostFragmentArgs>()
 
     // TODO
     private val photosUrls = mutableListOf<String>()
 
     private var savedText: String? = null
 
-    private lateinit var binding: FragmentCreateEditEventBinding
+    private lateinit var binding: FragmentCreateEditPostBinding
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
@@ -60,7 +60,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCreateEditEventBinding.inflate(inflater, container, false)
+        binding = FragmentCreateEditPostBinding.inflate(inflater, container, false)
 
         initMode()
         initRender()
@@ -78,12 +78,12 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         when (mode) {
             Mode.CREATE -> {
                 binding.toolbar.setLeftButtonText(getString(R.string.action_cancel))
-                binding.toolbar.setTitle(getString(R.string.create_event))
+                binding.toolbar.setTitle(getString(R.string.create_post))
                 binding.toolbar.setRightButtonText(getString(R.string.action_create))
             }
             Mode.EDIT -> {
                 binding.toolbar.setLeftButtonText(getString(R.string.action_cancel))
-                binding.toolbar.setTitle(getString(R.string.edit_event))
+                binding.toolbar.setTitle(getString(R.string.edit_post))
                 binding.toolbar.setRightButtonText(getString(R.string.action_save))
             }
         }
@@ -98,27 +98,27 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     private fun initMode() {
-        eventId = getEventIdArg()
+        postId = getPostIdArg()
 
-        mode = if (eventId == null) {
+        mode = if (postId == null) {
             Mode.CREATE
         } else {
             Mode.EDIT
         }
     }
 
-    private fun setEditableText(event: Event?) {
-        if (event == null) return
+    private fun setEditableText(post: Post?) {
+        if (post == null) return
 
         if (savedText == null) {
-            binding.text.setText(event.text)
+            binding.text.setText(post.text)
         } else {
             binding.text.setText(savedText)
         }
     }
 
 
-    private fun getEventIdArg(): Long? = args.eventId.eventId
+    private fun getPostIdArg(): Long? = args.postId.postId
 
     private fun onCancelButtonPressed() {
         createDialog()
@@ -134,7 +134,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     private fun createDialog() {
-        val messageText = getString(R.string.ask_cancel_event_warning)
+        val messageText = getString(R.string.ask_cancel_post_warning)
 
         val neutralButtonText = getString(R.string.action_back)
 
@@ -188,7 +188,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             }
         }
 
-        viewModel.eventHolder.observe(viewLifecycleOwner) { holder ->
+        viewModel.postHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
                     binding.fcpLoading.root.visibility = VISIBLE
@@ -224,7 +224,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         sendResult(isSaved)
 
         /*val bundle = if (isSaved) {
-            bundleOf(EDIT_RESULT to EditResult(isSaved, eventId, binding.text.text.toString()))
+            bundleOf(EDIT_RESULT to EditResult(isSaved, postId, binding.text.text.toString()))
         } else {
             bundleOf(EDIT_RESULT to EditResult(isSaved, null, null))
         }
@@ -255,7 +255,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
             val errorText =
                 when (it) {
-                    CreateEditEventViewModel.ErrorType.EMPTY_POST -> getString(R.string.error_empty_event)
+                    CreateEditPostViewModel.ErrorType.EMPTY_POST -> getString(R.string.error_empty_post)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
@@ -267,14 +267,14 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     // TODO parcelable
-    data class EventId(
-        val eventId: Long?
+    data class PostId(
+        val postId: Long?
     ) : Serializable
 
     companion object {
         /*data class EditResult(
             val isSaved: Boolean,
-            val eventId: Long?,
+            val postId: Long?,
             val text: String?,
         ) : Serializable*/
 
@@ -287,4 +287,4 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
     }
 
-}*/
+}

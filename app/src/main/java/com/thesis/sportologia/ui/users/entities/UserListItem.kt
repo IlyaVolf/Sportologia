@@ -1,11 +1,9 @@
 package com.thesis.sportologia.ui.users.entities
 
 import android.location.Address
-import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.users.entities.User
-import java.util.*
 
-abstract class UserItem(
+abstract class UserListItem(
     val user: User,
 ) {
     val id: String get() = user.id

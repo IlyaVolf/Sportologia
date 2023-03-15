@@ -56,11 +56,11 @@
         tools:layout="@layout/fragment_filter" />
     <fragment
         android:id="@+id/createEditPostFragment"
-        android:name="com.thesis.sportologia.ui.CreateEditPostFragment"
+        android:name="com.thesis.sportologia.ui.posts.CreateEditPostFragment"
         android:label="fragment_create_edit_post"
         tools:layout="@layout/fragment_create_edit_post" >
         <argument
             android:name="postId"
-            app:argType="com.thesis.sportologia.ui.CreateEditPostFragment$PostId" />
+            app:argType="com.thesis.sportologia.ui.posts.CreateEditPostFragment$PostId" />
     </fragment>
 </navigation>

@@ -1,7 +1,6 @@
-package com.thesis.sportologia.ui.posts
+package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +13,10 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.databinding.FragmentListUsersBinding
 import com.thesis.sportologia.ui.adapters.*
-import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
-import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,34 +33,23 @@ import kotlin.properties.Delegates
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
-abstract class ListPostsFragment : Fragment() {
+abstract class ListUsersFragment : Fragment() {
 
-    abstract val viewModel: ListPostsViewModel
+    abstract val viewModel: ListUsersViewModel
     abstract val isSwipeToRefreshEnabled: Boolean
-    abstract val onHeaderBlockPressedAction: (String) -> Unit
+    abstract val onUserSnippetItemPressed: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
-    protected lateinit var binding: FragmentListPostsBinding
-    private lateinit var adapter: PostsPagerAdapter
+    protected lateinit var binding: FragmentListUsersBinding
+    private lateinit var adapter: UsersPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         userId = arguments?.getString("userId") ?: throw Exception()
-        adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+        adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
 
-        Log.d("LIFE", "onCreate ${this.hashCode()}")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("LIFE", "onDestroyView ${this.hashCode()}")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("LIFE", "onDestroy ${this.hashCode()}")
     }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
@@ -70,15 +57,13 @@ abstract class ListPostsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("LIFE", "onCreateView ${this.hashCode()}")
-        binding = FragmentListPostsBinding.inflate(inflater, container, false)
+        binding = FragmentListUsersBinding.inflate(inflater, container, false)
 
-        initResultsProcessing()
         initSwipeToRefresh()
-        initPostsList()
+        initUsersList()
 
         observeErrorMessages()
-        observePosts(adapter)
+        observeUsers(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
 
@@ -88,43 +73,11 @@ abstract class ListPostsFragment : Fragment() {
         return binding.root
     }
 
-    private fun initResultsProcessing() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            CreateEditPostFragment.IS_CREATED_REQUEST_CODE,
-            viewLifecycleOwner
-        ) { _, data ->
-            val isSaved = data.getBoolean(CreateEditPostFragment.IS_CREATED)
-            if (isSaved) {
-                viewModel.onPostCreated()
-            }
-        }
+    abstract fun initUserHeaderAdapter(): UsersHeaderAdapter
 
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            CreateEditPostFragment.IS_EDITED_REQUEST_CODE,
-            viewLifecycleOwner
-        ) { _, data ->
-            val isSaved = data.getBoolean(CreateEditPostFragment.IS_EDITED)
-            if (isSaved) {
-                viewModel.onPostEdited()
-            }
-        }
+    private fun initUsersList() {
 
-        requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
-            viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
-        }
-    }
-
-    abstract fun initPostHeaderAdapter(): PostsHeaderAdapter
-
-    private fun initPostsList() {
-
-        //val adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+        //val adapter = UsersPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
@@ -132,21 +85,21 @@ abstract class ListPostsFragment : Fragment() {
         val footerAdapter = LoadStateAdapterPaging(tryAgainAction)
         val headerAdapter = LoadStateAdapterPaging(tryAgainAction)
 
-        // combined adapter which shows both the list of posts + footer indicator when loading pages
+        // combined adapter which shows both the list of users + footer indicator when loading pages
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
         val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout
+            binding.usersSwipeRefreshLayout
         } else {
             null
         }
-        val postsHeaderAdapter = initPostHeaderAdapter()
-        val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
+        val usersHeaderAdapter = initUserHeaderAdapter()
+        val concatAdapter = ConcatAdapter(usersHeaderAdapter, adapterWithLoadState)
 
-        binding.postsList.layoutManager = LinearLayoutManager(context)
-        binding.postsList.adapter = concatAdapter
-        (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
+        binding.usersList.layoutManager = LinearLayoutManager(context)
+        binding.usersList.adapter = concatAdapter
+        (binding.usersList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
 
         mainLoadStateHolder = LoadStateAdapterPage.Holder(
             binding.loadStateView,
@@ -157,24 +110,24 @@ abstract class ListPostsFragment : Fragment() {
 
     private fun initSwipeToRefresh() {
         if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout.isEnabled = true
-            binding.postsSwipeRefreshLayout.setOnRefreshListener {
+            binding.usersSwipeRefreshLayout.isEnabled = true
+            binding.usersSwipeRefreshLayout.setOnRefreshListener {
                 viewModel.refresh()
             }
         } else {
-            binding.postsSwipeRefreshLayout.isEnabled = false
+            binding.usersSwipeRefreshLayout.isEnabled = false
         }
     }
 
-    private fun observePosts(adapter: PostsPagerAdapter) {
+    private fun observeUsers(adapter: UsersPagerAdapter) {
         lifecycleScope.launch {
-            viewModel.postsFlow.collectLatest { pagingData ->
+            viewModel.usersFlow.collectLatest { pagingData ->
                 adapter.submitData(pagingData)
             }
         }
     }
 
-    private fun observeLoadState(adapter: PostsPagerAdapter) {
+    private fun observeLoadState(adapter: UsersPagerAdapter) {
         // you can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
@@ -187,16 +140,16 @@ abstract class ListPostsFragment : Fragment() {
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
-                binding.postsList.isVisible = false
-                binding.postsEmptyBlock.isVisible = true
+                binding.usersList.isVisible = false
+                binding.usersEmptyBlock.isVisible = true
             } else {
-                binding.postsList.isVisible = true
-                binding.postsEmptyBlock.isVisible = false
+                binding.usersList.isVisible = true
+                binding.usersEmptyBlock.isVisible = false
             }
         }
     }
 
-    private fun handleListVisibility(adapter: PostsPagerAdapter) = lifecycleScope.launch {
+    private fun handleListVisibility(adapter: UsersPagerAdapter) = lifecycleScope.launch {
         // list should be hidden if an error is displayed OR if items are being loaded after the error:
         // (current state = Error) OR (prev state = Error)
         //   OR
@@ -204,14 +157,14 @@ abstract class ListPostsFragment : Fragment() {
         getRefreshLoadStateFlow(adapter)
             .simpleScan(count = 3)
             .collectLatest { (beforePrevious, previous, current) ->
-                binding.postsList.isInvisible = current is LoadState.Error
+                binding.usersList.isInvisible = current is LoadState.Error
                         || previous is LoadState.Error
                         || (beforePrevious is LoadState.Error && previous is LoadState.NotLoading
                         && current is LoadState.Loading)
             }
     }
 
-    private fun handleScrollingToTop(adapter: PostsPagerAdapter) = lifecycleScope.launch {
+    private fun handleScrollingToTop(adapter: UsersPagerAdapter) = lifecycleScope.launch {
         // list should be scrolled to the 1st item (index = 0) if data has been reloaded:
         // (prev state = Loading, current state = NotLoading)
         getRefreshLoadStateFlow(adapter)
@@ -220,12 +173,12 @@ abstract class ListPostsFragment : Fragment() {
                 if (previousState is LoadState.Loading && currentState is LoadState.NotLoading
                     && viewModel.scrollEvents.value?.get() != null
                 ) {
-                    binding.postsList.scrollToPosition(0)
+                    binding.usersList.scrollToPosition(0)
                 }
             }
     }
 
-    private fun getRefreshLoadStateFlow(adapter: PostsPagerAdapter): Flow<LoadState> {
+    private fun getRefreshLoadStateFlow(adapter: UsersPagerAdapter): Flow<LoadState> {
         return adapter.loadStateFlow
             .map { it.refresh }
     }
@@ -236,7 +189,7 @@ abstract class ListPostsFragment : Fragment() {
         }
     }
 
-    private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
+    private fun observeInvalidationEvents(adapter: UsersPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
         }

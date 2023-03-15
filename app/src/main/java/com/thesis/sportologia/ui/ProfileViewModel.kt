@@ -12,9 +12,9 @@ import com.thesis.sportologia.model.users.entities.Organization
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.posts.entities.PostListItem
-import com.thesis.sportologia.ui.users.entities.AthleteItem
-import com.thesis.sportologia.ui.users.entities.OrganizationItem
-import com.thesis.sportologia.ui.users.entities.UserItem
+import com.thesis.sportologia.ui.users.entities.AthleteListItem
+import com.thesis.sportologia.ui.users.entities.OrganizationListItem
+import com.thesis.sportologia.ui.users.entities.UserListItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -35,7 +35,7 @@ class ProfileViewModel @AssistedInject constructor(
     private val _subscribeHolder = ObservableHolder(DataHolder.ready(null))
     val subscribeHolder = _subscribeHolder.share()
 
-    private val _userHolder = ObservableHolder<UserItem>(DataHolder.init())
+    private val _userHolder = ObservableHolder<UserListItem>(DataHolder.init())
     val userHolder = _userHolder.share()
 
     init {
@@ -64,11 +64,11 @@ class ProfileViewModel @AssistedInject constructor(
                     when (user) {
                         is Athlete -> {
                             _userHolder.value =
-                                DataHolder.ready(AthleteItem(user.copy()))
+                                DataHolder.ready(AthleteListItem(user.copy()))
 
                         }
                         is Organization -> {
-                            _userHolder.value = DataHolder.ready(OrganizationItem(user.copy()))
+                            _userHolder.value = DataHolder.ready(OrganizationListItem(user.copy()))
                         }
                     }
                 } else {
@@ -86,7 +86,7 @@ class ProfileViewModel @AssistedInject constructor(
     fun onSubscribeButtonPressed() = viewModelScope.launch(Dispatchers.IO) {
         if (_subscribeHolder.value!!.isLoading || _userHolder.value!!.isLoading) return@launch
 
-        lateinit var userItem: UserItem
+        lateinit var userItem: UserListItem
         _userHolder.value!!.onReady { userItem = it }
         val newIsSubscribed = !userItem.isSubscribed
         Log.d("BUGFIX", "$newIsSubscribed, ${userItem.hashCode()}")
@@ -110,9 +110,9 @@ class ProfileViewModel @AssistedInject constructor(
     }
 
     private fun getUserItemOnSubscriptionAction(
-        userItem: UserItem,
+        userItem: UserListItem,
         isSubscribed: Boolean
-    ): UserItem {
+    ): UserListItem {
         val followersCount = when (isSubscribed) {
             true -> {
                 userItem.followersCount + 1
@@ -123,16 +123,16 @@ class ProfileViewModel @AssistedInject constructor(
         }
 
         return when (userItem) {
-            is AthleteItem -> {
-                AthleteItem(
+            is AthleteListItem -> {
+                AthleteListItem(
                     userItem.athlete.copy(
                         followersCount = followersCount,
                         isSubscribed = isSubscribed
                     ),
                 )
             }
-            is OrganizationItem -> {
-                OrganizationItem(
+            is OrganizationListItem -> {
+                OrganizationListItem(
                     userItem.organization.copy(
                         followersCount = followersCount,
                         isSubscribed = isSubscribed

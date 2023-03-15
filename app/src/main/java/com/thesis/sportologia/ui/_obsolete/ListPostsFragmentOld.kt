@@ -1,41 +1,5 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.core.os.bundleOf
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
-import androidx.paging.LoadState
-import androidx.recyclerview.widget.ConcatAdapter
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.ui.CreateEditPostFragment
-import com.thesis.sportologia.ui.FavouritesFragment
-import com.thesis.sportologia.ui.HomeFragment
-import com.thesis.sportologia.ui.ProfileFragment
-import com.thesis.sportologia.ui.adapters.*
-import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
-import com.thesis.sportologia.utils.observeEvent
-import com.thesis.sportologia.utils.simpleScan
-import com.thesis.sportologia.utils.viewModelCreator
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.properties.Delegates
-
 
 /**@AndroidEntryPoint
 @ExperimentalCoroutinesApi

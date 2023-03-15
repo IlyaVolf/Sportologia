@@ -13,4 +13,14 @@ abstract class User {
     abstract var address: Address?
     abstract var categories: Map<String, Boolean>
     abstract var isSubscribed: Boolean
+
+    fun toUserSnippet(): UserSnippet {
+        return UserSnippet(
+            this.id,
+            this.name,
+            this.profilePhotoURI,
+            this.address,
+            this.categories
+        )
+    }
 }

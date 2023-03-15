@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <include
+        android:id="@+id/users_chosen_filters"
+        layout="@layout/view_chosen_filters" />
+
+    <Space
+        android:id="@+id/users_chosen_filters_space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+</LinearLayout>

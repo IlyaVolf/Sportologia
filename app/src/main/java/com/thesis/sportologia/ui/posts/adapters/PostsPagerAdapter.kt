@@ -12,6 +12,7 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.ui.*
+import com.thesis.sportologia.ui.posts.CreateEditPostFragment
 import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.ui.views.ItemPostView
 import com.thesis.sportologia.ui.views.OnItemPostAction

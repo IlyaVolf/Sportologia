@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui.posts
 
 
 import androidx.lifecycle.viewModelScope
