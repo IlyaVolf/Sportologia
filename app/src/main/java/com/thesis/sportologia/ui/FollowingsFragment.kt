@@ -37,8 +37,6 @@ class FollowingsFragment : Fragment() {
     ): View {
         binding = FragmentFollowingsBinding.inflate(inflater, container, false)
 
-        userId = getUserId()
-
         initToolbar()
         initOnFollowerPressed()
         initListFragment()
@@ -89,7 +87,7 @@ class FollowingsFragment : Fragment() {
 
     private fun initListFragment() {
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.followings_list_container, ListUsersFragmentFollowings.newInstance(userId)
+            R.id.followings_list_container, listUsersFragmentFollowings
         ).commit()
     }
 

@@ -74,7 +74,7 @@ class InMemoryUsersRepository @Inject constructor(
                 Pair("Аэробика", false),
                 Pair("Бег", false)
             ),
-            false,
+            true,
         ),
         Organization(
             null,
@@ -124,6 +124,12 @@ class InMemoryUsersRepository @Inject constructor(
             following.forEach { it.followersCount-- }
         }
         following.forEach { it.isSubscribed = isSubscribed }
+
+        if (isSubscribed) {
+            followingsId.add(followingId)
+        } else {
+            followingsId.remove(followingId)
+        }
 
     }
 
