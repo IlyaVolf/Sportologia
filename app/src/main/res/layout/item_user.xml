@@ -6,7 +6,10 @@
     android:layout_height="64dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
+    android:background="@drawable/background_transparent"
     android:paddingHorizontal="@dimen/margin_sides"
+    android:clickable="true"
+    android:focusable="true"
     android:paddingVertical="6dp">
 
     <androidx.cardview.widget.CardView

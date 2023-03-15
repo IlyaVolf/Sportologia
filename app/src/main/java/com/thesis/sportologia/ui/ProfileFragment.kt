@@ -116,6 +116,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButtonsBlock.visibility = View.VISIBLE
 
         initToolbar()
+        initFollowersButton()
+        initFollowingsButton()
         initRefreshLayout()
         initContentBlock()
         initErrorProcessing()
@@ -150,7 +152,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun initFollowingsButton() {
         binding.followingsLayout.setOnClickListener {
-            //onFollowersButtonPressed()
+            onFollowingsButtonPressed()
         }
     }
 
@@ -288,10 +290,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             onOpenPhotosButtonPressed()
         }
 
-        binding.followingsLayout.setOnClickListener {
-            onOpenFollowingsButton()
-        }
-
         binding.userName.text = userItem.name
         when (userItem) {
             is AthleteListItem -> binding.userType.text = getString(R.string.athlete)
@@ -402,7 +400,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             })
     }
 
-    private fun onOpenFollowingsButton() {
+    private fun onFollowingsButtonPressed() {
         val direction =
             ProfileFragmentDirections.actionProfileFragmentToFollowingsFragment(userId)
         findNavController().navigate(

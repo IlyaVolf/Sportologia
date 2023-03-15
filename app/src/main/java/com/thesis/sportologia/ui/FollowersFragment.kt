@@ -13,7 +13,6 @@ import com.thesis.sportologia.databinding.FragmentFollowersBinding
 import com.thesis.sportologia.ui.users.ListUsersFragmentFollowers
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URI
 
 @AndroidEntryPoint
 class FollowersFragment : Fragment() {
@@ -28,6 +27,7 @@ class FollowersFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        userId = getUserId()
         listUsersFragmentFollowers = ListUsersFragmentFollowers.newInstance(userId)
     }
 
@@ -36,8 +36,6 @@ class FollowersFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFollowersBinding.inflate(inflater, container, false)
-
-        userId = getUserId()
 
         initToolbar()
         initOnFollowerPressed()
@@ -78,9 +76,17 @@ class FollowersFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .remove(listUsersFragmentFollowers).commit()
+    }
+
     private fun initListFragment() {
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.followings_list_container, listUsersFragmentFollowers).commit()
+            R.id.followings_list_container, listUsersFragmentFollowers
+        ).commit()
     }
 
     private fun onBackButtonPressed() {

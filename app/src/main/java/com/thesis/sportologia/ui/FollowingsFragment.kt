@@ -27,6 +27,7 @@ class FollowingsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        userId = getUserId()
         listUsersFragmentFollowings = ListUsersFragmentFollowings.newInstance(userId)
     }
 
@@ -62,7 +63,9 @@ class FollowingsFragment : Fragment() {
             val userIdToGo = data.getString(USER_ID) ?: return@setFragmentResultListener
             if (userIdToGo != userId) {
                 val direction =
-                    FollowingsFragmentDirections.actionFollowingsFragmentToProfileFragment(userIdToGo)
+                    FollowingsFragmentDirections.actionFollowingsFragmentToProfileFragment(
+                        userIdToGo
+                    )
                 findNavController().navigate(
                     direction,
                     navOptions {
@@ -77,9 +80,17 @@ class FollowingsFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        requireActivity().supportFragmentManager.beginTransaction()
+            .remove(listUsersFragmentFollowings).commit()
+    }
+
     private fun initListFragment() {
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.followings_list_container, listUsersFragmentFollowings).commit()
+            R.id.followings_list_container, ListUsersFragmentFollowings.newInstance(userId)
+        ).commit()
     }
 
     private fun onBackButtonPressed() {

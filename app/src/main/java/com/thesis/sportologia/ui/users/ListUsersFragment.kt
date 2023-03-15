@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,8 @@ abstract class ListUsersFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        Log.d("LIFECYCLE", "FOLLOWERS onCreate")
+
         userId = arguments?.getString("userId") ?: throw Exception()
         adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
 
@@ -57,6 +60,7 @@ abstract class ListUsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("LIFECYCLE", "FOLLOWERS onCreateView")
         binding = FragmentListUsersBinding.inflate(inflater, container, false)
 
         initSwipeToRefresh()
@@ -71,6 +75,18 @@ abstract class ListUsersFragment : Fragment() {
         handleListVisibility(adapter)
 
         return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        Log.d("LIFECYCLE", "FOLLOWERS onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Log.d("LIFECYCLE", "FOLLOWERS onDestroy")
     }
 
     abstract fun initUserHeaderAdapter(): UsersHeaderAdapter
