@@ -61,6 +61,21 @@ class InMemoryUsersRepository @Inject constructor(
             ),
             true,
         ),
+        Athlete(
+            true,
+            null,
+            "nikita",
+            "Никита Романов",
+            "-----",
+            "https://i.imgur.com/tGbaZCY.jpg",
+            21,
+            5,
+            hashMapOf(
+                Pair("Аэробика", false),
+                Pair("Бег", false)
+            ),
+            false,
+        ),
         Organization(
             null,
             "stroitel",

@@ -21,8 +21,15 @@ class FollowersFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowersBinding
     private lateinit var userId: String
+    private lateinit var listUsersFragmentFollowers: ListUsersFragmentFollowers
 
     private fun getUserId(): String = args.userId
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        listUsersFragmentFollowers = ListUsersFragmentFollowers.newInstance(userId)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +80,7 @@ class FollowersFragment : Fragment() {
 
     private fun initListFragment() {
         requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.followings_list_container, ListUsersFragmentFollowers.newInstance(userId)).commit()
+            R.id.followings_list_container, listUsersFragmentFollowers).commit()
     }
 
     private fun onBackButtonPressed() {
