@@ -1,34 +1,25 @@
 package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.SearchView
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
-import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.events.ListEventsViewModel
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
-import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
-import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,7 +28,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import java.net.URI
 import kotlin.properties.Delegates
 
 @AndroidEntryPoint

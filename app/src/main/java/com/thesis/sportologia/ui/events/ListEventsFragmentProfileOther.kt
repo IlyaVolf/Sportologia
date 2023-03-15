@@ -2,8 +2,6 @@ package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import com.thesis.sportologia.ui.FavouritesFragment
-import com.thesis.sportologia.ui.HomeFragment
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterProfileOther
@@ -34,7 +32,7 @@ class ListEventsFragmentProfileOther : ListEventsFragment() {
     }
 
     override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterProfileOther(this, viewModel)
+        return EventsHeaderAdapterProfileOther(this, viewModel, viewModel.isUpcomingOnly)
     }
 
     companion object {

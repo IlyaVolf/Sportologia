@@ -2,6 +2,7 @@ package com.thesis.sportologia.ui.events.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
@@ -19,7 +20,38 @@ abstract class EventsHeaderAdapter(
         val inflater = LayoutInflater.from(parent.context)
         binding = FragmentListEventsHeaderBinding.inflate(inflater, parent, false)
 
+        disableAllItems()
+
         return Holder(fragment, renderHeader, binding)
+    }
+
+    private fun disableAllItems() {
+        binding.eventsChosenFilters.root.isVisible = false
+        binding.eventsChosenFiltersSpace.isVisible = false
+        binding.eventsFilter.root.isVisible = false
+        binding.eventsFilterSpace.isVisible = false
+        binding.createEventButton.isVisible = false
+        binding.createEventButtonSpace.isVisible = false
+    }
+
+    protected fun enableEventsFilter(isUpcomingOnly: Boolean) {
+        binding.eventsFilter.root.isVisible = true
+        binding.eventsFilterSpace.isVisible = true
+        binding.eventsFilter.spinner.initAdapter(filterOptionsList, getFilterValue(isUpcomingOnly))
+        binding.eventsFilter.spinner.setListener(eventsFilterListener)
+    }
+
+    protected fun enableEventsChosenFilters() {
+        binding.eventsChosenFilters.root.isVisible = true
+        binding.eventsChosenFiltersSpace.isVisible = true
+    }
+
+    protected fun enableCreateEventButton() {
+        binding.createEventButton.isVisible = true
+        binding.createEventButtonSpace.isVisible = true
+        binding.createEventButton.setOnClickListener {
+            onCreateEventButtonPressed()
+        }
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -38,26 +70,26 @@ abstract class EventsHeaderAdapter(
 
     }
 
-    protected val filterOptionsList = listOf(
+    private val filterOptionsList = listOf(
         fragment.context?.getString(R.string.filter_events_upcoming) ?: "",
         fragment.context?.getString(R.string.filter_events_all) ?: "",
     )
 
-    protected fun getFilterValue(isUpcomingOnly: Boolean): String {
+    private fun getFilterValue(isUpcomingOnly: Boolean): String {
         return when (isUpcomingOnly) {
             true -> filterOptionsList[0]
             false -> filterOptionsList[1]
         }
     }
 
-    protected val eventsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
+    private val eventsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
         when (it) {
             filterOptionsList[0] -> listener.filterApply(true)
             filterOptionsList[1] -> listener.filterApply(false)
         }
     }
 
-    protected fun onCreateEventButtonPressed() {
+    private fun onCreateEventButtonPressed() {
         /*val direction = TabsFragmentDirections.actionTabsFragmentToEditEventFragment(
             CreateEditEventFragment.EventId(null)
         )*/

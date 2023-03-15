@@ -2,6 +2,7 @@ package com.thesis.sportologia.ui.users.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.navOptions
 import com.thesis.sportologia.utils.findTopNavController
@@ -21,7 +22,19 @@ abstract class UsersHeaderAdapter(
         val inflater = LayoutInflater.from(parent.context)
         binding = FragmentListUsersHeaderBinding.inflate(inflater, parent, false)
 
+        disableAllItems()
+
         return Holder(fragment, renderHeader, binding)
+    }
+
+    private fun disableAllItems() {
+        binding.usersChosenFilters.root.isVisible = false
+        binding.usersChosenFiltersSpace.isVisible = false
+    }
+
+    fun enableUsersChosenFilters() {
+        binding.usersChosenFilters.root.isVisible = true
+        binding.usersChosenFiltersSpace.isVisible = true
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

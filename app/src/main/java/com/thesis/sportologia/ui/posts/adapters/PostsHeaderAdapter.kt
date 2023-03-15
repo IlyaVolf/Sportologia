@@ -2,6 +2,7 @@ package com.thesis.sportologia.ui.posts.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.navOptions
 import com.thesis.sportologia.utils.findTopNavController
@@ -11,7 +12,6 @@ import com.thesis.sportologia.databinding.FragmentListPostsHeaderBinding
 import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.posts.CreateEditPostFragment
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
-
 
 abstract class PostsHeaderAdapter(
     private val fragment: Fragment,
@@ -24,7 +24,31 @@ abstract class PostsHeaderAdapter(
         val inflater = LayoutInflater.from(parent.context)
         binding = FragmentListPostsHeaderBinding.inflate(inflater, parent, false)
 
+        disableAllItems()
+        
         return Holder(fragment, renderHeader, binding)
+    }
+
+    private fun disableAllItems() {
+        binding.postsFilter.root.isVisible = false
+        binding.postsFilterSpace.isVisible = false
+        binding.createPostButton.isVisible = false
+        binding.createPostButtonSpace.isVisible = false
+    }
+
+    protected fun enablePostsFilter(athTorgF: Boolean?) {
+        binding.postsFilter.root.isVisible = true
+        binding.postsFilterSpace.isVisible = true
+        binding.postsFilter.spinner.initAdapter(filterOptionsList, getFilterValue(athTorgF))
+        binding.postsFilter.spinner.setListener(postsFilterListener)
+    }
+    
+    protected fun enableCreatePostButton() {
+        binding.createPostButton.isVisible = true
+        binding.createPostButtonSpace.isVisible = true
+        binding.createPostButton.setOnClickListener {
+            onCreatePostButtonPressed()
+        }
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
@@ -43,13 +67,13 @@ abstract class PostsHeaderAdapter(
 
     }
 
-    protected val filterOptionsList = listOf(
+    private val filterOptionsList = listOf(
         fragment.context?.getString(R.string.filter_posts_all) ?: "",
         fragment.context?.getString(R.string.filter_posts_athletes) ?: "",
         fragment.context?.getString(R.string.filter_posts_organizations) ?: ""
     )
 
-    protected fun getFilterValue(athTorgF: Boolean?): String {
+    private fun getFilterValue(athTorgF: Boolean?): String {
         return when (athTorgF) {
             null -> filterOptionsList[0]
             true -> filterOptionsList[1]
@@ -57,7 +81,7 @@ abstract class PostsHeaderAdapter(
         }
     }
 
-    protected val postsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
+    private val postsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
         when (it) {
             filterOptionsList[0] -> listener.filterApply(null)
             filterOptionsList[1] -> listener.filterApply(true)
@@ -65,7 +89,7 @@ abstract class PostsHeaderAdapter(
         }
     }
 
-    protected fun onCreatePostButtonPressed() {
+    private fun onCreatePostButtonPressed() {
         val direction = TabsFragmentDirections.actionTabsFragmentToEditPostFragment(
             CreateEditPostFragment.PostId(null)
         )

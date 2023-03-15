@@ -36,7 +36,7 @@
                     android:id="@+id/posts_empty_block"
                     style="@style/TextStyleSecondary"
                     android:layout_width="match_parent"
-                    android:layout_height="32dp"
+                    android:layout_height="96dp"
                     android:layout_marginVertical="12dp"
                     android:gravity="center"
                     android:visibility="gone"

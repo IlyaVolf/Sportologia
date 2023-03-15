@@ -31,7 +31,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
