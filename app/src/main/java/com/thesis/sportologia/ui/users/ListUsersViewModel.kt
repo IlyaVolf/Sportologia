@@ -20,6 +20,7 @@ import com.thesis.sportologia.utils.logger.Logger
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
+// TODO баг при отписки от пользователя, возврату на экран с подписками и послед обновлением страницы
 abstract class ListUsersViewModel constructor(
     private val userId: String,
     private val usersRepository: UsersRepository,
@@ -43,13 +44,13 @@ abstract class ListUsersViewModel constructor(
     val usersFlow: Flow<PagingData<UserSnippetListItem>>
 
     init {
-        val originUsersFlow = getDataFlow()
+        val originUsersFlow = this.getDataFlow()
 
         usersFlow = combine(
             originUsersFlow,
             localChangesFlow.debounce(50),
             // TODO get rid of this!
-            this::merge
+            ::merge
         )
     }
 

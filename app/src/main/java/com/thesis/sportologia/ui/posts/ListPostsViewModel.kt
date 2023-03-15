@@ -51,12 +51,12 @@ abstract class ListPostsViewModel constructor(
 
 
     init {
-        val originPostsFlow = getDataFlow()
+        val originPostsFlow = this.getDataFlow()
 
         postsFlow = combine(
             originPostsFlow,
             localChangesFlow.debounce(50),
-            this::merge
+            ::merge
         )
     }
 

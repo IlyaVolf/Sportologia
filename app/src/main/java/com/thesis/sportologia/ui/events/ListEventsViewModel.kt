@@ -52,12 +52,12 @@ abstract class ListEventsViewModel constructor(
 
 
     init {
-        val originEventsFlow = getDataFlow()
+        val originEventsFlow = this.getDataFlow()
 
         eventsFlow = combine(
             originEventsFlow,
             localChangesFlow.debounce(50),
-            this::merge
+            ::merge
         )
     }
 
