@@ -24,8 +24,6 @@ abstract class ListPostsViewModel constructor(
     logger: Logger
 ) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
 
-    // LiveData для Event (т.е. действий)
-
     internal val search = MutableLiveData("")
 
     private val athTorgFLiveData = MutableLiveData<Boolean?>(null)

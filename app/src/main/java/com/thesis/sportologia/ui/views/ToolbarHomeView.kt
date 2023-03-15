@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
@@ -29,6 +30,8 @@ class ToolbarHomeView(
 
     private val binding: ViewToolbarHomeBinding
 
+    lateinit var avatar: ImageView
+
     private var listeners = mutableListOf<OnToolbarHomeActionListener?>()
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : this(
@@ -45,6 +48,8 @@ class ToolbarHomeView(
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.view_toolbar_home, this, true)
         binding = ViewToolbarHomeBinding.bind(this)
+        avatar = binding.avatar
+
         initAttributes(attrs, defStyleAttr, defStyleRes)
         initListeners()
     }
@@ -58,13 +63,11 @@ class ToolbarHomeView(
         val title = typedArray.getText(R.styleable.ToolbarHomeView_th_toolbarTitle)
         binding.title.text = title ?: "Title"
 
-        val avatar = typedArray.getResourceId(R.styleable.ToolbarHomeView_th_toolbarAvatar, 0)
-        if (avatar == 0) {
-            binding.avatarHolder.visibility = GONE
-        } else {
-            binding.avatarHolder.visibility = VISIBLE
-            binding.avatar.setImageResource(avatar)
-        }
+        val avatar = typedArray.getResourceId(
+            R.styleable.ToolbarHomeView_th_toolbarAvatar,
+            R.drawable.avatar
+        )
+        binding.avatar.setImageResource(avatar)
 
         val icon = typedArray.getResourceId(R.styleable.ToolbarHomeView_th_toolbarRightButton, 0)
         if (icon == 0) {

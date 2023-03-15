@@ -25,8 +25,6 @@ abstract class ListEventsViewModel constructor(
     logger: Logger
 ) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener, EventsHeaderAdapter.FilterListener {
 
-    // LiveData для Event (т.е. действий)
-
     internal val search = MutableLiveData("")
 
     private val isUpcomingOnlyLiveData = MutableLiveData(true)

@@ -49,7 +49,6 @@ abstract class ListUsersViewModel constructor(
         usersFlow = combine(
             originUsersFlow,
             localChangesFlow.debounce(50),
-            // TODO get rid of this!
             ::merge
         )
     }

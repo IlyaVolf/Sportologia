@@ -28,7 +28,6 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:th_toolbarAvatar="@drawable/avatar_photo"
                     app:th_toolbarRightButton="@drawable/icon_settings"
                     app:th_toolbarTitle="@string/home" />
 

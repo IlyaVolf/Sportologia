@@ -40,7 +40,7 @@ class InMemoryEventsRepository @Inject constructor(
         organizerId = "i_chiesov",
         organizerName = "Игорь Чиёсов",
         isOrganizerAthlete = true,
-        profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
+        profilePictureUrl = null,
         dateFrom = dateFrom.timeInMillis,
         dateTo = dateTo.timeInMillis,
         address = null,
