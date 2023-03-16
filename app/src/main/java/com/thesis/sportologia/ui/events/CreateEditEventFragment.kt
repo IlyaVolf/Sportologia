@@ -12,19 +12,19 @@ import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
+import com.thesis.sportologia.databinding.FragmentCreateEditEventBinding
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
+import com.thesis.sportologia.ui.posts.CreateEditPostViewModel
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
-import com.thesis.sportologia.utils.createSimpleDialog
-import com.thesis.sportologia.utils.observeEvent
-import com.thesis.sportologia.utils.viewModelCreator
+import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
 
-
-/**@AndroidEntryPoint
+@AndroidEntryPoint
 class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event) {
 
     // TODO SAVE ON STATE, т.к. текст при повороте / смене темы затирается
@@ -38,22 +38,22 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         factory.create(eventId)
     }
 
-    private var eventId: Long? = null
-
     private lateinit var mode: Mode
 
     private val args by navArgs<CreateEditEventFragmentArgs>()
 
-    // TODO
+    // TODO photosUrls
     private val photosUrls = mutableListOf<String>()
 
-    private var savedText: String? = null
+    private var eventId: Long? = null
+    private var currentEventCreateEditItem: EventCreateEditItem? = null
 
     private lateinit var binding: FragmentCreateEditEventBinding
 
+    // TODO onSaveInstanceState
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(TEXT_KEY, binding.text.text.toString())
+        outState.putSerializable(EVENT_KEY, currentEventCreateEditItem)
     }
 
     override fun onCreateView(
@@ -64,8 +64,8 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
         initMode()
         initRender()
+        initCurrentEventCreateEditItem(savedInstanceState)
 
-        savedText = savedInstanceState?.getString(TEXT_KEY)
         observeGoBackEvent()
         observeToastMessageEvent()
 
@@ -74,27 +74,8 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private fun initRender() {
         initMode()
-
-        when (mode) {
-            Mode.CREATE -> {
-                binding.toolbar.setLeftButtonText(getString(R.string.action_cancel))
-                binding.toolbar.setTitle(getString(R.string.create_event))
-                binding.toolbar.setRightButtonText(getString(R.string.action_create))
-            }
-            Mode.EDIT -> {
-                binding.toolbar.setLeftButtonText(getString(R.string.action_cancel))
-                binding.toolbar.setTitle(getString(R.string.edit_event))
-                binding.toolbar.setRightButtonText(getString(R.string.action_save))
-            }
-        }
-
-        binding.toolbar.setListener {
-            when (it) {
-                OnToolbarBasicAction.LEFT -> onCancelButtonPressed()
-                OnToolbarBasicAction.RIGHT -> onSaveButtonPressed()
-            }
-        }
-
+        initToolbar()
+        initCategoriesSelector()
     }
 
     private fun initMode() {
@@ -107,14 +88,54 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         }
     }
 
-    private fun setEditableText(event: Event?) {
+    private fun initToolbar() {
+        when (mode) {
+            Mode.CREATE -> {
+                binding.fceeToolbar.setLeftButtonText(getString(R.string.action_cancel))
+                binding.fceeToolbar.setTitle(getString(R.string.create_event))
+                binding.fceeToolbar.setRightButtonText(getString(R.string.action_create))
+            }
+            Mode.EDIT -> {
+                binding.fceeToolbar.setLeftButtonText(getString(R.string.action_cancel))
+                binding.fceeToolbar.setTitle(getString(R.string.event))
+                binding.fceeToolbar.setRightButtonText(getString(R.string.action_save))
+            }
+        }
+
+        binding.fceeToolbar.setListener {
+            when (it) {
+                OnToolbarBasicAction.LEFT -> onCancelButtonPressed()
+                OnToolbarBasicAction.RIGHT -> onSaveButtonPressed()
+            }
+        }
+    }
+
+    private fun initCategoriesSelector() {
+        binding.fceeCategories.setListener { }
+    }
+
+    private fun renderSelectedCategories(event: Event?) {
+        val categoriesMap = event?.categories ?: Event.emptyCategoriesMap
+        binding.fceeCategories.initMultiChoiceList(
+            categoriesMap,
+            getString(R.string.event_categories_hint)
+        )
+    }
+    
+    private fun initCurrentEventCreateEditItem(savedInstanceState: Bundle?) {
+        currentEventCreateEditItem =
+            savedInstanceState?.getSerializable(EVENT_KEY) as EventCreateEditItem?
+    }
+
+    private fun renderData(event: Event?) {
+        renderSelectedCategories(event)
+
         if (event == null) return
 
-        if (savedText == null) {
-            binding.text.setText(event.text)
-        } else {
-            binding.text.setText(savedText)
-        }
+        binding.fceeName.setText(event.name)
+        binding.fceeDescription.setText(event.description)
+        binding.fceePrice.setText(formatPrice(event.price.toString()))
+        binding.fceeAddress.setText(event.address.toString())
     }
 
 
@@ -124,11 +145,22 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         createDialog()
     }
 
-
     private fun onSaveButtonPressed() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             if (holder !is DataHolder.LOADING) {
-                viewModel.onSaveButtonPressed(binding.text.text.toString(), photosUrls)
+                viewModel.onSaveButtonPressed(
+                    EventCreateEditItem(
+                        binding.fceeName.getText(),
+                        binding.fceeDescription.getText(),
+                        binding.fceeDate.getDateFromMillis(),
+                        binding.fceeDate.getDateToMillis(),
+                        null,
+                        binding.fceePrice.getText(),
+                        getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
+                        binding.fceeCategories.getCheckedDataMap(),
+                        photosUrls
+                    )
+                )
             }
         }
     }
@@ -162,28 +194,28 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             },
             null,
             null,
-            )
+        )
     }
 
     override fun observeViewModel() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
-                    binding.fcpLoading.root.visibility = VISIBLE
-                    binding.fcpError.root.visibility = GONE
-                    binding.textBlock.visibility = GONE
+                    binding.fceeLoading.root.visibility = VISIBLE
+                    binding.fceeError.root.visibility = GONE
+                    binding.fceeEventBlock.visibility = GONE
                 }
                 is DataHolder.READY -> {
-                    binding.fcpLoading.root.visibility = GONE
-                    binding.fcpError.root.visibility = GONE
-                    binding.textBlock.visibility = VISIBLE
+                    binding.fceeLoading.root.visibility = GONE
+                    binding.fceeError.root.visibility = GONE
+                    binding.fceeEventBlock.visibility = VISIBLE
                 }
                 is DataHolder.ERROR -> {
-                    binding.fcpLoading.root.visibility = GONE
-                    binding.fcpError.root.visibility = VISIBLE
-                    binding.textBlock.visibility = GONE
+                    binding.fceeLoading.root.visibility = GONE
+                    binding.fceeError.root.visibility = VISIBLE
+                    binding.fceeEventBlock.visibility = GONE
 
-                    binding.fcpError.veText.text = holder.failure.message
+                    binding.fceeError.veText.text = holder.failure.message
                 }
             }
         }
@@ -191,23 +223,23 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         viewModel.eventHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
-                    binding.fcpLoading.root.visibility = VISIBLE
-                    binding.fcpError.root.visibility = GONE
-                    binding.textBlock.visibility = GONE
+                    binding.fceeLoading.root.visibility = VISIBLE
+                    binding.fceeError.root.visibility = GONE
+                    binding.fceeEventBlock.visibility = GONE
                 }
                 is DataHolder.READY -> {
-                    binding.fcpLoading.root.visibility = GONE
-                    binding.fcpError.root.visibility = GONE
-                    binding.textBlock.visibility = VISIBLE
+                    binding.fceeLoading.root.visibility = GONE
+                    binding.fceeError.root.visibility = GONE
+                    binding.fceeEventBlock.visibility = VISIBLE
 
-                    setEditableText(holder.data)
+                    renderData(holder.data)
                 }
                 is DataHolder.ERROR -> {
-                    binding.fcpLoading.root.visibility = GONE
-                    binding.fcpError.root.visibility = VISIBLE
-                    binding.textBlock.visibility = GONE
+                    binding.fceeLoading.root.visibility = GONE
+                    binding.fceeError.root.visibility = VISIBLE
+                    binding.fceeEventBlock.visibility = GONE
 
-                    binding.fcpError.veText.text = holder.failure.message
+                    binding.fceeError.veText.text = holder.failure.message
                 }
             }
         }
@@ -215,7 +247,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     override fun setupViews() {
         super.setupViews()
-        binding.fcpError.veTryAgain.setOnClickListener {
+        binding.fceeError.veTryAgain.setOnClickListener {
             onSaveButtonPressed()
         }
     }
@@ -255,7 +287,8 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
             val errorText =
                 when (it) {
-                    CreateEditEventViewModel.ErrorType.EMPTY_POST -> getString(R.string.error_empty_event)
+                    CreateEditEventViewModel.ErrorType.INCORRECT_PRICE -> getString(R.string.error_price_event)
+                    else -> getString(R.string.error_event)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
@@ -278,7 +311,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             val text: String?,
         ) : Serializable*/
 
-        const val TEXT_KEY = "TEXT_KEY"
+        const val EVENT_KEY = "EVENT_KEY"
 
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
@@ -287,4 +320,4 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
     }
 
-}*/
+}

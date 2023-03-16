@@ -90,7 +90,7 @@ abstract class PostsHeaderAdapter(
     }
 
     private fun onCreatePostButtonPressed() {
-        val direction = TabsFragmentDirections.actionTabsFragmentToEditPostFragment(
+        val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditPostFragment(
             CreateEditPostFragment.PostId(null)
         )
 

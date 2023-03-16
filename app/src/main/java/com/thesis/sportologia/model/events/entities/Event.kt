@@ -1,6 +1,8 @@
 package com.thesis.sportologia.model.events.entities
 
 import android.location.Address
+import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
+import com.thesis.sportologia.ui.events.entities.EventListItem
 import java.util.*
 
 data class Event(
@@ -21,4 +23,27 @@ data class Event(
     var isLiked: Boolean,
     var isFavourite: Boolean,
     var photosUrls: List<String>?,
-)
+) {
+
+    fun toEventCreateEditItem(): EventCreateEditItem {
+        return EventCreateEditItem(
+            name,
+            description,
+            dateFrom,
+            dateTo,
+            address,
+            price.toString(),
+            currency,
+            categories,
+            photosUrls
+        )
+    }
+
+    companion object {
+        val emptyCategoriesMap
+            get() = hashMapOf(Pair(RUNNING, false), Pair(MASTER_CLASS, false))
+
+        private const val RUNNING = "Running"
+        private const val MASTER_CLASS = "Master class"
+    }
+}

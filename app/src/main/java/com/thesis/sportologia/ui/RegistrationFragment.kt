@@ -62,12 +62,14 @@ class RegistrationFragment : Fragment() {
             getString(R.string.category_running),
             getString(R.string.category_body_building),
         )
+        val categoriesMap = hashMapOf<String, Boolean>()
+        categories.forEach{ category -> categoriesMap[category] = false }
         val interests = binding.root.findViewById<MultiChoiceBasicView>(R.id.interests)
-        interests.initMultiChoiceList(categories, getString(R.string.hint_athlete_interests))
+        interests.initMultiChoiceList(categoriesMap, getString(R.string.hint_athlete_interests))
 
         val specializations = binding.root.findViewById<MultiChoiceBasicView>(R.id.specializations)
         specializations.initMultiChoiceList(
-            categories, getString(R.string.hint_organization_specializations)
+            categoriesMap, getString(R.string.hint_organization_specializations)
         )
 
         return binding.root
@@ -78,7 +80,6 @@ class RegistrationFragment : Fragment() {
     }
 
     private fun updateLayout(currentAccountType: CurrentAccountType) {
-        Log.d("BUGFIX", "updateLayout: " + binding.accountType.getCurrentAccountType())
         with (binding) {
             when (currentAccountType) {
                 CurrentAccountType.NONE -> {

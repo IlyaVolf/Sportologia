@@ -34,7 +34,6 @@ class CreateEditPostViewModel @AssistedInject constructor(
     private val _saveHolder = ObservableHolder(DataHolder.ready(null))
     val saveHolder = _saveHolder.share()
 
-
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
     val toastMessageEvent = _toastMessageEvent.share()
 

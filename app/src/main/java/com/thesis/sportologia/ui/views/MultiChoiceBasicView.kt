@@ -66,9 +66,9 @@ class MultiChoiceBasicView(
         typedArray.recycle()
     }
 
-    fun initMultiChoiceList(list: List<String>, hint: String) {
-        data = list.toTypedArray()
-        checkedData = BooleanArray(data.size) { false }
+    fun initMultiChoiceList(map: Map<String, Boolean>, hint: String) {
+        data = map.keys.toTypedArray()
+        checkedData = map.values.toBooleanArray()
 
         binding.textBlock.setOnClickListener {
             val localData = data.clone()
@@ -107,6 +107,16 @@ class MultiChoiceBasicView(
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
                 .setTextColor(context.getColor(R.color.purple_medium))
         }
+    }
+
+    fun getCheckedDataMap(): Map<String, Boolean> {
+        val list = hashMapOf<String, Boolean>()
+
+        for (i in checkedData.indices) {
+            list[data[i]] = checkedData[i]
+        }
+
+        return list
     }
 
     fun getCheckedData(): List<DataExtended> {

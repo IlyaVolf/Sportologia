@@ -36,8 +36,11 @@
             android:id="@+id/action_tabsFragment_to_filterFragment"
             app:destination="@id/filterFragment" />
         <action
-            android:id="@+id/action_tabsFragment_to_editPostFragment"
+            android:id="@+id/action_tabsFragment_to_createEditPostFragment"
             app:destination="@id/createEditPostFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_createEditEventFragment"
+            app:destination="@id/createEditEventFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -62,5 +65,14 @@
         <argument
             android:name="postId"
             app:argType="com.thesis.sportologia.ui.posts.CreateEditPostFragment$PostId" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditEventFragment"
+        android:name="com.thesis.sportologia.ui.events.CreateEditEventFragment"
+        android:label="fragment_create_edit_event"
+        tools:layout="@layout/fragment_create_edit_event">
+        <argument
+            android:name="eventId"
+            app:argType="com.thesis.sportologia.ui.events.CreateEditEventFragment$EventId" />
     </fragment>
 </navigation>

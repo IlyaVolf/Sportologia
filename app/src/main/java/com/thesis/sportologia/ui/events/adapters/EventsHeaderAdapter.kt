@@ -4,10 +4,14 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListEventsHeaderBinding
+import com.thesis.sportologia.ui.TabsFragmentDirections
+import com.thesis.sportologia.ui.events.CreateEditEventFragment
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
+import com.thesis.sportologia.utils.findTopNavController
 
 abstract class EventsHeaderAdapter(
     private val fragment: Fragment,
@@ -90,11 +94,11 @@ abstract class EventsHeaderAdapter(
     }
 
     private fun onCreateEventButtonPressed() {
-        /*val direction = TabsFragmentDirections.actionTabsFragmentToEditEventFragment(
+        val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditEventFragment(
             CreateEditEventFragment.EventId(null)
-        )*/
+        )
 
-        /*fragment.findTopNavController().navigate(direction,
+        fragment.findTopNavController().navigate(direction,
             navOptions {
                 anim {
                     enter = R.anim.enter
@@ -102,7 +106,7 @@ abstract class EventsHeaderAdapter(
                     popEnter = R.anim.pop_enter
                     popExit = R.anim.pop_exit
                 }
-            })*/
+            })
     }
 
     class Holder(

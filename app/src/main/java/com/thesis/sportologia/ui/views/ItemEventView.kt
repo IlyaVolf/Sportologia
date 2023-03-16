@@ -14,10 +14,7 @@ import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
 import com.thesis.sportologia.databinding.ItemPostBinding
-import com.thesis.sportologia.utils.convertPrice
-import com.thesis.sportologia.utils.getCurrencyAbbreviation
-import com.thesis.sportologia.utils.parseDateRange
-import com.thesis.sportologia.utils.setAvatar
+import com.thesis.sportologia.utils.*
 import java.net.URI
 import java.util.Calendar
 import kotlin.properties.Delegates
@@ -210,7 +207,7 @@ class ItemEventView(
 
     // TODO логика преобразования валют в VM
     fun setPrice(price: Float, currency: String) {
-        binding.eventPrice.text = convertPrice(context, price, currency)
+        binding.eventPrice.text = getPriceWithCurrency(context, price, currency)
     }
 
     // TODO photos

@@ -68,6 +68,15 @@
         <attr name="dateIsTimeEnabled" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="DateIntervalView">
+        <attr name="divTitle" format="string" />
+        <attr name="divHintLeft" format="string" />
+        <attr name="divHintRight" format="string" />
+        <attr name="divIsAfter" format="boolean" />
+        <attr name="divIsBefore" format="boolean" />
+        <attr name="divIsTimeEnabled" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="TimeBasicView">
         <attr name="timeTitle" format="string" />
         <attr name="timeHint" format="string" />

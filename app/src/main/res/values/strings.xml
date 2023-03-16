@@ -150,6 +150,7 @@
 
     <!-- Currency Abbreviations and Prices -->
     <string name="free">Бесплатно</string>
+    <string name="rubles">Рублей</string>
     <string name="ruble_abbreviation">Руб.</string>
     <string name="dollar_abbreviation">$</string>
 
@@ -205,16 +206,26 @@
 
     <!-- Create/Edit/Delete Event Page -->
     <string name="event_name">Название мероприятия</string>
+    <string name="event_date_start">Начало мероприятия</string>
+    <string name="event_date_end">Конец мероприятия</string>
+    <string name="event">Мероприятие</string>
+    <string name="edit_event">Редактировать мероприятие</string>
 
     <string name="ask_cancel_create_event">Отменить создание мероприятия?</string>
     <string name="ask_cancel_edit_event">Отменить редактирование мероприятия?</string>
     <string name="ask_cancel_event_warning">Все изменения будут утеряны</string>
     <string name="ask_delete_event_warning">Удалить мероприятие?</string>
+    <string name="error_event">Ошибка: не указаны все поля</string>
+    <string name="error_price_event">Ошибка: указана неверная цена</string>
 
     <string name="event_name_hint">Укажите название мероприятия</string>
     <string name="event_date_hint">Укажите дату проведения мероприятия</string>
+    <string name="event_date_hint_start"></string>
+    <string name="event_date_hint_end">Укажите дату конца</string>
+    <string name="event_date_hint_from">С</string>
+    <string name="event_date_hint_to">До</string>
     <string name="event_address_hint">Укажите адрес мероприятия</string>
-    <string name="event_price_hint">Укажите стоимость мероприятия</string>
+    <string name="event_price_hint">Укажите стоимость мероприятия (Руб)</string>
     <string name="event_categories_hint">Укажите категорию мероприятия</string>
     <string name="event_description_hint">Введите описание мероприятия</string>
 

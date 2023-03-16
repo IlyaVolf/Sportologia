@@ -23,7 +23,7 @@ enum class OnEditTextBasicAction {
 fun inputTypeMap(inputType: String): Int {
     return when (inputType) {
         "textMultiLine" -> InputType.TYPE_TEXT_FLAG_MULTI_LINE or InputType.TYPE_CLASS_TEXT
-        "number" -> InputType.TYPE_NUMBER_FLAG_DECIMAL
+        "number" -> InputType.TYPE_NUMBER_FLAG_DECIMAL or InputType.TYPE_CLASS_NUMBER
         "textSingleLine" -> InputType.TYPE_CLASS_TEXT
         "textEmailAddress" -> InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS
         "textPassword" -> InputType.TYPE_TEXT_VARIATION_PASSWORD
@@ -101,7 +101,7 @@ class EditTextBasicView(
         return binding.title.text.toString()
     }
 
-    fun getText(text: String): String {
+    fun getText(): String {
         return binding.textBlock.text.toString()
     }
 
@@ -129,8 +129,6 @@ class EditTextBasicView(
         super.onRestoreInstanceState(savedState.superState)
 
         val enteredText = savedState.enteredText
-
-        Log.d("BUGFIX", "HELLO")
 
         binding.textBlock.post {
             binding.textBlock.setText(enteredText)

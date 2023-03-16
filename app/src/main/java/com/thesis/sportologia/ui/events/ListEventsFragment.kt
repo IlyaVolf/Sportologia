@@ -74,7 +74,7 @@ abstract class ListEventsFragment : Fragment() {
     }
 
     private fun initResultsProcessing() {
-        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+        requireActivity().supportFragmentManager.setFragmentResultListener(
             CreateEditEventFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -92,7 +92,7 @@ abstract class ListEventsFragment : Fragment() {
             if (isSaved) {
                 viewModel.onEventEdited()
             }
-        }*/
+        }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
             ProfileFragment.REFRESH_REQUEST_CODE,

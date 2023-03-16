@@ -4,12 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.navOptions
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
+import com.thesis.sportologia.ui.TabsFragmentDirections
+import com.thesis.sportologia.ui.events.CreateEditEventFragment
 import com.thesis.sportologia.ui.events.entities.EventListItem
 import com.thesis.sportologia.ui.views.ItemEventView
 import com.thesis.sportologia.ui.views.OnItemEventAction
@@ -118,7 +121,7 @@ class EventsPagerAdapter(
 
     private fun onEditButtonPressed(eventId: Long) {
         // TODO CREATEEDIT
-        /*val direction = TabsFragmentDirections.actionTabsFragmentToEditEventFragment(
+        val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditEventFragment(
             CreateEditEventFragment.EventId(eventId)
         )
 
@@ -130,7 +133,7 @@ class EventsPagerAdapter(
                     popEnter = R.anim.pop_enter
                     popExit = R.anim.pop_exit
                 }
-            })*/
+            })
     }
 
     interface MoreButtonListener {

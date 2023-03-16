@@ -11,9 +11,6 @@
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
-            android:id="@+id/action_profileFragment_to_createEventFragment"
-            app:destination="@id/createEventFragment" />
-        <action
             android:id="@+id/action_profileFragment_to_createServiceFragment"
             app:destination="@id/createServiceFragment" />
         <action
@@ -36,11 +33,6 @@
             app:argType="string"
             android:defaultValue="$current_user" />
     </fragment>
-    <fragment
-        android:id="@+id/createEventFragment"
-        android:name="com.thesis.sportologia.ui.CreateEventFragment"
-        android:label="fragment_create_event"
-        tools:layout="@layout/fragment_create_event" />
     <fragment
         android:id="@+id/createServiceFragment"
         android:name="com.thesis.sportologia.ui.CreateServiceFragment"

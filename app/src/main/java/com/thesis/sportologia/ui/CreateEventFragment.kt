@@ -5,10 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.thesis.sportologia.databinding.FragmentCreateEventBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+/**@AndroidEntryPoint
 class CreateEventFragment : Fragment() {
     private lateinit var binding: FragmentCreateEventBinding
 
@@ -20,4 +19,4 @@ class CreateEventFragment : Fragment() {
 
         return binding.root
     }
-}
+}*/

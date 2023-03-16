@@ -113,7 +113,7 @@ class PostsPagerAdapter(
     }
 
     private fun onEditButtonPressed(postId: Long) {
-        val direction = TabsFragmentDirections.actionTabsFragmentToEditPostFragment(
+        val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditPostFragment(
             CreateEditPostFragment.PostId(postId)
         )
 
