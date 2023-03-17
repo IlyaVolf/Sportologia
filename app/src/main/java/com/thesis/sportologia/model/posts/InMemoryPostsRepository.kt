@@ -111,6 +111,8 @@ class InMemoryPostsRepository @Inject constructor(
 
             val filteredPosts = posts.filter { it.authorId == userId }.reversed()
 
+            filteredPosts.sortedBy { it.postedDate }
+
             // TODO SORT BY DATE
 
             // TODO
@@ -189,6 +191,8 @@ class InMemoryPostsRepository @Inject constructor(
             }
         }
 
+        res.sortedBy { it.postedDate }
+
         // TODO МЕТОД ФИГНЯ
 
         // TODO SORT BY DATE
@@ -239,6 +243,8 @@ class InMemoryPostsRepository @Inject constructor(
             } else {
                 posts.filter { it.isFavourite }.reversed()
             }
+
+            filteredPosts.sortedBy { it.postedDate }
 
             // TODO SORT BY DATE
 

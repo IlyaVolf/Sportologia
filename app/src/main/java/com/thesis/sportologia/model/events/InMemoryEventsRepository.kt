@@ -131,6 +131,8 @@ class InMemoryEventsRepository @Inject constructor(
 
             val filteredEvents = events.filter { it.organizerId == userId }.reversed()
 
+            filteredEvents.sortedBy { it.dateFrom }
+
             // TODO SORT BY DATE
 
             // TODO
@@ -215,6 +217,8 @@ class InMemoryEventsRepository @Inject constructor(
             }
         }
 
+        res.sortedBy { it.dateFrom }
+
         // TODO МЕТОД ФИГНЯ
 
         // TODO SORT BY DATE
@@ -273,6 +277,8 @@ class InMemoryEventsRepository @Inject constructor(
             } else {
                 events.filter { it.isFavourite }.reversed()
             }
+
+            filteredEvents.sortedBy { it.dateFrom }
 
             // TODO SORT BY DATE
 
