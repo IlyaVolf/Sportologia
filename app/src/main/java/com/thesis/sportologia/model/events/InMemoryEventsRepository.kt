@@ -129,9 +129,7 @@ class InMemoryEventsRepository @Inject constructor(
             delay(1000)
             val offset = pageIndex * pageSize
 
-            val filteredEvents = events.filter { it.organizerId == userId }.reversed()
-
-            filteredEvents.sortedBy { it.dateFrom }
+            val filteredEvents = events.filter { it.organizerId == userId }.sortedBy { it.dateFrom }
 
             // TODO SORT BY DATE
 
@@ -273,9 +271,9 @@ class InMemoryEventsRepository @Inject constructor(
                     } else {
                         it.isFavourite && it.dateFrom > Calendar.getInstance().timeInMillis
                     }
-                }.reversed()
+                }.sortedBy { it.dateFrom }
             } else {
-                events.filter { it.isFavourite }.reversed()
+                events.filter { it.isFavourite }.sortedBy { it.dateFrom }
             }
 
             filteredEvents.sortedBy { it.dateFrom }

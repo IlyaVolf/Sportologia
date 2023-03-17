@@ -109,9 +109,9 @@ class InMemoryPostsRepository @Inject constructor(
             delay(1000)
             val offset = pageIndex * pageSize
 
-            val filteredPosts = posts.filter { it.authorId == userId }.reversed()
+            val filteredPosts = posts.filter { it.authorId == userId }.sortedByDescending { it.postedDate }
 
-            filteredPosts.sortedBy { it.postedDate }
+            // filteredPosts.sortedByDescending { it.postedDate }
 
             // TODO SORT BY DATE
 
@@ -191,7 +191,7 @@ class InMemoryPostsRepository @Inject constructor(
             }
         }
 
-        res.sortedBy { it.postedDate }
+        res.sortedByDescending { it.postedDate }
 
         // TODO МЕТОД ФИГНЯ
 
@@ -239,13 +239,10 @@ class InMemoryPostsRepository @Inject constructor(
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
             val filteredPosts = if (athTorgF != null) {
-                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }.reversed()
+                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }.sortedByDescending { it.postedDate }
             } else {
-                posts.filter { it.isFavourite }.reversed()
+                posts.filter { it.isFavourite }.sortedByDescending { it.postedDate }
             }
-
-            filteredPosts.sortedBy { it.postedDate }
-
             // TODO SORT BY DATE
 
             // TODO
