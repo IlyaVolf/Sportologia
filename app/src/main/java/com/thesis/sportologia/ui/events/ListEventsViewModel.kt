@@ -113,6 +113,12 @@ abstract class ListEventsViewModel constructor(
         refresh()
     }
 
+    fun setSearchBy(searchQuery: String) {
+        if (this.search.value == searchQuery) return
+        this.search.value = searchQuery
+        scrollListToTop()
+    }
+
     fun refresh() {
         this.search.postValue(this.search.value)
     }

@@ -20,3 +20,7 @@ fun concatMap(map: Map<String, Boolean>, separator: String): String {
 
     return text.toString()
 }
+
+fun containsAnyCase(text: String, cantainedText: String): Boolean {
+    return text.lowercase().contains(cantainedText.lowercase())
+}

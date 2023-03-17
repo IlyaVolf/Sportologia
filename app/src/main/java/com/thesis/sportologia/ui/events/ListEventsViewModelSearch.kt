@@ -22,7 +22,13 @@ class ListEventsViewModelSearch @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<Event>> {
         return search.asFlow()
             .flatMapLatest {
-                eventsRepository.getPagedEvents()
+                eventsRepository.getPagedEvents(
+                    EventsRepository.EventsFilter(
+                        it,
+                        false,
+                        EventsRepository.SortBy.DATE_ASC
+                    )
+                )
             }.cachedIn(viewModelScope)
     }
 

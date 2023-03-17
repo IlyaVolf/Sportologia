@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
@@ -58,6 +59,7 @@ abstract class ListEventsFragment : Fragment() {
 
         userId = arguments?.getString("userId") ?: throw Exception()
 
+        initSearchQueryReceiver()
         initResultsProcessing()
         initSwipeToRefresh()
         initEventsList()
@@ -71,6 +73,18 @@ abstract class ListEventsFragment : Fragment() {
         handleListVisibility(adapter)
 
         return binding.root
+    }
+
+    private fun initSearchQueryReceiver() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            SearchFragment.SUBMIT_SEARCH_QUERY_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val searchQuery =
+                data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
+
+            viewModel.setSearchBy(searchQuery)
+        }
     }
 
     private fun initResultsProcessing() {

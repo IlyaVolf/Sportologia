@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.utils.Categories
+import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
@@ -289,9 +290,10 @@ class InMemoryEventsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedEvents(): Flow<PagingData<Event>> {
+    override suspend fun getPagedEvents(eventsFilter: EventsRepository.EventsFilter)
+            : Flow<PagingData<Event>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
-            getEvents(pageIndex, pageSize)
+            getEvents(pageIndex, pageSize, eventsFilter)
         }
 
         return Pager(
@@ -305,13 +307,19 @@ class InMemoryEventsRepository @Inject constructor(
         ).flow
     }
 
-    private suspend fun getEvents(pageIndex: Int, pageSize: Int): List<Event> =
+    private suspend fun getEvents(
+        pageIndex: Int,
+        pageSize: Int,
+        eventsFilter: EventsRepository.EventsFilter
+    ): List<Event> =
         withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val eventsFound = events.sortedBy { it.dateFrom }
+            val eventsFound = events.filter {
+                containsAnyCase(it.name, eventsFilter.eventName)
+            }.sortedBy { it.dateFrom }
 
             // TODO SORT BY DATE
 
@@ -365,7 +373,8 @@ class InMemoryEventsRepository @Inject constructor(
         withContext(ioDispatcher) {
             delay(1000)
 
-            val eventInList = events.find { it.id == event.id } ?: throw IllegalStateException()
+            val eventInList =
+                events.find { it.id == event.id } ?: throw IllegalStateException()
 
             eventInList.isLiked = isLiked
 
@@ -377,7 +386,11 @@ class InMemoryEventsRepository @Inject constructor(
         }
     }
 
-    override suspend fun setIsFavourite(userId: String, event: Event, isFavourite: Boolean) =
+    override suspend fun setIsFavourite(
+        userId: String,
+        event: Event,
+        isFavourite: Boolean
+    ) =
         withContext(ioDispatcher) {
             delay(1000)
 

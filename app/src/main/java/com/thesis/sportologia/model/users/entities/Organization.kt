@@ -12,4 +12,5 @@ data class Organization(
     override var followingsCount: Int,
     override var categories: Map<String, Boolean>,
     override var isSubscribed: Boolean,
+    override var innerRating: Int,
 ) : User()

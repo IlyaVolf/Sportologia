@@ -2,11 +2,8 @@ package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import com.thesis.sportologia.ui.FavouritesFragment
-import com.thesis.sportologia.ui.FollowersFragment
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterFollowers
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterUsers
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,10 +14,10 @@ import javax.inject.Inject
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
-class ListUsersFragmentUsers : ListUsersFragment() {
+class ListUsersFragmentSearch : ListUsersFragment() {
 
     @Inject
-    lateinit var factory: ListUsersViewModelUsers.Factory
+    lateinit var factory: ListUsersViewModelSearch.Factory
 
     override val viewModel by viewModelCreator {
         factory.create(userId)
@@ -40,8 +37,8 @@ class ListUsersFragmentUsers : ListUsersFragment() {
 
     companion object {
         // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации
-        fun newInstance(userId: String): ListUsersFragmentUsers {
-            val myFragment = ListUsersFragmentUsers()
+        fun newInstance(userId: String): ListUsersFragmentSearch {
+            val myFragment = ListUsersFragmentSearch()
             val args = Bundle()
             args.putString("userId", userId)
             myFragment.arguments = args

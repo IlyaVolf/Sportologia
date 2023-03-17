@@ -13,6 +13,7 @@ abstract class User {
     abstract var address: Address?
     abstract var categories: Map<String, Boolean>
     abstract var isSubscribed: Boolean
+    abstract var innerRating: Int // 0..100
 
     fun toUserSnippet(): UserSnippet {
         return UserSnippet(

@@ -11,6 +11,7 @@ import com.thesis.sportologia.model.users.entities.Organization
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import com.thesis.sportologia.utils.Categories
+import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +48,7 @@ class InMemoryUsersRepository @Inject constructor(
                 Pair(Categories.MASTER_CLASS, false),
             ),
             false,
+            50,
         ),
         Athlete(
             true,
@@ -63,6 +65,7 @@ class InMemoryUsersRepository @Inject constructor(
                 Pair(Categories.MASTER_CLASS, false),
             ),
             true,
+            0,
         ),
         Athlete(
             true,
@@ -79,6 +82,7 @@ class InMemoryUsersRepository @Inject constructor(
                 Pair(Categories.MASTER_CLASS, false),
             ),
             true,
+            50,
         ),
         Organization(
             null,
@@ -94,6 +98,7 @@ class InMemoryUsersRepository @Inject constructor(
                 Pair(Categories.MASTER_CLASS, true),
             ),
             false,
+            50,
         ),
 
         )
@@ -216,7 +221,7 @@ class InMemoryUsersRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUsers(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedUsers(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
             getUsers(pageIndex, pageSize, filter)
         }
@@ -232,7 +237,7 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedAthletes(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedAthletes(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
             getUsers(pageIndex, pageSize, filter)
         }
@@ -248,7 +253,7 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedOrganizations(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedOrganizations(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
             getUsers(pageIndex, pageSize, filter)
         }
@@ -267,7 +272,7 @@ class InMemoryUsersRepository @Inject constructor(
     private suspend fun getUsers(
         pageIndex: Int,
         pageSize: Int,
-        filter: UsersFilter,
+        filter: UsersRepository.UsersFilter,
     ): List<UserSnippet> = withContext(ioDispatcher) {
         delay(1000)
 
@@ -276,12 +281,17 @@ class InMemoryUsersRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         val usersFound = when (filter.userType) {
-            UserTypes.ATHLETES ->
-                users.filter { it is Athlete && containsName(it.name, filter.userName) }
-            UserTypes.ORGANIZATIONS ->
-                users.filter { it is Organization && containsName(it.name, filter.userName) }
-            UserTypes.ALL -> users.filter { containsName(it.name, filter.userName) }
-        }.map { it.toUserSnippet() }
+            UsersRepository.UserTypes.ATHLETES ->
+                users.filter { it is Athlete && containsAnyCase(it.name, filter.userName) }
+            UsersRepository.UserTypes.ORGANIZATIONS ->
+                users.filter { it is Organization && containsAnyCase(it.name, filter.userName) }
+            UsersRepository.UserTypes.ALL -> users.filter {
+                containsAnyCase(
+                    it.name,
+                    filter.userName
+                )
+            }
+        }.sortedByDescending { it.innerRating }.map { it.toUserSnippet() }
 
         if (offset >= usersFound.size) {
             return@withContext listOf<UserSnippet>()
@@ -290,19 +300,6 @@ class InMemoryUsersRepository @Inject constructor(
         } else {
             return@withContext usersFound.subList(offset, offset + pageSize)
         }
-    }
-
-    private fun containsName(userName: String, searchQuery: String): Boolean {
-        return userName.lowercase() == searchQuery.lowercase()
-    }
-
-    data class UsersFilter(
-        val userName: String,
-        val userType: UserTypes,
-    )
-
-    enum class UserTypes {
-        ATHLETES, ORGANIZATIONS, ALL
     }
 
     companion object {

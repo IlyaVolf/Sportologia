@@ -14,25 +14,25 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.*
 
-class ListUsersViewModelUsers @AssistedInject constructor(
+class ListUsersViewModelSearch @AssistedInject constructor(
     @Assisted private val userId: String,
     private val usersRepository: UsersRepository,
     logger: Logger
 ) : ListUsersViewModel(userId, usersRepository, logger) {
 
-    val userType = InMemoryUsersRepository.UserTypes.ATHLETES
+    val userType = UsersRepository.UserTypes.ATHLETES
 
     override fun getDataFlow(): Flow<PagingData<UserSnippet>> {
         return search.asFlow()
             .flatMapLatest {
                 usersRepository.getPagedUsers(
-                    InMemoryUsersRepository.UsersFilter(it, userType)
+                    UsersRepository.UsersFilter(it, userType)
                 )
             }.cachedIn(viewModelScope)
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(userId: String): ListUsersViewModelUsers
+        fun create(userId: String): ListUsersViewModelSearch
     }
 }

@@ -17,7 +17,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentSearchBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
-import com.thesis.sportologia.ui.users.ListUsersFragmentUsers
+import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -46,10 +46,11 @@ class SearchFragment : Fragment() {
         binding.searchBar.filterButton.setOnClickListener {
             onOpenFilterButtonPressed()
         }
-        binding.searchBar.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+        binding.searchBar.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 // Called when the user submits the query.
+                binding.searchBar.searchView.clearFocus()
                 initSearchSubmission(query)
                 return true
             }
@@ -64,7 +65,7 @@ class SearchFragment : Fragment() {
 
     private fun initContentBlock() {
         val fragments = arrayListOf(
-            ListUsersFragmentUsers.newInstance(CurrentAccount().id),
+            ListUsersFragmentSearch.newInstance(CurrentAccount().id),
             ListServicesFragment(),
             ListEventsFragmentSearch.newInstance(CurrentAccount().id),
         )
