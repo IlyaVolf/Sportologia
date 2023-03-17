@@ -216,7 +216,11 @@ class ItemEventView(
     }
 
     fun setCategories(categories: Map<String, Boolean>) {
-        val categoriesString = concatMap(categories, ", ")
+        val categoriesLocalized = hashMapOf<String, Boolean>()
+        categories.forEach {
+            categoriesLocalized[convertEnumToCategory(context, it.key)!!] = it.value
+        }
+        val categoriesString = concatMap(categoriesLocalized, ", ")
         if (categoriesString != "") {
             binding.eventCategories.text = categoriesString
         } else {

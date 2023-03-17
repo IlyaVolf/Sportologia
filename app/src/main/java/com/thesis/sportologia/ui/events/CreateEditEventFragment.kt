@@ -38,8 +38,6 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         factory.create(eventId)
     }
 
-    private lateinit var mode: Mode
-
     private val args by navArgs<CreateEditEventFragmentArgs>()
 
     // TODO photosUrls
@@ -48,6 +46,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     private var eventId: Long? = null
     private var currentEventCreateEditItem: EventCreateEditItem? = null
 
+    private lateinit var mode: Mode
     private lateinit var binding: FragmentCreateEditEventBinding
 
     // TODO onSaveInstanceState
@@ -116,12 +115,19 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private fun renderSelectedCategories(event: Event?) {
         val categoriesMap = event?.categories ?: Event.emptyCategoriesMap
+        val categoriesLocalizedMap = hashMapOf<String, Boolean>()
+        categoriesMap.map {
+            categoriesLocalizedMap.put(
+                convertEnumToCategory(context, it.key)!!,
+                it.value
+            )
+        }
         binding.fceeCategories.initMultiChoiceList(
-            categoriesMap,
+            categoriesLocalizedMap,
             getString(R.string.event_categories_hint)
         )
     }
-    
+
     private fun initCurrentEventCreateEditItem(savedInstanceState: Bundle?) {
         currentEventCreateEditItem =
             savedInstanceState?.getSerializable(EVENT_KEY) as EventCreateEditItem?
@@ -138,7 +144,6 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         binding.fceeAddress.setText(event.address.toString())
         binding.fceeDate.setDateAndTime(event.dateFrom, event.dateTo)
     }
-
 
     private fun getEventIdArg(): Long? = args.eventId.eventId
 
@@ -158,7 +163,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                         null,
                         binding.fceePrice.getText(),
                         getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
-                        binding.fceeCategories.getCheckedDataMap(),
+                        binding.fceeCategories.getCheckedDataMap(Event.emptyCategoriesMap.keys.toTypedArray()),
                         photosUrls
                     )
                 )

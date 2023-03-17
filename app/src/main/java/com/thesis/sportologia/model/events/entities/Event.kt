@@ -41,9 +41,14 @@ data class Event(
 
     companion object {
         val emptyCategoriesMap
-            get() = hashMapOf(Pair(RUNNING, false), Pair(MASTER_CLASS, false))
+            get() = hashMapOf(
+                Pair(RUNNING, false),
+                Pair(MASTER_CLASS, false),
+                Pair(MARTIAL_ARTS, false)
+            )
 
-        private const val RUNNING = "Running"
-        private const val MASTER_CLASS = "Master class"
+        const val RUNNING = "Running"
+        const val MASTER_CLASS = "Master class"
+        const val MARTIAL_ARTS = "Martial arts"
     }
 }
