@@ -289,7 +289,8 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             val errorText =
                 when (it) {
                     CreateEditEventViewModel.ErrorType.INCORRECT_PRICE -> getString(R.string.error_price_event)
-                    else -> getString(R.string.error_event)
+                    CreateEditEventViewModel.ErrorType.INCORRECT_DATE -> getString(R.string.error_event_incorrect_date)
+                    else -> getString(R.string.error_event_empty_fields)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()

@@ -215,7 +215,8 @@
     <string name="ask_cancel_edit_event">Отменить редактирование мероприятия?</string>
     <string name="ask_cancel_event_warning">Все изменения будут утеряны</string>
     <string name="ask_delete_event_warning">Удалить мероприятие?</string>
-    <string name="error_event">Ошибка: не указаны все поля</string>
+    <string name="error_event_empty_fields">Ошибка: не указаны все поля</string>
+    <string name="error_event_incorrect_date">Ошибка: указаны неверные даты</string>
     <string name="error_price_event">Ошибка: указана неверная цена</string>
 
     <string name="event_name_hint">Укажите название мероприятия</string>
@@ -224,6 +225,7 @@
     <string name="event_date_hint_end">Укажите дату конца</string>
     <string name="event_date_hint_from">С</string>
     <string name="event_date_hint_to">До</string>
+    <string name="event_date_hint_to_optionally">До (Опционально)</string>
     <string name="event_address_hint">Укажите адрес мероприятия</string>
     <string name="event_price_hint">Укажите стоимость мероприятия (Руб)</string>
     <string name="event_categories_hint">Укажите категорию мероприятия</string>

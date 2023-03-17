@@ -216,7 +216,12 @@ class ItemEventView(
     }
 
     fun setCategories(categories: Map<String, Boolean>) {
-        binding.eventCategories.text = concatMap(categories, ", ")
+        val categoriesString = concatMap(categories, ", ")
+        if (categoriesString != "") {
+            binding.eventCategories.text = categoriesString
+        } else {
+            binding.eventCategories.text = context.getString(R.string.categories_not_specified)
+        }
     }
 
     // TODO photos

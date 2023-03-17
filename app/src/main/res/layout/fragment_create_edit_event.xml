@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:divHintLeft="@string/event_date_hint_from"
-                    app:divHintRight="@string/event_date_hint_to"
+                    app:divHintRight="@string/event_date_hint_to_optionally"
                     app:divIsTimeEnabled="true"
                     app:divIsAfter="true"
                     app:divIsBefore="false"
