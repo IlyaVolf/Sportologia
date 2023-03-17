@@ -280,8 +280,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun renderUserDetails(userItem: UserListItem) {
-        Log.d("BUGFIX", "1313131313")
-
         binding.subscribeButton.setOnClickListener {
             onSubscribeButtonPressed()
         }
@@ -308,9 +306,20 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun getCategoriesText(userItem: UserListItem): String {
-        val concatCategories = concatMap(userItem.categories, ", ")
+        val categoriesLocalized = hashMapOf<String, Boolean>()
+        userItem.categories.forEach {
+            categoriesLocalized.put(
+                Categories.convertEnumToCategory(
+                    context,
+                    it.key
+                )!!,
+                it.value
+            )
+        }
 
-        return if (concatCategories == ""){
+        val concatCategories = concatMap(categoriesLocalized, ", ")
+
+        return if (concatCategories == "") {
             getString(R.string.categories_not_specified)
         } else {
             concatCategories

@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.utils.Categories
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
@@ -47,8 +48,9 @@ class InMemoryEventsRepository @Inject constructor(
         price = 1000f,
         currency = "Rubles",
         categories = hashMapOf(
-            Pair("забег", true),
-            Pair("мастер-класс", false),
+            Pair(Categories.MARTIAL_ARTS, false),
+            Pair(Categories.RUNNING, true),
+            Pair(Categories.MASTER_CLASS, false),
         ),
         likesCount = 5,
         isLiked = false,
@@ -72,8 +74,9 @@ class InMemoryEventsRepository @Inject constructor(
             price = 0f,
             currency = "Rubles",
             categories = hashMapOf(
-                Pair("забег", false),
-                Pair("мастер-класс", true),
+                Pair(Categories.MARTIAL_ARTS, false),
+                Pair(Categories.RUNNING, false),
+                Pair(Categories.MASTER_CLASS, true),
             ),
             likesCount = 10,
             isLiked = false,

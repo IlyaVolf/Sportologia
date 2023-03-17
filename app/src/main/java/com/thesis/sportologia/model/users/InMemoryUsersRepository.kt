@@ -10,6 +10,7 @@ import com.thesis.sportologia.model.users.entities.Athlete
 import com.thesis.sportologia.model.users.entities.Organization
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
+import com.thesis.sportologia.utils.Categories
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -41,8 +42,9 @@ class InMemoryUsersRepository @Inject constructor(
             2,
             1,
             hashMapOf(
-                Pair("Аэробика", true),
-                Pair("Бег", false)
+                Pair(Categories.MARTIAL_ARTS, true),
+                Pair(Categories.RUNNING, true),
+                Pair(Categories.MASTER_CLASS, false),
             ),
             false,
         ),
@@ -56,8 +58,9 @@ class InMemoryUsersRepository @Inject constructor(
             1,
             0,
             hashMapOf(
-                Pair("Аэробика", true),
-                Pair("Бег", true)
+                Pair(Categories.MARTIAL_ARTS, false),
+                Pair(Categories.RUNNING, true),
+                Pair(Categories.MASTER_CLASS, false),
             ),
             true,
         ),
@@ -71,8 +74,9 @@ class InMemoryUsersRepository @Inject constructor(
             21,
             5,
             hashMapOf(
-                Pair("Аэробика", false),
-                Pair("Бег", false)
+                Pair(Categories.MARTIAL_ARTS, false),
+                Pair(Categories.RUNNING, false),
+                Pair(Categories.MASTER_CLASS, false),
             ),
             true,
         ),
@@ -85,8 +89,9 @@ class InMemoryUsersRepository @Inject constructor(
             2993,
             302,
             hashMapOf(
-                Pair("Аэробика", false),
-                Pair("Бег", false)
+                Pair(Categories.MARTIAL_ARTS, true),
+                Pair(Categories.RUNNING, true),
+                Pair(Categories.MASTER_CLASS, true),
             ),
             false,
         ),

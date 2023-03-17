@@ -114,11 +114,11 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     private fun renderSelectedCategories(event: Event?) {
-        val categoriesMap = event?.categories ?: Event.emptyCategoriesMap
+        val categoriesMap = event?.categories ?: Categories.emptyCategoriesMap
         val categoriesLocalizedMap = hashMapOf<String, Boolean>()
         categoriesMap.map {
             categoriesLocalizedMap.put(
-                convertEnumToCategory(context, it.key)!!,
+                Categories.convertEnumToCategory(context, it.key)!!,
                 it.value
             )
         }
@@ -163,7 +163,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                         null,
                         binding.fceePrice.getText(),
                         getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
-                        binding.fceeCategories.getCheckedDataMap(Event.emptyCategoriesMap.keys.toTypedArray()),
+                        binding.fceeCategories.getCheckedDataMap(Categories.emptyCategoriesMap.keys.toTypedArray()),
                         photosUrls
                     )
                 )

@@ -45,7 +45,7 @@
     <!-- Categories -->
     <string name="categories_not_specified">Не указаны</string>
     <string name="category_running">Бег</string>
-    <string name="category_master_classes">Мастер-классы</string>
+    <string name="category_master_classes">Мастер-класс</string>
     <string name="category_martial_arts">Боевые искусства</string>
     <string name="category_body_building">Бодибилдинг</string>
     <string name="category_aerobics">Аэробика</string>

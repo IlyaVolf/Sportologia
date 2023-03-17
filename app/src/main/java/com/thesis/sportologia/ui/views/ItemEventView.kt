@@ -218,7 +218,7 @@ class ItemEventView(
     fun setCategories(categories: Map<String, Boolean>) {
         val categoriesLocalized = hashMapOf<String, Boolean>()
         categories.forEach {
-            categoriesLocalized[convertEnumToCategory(context, it.key)!!] = it.value
+            categoriesLocalized[Categories.convertEnumToCategory(context, it.key)!!] = it.value
         }
         val categoriesString = concatMap(categoriesLocalized, ", ")
         if (categoriesString != "") {
