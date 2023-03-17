@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListUsersBinding
+import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
@@ -65,6 +66,7 @@ abstract class ListUsersFragment : Fragment() {
 
         initSwipeToRefresh()
         initUsersList()
+        initSearchQueryReceiver()
 
         observeErrorMessages()
         observeUsers(adapter)
@@ -90,6 +92,18 @@ abstract class ListUsersFragment : Fragment() {
     }
 
     abstract fun initUserHeaderAdapter(): UsersHeaderAdapter
+
+    private fun initSearchQueryReceiver() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            SearchFragment.SUBMIT_SEARCH_QUERY_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val searchQuery =
+                data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
+
+            viewModel.setSearchBy(searchQuery)
+        }
+    }
 
     private fun initUsersList() {
 

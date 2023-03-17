@@ -15,6 +15,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemEventBinding
 import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.utils.*
+import com.thesis.sportologia.utils.Categories.Companion.getLocalizedCategories
 import java.net.URI
 import java.util.Calendar
 import kotlin.properties.Delegates
@@ -216,10 +217,7 @@ class ItemEventView(
     }
 
     fun setCategories(categories: Map<String, Boolean>) {
-        val categoriesLocalized = hashMapOf<String, Boolean>()
-        categories.forEach {
-            categoriesLocalized[Categories.convertEnumToCategory(context, it.key)!!] = it.value
-        }
+        val categoriesLocalized = getLocalizedCategories(context, categories)
         val categoriesString = concatMap(categoriesLocalized, ", ")
         if (categoriesString != "") {
             binding.eventCategories.text = categoriesString

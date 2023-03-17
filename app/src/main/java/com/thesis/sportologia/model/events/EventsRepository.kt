@@ -12,6 +12,8 @@ interface EventsRepository {
 
     suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>>
 
+    suspend fun getPagedEvents(): Flow<PagingData<Event>>
+
     suspend fun getEvent(postId: Long): Event?
 
     suspend fun createEvent(post: Event)

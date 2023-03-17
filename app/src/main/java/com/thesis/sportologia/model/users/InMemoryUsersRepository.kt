@@ -216,7 +216,96 @@ class InMemoryUsersRepository @Inject constructor(
         }
     }
 
-    private companion object {
+    override suspend fun getPagedUsers(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
+            getUsers(pageIndex, pageSize, filter)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { UsersPagingSource(loader) }
+        ).flow
+    }
+
+    override suspend fun getPagedAthletes(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
+            getUsers(pageIndex, pageSize, filter)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { UsersPagingSource(loader) }
+        ).flow
+    }
+
+    override suspend fun getPagedOrganizations(filter: UsersFilter): Flow<PagingData<UserSnippet>> {
+        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
+            getUsers(pageIndex, pageSize, filter)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { UsersPagingSource(loader) }
+        ).flow
+    }
+
+    private suspend fun getUsers(
+        pageIndex: Int,
+        pageSize: Int,
+        filter: UsersFilter,
+    ): List<UserSnippet> = withContext(ioDispatcher) {
+        delay(1000)
+
+        //Log.d("SEARCHUSER", filter.userName)
+
+        val offset = pageIndex * pageSize
+
+        val usersFound = when (filter.userType) {
+            UserTypes.ATHLETES ->
+                users.filter { it is Athlete && containsName(it.name, filter.userName) }
+            UserTypes.ORGANIZATIONS ->
+                users.filter { it is Organization && containsName(it.name, filter.userName) }
+            UserTypes.ALL -> users.filter { containsName(it.name, filter.userName) }
+        }.map { it.toUserSnippet() }
+
+        if (offset >= usersFound.size) {
+            return@withContext listOf<UserSnippet>()
+        } else if (offset + pageSize >= usersFound.size) {
+            return@withContext usersFound.subList(offset, usersFound.size)
+        } else {
+            return@withContext usersFound.subList(offset, offset + pageSize)
+        }
+    }
+
+    private fun containsName(userName: String, searchQuery: String): Boolean {
+        return userName.lowercase() == searchQuery.lowercase()
+    }
+
+    data class UsersFilter(
+        val userName: String,
+        val userType: UserTypes,
+    )
+
+    enum class UserTypes {
+        ATHLETES, ORGANIZATIONS, ALL
+    }
+
+    companion object {
         const val PAGE_SIZE = 12
     }
 

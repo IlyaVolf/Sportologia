@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.databinding.ItemUserBinding
 import com.thesis.sportologia.ui.users.entities.UserSnippetListItem
 import com.thesis.sportologia.utils.*
+import com.thesis.sportologia.utils.Categories.Companion.getLocalizedCategories
 
 class UsersPagerAdapter(
     val fragment: Fragment,
@@ -36,7 +37,9 @@ class UsersPagerAdapter(
                 iuAddress.text = addressText
             }
 
-            val categoriesText = concatMap(userSnippetListItem.categories, ", ")
+            val categoriesLocalized = getLocalizedCategories(context, userSnippetListItem.categories)
+
+            val categoriesText = concatMap(categoriesLocalized, ", ")
             if (categoriesText == "") {
                 iuCategories.visibility = GONE
             } else {

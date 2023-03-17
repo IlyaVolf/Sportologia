@@ -156,6 +156,7 @@
     <string name="dollar_abbreviation">$</string>
 
     <!-- Search Page -->
+    <string name="search_users">Пользователи</string>
     <string name="search_athletes">Спортсмены</string>
     <string name="search_organizations">Организации</string>
     <string name="search_events">Мероприятия</string>

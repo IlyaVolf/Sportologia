@@ -256,39 +256,74 @@ class InMemoryEventsRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         isUpcomingOnly: Boolean
-    ): List<Event> =
-        withContext(
-            ioDispatcher
-        ) {
+    ): List<Event> = withContext(ioDispatcher) {
+        delay(1000)
+        val offset = pageIndex * pageSize
+
+        // временный и корявый метод! Ибо тут не учитыааются пользователи
+        val filteredEvents = if (isUpcomingOnly) {
+            events.filter {
+                if (it.dateTo != null) {
+                    it.isFavourite && it.dateTo!! > Calendar.getInstance().timeInMillis
+                } else {
+                    it.isFavourite && it.dateFrom > Calendar.getInstance().timeInMillis
+                }
+            }.sortedBy { it.dateFrom }
+        } else {
+            events.filter { it.isFavourite }.sortedBy { it.dateFrom }
+        }
+
+        filteredEvents.sortedBy { it.dateFrom }
+
+        // TODO SORT BY DATE
+
+        // TODO
+        //throw Exception("a")
+
+        if (offset >= filteredEvents.size) {
+            return@withContext listOf<Event>()
+        } else if (offset + pageSize >= filteredEvents.size) {
+            return@withContext filteredEvents.subList(offset, filteredEvents.size)
+        } else {
+            return@withContext filteredEvents.subList(offset, offset + pageSize)
+        }
+    }
+
+    override suspend fun getPagedEvents(): Flow<PagingData<Event>> {
+        val loader: EventsPageLoader = { pageIndex, pageSize ->
+            getEvents(pageIndex, pageSize)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { EventsPagingSource(loader) }
+        ).flow
+    }
+
+    private suspend fun getEvents(pageIndex: Int, pageSize: Int): List<Event> =
+        withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val filteredEvents = if (isUpcomingOnly) {
-                events.filter {
-                    if (it.dateTo != null) {
-                        it.isFavourite && it.dateTo!! > Calendar.getInstance().timeInMillis
-                    } else {
-                        it.isFavourite && it.dateFrom > Calendar.getInstance().timeInMillis
-                    }
-                }.sortedBy { it.dateFrom }
-            } else {
-                events.filter { it.isFavourite }.sortedBy { it.dateFrom }
-            }
-
-            filteredEvents.sortedBy { it.dateFrom }
+            val eventsFound = events.sortedBy { it.dateFrom }
 
             // TODO SORT BY DATE
 
             // TODO
             //throw Exception("a")
 
-            if (offset >= filteredEvents.size) {
+            if (offset >= eventsFound.size) {
                 return@withContext listOf<Event>()
-            } else if (offset + pageSize >= filteredEvents.size) {
-                return@withContext filteredEvents.subList(offset, filteredEvents.size)
+            } else if (offset + pageSize >= eventsFound.size) {
+                return@withContext eventsFound.subList(offset, eventsFound.size)
             } else {
-                return@withContext filteredEvents.subList(offset, offset + pageSize)
+                return@withContext eventsFound.subList(offset, offset + pageSize)
             }
         }
 

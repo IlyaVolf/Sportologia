@@ -16,4 +16,10 @@ interface UsersRepository {
 
     suspend fun getPagedFollowings(userId: String): Flow<PagingData<UserSnippet>>
 
+    suspend fun getPagedUsers(filter: InMemoryUsersRepository.UsersFilter): Flow<PagingData<UserSnippet>>
+
+    suspend fun getPagedAthletes(filter: InMemoryUsersRepository.UsersFilter): Flow<PagingData<UserSnippet>>
+
+    suspend fun getPagedOrganizations(filter: InMemoryUsersRepository.UsersFilter): Flow<PagingData<UserSnippet>>
+
 }

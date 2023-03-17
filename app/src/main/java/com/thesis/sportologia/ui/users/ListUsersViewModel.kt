@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.users
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -54,6 +55,12 @@ abstract class ListUsersViewModel constructor(
     }
 
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
+
+    fun setSearchBy(searchQuery: String) {
+        if (this.search.value == searchQuery) return
+        this.search.value = searchQuery
+        scrollListToTop()
+    }
 
     fun refresh() {
         this.search.postValue(this.search.value)

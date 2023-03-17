@@ -24,7 +24,14 @@ class TabsFragment : Fragment(R.layout.fragment_tabs) {
         binding.bottomNavigationView.itemIconTintList = null
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            HomeFragment.REQUEST_CODE,
+            HomeFragment.GO_TO_OWN_PROFILE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, _ ->
+            binding.bottomNavigationView.selectedItemId = R.id.profile_own
+        }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            SearchFragment.GO_TO_OWN_PROFILE_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, _ ->
             binding.bottomNavigationView.selectedItemId = R.id.profile_own

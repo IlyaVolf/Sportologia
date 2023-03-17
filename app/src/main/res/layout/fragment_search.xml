@@ -1,49 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/coordinator_layout"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.SearchFragment">
+    tools:context="com.thesis.sportologia.ui.HomeFragment">
 
-    <include
-        android:id="@+id/search_bar"
-        layout="@layout/view_search_bar" />
-
-    <com.thesis.sportologia.ui.views.ContentTabsView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/materialup.appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:contentTabsActiveByDefault="4"
-        app:contentTabsText1="@string/search_athletes"
-        app:contentTabsText2="@string/search_organizations"
-        app:contentTabsText3="@string/search_events"
-        app:contentTabsText4="@string/search_services" />
+        android:backgroundTint="@color/background">
 
-    <com.thesis.sportologia.ui.views.ChosenFilterView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cf_isRestrictionsBlockEnabled="true"
-        app:cf_isSortingBlockEnabled="true" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleEnabled="false">
 
-            <include layout="@layout/fragment_list_services" />
-
-            <com.thesis.sportologia.ui.views.ItemServiceView
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:is_isMainPhotoSquareLimited="false" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <include
+                    android:id="@+id/search_bar"
+                    layout="@layout/view_search_bar" />
 
-    </ScrollView>
+            </LinearLayout>
 
-</LinearLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="29dp"
+            android:backgroundTint="@color/background"
+            app:tabIndicatorColor="@color/purple_dark"
+            app:tabIndicatorHeight="1dp"
+            app:tabRippleColor="@color/purple_200"
+            app:tabSelectedTextColor="@color/background_inverted"
+            app:tabTextAppearance="@style/TextStyleBold"
+            app:tabTextColor="@color/element_tertiary_inverted" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

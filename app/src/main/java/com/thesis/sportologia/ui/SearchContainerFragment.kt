@@ -29,8 +29,8 @@ import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class HomeFragment : BaseFragment(R.layout.fragment_home) {
+/**@AndroidEntryPoint
+class SearchContainerFragment : BaseFragment(R.layout.fragment_home) {
 
     override val viewModel by viewModels<HomeViewModel>()
 
@@ -45,8 +45,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("BUGFIX", "${this.hashCode()}")
-
         binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         initToolbar()
@@ -70,7 +68,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             ListPostsFragmentHome.newInstance(CurrentAccount().id),
             ListEventsFragmentHome.newInstance(CurrentAccount().id),
         )
-        Log.d("BUGFIX", "afjpafjoafp ${fragments[0].hashCode()}")
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
@@ -161,7 +158,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     // TODO очищать стек вкладки profile_own
     private fun onProfilePicturePressed() {
         requireActivity().supportFragmentManager.setFragmentResult(
-            GO_TO_OWN_PROFILE_REQUEST_CODE,
+            REQUEST_CODE,
             bundleOf()
         )
 
@@ -196,8 +193,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     companion object {
-        const val GO_TO_OWN_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE_FROM_HOME"
+        const val REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE"
         const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_HOME"
         const val USER_ID = "USER_ID"
     }
-}
+}*/

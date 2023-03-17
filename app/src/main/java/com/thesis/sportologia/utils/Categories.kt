@@ -14,6 +14,19 @@ class Categories {
                 Pair(MARTIAL_ARTS, false)
             )
 
+        fun getLocalizedCategories(
+            context: Context,
+            hashMap: Map<String, Boolean>
+        ): Map<String, Boolean> {
+            val localizedHashMap = hashMapOf<String, Boolean>()
+
+            hashMap.forEach {
+                localizedHashMap[convertEnumToCategory(context, it.key)!!] = it.value
+            }
+
+            return localizedHashMap
+        }
+
         fun convertEnumToCategory(context: Context?, categoryEnum: String): String? {
             context ?: return null
 
