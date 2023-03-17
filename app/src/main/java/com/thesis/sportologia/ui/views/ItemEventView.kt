@@ -184,14 +184,19 @@ class ItemEventView(
         binding.eventUserName.text = username
     }
 
-    fun setDate(dateFromMillis: Long, dateToMillis: Long) {
+    fun setDate(dateFromMillis: Long, dateToMillis: Long?) {
         val dateNow = Calendar.getInstance()
         val dateFrom = Calendar.getInstance()
-        dateFrom.timeInMillis = dateFromMillis
         val dateTo = Calendar.getInstance()
-        dateTo.timeInMillis = dateToMillis
 
-        if (dateNow.timeInMillis > dateToMillis) {
+        dateFrom.timeInMillis = dateFromMillis
+        if (dateToMillis == null) {
+            dateTo.timeInMillis = dateFromMillis
+        } else {
+            dateTo.timeInMillis = dateToMillis
+        }
+
+        if (dateNow.timeInMillis > dateTo.timeInMillis) {
             binding.eventEndedLabel.visibility = VISIBLE
         } else {
             binding.eventEndedLabel.visibility = GONE
@@ -208,6 +213,10 @@ class ItemEventView(
     // TODO логика преобразования валют в VM
     fun setPrice(price: Float, currency: String) {
         binding.eventPrice.text = getPriceWithCurrency(context, price, currency)
+    }
+
+    fun setCategories(categories: Map<String, Boolean>) {
+        binding.eventCategories.text = concatMap(categories, ", ")
     }
 
     // TODO photos

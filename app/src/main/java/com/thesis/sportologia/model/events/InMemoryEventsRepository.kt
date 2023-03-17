@@ -200,7 +200,13 @@ class InMemoryEventsRepository @Inject constructor(
 
         followersIds.forEach { id ->
             if (isUpcomingOnly) {
-                res.addAll(events.filter { it.organizerId == id && it.dateTo > Calendar.getInstance().timeInMillis })
+                res.addAll(events.filter {
+                    if (it.dateTo != null) {
+                        it.organizerId == id && it.dateTo!! > Calendar.getInstance().timeInMillis
+                    } else {
+                        it.organizerId == id && it.dateFrom > Calendar.getInstance().timeInMillis
+                    }
+                })
             } else {
                 res.addAll(events.filter { it.organizerId == id })
             }
@@ -254,7 +260,13 @@ class InMemoryEventsRepository @Inject constructor(
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
             val filteredEvents = if (isUpcomingOnly) {
-                events.filter { it.isFavourite && it.dateTo > Calendar.getInstance().timeInMillis }.reversed()
+                events.filter {
+                    if (it.dateTo != null) {
+                        it.isFavourite && it.dateTo!! > Calendar.getInstance().timeInMillis
+                    } else {
+                        it.isFavourite && it.dateFrom > Calendar.getInstance().timeInMillis
+                    }
+                }.reversed()
             } else {
                 events.filter { it.isFavourite }.reversed()
             }

@@ -60,6 +60,9 @@ class CreateEditEventViewModel @AssistedInject constructor(
         if (!validatePrice(newEventCreateEditItem.priceString)) {
             return
         }
+        if (!validateDate(newEventCreateEditItem.dateFrom, newEventCreateEditItem.dateTo)) {
+            return
+        }
         /*if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_DATE_FROM)) {
             return
         }
@@ -93,7 +96,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     organizerName = currentAccount.userName,
                     isOrganizerAthlete = currentAccount.isAthlete,
                     profilePictureUrl = currentAccount.profilePictureUrl,
-                    dateFrom = newEventCreateEditItem.dateFrom,
+                    dateFrom = newEventCreateEditItem.dateFrom!!,
                     dateTo = newEventCreateEditItem.dateTo,
                     address = newEventCreateEditItem.address,
                     price = newEventCreateEditItem.priceString.toFloat(),
@@ -110,7 +113,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                         it!!.copy(
                             name = reformattedName,
                             description = reformattedDescription,
-                            dateFrom = newEventCreateEditItem.dateFrom,
+                            dateFrom = newEventCreateEditItem.dateFrom!!,
                             dateTo = newEventCreateEditItem.dateTo,
                             address = newEventCreateEditItem.address,
                             price = newEventCreateEditItem.priceString.toFloat(),
@@ -160,6 +163,22 @@ class CreateEditEventViewModel @AssistedInject constructor(
         }
     }
 
+    private fun validateDate(dateFromMillis: Long?, dateToMillis: Long?): Boolean {
+        if (dateFromMillis == null) {
+            _toastMessageEvent.publishEvent(ErrorType.EMPTY_DATE)
+            return false
+        }
+
+        if (dateToMillis != null) {
+            if (dateFromMillis > dateToMillis) {
+                _toastMessageEvent.publishEvent(ErrorType.INCORRECT_DATE)
+                return false
+            }
+        }
+
+        return true
+    }
+
     private fun validateText(text: String, errorType: ErrorType): Boolean {
         // check whether the text is empty
         if (text == "") {
@@ -199,9 +218,9 @@ class CreateEditEventViewModel @AssistedInject constructor(
         EMPTY_NAME,
         EMPTY_DESCRIPTION,
         EMPTY_PRICE,
+        EMPTY_DATE,
         INCORRECT_PRICE,
-        EMPTY_DATE_FROM,
-        EMPTY_DATE_TO,
+        INCORRECT_DATE,
         EMPTY_ADDRESS
     }
 

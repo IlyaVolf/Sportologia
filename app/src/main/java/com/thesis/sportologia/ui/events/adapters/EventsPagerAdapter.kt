@@ -44,6 +44,7 @@ class EventsPagerAdapter(
             }
         }
 
+        itemEvent.setCategories(eventListItem.categories)
         itemEvent.setEventName(eventListItem.name)
         itemEvent.setDescription(eventListItem.description)
         itemEvent.setOrganizerName(eventListItem.organizerName)
@@ -120,7 +121,6 @@ class EventsPagerAdapter(
     }
 
     private fun onEditButtonPressed(eventId: Long) {
-        // TODO CREATEEDIT
         val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditEventFragment(
             CreateEditEventFragment.EventId(eventId)
         )

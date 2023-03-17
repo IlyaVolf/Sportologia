@@ -48,10 +48,10 @@
             android:paddingVertical="4dp"
             android:paddingStart="@dimen/margin_sides"
             android:paddingEnd="44dp"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
         <Space
-            android:layout_width="@dimen/margin_sides"
+            android:layout_width="8dp"
             android:layout_height="match_parent"            />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -67,7 +67,7 @@
             android:paddingVertical="4dp"
             android:paddingStart="@dimen/margin_sides"
             android:paddingEnd="44dp"
-            android:textSize="14sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 

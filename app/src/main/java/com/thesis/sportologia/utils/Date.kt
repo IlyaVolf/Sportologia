@@ -57,16 +57,31 @@ fun parseDatePublication(context: Context, dateAndTime: Calendar): String {
 }
 
 fun parseDateRange(dateAndTimeFrom: Calendar, dateAndTimeTo: Calendar): String {
+    val res = StringBuilder()
     val dateAndTimeNow = Calendar.getInstance()
-    val isTheSameYear = dateAndTimeNow.get(Calendar.YEAR) == dateAndTimeFrom.get(Calendar.YEAR) &&
+    val isInCurrentYear = dateAndTimeNow.get(Calendar.YEAR) == dateAndTimeFrom.get(Calendar.YEAR) &&
             dateAndTimeNow.get(Calendar.YEAR) == dateAndTimeTo.get(Calendar.YEAR)
 
-    val res = StringBuilder()
-    if (dateAndTimeFrom.get(Calendar.DAY_OF_MONTH) == dateAndTimeTo.get(Calendar.DAY_OF_MONTH) &&
-        dateAndTimeFrom.get(Calendar.MONTH) == dateAndTimeTo.get(Calendar.MONTH) &&
-        dateAndTimeFrom.get(Calendar.YEAR) == dateAndTimeTo.get(Calendar.YEAR)
-    ) {
-        if (isTheSameYear) {
+    val isTheSameDay =
+        dateAndTimeFrom.get(Calendar.DAY_OF_MONTH) == dateAndTimeTo.get(Calendar.DAY_OF_MONTH) &&
+                dateAndTimeFrom.get(Calendar.MONTH) == dateAndTimeTo.get(Calendar.MONTH) &&
+                dateAndTimeFrom.get(Calendar.YEAR) == dateAndTimeTo.get(Calendar.YEAR)
+
+    val isTheSameTime =
+        isTheSameDay && dateAndTimeFrom.get(Calendar.HOUR_OF_DAY) == dateAndTimeTo.get(Calendar.HOUR_OF_DAY)
+                && dateAndTimeFrom.get(Calendar.MINUTE) == dateAndTimeTo.get(Calendar.MINUTE)
+
+    if (isTheSameTime) {
+        if (isInCurrentYear) {
+            res.append(parseDate(dateAndTimeFrom, "d MMMM, H:mm"))
+        } else {
+            res.append(parseDate(dateAndTimeFrom, "d MMMM uuuu, H:mm"))
+        }
+        return res.toString()
+    }
+
+    if (isTheSameDay) {
+        if (isInCurrentYear) {
             res.append(parseDate(dateAndTimeFrom, "d MMMM"))
         } else {
             res.append(parseDate(dateAndTimeFrom, "d MMMM uuuu"))
@@ -75,17 +90,17 @@ fun parseDateRange(dateAndTimeFrom: Calendar, dateAndTimeTo: Calendar): String {
             .append(parseDate(dateAndTimeFrom, "H:mm"))
             .append("-")
             .append(parseDate(dateAndTimeTo, "H:mm"))
-    } else {
-        if (isTheSameYear) {
-            res.append(parseDate(dateAndTimeFrom, "d MMMM, H:mm"))
-                .append(" - ")
-            res.append(parseDate(dateAndTimeTo, "d MMMM, H:mm"))
-        } else {
-            res.append(parseDate(dateAndTimeFrom, "d MMMM uuuu, H:mm"))
-                .append(" - ")
-            res.append(parseDate(dateAndTimeTo, "d MMMM uuuu, H:mm"))
-        }
+        return res.toString()
     }
 
+    if (isInCurrentYear) {
+        res.append(parseDate(dateAndTimeFrom, "d MMMM, H:mm"))
+            .append(" - ")
+        res.append(parseDate(dateAndTimeTo, "d MMMM, H:mm"))
+    } else {
+        res.append(parseDate(dateAndTimeFrom, "d MMMM uuuu, H:mm"))
+            .append(" - ")
+        res.append(parseDate(dateAndTimeTo, "d MMMM uuuu, H:mm"))
+    }
     return res.toString()
 }

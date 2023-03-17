@@ -4,12 +4,12 @@ import android.location.Address
 import com.thesis.sportologia.model.events.entities.Event
 import java.util.*
 
-// parcelable!
+// TODO parcelable!
 data class EventCreateEditItem(
     val name: String,
     var description: String,
-    var dateFrom: Long,
-    var dateTo: Long,
+    var dateFrom: Long?,
+    var dateTo: Long?,
     var address: Address?, // TODO NON-NULL
     var priceString: String,
     var currency: String,

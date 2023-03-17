@@ -2,22 +2,22 @@ package com.thesis.sportologia.ui.views
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.app.TimePickerDialog
+import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ViewDateIntervalBinding
 import com.thesis.sportologia.utils.parseDate
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 import java.util.*
 
-
+// TODO дата мнимая: при сохранении берется текущая. При отменевы бора берется текущая
 typealias OnDateIntervalActionListener = (OnDateIntervalAction) -> Unit
 
 enum class OnDateIntervalAction {
@@ -35,11 +35,12 @@ class DateIntervalView(
 
     private var listener: OnDateIntervalActionListener? = null
 
-    private var dateAndTimeFrom = Calendar.getInstance()
-    private var dateAndTimeTo = Calendar.getInstance()
+    private val chosenDataAndTime = Calendar.getInstance()
+    private var dateAndTimeFrom: Calendar? = null
+    private var dateAndTimeTo: Calendar? = null
 
     private var isBefore = false
-    private var isAfter= false
+    private var isAfter = false
 
     private var isTimeEnabled = false
 
@@ -57,10 +58,11 @@ class DateIntervalView(
         val inflater = LayoutInflater.from(context)
         inflater.inflate(R.layout.view_date_interval, this, true)
         binding = ViewDateIntervalBinding.bind(this)
-        initializeAttributes(attrs, defStyleAttr, defStyleRes)
+        initAttributes(attrs, defStyleAttr, defStyleRes)
+        initDates()
     }
 
-    private fun initializeAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
+    private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
             attrs, R.styleable.DateIntervalView, defStyleAttr, defStyleRes
@@ -83,35 +85,91 @@ class DateIntervalView(
             false
         )
 
-        val dLeft = OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            dateAndTimeFrom[Calendar.YEAR] = year
-            dateAndTimeFrom[Calendar.MONTH] = monthOfYear
-            dateAndTimeFrom[Calendar.DAY_OF_MONTH] = dayOfMonth
-
-            if (validateDate(dateAndTimeFrom)) {
-                binding.textBlockLeft.text = parseDate(dateAndTimeFrom, "d M uuuu, H:mm")
-            }
-        }
-
-        binding.textBlockLeft.setOnClickListener {
-            invokeDatePicker(dLeft, dateAndTimeFrom)
-        }
-
-        val dRight = OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
-            dateAndTimeTo[Calendar.YEAR] = year
-            dateAndTimeTo[Calendar.MONTH] = monthOfYear
-            dateAndTimeTo[Calendar.DAY_OF_MONTH] = dayOfMonth
-
-            if (validateDate(dateAndTimeTo)) {
-                binding.textBlockRight.text = parseDate(dateAndTimeTo, "d M uuuu, H:mm")
-            }
-        }
-
-        binding.textBlockRight.setOnClickListener {
-            invokeDatePicker(dRight, dateAndTimeTo)
-        }
-
         typedArray.recycle()
+    }
+
+    private fun initDates() {
+        val tLeft = getTimeSetListener(DateBlock.LEFT)
+        val dLeft = getDateSetListener(DateBlock.LEFT, tLeft)
+        binding.textBlockLeft.setOnClickListener {
+            if (dateAndTimeFrom != null) {
+                chosenDataAndTime.timeInMillis = dateAndTimeFrom!!.timeInMillis
+            }
+            invokeDatePicker(dLeft)
+        }
+
+        val tRight = getTimeSetListener(DateBlock.RIGHT)
+        val dRight = getDateSetListener(DateBlock.RIGHT, tRight)
+        binding.textBlockRight.setOnClickListener {
+            if (dateAndTimeTo != null) {
+                chosenDataAndTime.timeInMillis = dateAndTimeTo!!.timeInMillis
+            }
+            invokeDatePicker(dRight)
+        }
+    }
+
+    fun setDateAndTime(dateFromMillis: Long, dateToMillis: Long?) {
+        if (dateAndTimeFrom == null) {
+            dateAndTimeFrom = Calendar.getInstance()
+        }
+        dateAndTimeFrom!!.timeInMillis = dateFromMillis
+        binding.textBlockLeft.text = parseDate(dateAndTimeFrom!!, DATE_TIME_PATTERN)
+
+        if (dateToMillis != null) {
+            if (dateAndTimeTo == null) {
+                dateAndTimeTo = Calendar.getInstance()
+            }
+            dateAndTimeTo!!.timeInMillis = dateToMillis
+            binding.textBlockRight.text = parseDate(dateAndTimeTo!!, DATE_TIME_PATTERN)
+        }
+    }
+
+    private fun updateDateAndTime(dateBlock: DateBlock) {
+        when (dateBlock) {
+            DateBlock.LEFT -> {
+                if (dateAndTimeFrom == null) {
+                    dateAndTimeFrom = Calendar.getInstance()
+                }
+                dateAndTimeFrom!!.timeInMillis = chosenDataAndTime.timeInMillis
+                binding.textBlockLeft.text = parseDate(dateAndTimeFrom!!, DATE_TIME_PATTERN)
+            }
+            DateBlock.RIGHT -> {
+                if (dateAndTimeTo == null) {
+                    dateAndTimeTo = Calendar.getInstance()
+                }
+                dateAndTimeTo!!.timeInMillis = chosenDataAndTime.timeInMillis
+                binding.textBlockRight.text = parseDate(dateAndTimeTo!!, DATE_TIME_PATTERN)
+            }
+        }
+    }
+
+    private fun getTimeSetListener(dateBlock: DateBlock): OnTimeSetListener {
+        return OnTimeSetListener { view, hourOfDay, minute ->
+            chosenDataAndTime[Calendar.HOUR_OF_DAY] = hourOfDay
+            chosenDataAndTime[Calendar.MINUTE] = minute
+
+            Log.d("CALENDAR", "chosenTime: $chosenDataAndTime")
+            if (validateDate(chosenDataAndTime)) {
+                updateDateAndTime(dateBlock)
+            }
+        }
+    }
+
+    private fun getDateSetListener(dateBlock: DateBlock, t: OnTimeSetListener): OnDateSetListener {
+        return OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+            chosenDataAndTime[Calendar.YEAR] = year
+            chosenDataAndTime[Calendar.MONTH] = monthOfYear
+            chosenDataAndTime[Calendar.DAY_OF_MONTH] = dayOfMonth
+
+            Log.d("CALENDAR", "chosenData: $chosenDataAndTime")
+            if (isTimeEnabled) {
+                invokeTimePicker(t)
+            } else {
+                if (validateDate(chosenDataAndTime)) {
+                    updateDateAndTime(dateBlock)
+                }
+            }
+        }
     }
 
     /*// TODO other languages support
@@ -148,34 +206,42 @@ class DateIntervalView(
         return true
     }
 
-    fun getDateFromMillis(): Long {
-        return dateAndTimeFrom.timeInMillis
+    fun getDateFromMillis(): Long? {
+        return dateAndTimeFrom?.timeInMillis
     }
 
-    fun getDateToMillis(): Long {
-        return dateAndTimeTo.timeInMillis
+    fun getDateToMillis(): Long? {
+        return dateAndTimeTo?.timeInMillis
     }
 
-    fun getDateFromText(): String {
-        return binding.textBlockLeft.text.toString()
-    }
-
-    fun getDateToText(): String {
-        return binding.textBlockRight.text.toString()
-    }
-
-    private fun invokeDatePicker(d: OnDateSetListener, dateAndTime: Calendar) {
+    private fun invokeDatePicker(d: OnDateSetListener) {
         val datePickerDialog = DatePickerDialog(
             context, R.style.DialogStyleBasic, d,
-            dateAndTime.get(Calendar.YEAR),
-            dateAndTime.get(Calendar.MONTH),
-            dateAndTime.get(Calendar.DAY_OF_MONTH)
+            chosenDataAndTime.get(Calendar.YEAR),
+            chosenDataAndTime.get(Calendar.MONTH),
+            chosenDataAndTime.get(Calendar.DAY_OF_MONTH)
         )
         datePickerDialog.show()
 
         datePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
             .setTextColor(context.getColor(R.color.text_main))
         datePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
+            .setTextColor(context.getColor(R.color.text_main))
+    }
+
+    private fun invokeTimePicker(t: OnTimeSetListener) {
+        val timePickerDialog = TimePickerDialog(
+            context, R.style.DialogStyleBasic, t,
+            chosenDataAndTime[Calendar.HOUR_OF_DAY],
+            chosenDataAndTime[Calendar.MINUTE],
+            true
+        )
+
+        timePickerDialog.show()
+
+        timePickerDialog.getButton(DatePickerDialog.BUTTON_NEGATIVE)
+            .setTextColor(context.getColor(R.color.text_main))
+        timePickerDialog.getButton(DatePickerDialog.BUTTON_POSITIVE)
             .setTextColor(context.getColor(R.color.text_main))
     }
 
@@ -215,6 +281,14 @@ class DateIntervalView(
         }
     }
 
+    companion object {
+        enum class DateBlock {
+            LEFT, RIGHT
+        }
+
+        const val DATE_TIME_PATTERN = "d MMM uuuu, H:mm"
+    }
+
     class SavedState : BaseSavedState {
 
         var savedDateLeft: String? = null
@@ -234,6 +308,7 @@ class DateIntervalView(
         }
 
         companion object {
+
             @JvmField
             val CREATOR: Parcelable.Creator<SavedState> = object : Parcelable.Creator<SavedState> {
                 override fun createFromParcel(source: Parcel): SavedState {

@@ -136,6 +136,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         binding.fceeDescription.setText(event.description)
         binding.fceePrice.setText(formatPrice(event.price.toString()))
         binding.fceeAddress.setText(event.address.toString())
+        binding.fceeDate.setDateAndTime(event.dateFrom, event.dateTo)
     }
 
 

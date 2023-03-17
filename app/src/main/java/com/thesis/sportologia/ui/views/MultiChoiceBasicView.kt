@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ViewMultiChoiceBasicBinding
+import com.thesis.sportologia.utils.concatMap
 
 
 typealias OnMultiChoiceBasicActionListener = (OnMultiChoiceBasicAction) -> Unit
@@ -107,6 +108,8 @@ class MultiChoiceBasicView(
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
                 .setTextColor(context.getColor(R.color.purple_medium))
         }
+
+        updateText()
     }
 
     fun getCheckedDataMap(): Map<String, Boolean> {
@@ -134,21 +137,7 @@ class MultiChoiceBasicView(
     }
 
     private fun updateText() {
-        var text = ""
-
-        var isAnyChecked = false
-        for (i in checkedData.indices) {
-            if (checkedData[i]) {
-                text += data[i] + ", "
-                isAnyChecked = true
-            }
-        }
-
-        if (isAnyChecked) {
-            text = text.substring(0, text.length - 2)
-        }
-
-        binding.textBlock.text = text
+        binding.textBlock.text = concatMap(getCheckedDataMap(), SEPARATOR)
     }
 
     private fun initListeners() {
@@ -186,6 +175,10 @@ class MultiChoiceBasicView(
         }
 
         checkedData = savedCheckedData ?: BooleanArray(data.size) { false }
+    }
+
+    companion object {
+        const val SEPARATOR = ", "
     }
 
     class SavedState : BaseSavedState {

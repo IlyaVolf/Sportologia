@@ -14,7 +14,7 @@ data class Event(
     var isOrganizerAthlete: Boolean,
     var profilePictureUrl: String?,
     var dateFrom: Long,
-    var dateTo: Long,
+    var dateTo: Long?,
     var address: Address?, // TODO NON-NULL
     var price: Float,
     var currency: String,
