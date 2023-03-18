@@ -267,7 +267,7 @@
     <!-- Filters -->
     <string name="filter_not_specified">Не указаны</string>
 
-    <string name="split_dot"> • </string>
+    <string name="split_dot">•</string>
     <string name="filter">Фильтр</string>
     <string name="filter_city">Город</string>
     <string name="filter_city_hint">Укажите город</string>

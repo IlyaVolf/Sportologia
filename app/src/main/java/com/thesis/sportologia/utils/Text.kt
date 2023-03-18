@@ -24,6 +24,24 @@ fun concatMap(map: Map<String, Boolean>?, separator: String): String {
     return text.toString()
 }
 
+fun concatList(list: List<String>?, separator: String): String {
+    list ?: return ""
+
+    val text = StringBuilder().append("")
+
+    var flag = false
+    for (item in list) {
+        text.append(item).append(separator)
+        flag = true
+    }
+
+    if (flag) {
+        text.delete(text.length - separator.length, text.length)
+    }
+
+    return text.toString()
+}
+
 fun containsAnyCase(text: String, cantainedText: String): Boolean {
     return text.lowercase().contains(cantainedText.lowercase())
 }
