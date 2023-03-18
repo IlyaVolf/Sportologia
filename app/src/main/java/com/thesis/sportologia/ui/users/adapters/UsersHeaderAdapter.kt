@@ -4,13 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.navigation.navOptions
-import com.thesis.sportologia.utils.findTopNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
-import com.thesis.sportologia.ui.TabsFragmentDirections
-import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 
 abstract class UsersHeaderAdapter(
     private val fragment: Fragment,
@@ -18,11 +13,15 @@ abstract class UsersHeaderAdapter(
 
     protected lateinit var binding: FragmentListUsersHeaderBinding
 
+    open val restrictionsParser: () -> Unit = {}
+    open val sortingParser: () -> Unit = {}
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
         val inflater = LayoutInflater.from(parent.context)
         binding = FragmentListUsersHeaderBinding.inflate(inflater, parent, false)
 
         disableAllItems()
+        setChosenFilterText()
 
         return Holder(fragment, renderHeader, binding)
     }
@@ -32,10 +31,14 @@ abstract class UsersHeaderAdapter(
         binding.usersChosenFiltersSpace.isVisible = false
     }
 
-    fun enableUsersChosenFilters(restrictionsParser: () -> Unit, sortingParser: () -> Unit) {
+    fun enableUsersChosenFilters() {
         binding.usersChosenFilters.root.isVisible = true
         binding.usersChosenFiltersSpace.isVisible = true
 
+        setChosenFilterText()
+    }
+
+    private fun setChosenFilterText() {
         restrictionsParser()
         sortingParser()
     }
@@ -53,7 +56,7 @@ abstract class UsersHeaderAdapter(
     class Holder(
         val fragment: Fragment,
         private val renderHeader: () -> Unit,
-        private val viewBinding: FragmentListUsersHeaderBinding,
+        viewBinding: FragmentListUsersHeaderBinding,
     ) : RecyclerView.ViewHolder(viewBinding.root) {
 
         fun bind() {

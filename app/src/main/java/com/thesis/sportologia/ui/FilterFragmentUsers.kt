@@ -39,8 +39,6 @@ class FilterFragmentUsers : Fragment() {
 
         currentFilterParamsUsers = getFilterFragmentArg() as FilterParamsUsers
         currentCategories = currentFilterParamsUsers.categories ?: Categories.emptyCategoriesMap
-        /*currentFilterParamsUsers = arguments?.getSerializable("filterParams") as FilterParamsUsers?
-            ?: FilterParamsUsers.newEmptyInstance()*/
 
         initDistanceEditText()
         initAddressEditText()
@@ -84,19 +82,16 @@ class FilterFragmentUsers : Fragment() {
             { toggleButton, isPressed ->
                 currentCategories[toggleButton.codeText] = isPressed
             }
-        val localizedCategories =
-            Categories.getLocalizedCategories(context!!, currentCategories)
         val adapter = FilterButtonsListAdapter(onCategoryButtonPressed)
         val filterToggleButtonItemList = mutableListOf<FilterToggleButtonItem>()
         val categoriesKeys = currentCategories.keys.toTypedArray()
-        val localizedCategoriesKeys = localizedCategories.keys.toTypedArray()
 
         binding.fragmentFilterUserCategories.vfmList.flbList.adapter = adapter
-        for (i in localizedCategoriesKeys.indices) {
+        for (i in categoriesKeys.indices) {
             filterToggleButtonItemList.add(
                 FilterToggleButtonItem(
                     categoriesKeys[i],
-                    localizedCategoriesKeys[i],
+                    Categories.convertEnumToCategory(context!!, categoriesKeys[i])!!,
                     i,
                     currentCategories[categoriesKeys[i]]!!
                 )
@@ -164,16 +159,4 @@ class FilterFragmentUsers : Fragment() {
             }
         }
     }
-
-    /* companion object {
-         // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации
-         fun newInstance(filterParams: FilterParamsUsers): FilterFragmentUsers {
-             val myFragment = FilterFragmentUsers()
-             val args = Bundle()
-             args.putSerializable("filterParams", filterParams)
-             myFragment.arguments = args
-             return myFragment
-         }
-     }*/
-
 }

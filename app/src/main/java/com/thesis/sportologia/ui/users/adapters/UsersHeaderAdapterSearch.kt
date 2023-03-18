@@ -12,7 +12,7 @@ class UsersHeaderAdapterSearch(
     filterParamsUsers: FilterFragmentUsers.FilterParamsUsers
 ) : UsersHeaderAdapter(fragment) {
 
-    private val restrictionsParser: () -> Unit = {
+    override val restrictionsParser: () -> Unit = {
         val restrictionBlockList = mutableListOf<String>()
 
         if (filterParamsUsers.categories != null) {
@@ -23,7 +23,6 @@ class UsersHeaderAdapterSearch(
             )
 
             restrictionBlock.append(concatMap(localizedCategories, ", "))
-            restrictionBlock.append(splittingDot)
 
             restrictionBlockList.add(restrictionBlock.toString())
         }
@@ -31,12 +30,11 @@ class UsersHeaderAdapterSearch(
         if (filterParamsUsers.distance != null) {
             val restrictionBlock = StringBuilder("")
 
-            restrictionBlock.append(fragment.context!!.getString(R.string.within))
+            restrictionBlock.append(fragment.getString(R.string.within))
                 .append(" ")
                 .append(filterParamsUsers.distance)
-                .append("")
-                .append(fragment.context!!.getString(R.string.km))
-            restrictionBlock.append(splittingDot)
+                .append(" ")
+                .append(fragment.getString(R.string.km))
 
             restrictionBlockList.add(restrictionBlock.toString())
         }
@@ -52,18 +50,21 @@ class UsersHeaderAdapterSearch(
         val restrictionsString = concatList(restrictionBlockList, splittingDot)
         if (restrictionsString == "") {
             binding.usersChosenFilters.restrictions.text =
-                fragment.context!!.getString(R.string.filter_not_specified)
+                fragment.getString(R.string.filter_not_specified)
         } else {
             binding.usersChosenFilters.restrictions.text = restrictionsString
         }
     }
 
+    override val sortingParser: () -> Unit = {
+        binding.usersChosenFilters.sorting.text =
+            fragment.getString(R.string.filter_sorting_relevance)
+    }
+
     private val splittingDot = " " + fragment.context!!.getString(R.string.split_dot) + " "
 
-    private val sortingParser: () -> Unit = { }
-
     override val renderHeader = {
-        enableUsersChosenFilters(restrictionsParser, sortingParser)
+        enableUsersChosenFilters()
     }
 
 }

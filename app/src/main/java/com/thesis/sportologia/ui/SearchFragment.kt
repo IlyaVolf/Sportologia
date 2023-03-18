@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.SearchView
 import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
@@ -17,6 +19,8 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentSearchBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
 import com.thesis.sportologia.ui.search.entities.FilterParams
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
@@ -24,8 +28,9 @@ import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : Fragment() {
+class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
+    override val viewModel by viewModels<SearchViewModel>()
     private lateinit var searchTabs: List<SearchTab>
     private lateinit var currentSearchTab: SearchTab
     private lateinit var binding: FragmentSearchBinding
@@ -38,33 +43,45 @@ class SearchFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        searchTabs = listOf(
-            SearchTab(
-                SearchTab.Tab.USERS,
-                ListUsersFragmentSearch.newInstance(CurrentAccount().id),
-                R.id.filterFragmentUsers,
-                getString(R.string.search_users),
-                SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
-                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
-            ),
-            SearchTab(
-                SearchTab.Tab.SERVICES,
-                ListServicesFragment(),
-                R.id.filterFragment,
-                getString(R.string.search_services),
-                SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
-                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
-            ),
-            SearchTab(
-                SearchTab.Tab.EVENTS,
-                ListEventsFragmentSearch.newInstance(CurrentAccount().id),
-                R.id.filterFragment,
-                getString(R.string.search_events),
-                SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
-                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
-            )
-        )
+        Log.d("SEARCHH", "onCreate ${savedInstanceState == null}")
+
+        searchTabs =
+            (savedInstanceState?.getSerializable("searchTabs") as SearchTabList?)?.searchTabList
+                ?: listOf(
+                    SearchTab(
+                        SearchTab.Tab.USERS,
+                        ListUsersFragmentSearch.newInstance(CurrentAccount().id),
+                        R.id.filterFragmentUsers,
+                        getString(R.string.search_users),
+                        SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
+                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                    ),
+                    SearchTab(
+                        SearchTab.Tab.SERVICES,
+                        ListServicesFragment(),
+                        R.id.filterFragment,
+                        getString(R.string.search_services),
+                        SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
+                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                    ),
+                    SearchTab(
+                        SearchTab.Tab.EVENTS,
+                        ListEventsFragmentSearch.newInstance(CurrentAccount().id),
+                        R.id.filterFragment,
+                        getString(R.string.search_events),
+                        SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
+                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                    )
+                )
         currentSearchTab = searchTabs[0]
+
+        Log.d("SEARCHH", "onCreate ${currentSearchTab.filterParams.toString()}")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putSerializable("searchTabs", SearchTabList(searchTabs))
     }
 
     override fun onCreateView(
@@ -73,10 +90,14 @@ class SearchFragment : Fragment() {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
+        Log.d("SEARCHH", "onCreateView ${currentSearchTab.filterParams.toString()}")
+
         initSearchBar()
         initFilterResultListener()
         initContentBlock()
         initNavToProfile()
+
+        sendSearchQuery()
 
         return binding.root
     }
@@ -141,6 +162,7 @@ class SearchFragment : Fragment() {
     }
 
     private fun sendSearchQuery() {
+        Log.d("SEARCHH", "${currentSearchTab.filterParams}")
         requireActivity().supportFragmentManager.setFragmentResult(
             currentSearchTab.requestCode,
             bundleOf(
@@ -195,6 +217,10 @@ class SearchFragment : Fragment() {
                 }
             })
     }
+
+    data class SearchTabList(
+        val searchTabList: List<SearchTab>
+    ) : java.io.Serializable
 
     data class SearchTab(
         val tab: Tab,

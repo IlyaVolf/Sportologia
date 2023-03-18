@@ -270,6 +270,7 @@
     <string name="split_dot">•</string>
     <string name="filter">Фильтр</string>
     <string name="filter_city">Город</string>
+    <string name="filter_sorting_relevance">Релевантость</string>
     <string name="filter_city_hint">Укажите город</string>
     <string name="filter_distance">Расстояние</string>
     <string name="within">В пределах</string>

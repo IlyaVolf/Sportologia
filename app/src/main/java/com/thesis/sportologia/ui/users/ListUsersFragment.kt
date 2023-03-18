@@ -56,6 +56,13 @@ abstract class ListUsersFragment : Fragment() {
         userId = arguments?.getString("userId") ?: throw Exception()
         adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
 
+        filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParams?
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putSerializable("filterParams", filterParams)
     }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
@@ -63,7 +70,6 @@ abstract class ListUsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("LIFECYCLE", "FOLLOWERS onCreateView")
         binding = FragmentListUsersBinding.inflate(inflater, container, false)
 
         initSwipeToRefresh()
@@ -106,7 +112,6 @@ abstract class ListUsersFragment : Fragment() {
             val receivedFilterParams =
                 data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParams?
                     ?: return@setFragmentResultListener
-
             filterParams = receivedFilterParams
 
             viewModel.setSearchBy(receivedSearchQuery)

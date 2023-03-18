@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
 import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.ui.SearchFragment

@@ -41,6 +41,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     // TODO нормальная адаптивная высота viewpager'а!
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.d("SEARCHH", "onCreate HOME")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

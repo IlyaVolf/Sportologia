@@ -56,12 +56,16 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private val args by navArgs<ProfileFragmentArgs>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        Log.d("SEARCHH", "onCreate PROFILE")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("BUGFIX", "${this.hashCode()}")
-
         binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         userId = getUserIdArg()
