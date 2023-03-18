@@ -271,12 +271,14 @@
     <string name="split_dot">•</string>
     <string name="filter">Фильтр</string>
     <string name="filter_city">Город</string>
-    <string name="filter_sorting_relevance">Релевантость</string>
     <string name="filter_city_hint">Укажите город</string>
+    <string name="filter_sorting_relevance">Релевантость</string>
     <string name="filter_distance">Расстояние</string>
+    <string name="filter_distance_hint">В радиусе (км)</string>
+    <string name="filter_users">Пользователи</string>
+    <string name="filter_users_hint">Тип пользователей</string>
     <string name="within">В пределах</string>
     <string name="km">км</string>
-    <string name="filter_distance_hint">В радиусе (км)</string>
     <string name="filter_users_extra_offer_services">Предлагает услуги</string>
     <string name="filter_users_extra_hosts_events">Проводит мероприятия</string>
     <string name="filter_posts_all">Все</string>

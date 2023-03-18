@@ -91,6 +91,13 @@ class FilterFragmentUsers : Fragment() {
                 options[2] -> currentFilterParamsUsers.isAthTOrgF = false
             }
         }
+
+        val currentType = when (currentFilterParamsUsers.isAthTOrgF) {
+            null -> options[0]
+            true -> options[1]
+            false -> options[2]
+        }
+        binding.fragmentFilterUserType.filterSpinnerOnechocie.setItem(currentType)
     }
 
     private fun initAdapter() {
