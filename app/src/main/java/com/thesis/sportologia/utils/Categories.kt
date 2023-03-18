@@ -7,6 +7,40 @@ import com.thesis.sportologia.model.events.entities.Event
 class Categories {
 
     companion object {
+        /**val emptyUsersExtraCategoriesMap
+            get() = hashMapOf(
+                Pair(OFFERS_SERVICES, false),
+                Pair(HOSTS_EVENTS, false),
+            )
+
+        private const val OFFERS_SERVICES = "Offers services"
+        private const val HOSTS_EVENTS = "Hosts events"
+
+        fun getLocalizedUsersExtraCategories(
+            context: Context,
+            hashMap: Map<String, Boolean>
+        ): Map<String, Boolean> {
+            val localizedHashMap = hashMapOf<String, Boolean>()
+
+            hashMap.forEach {
+                localizedHashMap[convertEnumToUsersExtraCategory(context, it.key)!!] = it.value
+            }
+
+            return localizedHashMap
+        }
+
+        fun convertEnumToUsersExtraCategory(context: Context?, categoryEnum: String): String? {
+            context ?: return null
+
+            return when (categoryEnum) {
+                OFFERS_SERVICES -> context.getString(R.string.filter_users_extra_offer_services)
+                HOSTS_EVENTS -> context.getString(R.string.filter_users_extra_hosts_events)
+                else -> null
+            }
+        }*/
+
+        /////////////////////////////////////////
+
         val emptyCategoriesMap
             get() = hashMapOf(
                 Pair(RUNNING, false),
@@ -18,6 +52,7 @@ class Categories {
             context: Context,
             hashMap: Map<String, Boolean>
         ): Map<String, Boolean> {
+
             val localizedHashMap = hashMapOf<String, Boolean>()
 
             hashMap.forEach {

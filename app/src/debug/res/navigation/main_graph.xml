@@ -41,6 +41,9 @@
         <action
             android:id="@+id/action_tabsFragment_to_createEditEventFragment"
             app:destination="@id/createEditEventFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_filterFragmentUsers"
+            app:destination="@id/filterFragmentUsers" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -74,5 +77,13 @@
         <argument
             android:name="eventId"
             app:argType="com.thesis.sportologia.ui.events.CreateEditEventFragment$EventId" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragmentUsers"
+        android:name="com.thesis.sportologia.ui.FilterFragmentUsers"
+        android:label="FilterFragmentUsers" >
+        <argument
+            android:name="filterParams"
+            app:argType="com.thesis.sportologia.ui.search.entities.FilterParams" />
     </fragment>
 </navigation>

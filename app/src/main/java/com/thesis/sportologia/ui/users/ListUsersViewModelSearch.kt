@@ -20,7 +20,7 @@ class ListUsersViewModelSearch @AssistedInject constructor(
     logger: Logger
 ) : ListUsersViewModel(userId, usersRepository, logger) {
 
-    val userType = UsersRepository.UserTypes.ATHLETES
+    private val userType = UsersRepository.UserTypes.ATHLETES
 
     override fun getDataFlow(): Flow<PagingData<UserSnippet>> {
         return search.asFlow()

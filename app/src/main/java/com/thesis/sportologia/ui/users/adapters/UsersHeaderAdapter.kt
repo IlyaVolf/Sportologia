@@ -32,9 +32,12 @@ abstract class UsersHeaderAdapter(
         binding.usersChosenFiltersSpace.isVisible = false
     }
 
-    fun enableUsersChosenFilters() {
+    fun enableUsersChosenFilters(restrictionsParser: () -> Unit, sortingParser: () -> Unit) {
         binding.usersChosenFilters.root.isVisible = true
         binding.usersChosenFiltersSpace.isVisible = true
+
+        restrictionsParser()
+        sortingParser()
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {

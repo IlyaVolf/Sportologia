@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -17,6 +18,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentSearchBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
+import com.thesis.sportologia.ui.search.entities.FilterParams
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,6 +33,8 @@ class SearchFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
 
+    private var searchQuery = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,23 +42,26 @@ class SearchFragment : Fragment() {
             SearchTab(
                 SearchTab.Tab.USERS,
                 ListUsersFragmentSearch.newInstance(CurrentAccount().id),
-                FilterFragment(),
+                R.id.filterFragmentUsers,
                 getString(R.string.search_users),
                 SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
+                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
             ),
             SearchTab(
                 SearchTab.Tab.SERVICES,
                 ListServicesFragment(),
-                FilterFragment(),
+                R.id.filterFragment,
                 getString(R.string.search_services),
                 SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
+                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
             ),
             SearchTab(
                 SearchTab.Tab.EVENTS,
                 ListEventsFragmentSearch.newInstance(CurrentAccount().id),
-                FilterFragment(),
+                R.id.filterFragment,
                 getString(R.string.search_events),
                 SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
+                FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
             )
         )
         currentSearchTab = searchTabs[0]
@@ -67,6 +74,7 @@ class SearchFragment : Fragment() {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         initSearchBar()
+        initFilterResultListener()
         initContentBlock()
         initNavToProfile()
 
@@ -79,16 +87,19 @@ class SearchFragment : Fragment() {
         }
         binding.searchBar.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
+
+            // Called when the user submits the query.
             override fun onQueryTextSubmit(query: String): Boolean {
-                // Called when the user submits the query.
                 binding.searchBar.searchView.clearFocus()
-                initSearchSubmission(query)
+                searchQuery = query
+                sendSearchQuery()
                 return true
             }
 
+            // Called when the query text is changed by the user.
             override fun onQueryTextChange(newText: String?): Boolean {
-                // Called when the query text is changed by the user.
-                initSearchSubmission(newText ?: "")
+                searchQuery = newText ?: ""
+                sendSearchQuery()
                 return true
             }
         })
@@ -111,18 +122,31 @@ class SearchFragment : Fragment() {
                 binding.searchBar.searchView.isIconified = true
             }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {
-            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-            }
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
     }
 
-    private fun initSearchSubmission(searchText: String) {
+    private fun initFilterResultListener() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            FILTER_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val filterParams =
+                data.getSerializable(FILTER_PARAMETERS) ?: return@setFragmentResultListener
+            currentSearchTab.filterParams = filterParams as FilterFragmentUsers.FilterParamsUsers
+            sendSearchQuery()
+        }
+    }
+
+    private fun sendSearchQuery() {
         requireActivity().supportFragmentManager.setFragmentResult(
             currentSearchTab.requestCode,
-            bundleOf(Pair(SEARCH_QUERY, searchText))
+            bundleOf(
+                Pair(SEARCH_QUERY, searchQuery),
+                Pair(FILTER_PARAMETERS, currentSearchTab.filterParams)
+            )
         )
     }
 
@@ -158,8 +182,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun onOpenFilterButtonPressed() {
-        findTopNavController().navigate(R.id.filterFragment,
-            null,
+        val direction =
+            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(currentSearchTab.filterParams)
+        findTopNavController().navigate(direction,
             navOptions {
                 // https://www.youtube.com/watch?v=lejBUeOSnf8
                 anim {
@@ -174,9 +199,10 @@ class SearchFragment : Fragment() {
     data class SearchTab(
         val tab: Tab,
         val tabFragment: Fragment,
-        val filterFragment: Fragment,
+        @LayoutRes val filterFragmentLayout: Int,
         val tabName: String,
         val requestCode: String,
+        var filterParams: FilterParams
     ) {
         enum class Tab {
             USERS, SERVICES, EVENTS
@@ -194,5 +220,8 @@ class SearchFragment : Fragment() {
         const val SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE =
             "SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE"
         const val SEARCH_QUERY = "SEARCH_QUERY"
+
+        const val FILTER_REQUEST_CODE = "FILTER_REQUEST_CODE"
+        const val FILTER_PARAMETERS = "FILTER_PARAMETERS"
     }
 }

@@ -265,7 +265,18 @@
     <string name="exercise_regularity_hint">Укажите регулярность</string>
 
     <!-- Filters -->
+    <string name="filter_not_specified">Не указаны</string>
+
+    <string name="split_dot"> • </string>
     <string name="filter">Фильтр</string>
+    <string name="filter_city">Город</string>
+    <string name="filter_city_hint">Укажите город</string>
+    <string name="filter_distance">Расстояние</string>
+    <string name="within">В пределах</string>
+    <string name="km">км</string>
+    <string name="filter_distance_hint">В радиусе (км)</string>
+    <string name="filter_users_extra_offer_services">Предлагает услуги</string>
+    <string name="filter_users_extra_hosts_events">Проводит мероприятия</string>
     <string name="filter_posts_all">Все</string>
     <string name="filter_posts_athletes">Спортсмены</string>
     <string name="filter_posts_organizations">Организации</string>

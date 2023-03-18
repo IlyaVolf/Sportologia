@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListUsersBinding
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.*
+import com.thesis.sportologia.ui.search.entities.FilterParams
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
@@ -42,6 +43,7 @@ abstract class ListUsersFragment : Fragment() {
     abstract val onUserSnippetItemPressed: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
+    protected var filterParams: FilterParams? = null
     protected lateinit var binding: FragmentListUsersBinding
     private lateinit var adapter: UsersPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
@@ -98,10 +100,16 @@ abstract class ListUsersFragment : Fragment() {
             SearchFragment.SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val searchQuery =
+            val receivedSearchQuery =
                 data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
 
-            viewModel.setSearchBy(searchQuery)
+            val receivedFilterParams =
+                data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParams?
+                    ?: return@setFragmentResultListener
+
+            filterParams = receivedFilterParams
+
+            viewModel.setSearchBy(receivedSearchQuery)
         }
     }
 

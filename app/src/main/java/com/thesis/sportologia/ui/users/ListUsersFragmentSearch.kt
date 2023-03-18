@@ -2,9 +2,10 @@ package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterUsers
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterSearch
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +33,11 @@ class ListUsersFragmentSearch : ListUsersFragment() {
     }
 
     override fun initUserHeaderAdapter(): UsersHeaderAdapter {
-        return UsersHeaderAdapterUsers(this)
+        return UsersHeaderAdapterSearch(
+            this,
+            filterParams as FilterFragmentUsers.FilterParamsUsers?
+                ?: FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+        )
     }
 
     companion object {

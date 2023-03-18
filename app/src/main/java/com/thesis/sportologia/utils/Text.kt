@@ -4,8 +4,11 @@ fun removeEmptyStrings(text: String): String {
     return text.replace("^\\n+|\\n+\$".toRegex(), "")
 }
 
-fun concatMap(map: Map<String, Boolean>, separator: String): String {
+fun concatMap(map: Map<String, Boolean>?, separator: String): String {
+    map ?: return ""
+
     val text = StringBuilder().append("")
+
     var flag = false
     for (item in map) {
         if (item.value) {
