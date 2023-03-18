@@ -284,7 +284,7 @@ class InMemoryUsersRepository @Inject constructor(
     ): List<UserSnippet> = withContext(ioDispatcher) {
         delay(1000)
 
-        //Log.d("SEARCHUSER", filter.userName)
+        Log.d("SEARCHUSER", "$searchQuery $filter")
 
         val offset = pageIndex * pageSize
 

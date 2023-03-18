@@ -59,7 +59,7 @@ abstract class ListUsersViewModel constructor(
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
 
     fun setSearchBy(searchQuery: String, filterParams: FilterParams) {
-        if (this.search.value == searchQuery) return
+        if (this.search.value == searchQuery && filterParams == this.filterParams.value) return
         this.search.value = searchQuery
         this.filterParams.value = filterParams
         scrollListToTop()
