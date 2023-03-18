@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,7 +78,7 @@ abstract class ListEventsFragment : Fragment() {
 
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            SearchFragment.SUBMIT_SEARCH_QUERY_REQUEST_CODE,
+            SearchFragment.SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
             val searchQuery =

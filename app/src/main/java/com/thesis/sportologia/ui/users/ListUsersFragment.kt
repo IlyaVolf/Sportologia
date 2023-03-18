@@ -95,7 +95,7 @@ abstract class ListUsersFragment : Fragment() {
 
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            SearchFragment.SUBMIT_SEARCH_QUERY_REQUEST_CODE,
+            SearchFragment.SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
             val searchQuery =

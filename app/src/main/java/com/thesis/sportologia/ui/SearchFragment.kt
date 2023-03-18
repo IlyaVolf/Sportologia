@@ -24,10 +24,41 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
+    private lateinit var searchTabs: List<SearchTab>
+    private lateinit var currentSearchTab: SearchTab
     private lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        searchTabs = listOf(
+            SearchTab(
+                SearchTab.Tab.USERS,
+                ListUsersFragmentSearch.newInstance(CurrentAccount().id),
+                FilterFragment(),
+                getString(R.string.search_users),
+                SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
+            ),
+            SearchTab(
+                SearchTab.Tab.SERVICES,
+                ListServicesFragment(),
+                FilterFragment(),
+                getString(R.string.search_services),
+                SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
+            ),
+            SearchTab(
+                SearchTab.Tab.EVENTS,
+                ListEventsFragmentSearch.newInstance(CurrentAccount().id),
+                FilterFragment(),
+                getString(R.string.search_events),
+                SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
+            )
+        )
+        currentSearchTab = searchTabs[0]
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,29 +95,33 @@ class SearchFragment : Fragment() {
     }
 
     private fun initContentBlock() {
-        val fragments = arrayListOf(
-            ListUsersFragmentSearch.newInstance(CurrentAccount().id),
-            ListServicesFragment(),
-            ListEventsFragmentSearch.newInstance(CurrentAccount().id),
-        )
-        val tabsNames = arrayListOf(
-            getString(R.string.search_users),
-            getString(R.string.search_services),
-            getString(R.string.search_events)
-        )
-        adapter = PagerAdapter(this, fragments)
+        adapter = PagerAdapter(this, ArrayList(searchTabs.map { it.tabFragment }))
         viewPager = binding.pager
         viewPager.adapter = adapter
         tabLayout = binding.tabLayout
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.text = tabsNames[position]
+            tab.text = searchTabs[position].tabName
         }.attach()
+
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                currentSearchTab = searchTabs[tab?.position ?: 0]
+                binding.searchBar.searchView.setQuery("", false)
+                binding.searchBar.searchView.isIconified = true
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
     }
 
     private fun initSearchSubmission(searchText: String) {
         requireActivity().supportFragmentManager.setFragmentResult(
-            SUBMIT_SEARCH_QUERY_REQUEST_CODE,
+            currentSearchTab.requestCode,
             bundleOf(Pair(SEARCH_QUERY, searchText))
         )
     }
@@ -136,12 +171,28 @@ class SearchFragment : Fragment() {
             })
     }
 
+    data class SearchTab(
+        val tab: Tab,
+        val tabFragment: Fragment,
+        val filterFragment: Fragment,
+        val tabName: String,
+        val requestCode: String,
+    ) {
+        enum class Tab {
+            USERS, SERVICES, EVENTS
+        }
+    }
+
     companion object {
         const val GO_TO_OWN_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE_FROM_SEARCH"
         const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_USERS"
         const val USER_ID = "USER_ID"
 
-        const val SUBMIT_SEARCH_QUERY_REQUEST_CODE = "SUBMIT_SEARCH_QUERY_REQUEST_CODE"
+        const val SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE = "SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE"
+        const val SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE =
+            "SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE"
+        const val SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE =
+            "SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE"
         const val SEARCH_QUERY = "SEARCH_QUERY"
     }
 }
