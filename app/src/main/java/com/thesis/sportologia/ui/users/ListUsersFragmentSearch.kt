@@ -1,9 +1,8 @@
 package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
-import android.util.Log
 import androidx.core.os.bundleOf
-import com.thesis.sportologia.ui.FilterFragmentUsers
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterSearch
@@ -36,8 +35,8 @@ class ListUsersFragmentSearch : ListUsersFragment() {
     override fun initUserHeaderAdapter(): UsersHeaderAdapter {
         return UsersHeaderAdapterSearch(
             this,
-            filterParams as FilterFragmentUsers.FilterParamsUsers?
-                ?: FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+            filterParams as FilterParamsUsers?
+                ?: FilterParamsUsers.newEmptyInstance()
         )
     }
 

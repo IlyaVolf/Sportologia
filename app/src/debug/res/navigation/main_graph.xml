@@ -84,6 +84,6 @@
         android:label="FilterFragmentUsers" >
         <argument
             android:name="filterParams"
-            app:argType="com.thesis.sportologia.ui.search.entities.FilterParams" />
+            app:argType="com.thesis.sportologia.model.FilterParams" />
     </fragment>
 </navigation>

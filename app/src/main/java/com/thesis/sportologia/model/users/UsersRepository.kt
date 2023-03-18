@@ -1,7 +1,7 @@
 package com.thesis.sportologia.model.users
 
 import androidx.paging.PagingData
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import kotlinx.coroutines.flow.Flow
@@ -16,20 +16,10 @@ interface UsersRepository {
 
     suspend fun getPagedFollowings(userId: String): Flow<PagingData<UserSnippet>>
 
-    suspend fun getPagedUsers(filter: UsersFilter): Flow<PagingData<UserSnippet>>
+    suspend fun getPagedUsers(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
 
-    suspend fun getPagedAthletes(filter: UsersFilter): Flow<PagingData<UserSnippet>>
+    suspend fun getPagedAthletes(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
 
-    suspend fun getPagedOrganizations(filter: UsersFilter): Flow<PagingData<UserSnippet>>
-
-    data class UsersFilter(
-        val userName: String,
-        val userType: UserTypes,
-        // val categories
-    )
-
-    enum class UserTypes {
-        ATHLETES, ORGANIZATIONS, ALL
-    }
+    suspend fun getPagedOrganizations(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
 
 }

@@ -14,9 +14,9 @@ import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentFilterUsersBinding
 import com.thesis.sportologia.ui.SearchFragment.Companion.FILTER_PARAMETERS
-import com.thesis.sportologia.ui.posts.ListPostsFragmentFavourites
 import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
-import com.thesis.sportologia.ui.search.entities.FilterParams
+import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
 import com.thesis.sportologia.utils.Categories
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +42,7 @@ class FilterFragmentUsers : Fragment() {
 
         initDistanceEditText()
         initAddressEditText()
+        initUserTypeSpinner()
         initAdapter()
         initCloseFilterFragment()
 
@@ -65,7 +66,6 @@ class FilterFragmentUsers : Fragment() {
     }
 
     private fun initAddressEditText() {
-
         binding.fragmentFilterUserCity.filterEdittextTitle.text = getString(R.string.filter_city)
         binding.fragmentFilterUserCity.filterEdittext.hint = getString(R.string.filter_city_hint)
         binding.fragmentFilterUserCity.filterEdittext.inputType = InputType.TYPE_CLASS_TEXT
@@ -74,6 +74,22 @@ class FilterFragmentUsers : Fragment() {
         if (currentFilterParamsUsers.address != null) {
             binding.fragmentFilterUserCity.filterEdittext
                 .setText(currentFilterParamsUsers.address.toString())
+        }
+    }
+
+    private fun initUserTypeSpinner() {
+        val options = listOf(
+            getString(R.string.search_all),
+            getString(R.string.search_athletes),
+            getString(R.string.search_organizations)
+        )
+        binding.fragmentFilterUserType.filterSpinnerOnechocie.initAdapter(options)
+        binding.fragmentFilterUserType.filterSpinnerOnechocie.setListener {
+            when (it) {
+                options[0] -> currentFilterParamsUsers.isAthTOrgF = null
+                options[1] -> currentFilterParamsUsers.isAthTOrgF = true
+                options[2] -> currentFilterParamsUsers.isAthTOrgF = false
+            }
         }
     }
 
@@ -146,17 +162,4 @@ class FilterFragmentUsers : Fragment() {
         currentFilterParamsUsers.address = null
     }
 
-    // TODO Parcelable
-    data class FilterParamsUsers(
-        var categories: HashMap<String, Boolean>?,
-        var isAthTOrgF: Boolean?,
-        var distance: Int?,
-        var address: Address?,
-    ) : FilterParams {
-        companion object {
-            fun newEmptyInstance(): FilterParamsUsers {
-                return FilterParamsUsers(null, null, null, null)
-            }
-        }
-    }
 }

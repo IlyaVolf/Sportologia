@@ -20,9 +20,9 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentSearchBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
-import com.thesis.sportologia.ui.search.entities.FilterParams
+import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +54,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                         R.id.filterFragmentUsers,
                         getString(R.string.search_users),
                         SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
-                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                        FilterParamsUsers.newEmptyInstance()
                     ),
                     SearchTab(
                         SearchTab.Tab.SERVICES,
@@ -62,7 +62,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                         R.id.filterFragment,
                         getString(R.string.search_services),
                         SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
-                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                        FilterParamsUsers.newEmptyInstance()
                     ),
                     SearchTab(
                         SearchTab.Tab.EVENTS,
@@ -70,7 +70,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                         R.id.filterFragment,
                         getString(R.string.search_events),
                         SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
-                        FilterFragmentUsers.FilterParamsUsers.newEmptyInstance()
+                        FilterParamsUsers.newEmptyInstance()
                     )
                 )
         currentSearchTab = searchTabs[0]
@@ -156,7 +156,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         ) { _, data ->
             val filterParams =
                 data.getSerializable(FILTER_PARAMETERS) ?: return@setFragmentResultListener
-            currentSearchTab.filterParams = filterParams as FilterFragmentUsers.FilterParamsUsers
+            currentSearchTab.filterParams = filterParams as FilterParamsUsers
             sendSearchQuery()
         }
     }

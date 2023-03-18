@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListUsersBinding
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.*
-import com.thesis.sportologia.ui.search.entities.FilterParams
+import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
@@ -113,8 +113,7 @@ abstract class ListUsersFragment : Fragment() {
                 data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParams?
                     ?: return@setFragmentResultListener
             filterParams = receivedFilterParams
-
-            viewModel.setSearchBy(receivedSearchQuery)
+            viewModel.setSearchBy(receivedSearchQuery, receivedFilterParams)
         }
     }
 

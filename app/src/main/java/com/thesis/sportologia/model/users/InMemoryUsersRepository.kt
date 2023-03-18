@@ -6,10 +6,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.posts.entities.Post
-import com.thesis.sportologia.model.users.entities.Athlete
-import com.thesis.sportologia.model.users.entities.Organization
-import com.thesis.sportologia.model.users.entities.User
-import com.thesis.sportologia.model.users.entities.UserSnippet
+import com.thesis.sportologia.model.users.entities.*
+import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -221,9 +219,12 @@ class InMemoryUsersRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUsers(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedUsers(
+        searchQuery: String,
+        filter: FilterParamsUsers
+    ): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, filter)
+            getUsers(pageIndex, pageSize, searchQuery, filter)
         }
 
         return Pager(
@@ -237,9 +238,12 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedAthletes(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedAthletes(
+        searchQuery: String,
+        filter: FilterParamsUsers
+    ): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, filter)
+            getUsers(pageIndex, pageSize, searchQuery, filter)
         }
 
         return Pager(
@@ -253,9 +257,12 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedOrganizations(filter: UsersRepository.UsersFilter): Flow<PagingData<UserSnippet>> {
+    override suspend fun getPagedOrganizations(
+        searchQuery: String,
+        filter: FilterParamsUsers
+    ): Flow<PagingData<UserSnippet>> {
         val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, filter)
+            getUsers(pageIndex, pageSize, searchQuery, filter)
         }
 
         return Pager(
@@ -272,7 +279,8 @@ class InMemoryUsersRepository @Inject constructor(
     private suspend fun getUsers(
         pageIndex: Int,
         pageSize: Int,
-        filter: UsersRepository.UsersFilter,
+        searchQuery: String,
+        filter: FilterParamsUsers,
     ): List<UserSnippet> = withContext(ioDispatcher) {
         delay(1000)
 
@@ -280,16 +288,13 @@ class InMemoryUsersRepository @Inject constructor(
 
         val offset = pageIndex * pageSize
 
-        val usersFound = when (filter.userType) {
-            UsersRepository.UserTypes.ATHLETES ->
-                users.filter { it is Athlete && containsAnyCase(it.name, filter.userName) }
-            UsersRepository.UserTypes.ORGANIZATIONS ->
-                users.filter { it is Organization && containsAnyCase(it.name, filter.userName) }
-            UsersRepository.UserTypes.ALL -> users.filter {
-                containsAnyCase(
-                    it.name,
-                    filter.userName
-                )
+        val usersFound = when (filter.isAthTOrgF) {
+            true ->
+                users.filter { it is Athlete && containsAnyCase(it.name, searchQuery) }
+            false ->
+                users.filter { it is Organization && containsAnyCase(it.name, searchQuery) }
+            null -> users.filter {
+                containsAnyCase(it.name, searchQuery)
             }
         }.sortedByDescending { it.innerRating }.map { it.toUserSnippet() }
 

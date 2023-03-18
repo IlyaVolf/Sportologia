@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.thesis.sportologia.R
+import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.users.UsersRepository
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
@@ -29,6 +30,7 @@ abstract class ListUsersViewModel constructor(
 ) : BaseViewModel(logger) {
 
     internal val search = MutableLiveData("")
+    internal val filterParams = MutableLiveData<FilterParams>()
 
     private val localChanges = LocalChanges()
     private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
@@ -56,9 +58,10 @@ abstract class ListUsersViewModel constructor(
 
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
 
-    fun setSearchBy(searchQuery: String) {
+    fun setSearchBy(searchQuery: String, filterParams: FilterParams) {
         if (this.search.value == searchQuery) return
         this.search.value = searchQuery
+        this.filterParams.value = filterParams
         scrollListToTop()
     }
 

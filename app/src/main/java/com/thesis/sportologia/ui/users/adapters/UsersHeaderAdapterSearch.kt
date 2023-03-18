@@ -2,6 +2,7 @@ package com.thesis.sportologia.ui.users.adapters
 
 import androidx.fragment.app.Fragment
 import com.thesis.sportologia.R
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.concatList
@@ -9,11 +10,24 @@ import com.thesis.sportologia.utils.concatMap
 
 class UsersHeaderAdapterSearch(
     fragment: Fragment,
-    filterParamsUsers: FilterFragmentUsers.FilterParamsUsers
+    filterParamsUsers: FilterParamsUsers
 ) : UsersHeaderAdapter(fragment) {
 
     override val restrictionsParser: () -> Unit = {
         val restrictionBlockList = mutableListOf<String>()
+
+        if (filterParamsUsers.isAthTOrgF != null) {
+            val restrictionBlock = StringBuilder("")
+
+            if (filterParamsUsers.isAthTOrgF == true) {
+                restrictionBlock.append(fragment.getString(R.string.search_athletes))
+            }
+            if (filterParamsUsers.isAthTOrgF == false) {
+                restrictionBlock.append(fragment.getString(R.string.search_organizations))
+            }
+
+            restrictionBlockList.add(restrictionBlock.toString())
+        }
 
         if (filterParamsUsers.categories != null) {
             val restrictionBlock = StringBuilder("")

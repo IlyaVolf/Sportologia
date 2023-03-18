@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.thesis.sportologia.model.users.InMemoryUsersRepository
 import com.thesis.sportologia.model.users.UsersRepository
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -20,13 +21,12 @@ class ListUsersViewModelSearch @AssistedInject constructor(
     logger: Logger
 ) : ListUsersViewModel(userId, usersRepository, logger) {
 
-    private val userType = UsersRepository.UserTypes.ATHLETES
-
     override fun getDataFlow(): Flow<PagingData<UserSnippet>> {
         return search.asFlow()
             .flatMapLatest {
                 usersRepository.getPagedUsers(
-                    UsersRepository.UsersFilter(it, userType)
+                    it,
+                    filterParams.value as FilterParamsUsers? ?: FilterParamsUsers.newEmptyInstance()
                 )
             }.cachedIn(viewModelScope)
     }
