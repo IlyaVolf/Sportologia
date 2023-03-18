@@ -58,6 +58,7 @@ abstract class ListUsersViewModel constructor(
 
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
 
+    // TODO обновление при перелистовании вкладок меню
     fun setSearchBy(searchQuery: String, filterParams: FilterParams) {
         this.search.value = searchQuery
         this.filterParams.value = filterParams

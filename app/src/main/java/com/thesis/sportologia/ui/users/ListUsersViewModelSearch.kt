@@ -1,11 +1,9 @@
 package com.thesis.sportologia.ui.users
 
-
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.thesis.sportologia.model.users.InMemoryUsersRepository
 import com.thesis.sportologia.model.users.UsersRepository
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.model.users.entities.UserSnippet

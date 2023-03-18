@@ -112,8 +112,9 @@ abstract class ListUsersFragment : Fragment() {
             val receivedFilterParams =
                 data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParams?
                     ?: return@setFragmentResultListener
+
             filterParams = receivedFilterParams
-            viewModel.setSearchBy(receivedSearchQuery, receivedFilterParams)
+            viewModel.setSearchBy(receivedSearchQuery, filterParams ?: receivedFilterParams)
         }
     }
 

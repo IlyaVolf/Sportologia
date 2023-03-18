@@ -90,14 +90,14 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     ): View {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
 
-        Log.d("SEARCHH", "onCreateView ${currentSearchTab.filterParams.toString()}")
+        Log.d("SEARCHH", "onCreateView ${currentSearchTab.filterParams}")
 
         initSearchBar()
         initFilterResultListener()
         initContentBlock()
         initNavToProfile()
 
-        sendSearchQuery()
+        sendSearchQuery(false)
 
         return binding.root
     }
@@ -113,14 +113,14 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchBar.searchView.clearFocus()
                 searchQuery = query
-                sendSearchQuery()
+                sendSearchQuery(true)
                 return true
             }
 
             // Called when the query text is changed by the user.
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchQuery = newText ?: ""
-                sendSearchQuery()
+                sendSearchQuery(true)
                 return true
             }
         })
@@ -157,11 +157,11 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             val filterParams =
                 data.getSerializable(FILTER_PARAMETERS) ?: return@setFragmentResultListener
             currentSearchTab.filterParams = filterParams as FilterParamsUsers
-            sendSearchQuery()
+            sendSearchQuery(true)
         }
     }
 
-    private fun sendSearchQuery() {
+    private fun sendSearchQuery(needToUpdateList: Boolean) {
         Log.d("SEARCHH", "${currentSearchTab.filterParams}")
         requireActivity().supportFragmentManager.setFragmentResult(
             currentSearchTab.requestCode,
@@ -249,5 +249,8 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
 
         const val FILTER_REQUEST_CODE = "FILTER_REQUEST_CODE"
         const val FILTER_PARAMETERS = "FILTER_PARAMETERS"
+
+        const val UPDATE_LIST_REQUEST_CODE = "UPDATE_LIST_REQUEST_CODE"
+        const val UPDATE_LIST = "UPDATE_LIST"
     }
 }
