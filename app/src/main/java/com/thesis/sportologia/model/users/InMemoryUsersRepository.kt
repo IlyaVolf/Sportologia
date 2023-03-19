@@ -288,12 +288,12 @@ class InMemoryUsersRepository @Inject constructor(
 
         val offset = pageIndex * pageSize
 
-        val usersFound = when (filter.isAthTOrgF) {
-            true ->
+        val usersFound = when (filter.usersType) {
+            FilterParamsUsers.UsersType.ATHLETES ->
                 users.filter { it is Athlete && containsAnyCase(it.name, searchQuery) }
-            false ->
+            FilterParamsUsers.UsersType.ORGANIZATIONS  ->
                 users.filter { it is Organization && containsAnyCase(it.name, searchQuery) }
-            null -> users.filter {
+            FilterParamsUsers.UsersType.ALL  -> users.filter {
                 containsAnyCase(it.name, searchQuery)
             }
         }.sortedByDescending { it.innerRating }.map { it.toUserSnippet() }

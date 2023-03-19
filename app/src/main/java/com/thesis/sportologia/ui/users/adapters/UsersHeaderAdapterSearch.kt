@@ -16,17 +16,10 @@ class UsersHeaderAdapterSearch(
     override val restrictionsParser: () -> Unit = {
         val restrictionBlockList = mutableListOf<String>()
 
-        if (filterParamsUsers.isAthTOrgF != null) {
-            val restrictionBlock = StringBuilder("")
-
-            if (filterParamsUsers.isAthTOrgF == true) {
-                restrictionBlock.append(fragment.getString(R.string.search_athletes))
-            }
-            if (filterParamsUsers.isAthTOrgF == false) {
-                restrictionBlock.append(fragment.getString(R.string.search_organizations))
-            }
-
-            restrictionBlockList.add(restrictionBlock.toString())
+        when (filterParamsUsers.usersType) {
+            FilterParamsUsers.UsersType.ATHLETES -> restrictionBlockList.add(fragment.getString(R.string.search_athletes))
+            FilterParamsUsers.UsersType.ORGANIZATIONS -> restrictionBlockList.add(fragment.getString(R.string.search_organizations))
+            else -> {}
         }
 
         if (filterParamsUsers.categories != null) {
@@ -71,8 +64,9 @@ class UsersHeaderAdapterSearch(
     }
 
     override val sortingParser: () -> Unit = {
-        binding.usersChosenFilters.sorting.text =
-            fragment.getString(R.string.filter_sorting_relevance)
+        binding.usersChosenFilters.sorting.text = when (filterParamsUsers.sortBy) {
+            FilterParamsUsers.UsersSortBy.RELEVANCE -> fragment.getString(R.string.filter_sort_by_relevance)
+        }
     }
 
     private val splittingDot = " " + fragment.context!!.getString(R.string.split_dot) + " "

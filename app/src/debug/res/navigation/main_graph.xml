@@ -33,9 +33,6 @@
             android:id="@+id/action_tabsFragment_to_profileSettingsFragment"
             app:destination="@id/profileSettingsFragment" />
         <action
-            android:id="@+id/action_tabsFragment_to_filterFragment"
-            app:destination="@id/filterFragment" />
-        <action
             android:id="@+id/action_tabsFragment_to_createEditPostFragment"
             app:destination="@id/createEditPostFragment" />
         <action
@@ -44,6 +41,9 @@
         <action
             android:id="@+id/action_tabsFragment_to_filterFragmentUsers"
             app:destination="@id/filterFragmentUsers" />
+        <action
+            android:id="@+id/action_tabsFragment_to_filterFragmentEvents"
+            app:destination="@id/filterFragmentEvents" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -55,11 +55,6 @@
         android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
         android:label="fragment_profile_settings"
         tools:layout="@layout/fragment_profile_settings" />
-    <fragment
-        android:id="@+id/filterFragment"
-        android:name="com.thesis.sportologia.ui.FilterFragment"
-        android:label="fragment_filter"
-        tools:layout="@layout/fragment_filter" />
     <fragment
         android:id="@+id/createEditPostFragment"
         android:name="com.thesis.sportologia.ui.posts.CreateEditPostFragment"
@@ -81,7 +76,16 @@
     <fragment
         android:id="@+id/filterFragmentUsers"
         android:name="com.thesis.sportologia.ui.FilterFragmentUsers"
-        android:label="FilterFragmentUsers" >
+        android:label="fragment_filter_users" >
+        <argument
+            android:name="filterParams"
+            app:argType="com.thesis.sportologia.model.FilterParams" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragmentEvents"
+        android:name="com.thesis.sportologia.ui.FilterFragmentEvents"
+        android:label="fragment_filter_events"
+        tools:layout="@layout/fragment_filter_events" >
         <argument
             android:name="filterParams"
             app:argType="com.thesis.sportologia.model.FilterParams" />

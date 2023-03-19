@@ -6,13 +6,23 @@ import com.thesis.sportologia.model.FilterParams
 // TODO Parcelable
 data class FilterParamsUsers(
     var categories: HashMap<String, Boolean>?,
-    var isAthTOrgF: Boolean?,
+    var usersType: UsersType,
     var distance: Int?,
     var address: Address?,
+    val sortBy: UsersSortBy
 ) : FilterParams {
+
+    enum class UsersSortBy {
+        RELEVANCE
+    }
+
+    enum class UsersType {
+        ALL, ATHLETES, ORGANIZATIONS
+    }
+
     companion object {
         fun newEmptyInstance(): FilterParamsUsers {
-            return FilterParamsUsers(null, null, null, null)
+            return FilterParamsUsers(null, UsersType.ALL, null, null, UsersSortBy.RELEVANCE)
         }
     }
 }

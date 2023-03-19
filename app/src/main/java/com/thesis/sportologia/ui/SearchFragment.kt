@@ -10,6 +10,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
@@ -22,15 +23,15 @@ import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
 import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment(R.layout.fragment_search) {
+class SearchFragment : Fragment() {
 
-    override val viewModel by viewModels<SearchViewModel>()
     private lateinit var searchTabs: List<SearchTab>
     private lateinit var currentSearchTab: SearchTab
     private lateinit var binding: FragmentSearchBinding
@@ -51,7 +52,11 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                     SearchTab(
                         SearchTab.Tab.USERS,
                         ListUsersFragmentSearch.newInstance(CurrentAccount().id),
-                        R.id.filterFragmentUsers,
+                        { filterParams ->
+                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(
+                                filterParams
+                            )
+                        },
                         getString(R.string.search_users),
                         SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
                         FilterParamsUsers.newEmptyInstance()
@@ -59,7 +64,11 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                     SearchTab(
                         SearchTab.Tab.SERVICES,
                         ListServicesFragment(),
-                        R.id.filterFragment,
+                        { filterParams ->
+                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(
+                                filterParams
+                            )
+                        },
                         getString(R.string.search_services),
                         SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
                         FilterParamsUsers.newEmptyInstance()
@@ -67,15 +76,19 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
                     SearchTab(
                         SearchTab.Tab.EVENTS,
                         ListEventsFragmentSearch.newInstance(CurrentAccount().id),
-                        R.id.filterFragment,
+                        { filterParams ->
+                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentEvents(
+                                filterParams
+                            )
+                        },
                         getString(R.string.search_events),
                         SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
-                        FilterParamsUsers.newEmptyInstance()
+                        FilterParamsEvents.newEmptyInstance()
                     )
                 )
         currentSearchTab = searchTabs[0]
 
-        Log.d("SEARCHH", "onCreate ${currentSearchTab.filterParams.toString()}")
+        Log.d("SEARCHH", "onCreate ${currentSearchTab.filterParams}")
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -97,7 +110,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         initContentBlock()
         initNavToProfile()
 
-        sendSearchQuery(false)
+        //sendSearchQuery()
 
         return binding.root
     }
@@ -113,14 +126,14 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchBar.searchView.clearFocus()
                 searchQuery = query
-                sendSearchQuery(true)
+                sendSearchQuery()
                 return true
             }
 
             // Called when the query text is changed by the user.
             override fun onQueryTextChange(newText: String?): Boolean {
                 searchQuery = newText ?: ""
-                sendSearchQuery(true)
+                sendSearchQuery()
                 return true
             }
         })
@@ -156,12 +169,12 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
         ) { _, data ->
             val filterParams =
                 data.getSerializable(FILTER_PARAMETERS) ?: return@setFragmentResultListener
-            currentSearchTab.filterParams = filterParams as FilterParamsUsers
-            sendSearchQuery(true)
+            currentSearchTab.filterParams = filterParams as FilterParams
+            sendSearchQuery()
         }
     }
 
-    private fun sendSearchQuery(needToUpdateList: Boolean) {
+    private fun sendSearchQuery() {
         Log.d("SEARCHH", "${currentSearchTab.filterParams}")
         requireActivity().supportFragmentManager.setFragmentResult(
             currentSearchTab.requestCode,
@@ -204,9 +217,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     }
 
     private fun onOpenFilterButtonPressed() {
-        val direction =
-            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(currentSearchTab.filterParams)
-        findTopNavController().navigate(direction,
+        findTopNavController().navigate(currentSearchTab.direction(currentSearchTab.filterParams),
             navOptions {
                 // https://www.youtube.com/watch?v=lejBUeOSnf8
                 anim {
@@ -225,7 +236,7 @@ class SearchFragment : BaseFragment(R.layout.fragment_search) {
     data class SearchTab(
         val tab: Tab,
         val tabFragment: Fragment,
-        @LayoutRes val filterFragmentLayout: Int,
+        val direction: (FilterParams) -> NavDirections,
         val tabName: String,
         val requestCode: String,
         var filterParams: FilterParams

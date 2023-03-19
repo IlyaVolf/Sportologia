@@ -5,10 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.thesis.sportologia.ui.FilterFragmentUsers">
+    tools:context="com.thesis.sportologia.ui.FilterFragmentEvents">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
-        android:id="@+id/fragment_filter_user_tb"
+        android:id="@+id/fragment_filter_event_tb"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,13 +24,13 @@
         android:layout_weight="1">
 
         <LinearLayout
-            android:id="@+id/fragment_filter_user_container"
+            android:id="@+id/fragment_filter_event_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="24dp">
 
-            <include android:id="@+id/fragment_filter_user_categories"
+            <include android:id="@+id/fragment_filter_event_categories"
                 layout="@layout/view_filter_multichoice" />
 
             <LinearLayout
@@ -39,7 +39,7 @@
                 android:orientation="horizontal">
 
                 <include
-                    android:id="@+id/fragment_filter_user_distance"
+                    android:id="@+id/fragment_filter_event_price"
                     layout="@layout/view_filter_edittext"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -50,8 +50,26 @@
                     android:layout_height="match_parent" />
 
                 <include
-                    android:id="@+id/fragment_filter_user_city"
-                    layout="@layout/view_filter_edittext"
+                    android:id="@+id/fragment_filter_event_type"
+                    layout="@layout/view_filter_onechoice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.thesis.sportologia.ui.views.DateIntervalOutlinedView
+                    android:id="@+id/fragment_filter_event_date"
+                    app:diovIsTimeEnabled="false"
+                    app:diovTitle="@string/event_date"
+                    app:diovHintLeft="@string/event_date_hint_from"
+                    app:diovHintRight="@string/event_date_hint_to"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -64,8 +82,8 @@
                 android:orientation="horizontal">
 
                 <include
-                    android:id="@+id/fragment_filter_user_type"
-                    layout="@layout/view_filter_onechoice"
+                    android:id="@+id/fragment_filter_event_distance"
+                    layout="@layout/view_filter_edittext"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
@@ -74,10 +92,13 @@
                     android:layout_width="12dp"
                     android:layout_height="match_parent" />
 
-                <Space
+                <include
+                    android:id="@+id/fragment_filter_event_address"
+                    layout="@layout/view_filter_edittext"
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
 
             </LinearLayout>
 
@@ -95,7 +116,7 @@
         android:background="@color/background">
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/fragment_filter_user_cancel"
+            android:id="@+id/fragment_filter_event_cancel"
             android:background="@drawable/background_gradient_outlined"
             android:textAllCaps="false"
             android:textColor="@color/purple_medium"
@@ -111,7 +132,7 @@
             android:layout_height="match_parent"/>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/fragment_filter__userapply"
+            android:id="@+id/fragment_filter__eventapply"
             android:background="@drawable/background_gradient"
             android:textAllCaps="false"
             android:textColor="@color/white"

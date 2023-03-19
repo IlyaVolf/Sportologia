@@ -77,6 +77,15 @@
         <attr name="divIsTimeEnabled" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="DateIntervalOutlinedView">
+        <attr name="diovTitle" format="string" />
+        <attr name="diovHintLeft" format="string" />
+        <attr name="diovHintRight" format="string" />
+        <attr name="diovIsAfter" format="boolean" />
+        <attr name="diovIsBefore" format="boolean" />
+        <attr name="diovIsTimeEnabled" format="boolean" />
+    </declare-styleable>
+
     <declare-styleable name="TimeBasicView">
         <attr name="timeTitle" format="string" />
         <attr name="timeHint" format="string" />

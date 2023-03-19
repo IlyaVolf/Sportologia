@@ -1,6 +1,5 @@
 package com.thesis.sportologia.ui
 
-import android.location.Address
 import android.os.Bundle
 import android.text.InputType
 import android.view.LayoutInflater
@@ -18,6 +17,7 @@ import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
+import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,10 +40,10 @@ class FilterFragmentUsers : Fragment() {
         currentFilterParamsUsers = getFilterFragmentArg() as FilterParamsUsers
         currentCategories = currentFilterParamsUsers.categories ?: Categories.emptyCategoriesMap
 
+        initCategoriesSpinner()
         initDistanceEditText()
         initAddressEditText()
         initUserTypeSpinner()
-        initAdapter()
         initCloseFilterFragment()
 
         return binding.root
@@ -78,29 +78,32 @@ class FilterFragmentUsers : Fragment() {
     }
 
     private fun initUserTypeSpinner() {
-        val options = listOf(
-            getString(R.string.search_all),
-            getString(R.string.search_athletes),
-            getString(R.string.search_organizations)
+        val options = AssociativeList(
+            listOf(
+                Pair(getString(R.string.search_all), FilterParamsUsers.UsersType.ALL),
+                Pair(
+                    getString(R.string.search_athletes),
+                    FilterParamsUsers.UsersType.ATHLETES
+                ),
+                Pair(
+                    getString(R.string.search_organizations),
+                    FilterParamsUsers.UsersType.ORGANIZATIONS
+                ),
+            )
         )
-        binding.fragmentFilterUserType.filterSpinnerOnechocie.initAdapter(options)
-        binding.fragmentFilterUserType.filterSpinnerOnechocie.setListener {
-            when (it) {
-                options[0] -> currentFilterParamsUsers.isAthTOrgF = null
-                options[1] -> currentFilterParamsUsers.isAthTOrgF = true
-                options[2] -> currentFilterParamsUsers.isAthTOrgF = false
-            }
+
+        binding.fragmentFilterUserType.filterSpinnerOnechoiceTitle.text =
+            getString(R.string.filter_users)
+        binding.fragmentFilterUserType.filterSpinnerOnechoice.initAdapter(options.getFirsts())
+        binding.fragmentFilterUserType.filterSpinnerOnechoice.setListener {
+            currentFilterParamsUsers.usersType = options.getAssociatedItemSecond(it)
         }
 
-        val currentType = when (currentFilterParamsUsers.isAthTOrgF) {
-            null -> options[0]
-            true -> options[1]
-            false -> options[2]
-        }
-        binding.fragmentFilterUserType.filterSpinnerOnechocie.setItem(currentType)
+        val currentType = options.getAssociatedItemFirst(currentFilterParamsUsers.usersType)
+        binding.fragmentFilterUserType.filterSpinnerOnechoice.setItem(currentType)
     }
 
-    private fun initAdapter() {
+    private fun initCategoriesSpinner() {
         val onCategoryButtonPressed: (FilterToggleButtonItem, Boolean) -> Unit =
             { toggleButton, isPressed ->
                 currentCategories[toggleButton.codeText] = isPressed

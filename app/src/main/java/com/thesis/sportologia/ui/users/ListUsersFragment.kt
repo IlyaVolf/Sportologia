@@ -114,7 +114,7 @@ abstract class ListUsersFragment : Fragment() {
                     ?: return@setFragmentResultListener
 
             filterParams = receivedFilterParams
-            viewModel.setSearchBy(receivedSearchQuery, filterParams ?: receivedFilterParams)
+            viewModel.setSearchBy(receivedSearchQuery, receivedFilterParams)
         }
     }
 
