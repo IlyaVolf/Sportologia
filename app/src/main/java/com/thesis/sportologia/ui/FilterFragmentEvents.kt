@@ -199,7 +199,7 @@ class FilterFragmentEvents : Fragment() {
 
         val price =
             binding.fragmentFilterEventPrice.filterEdittext.text.toString().toIntOrNull()
-        if (price == null || price == 0) {
+        if (price == null) {
             currentFilterParamsEvents.price = null
         } else {
             currentFilterParamsEvents.price =
