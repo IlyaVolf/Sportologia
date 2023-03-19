@@ -154,10 +154,7 @@ class SearchFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 currentSearchTab = searchTabs[tab?.position ?: 0]
-                //binding.searchBar.searchView.setQuery(searchQuery, false)
-                //binding.searchBar.searchView.isIconified = true
-                //sendSearchQuery()
-            }
+             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
@@ -178,7 +175,6 @@ class SearchFragment : Fragment() {
     }
 
     private fun sendSearchQuery() {
-        Log.d("SEARCHH", "${currentSearchTab.filterParams}")
         requireActivity().supportFragmentManager.setFragmentResult(
             currentSearchTab.requestCode,
             bundleOf(

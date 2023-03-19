@@ -77,28 +77,24 @@ class EventsHeaderAdapterSearch(
                 restrictionBlockList.add(restrictionBlock.toString())
             }
 
-            if (filterParamsEvents.dateFrom != null || filterParamsEvents.dateTo != null) {
+            if (filterParamsEvents.dateFrom != null) {
                 val restrictionBlock = StringBuilder("")
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = filterParamsEvents.dateFrom!!
+                restrictionBlock.append(fragment.getString(R.string.event_date_hint_from))
+                    .append(" ")
+                    .append(parseDate(calendar, "d MMM uuuu"))
 
-                if (filterParamsEvents.dateFrom != null) {
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = filterParamsEvents.dateFrom!!
-                    restrictionBlock.append(fragment.getString(R.string.event_date_hint_from))
-                        .append(" ")
-                        .append(parseDate(calendar, "d MMM uuuu"))
-                }
+                restrictionBlockList.add(restrictionBlock.toString())
+            }
 
-                if (filterParamsEvents.dateFrom != null && filterParamsEvents.dateTo != null) {
-                    restrictionBlock.append(" ")
-                }
-
-                if (filterParamsEvents.dateTo != null) {
-                    val calendar = Calendar.getInstance()
-                    calendar.timeInMillis = filterParamsEvents.dateTo!!
-                    restrictionBlock.append(fragment.getString(R.string.event_date_hint_to))
-                        .append(" ")
-                        .append(parseDate(calendar, "d MMM uuuu"))
-                }
+            if (filterParamsEvents.dateTo != null) {
+                val restrictionBlock = StringBuilder("")
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = filterParamsEvents.dateTo!!
+                restrictionBlock.append(fragment.getString(R.string.event_date_hint_to))
+                    .append(" ")
+                    .append(parseDate(calendar, "d MMM uuuu"))
 
                 restrictionBlockList.add(restrictionBlock.toString())
             }
