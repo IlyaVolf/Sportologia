@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.thesis.sportologia.model.users.UsersRepository
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -14,13 +15,14 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.*
 
 class ListUsersViewModelFollowings @AssistedInject constructor(
+    @Assisted filterParams: FilterParamsUsers,
     @Assisted private val userId: String,
     private val usersRepository: UsersRepository,
     logger: Logger
-) : ListUsersViewModel(userId, usersRepository, logger) {
+) : ListUsersViewModel(filterParams, userId, usersRepository, logger) {
 
     override fun getDataFlow(): Flow<PagingData<UserSnippet>> {
-        return search.asFlow()
+        return searchLive.asFlow()
             .flatMapLatest {
                 usersRepository.getPagedFollowings(userId)
             }.cachedIn(viewModelScope)
@@ -28,6 +30,6 @@ class ListUsersViewModelFollowings @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(userId: String): ListUsersViewModelFollowings
+        fun create(filterParams: FilterParamsUsers, userId: String): ListUsersViewModelFollowings
     }
 }

@@ -11,8 +11,8 @@ import com.thesis.sportologia.databinding.FragmentFilterBinding
 import dagger.hilt.android.AndroidEntryPoint
 import java.net.URI
 
-@AndroidEntryPoint
-class FilterFragment : Fragment() {
+/**@AndroidEntryPoint
+abstract class FilterFragment : Fragment() {
     private lateinit var binding: FragmentFilterBinding
 
     override fun onCreateView(
@@ -45,4 +45,4 @@ class FilterFragment : Fragment() {
         )
     }
 
-}
+}*/

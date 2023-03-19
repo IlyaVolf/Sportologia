@@ -1,10 +1,14 @@
 package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
+import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
+import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterFollowers
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterSearch
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +25,7 @@ class ListUsersFragmentSearch : ListUsersFragment() {
     lateinit var factory: ListUsersViewModelSearch.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = true
@@ -32,12 +36,9 @@ class ListUsersFragmentSearch : ListUsersFragment() {
         )
     }
 
-    override fun initUserHeaderAdapter(): UsersHeaderAdapter {
-        return UsersHeaderAdapterSearch(
-            this,
-            filterParams as FilterParamsUsers?
-                ?: FilterParamsUsers.newEmptyInstance()
-        )
+    override val initUserHeaderAdapter = {
+        Log.d("ABCDEF", "initUserHeaderAdapter: $filterParams")
+        UsersHeaderAdapterSearch(this, filterParams)
     }
 
     companion object {

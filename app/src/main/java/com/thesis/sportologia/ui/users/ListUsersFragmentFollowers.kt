@@ -21,7 +21,7 @@ class ListUsersFragmentFollowers : ListUsersFragment() {
     lateinit var factory: ListUsersViewModelFollowers.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = true
@@ -32,8 +32,8 @@ class ListUsersFragmentFollowers : ListUsersFragment() {
         )
     }
 
-    override fun initUserHeaderAdapter(): UsersHeaderAdapter {
-        return UsersHeaderAdapterFollowers(this)
+    override val initUserHeaderAdapter = {
+        UsersHeaderAdapterFollowers(this, filterParams)
     }
 
     companion object {

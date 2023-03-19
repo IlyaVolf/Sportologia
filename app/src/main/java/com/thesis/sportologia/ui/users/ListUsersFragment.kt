@@ -18,6 +18,7 @@ import com.thesis.sportologia.databinding.FragmentListUsersBinding
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
 import com.thesis.sportologia.utils.observeEvent
@@ -43,8 +44,9 @@ abstract class ListUsersFragment : Fragment() {
     abstract val onUserSnippetItemPressed: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
-    protected var filterParams: FilterParams? = null
+    protected lateinit var filterParams: FilterParamsUsers
     protected lateinit var binding: FragmentListUsersBinding
+    private lateinit var usersHeaderAdapter: UsersHeaderAdapter
     private lateinit var adapter: UsersPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
@@ -56,7 +58,8 @@ abstract class ListUsersFragment : Fragment() {
         userId = arguments?.getString("userId") ?: throw Exception()
         adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
 
-        filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParams?
+        filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParamsUsers?
+            ?: FilterParamsUsers.newEmptyInstance()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -99,22 +102,25 @@ abstract class ListUsersFragment : Fragment() {
         Log.d("LIFECYCLE", "FOLLOWERS onDestroy")
     }
 
-    abstract fun initUserHeaderAdapter(): UsersHeaderAdapter
+    abstract val initUserHeaderAdapter: () -> UsersHeaderAdapter
 
     private fun initSearchQueryReceiver() {
+        Log.d("ABCDEF", "initSearchQueryReceiver")
         requireActivity().supportFragmentManager.setFragmentResultListener(
             SearchFragment.SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
+            Log.d("ABCDEF", "setFragmentResultListener")
             val receivedSearchQuery =
                 data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
 
             val receivedFilterParams =
-                data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParams?
+                data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParamsUsers?
                     ?: return@setFragmentResultListener
 
             filterParams = receivedFilterParams
             viewModel.setSearchBy(receivedSearchQuery, receivedFilterParams)
+            usersHeaderAdapter.setFilterParamsUsers(filterParams)
         }
     }
 
@@ -137,7 +143,7 @@ abstract class ListUsersFragment : Fragment() {
         } else {
             null
         }
-        val usersHeaderAdapter = initUserHeaderAdapter()
+        usersHeaderAdapter = initUserHeaderAdapter()
         val concatAdapter = ConcatAdapter(usersHeaderAdapter, adapterWithLoadState)
 
         binding.usersList.layoutManager = LinearLayoutManager(context)

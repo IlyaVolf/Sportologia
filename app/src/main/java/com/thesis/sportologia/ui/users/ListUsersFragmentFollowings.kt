@@ -2,10 +2,12 @@ package com.thesis.sportologia.ui.users
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.ui.FavouritesFragment
 import com.thesis.sportologia.ui.FollowersFragment
 import com.thesis.sportologia.ui.FollowingsFragment
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterFollowers
 import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterFollowings
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +24,7 @@ class ListUsersFragmentFollowings : ListUsersFragment() {
     lateinit var factory: ListUsersViewModelFollowings.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = true
@@ -33,8 +35,8 @@ class ListUsersFragmentFollowings : ListUsersFragment() {
         )
     }
 
-    override fun initUserHeaderAdapter(): UsersHeaderAdapter {
-        return UsersHeaderAdapterFollowings(this)
+    override val initUserHeaderAdapter = {
+        UsersHeaderAdapterFollowings(this, filterParams)
     }
 
     companion object {

@@ -126,13 +126,16 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchBar.searchView.clearFocus()
                 searchQuery = query
+                Log.d("ABCDEF", "onQueryTextSubmit")
                 sendSearchQuery()
                 return true
             }
 
             // Called when the query text is changed by the user.
             override fun onQueryTextChange(newText: String?): Boolean {
+                if (searchQuery == newText) return true
                 searchQuery = newText ?: ""
+                Log.d("ABCDEF", "onQueryTextChange")
                 sendSearchQuery()
                 return true
             }

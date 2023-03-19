@@ -10,6 +10,7 @@ import androidx.paging.map
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.users.UsersRepository
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import com.thesis.sportologia.ui.base.BaseViewModel
@@ -24,13 +25,14 @@ import kotlinx.coroutines.flow.*
 
 // TODO баг при отписки от пользователя, возврату на экран с подписками и послед обновлением страницы
 abstract class ListUsersViewModel constructor(
+    private val filterParams: FilterParamsUsers,
     private val userId: String,
     private val usersRepository: UsersRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
 
-    internal val search = MutableLiveData("")
-    internal val filterParams = MutableLiveData<FilterParams>()
+    protected val searchLive = MutableLiveData("")
+    protected val filterParamsLive = MutableLiveData<FilterParamsUsers>()
 
     private val localChanges = LocalChanges()
     private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
@@ -47,6 +49,8 @@ abstract class ListUsersViewModel constructor(
     val usersFlow: Flow<PagingData<UserSnippetListItem>>
 
     init {
+        filterParamsLive.value = filterParams
+
         val originUsersFlow = this.getDataFlow()
 
         usersFlow = combine(
@@ -59,14 +63,15 @@ abstract class ListUsersViewModel constructor(
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
 
     // TODO обновление при перелистовании вкладок меню
-    fun setSearchBy(searchQuery: String, filterParams: FilterParams) {
-        this.search.value = searchQuery
-        this.filterParams.value = filterParams
+    fun setSearchBy(searchQuery: String, filterParams: FilterParamsUsers) {
+        Log.d("ABCDEF", "$searchQuery $filterParams")
+        this.filterParamsLive.value = filterParams
+        this.searchLive.value = searchQuery
         scrollListToTop()
     }
 
     fun refresh() {
-        this.search.postValue(this.search.value)
+        this.searchLive.postValue(this.searchLive.value)
     }
 
     private fun setProgress(userListItemId: String, inProgress: Boolean) {
