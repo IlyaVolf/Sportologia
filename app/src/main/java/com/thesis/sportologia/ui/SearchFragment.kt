@@ -20,7 +20,6 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentSearchBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
@@ -155,8 +154,9 @@ class SearchFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 currentSearchTab = searchTabs[tab?.position ?: 0]
-                binding.searchBar.searchView.setQuery("", false)
-                binding.searchBar.searchView.isIconified = true
+                //binding.searchBar.searchView.setQuery(searchQuery, false)
+                //binding.searchBar.searchView.isIconified = true
+                //sendSearchQuery()
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}

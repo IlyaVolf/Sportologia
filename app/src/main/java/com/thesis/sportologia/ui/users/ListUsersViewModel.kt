@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.*
 
 // TODO баг при отписки от пользователя, возврату на экран с подписками и послед обновлением страницы
 abstract class ListUsersViewModel constructor(
-    private val filterParams: FilterParamsUsers,
+    filterParams: FilterParamsUsers,
     private val userId: String,
     private val usersRepository: UsersRepository,
     logger: Logger
@@ -62,9 +62,7 @@ abstract class ListUsersViewModel constructor(
 
     abstract fun getDataFlow(): Flow<PagingData<UserSnippet>>
 
-    // TODO обновление при перелистовании вкладок меню
     fun setSearchBy(searchQuery: String, filterParams: FilterParamsUsers) {
-        Log.d("ABCDEF", "$searchQuery $filterParams")
         this.filterParamsLive.value = filterParams
         this.searchLive.value = searchQuery
         scrollListToTop()

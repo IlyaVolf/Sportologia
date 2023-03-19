@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
@@ -22,6 +24,7 @@ import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,7 +43,9 @@ abstract class ListEventsFragment : Fragment() {
     abstract val onHeaderBlockPressedAction: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
+    protected lateinit var filterParams: FilterParamsEvents
     protected lateinit var binding: FragmentListEventsBinding
+    private lateinit var eventsHeaderAdapter: EventsHeaderAdapter
     private lateinit var adapter: EventsPagerAdapter
     private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
@@ -48,7 +53,15 @@ abstract class ListEventsFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         userId = arguments?.getString("userId") ?: throw Exception()
+        filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParamsEvents?
+            ?: FilterParamsEvents.newEmptyInstance()
         adapter = EventsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putSerializable("filterParams", filterParams)
     }
 
     // onViewCreated() won't work because of lateinit mod initializations required to create viewmodel
@@ -58,12 +71,10 @@ abstract class ListEventsFragment : Fragment() {
     ): View {
         binding = FragmentListEventsBinding.inflate(inflater, container, false)
 
-        userId = arguments?.getString("userId") ?: throw Exception()
-
-        initSearchQueryReceiver()
         initResultsProcessing()
         initSwipeToRefresh()
         initEventsList()
+        initSearchQueryReceiver()
 
         observeErrorMessages()
         observeEvents(adapter)
@@ -76,15 +87,23 @@ abstract class ListEventsFragment : Fragment() {
         return binding.root
     }
 
+    abstract fun initEventsHeaderAdapter(): EventsHeaderAdapter
+
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             SearchFragment.SUBMIT_SEARCH_EVENTS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val searchQuery =
+            val receivedSearchQuery =
                 data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
 
-            viewModel.setSearchBy(searchQuery)
+            val receivedFilterParams =
+                data.getSerializable(SearchFragment.FILTER_PARAMETERS) as FilterParamsEvents?
+                    ?: return@setFragmentResultListener
+
+            filterParams = receivedFilterParams
+            viewModel.setSearchBy(receivedSearchQuery, receivedFilterParams)
+            eventsHeaderAdapter.setFilterParamsEvents(filterParams)
         }
     }
 
@@ -120,8 +139,6 @@ abstract class ListEventsFragment : Fragment() {
         }
     }
 
-    abstract fun initEventHeaderAdapter(): EventsHeaderAdapter
-
     private fun initEventsList() {
 
         // in case of loading errors this callback is called when you tap the 'Try Again' button
@@ -139,7 +156,7 @@ abstract class ListEventsFragment : Fragment() {
         } else {
             null
         }
-        val eventsHeaderAdapter = initEventHeaderAdapter()
+        eventsHeaderAdapter = initEventsHeaderAdapter()
         val concatAdapter = ConcatAdapter(eventsHeaderAdapter, adapterWithLoadState)
 
         binding.eventsList.layoutManager = LinearLayoutManager(context)

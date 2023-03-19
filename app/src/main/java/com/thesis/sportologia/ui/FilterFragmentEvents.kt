@@ -121,10 +121,10 @@ class FilterFragmentEvents : Fragment() {
             getString(R.string.filter_sort)
         binding.fragmentFilterEventType.filterSpinnerOnechoice.initAdapter(options.getFirsts())
         binding.fragmentFilterEventType.filterSpinnerOnechoice.setListener {
-            currentFilterParamsEvents.sortingBy = options.getAssociatedItemSecond(it)
+            currentFilterParamsEvents.sortBy = options.getAssociatedItemSecond(it)
         }
 
-        val currentSortingBy = options.getAssociatedItemFirst(currentFilterParamsEvents.sortingBy)
+        val currentSortingBy = options.getAssociatedItemFirst(currentFilterParamsEvents.sortBy)
         binding.fragmentFilterEventType.filterSpinnerOnechoice.setItem(currentSortingBy)
     }
 

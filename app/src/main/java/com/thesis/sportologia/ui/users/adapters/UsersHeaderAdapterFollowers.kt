@@ -13,13 +13,12 @@ class UsersHeaderAdapterFollowers(
         fragment: Fragment,
         binding: FragmentListUsersHeaderBinding,
     ): Holder {
-        return HolderFollowers(fragment, binding)
+        return HolderFollowers(binding)
     }
 
     class HolderFollowers(
-        fragment: Fragment,
         binding: FragmentListUsersHeaderBinding,
-    ) : Holder(fragment, binding) {
+    ) : Holder(binding) {
 
         override val renderHeader: () -> Unit = {}
 

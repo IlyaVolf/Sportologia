@@ -20,7 +20,7 @@ class ListEventsFragmentHome : ListEventsFragment() {
     lateinit var factory: ListEventsViewModelHome.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = true
@@ -31,8 +31,8 @@ class ListEventsFragmentHome : ListEventsFragment() {
         )
     }
 
-    override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterHome(this, viewModel, viewModel.isUpcomingOnly)
+    override fun initEventsHeaderAdapter(): EventsHeaderAdapter {
+        return EventsHeaderAdapterHome(this, viewModel, filterParams, viewModel.isUpcomingOnly)
     }
 
     companion object {

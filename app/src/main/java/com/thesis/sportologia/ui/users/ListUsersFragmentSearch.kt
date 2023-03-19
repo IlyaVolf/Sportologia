@@ -36,9 +36,8 @@ class ListUsersFragmentSearch : ListUsersFragment() {
         )
     }
 
-    override val initUserHeaderAdapter = {
-        Log.d("ABCDEF", "initUserHeaderAdapter: $filterParams")
-        UsersHeaderAdapterSearch(this, filterParams)
+    override fun initUsersHeaderAdapter(): UsersHeaderAdapter  {
+        return UsersHeaderAdapterSearch(this, filterParams)
     }
 
     companion object {

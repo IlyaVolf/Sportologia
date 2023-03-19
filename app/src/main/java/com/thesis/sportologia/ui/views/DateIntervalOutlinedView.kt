@@ -114,10 +114,6 @@ class DateIntervalOutlinedView(
     }
 
     fun setDateAndTime(dateFromMillis: Long?, dateToMillis: Long?) {
-        if (dateAndTimeFrom == null) {
-            dateAndTimeFrom = Calendar.getInstance()
-        }
-
         if (dateFromMillis != null) {
             if (dateAndTimeFrom == null) {
                 dateAndTimeFrom = Calendar.getInstance()

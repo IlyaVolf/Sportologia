@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.thesis.sportologia.databinding.FragmentFilterUsersBinding
 import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 
@@ -27,7 +26,6 @@ abstract class UsersHeaderAdapter(
         notifyDataSetChanged()
     }
 
-    var holder: Holder? = null
     protected lateinit var binding: FragmentListUsersHeaderBinding
 
     abstract fun createHolder(
@@ -45,7 +43,6 @@ abstract class UsersHeaderAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        this.holder = holder
         holder.bind()
     }
 
@@ -54,37 +51,26 @@ abstract class UsersHeaderAdapter(
     }
 
     abstract class Holder(
-        val fragment: Fragment,
         val binding: FragmentListUsersHeaderBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         abstract val renderHeader: () -> Unit
 
-        open val update: (FilterParamsUsers) -> Unit = {}
-        open val restrictionsParser: () -> Unit = {}
-        open val sortingParser: () -> Unit = {}
+        fun bind() {
+            disableAllItems()
+            renderHeader()
+        }
 
         private fun disableAllItems() {
             binding.usersChosenFilters.root.isVisible = false
             binding.usersChosenFiltersSpace.isVisible = false
         }
 
-        fun enableUsersChosenFilters() {
+        fun enableUsersChosenFilters(parser: () -> Unit) {
             binding.usersChosenFilters.root.isVisible = true
             binding.usersChosenFiltersSpace.isVisible = true
 
-            setChosenFilterText()
-        }
-
-        private fun setChosenFilterText() {
-            restrictionsParser()
-            sortingParser()
-        }
-
-        fun bind() {
-            disableAllItems()
-            setChosenFilterText()
-            renderHeader()
+            parser()
         }
 
     }

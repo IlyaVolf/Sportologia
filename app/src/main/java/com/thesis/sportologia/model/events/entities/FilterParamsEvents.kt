@@ -7,7 +7,7 @@ import com.thesis.sportologia.model.FilterParams
 data class FilterParamsEvents(
     var categories: HashMap<String, Boolean>?,
     var distance: Int?,
-    var sortingBy: EventsSortBy,
+    var sortBy: EventsSortBy,
     var dateFrom: Long?,
     var dateTo: Long?,
     var price: Float?,

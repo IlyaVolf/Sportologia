@@ -2,6 +2,8 @@ package com.thesis.sportologia.model.events
 
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import kotlinx.coroutines.flow.Flow
 
 interface EventsRepository {
@@ -12,7 +14,7 @@ interface EventsRepository {
 
     suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>>
 
-    suspend fun getPagedEvents(eventsFilter: EventsFilter): Flow<PagingData<Event>>
+    suspend fun getPagedEvents(searchQuery: String, filter: FilterParamsEvents): Flow<PagingData<Event>>
 
     suspend fun getEvent(postId: Long): Event?
 
@@ -25,16 +27,5 @@ interface EventsRepository {
     suspend fun setIsLiked(userId: String, post: Event, isLiked: Boolean)
 
     suspend fun setIsFavourite(userId: String, post: Event, isFavourite: Boolean)
-
-    data class EventsFilter(
-        val eventName: String,
-        val isUpcomingOnly: Boolean,
-        val sortBy: SortBy
-        // val categories
-    )
-
-    enum class SortBy {
-        POPULARITY, DISTANCE, DATE_ASC
-    }
 
 }

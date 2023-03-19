@@ -5,6 +5,8 @@ import androidx.core.os.bundleOf
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterProfileOwn
+import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterSearch
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +22,7 @@ class ListEventsFragmentProfileOwn : ListEventsFragment() {
     lateinit var factory: ListEventsViewModelProfile.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = false
@@ -31,8 +33,13 @@ class ListEventsFragmentProfileOwn : ListEventsFragment() {
         )
     }
 
-    override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterProfileOwn(this, viewModel, viewModel.isUpcomingOnly)
+    override fun initEventsHeaderAdapter(): EventsHeaderAdapter {
+        return EventsHeaderAdapterProfileOwn(
+            this,
+            viewModel,
+            filterParams,
+            viewModel.isUpcomingOnly
+        )
     }
 
     companion object {

@@ -35,8 +35,8 @@ class ListUsersFragmentFollowings : ListUsersFragment() {
         )
     }
 
-    override val initUserHeaderAdapter = {
-        UsersHeaderAdapterFollowings(this, filterParams)
+    override fun initUsersHeaderAdapter(): UsersHeaderAdapter  {
+        return UsersHeaderAdapterFollowings(this, filterParams)
     }
 
     companion object {

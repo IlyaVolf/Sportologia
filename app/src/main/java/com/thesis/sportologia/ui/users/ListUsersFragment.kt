@@ -33,7 +33,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlin.properties.Delegates
 
-
 @AndroidEntryPoint
 @ExperimentalCoroutinesApi
 @FlowPreview
@@ -56,10 +55,9 @@ abstract class ListUsersFragment : Fragment() {
         Log.d("LIFECYCLE", "FOLLOWERS onCreate")
 
         userId = arguments?.getString("userId") ?: throw Exception()
-        adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
-
         filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParamsUsers?
             ?: FilterParamsUsers.newEmptyInstance()
+        adapter = UsersPagerAdapter(this, onUserSnippetItemPressed)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -102,15 +100,13 @@ abstract class ListUsersFragment : Fragment() {
         Log.d("LIFECYCLE", "FOLLOWERS onDestroy")
     }
 
-    abstract val initUserHeaderAdapter: () -> UsersHeaderAdapter
+    abstract fun initUsersHeaderAdapter(): UsersHeaderAdapter
 
     private fun initSearchQueryReceiver() {
-        Log.d("ABCDEF", "initSearchQueryReceiver")
         requireActivity().supportFragmentManager.setFragmentResultListener(
             SearchFragment.SUBMIT_SEARCH_USERS_QUERY_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            Log.d("ABCDEF", "setFragmentResultListener")
             val receivedSearchQuery =
                 data.getString(SearchFragment.SEARCH_QUERY) ?: return@setFragmentResultListener
 
@@ -143,7 +139,7 @@ abstract class ListUsersFragment : Fragment() {
         } else {
             null
         }
-        usersHeaderAdapter = initUserHeaderAdapter()
+        usersHeaderAdapter = initUsersHeaderAdapter()
         val concatAdapter = ConcatAdapter(usersHeaderAdapter, adapterWithLoadState)
 
         binding.usersList.layoutManager = LinearLayoutManager(context)

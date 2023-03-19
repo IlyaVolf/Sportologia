@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
@@ -290,10 +291,10 @@ class InMemoryEventsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedEvents(eventsFilter: EventsRepository.EventsFilter)
+    override suspend fun getPagedEvents(searchQuery: String, filter: FilterParamsEvents)
             : Flow<PagingData<Event>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
-            getEvents(pageIndex, pageSize, eventsFilter)
+            getEvents(pageIndex, pageSize, searchQuery, filter)
         }
 
         return Pager(
@@ -310,7 +311,8 @@ class InMemoryEventsRepository @Inject constructor(
     private suspend fun getEvents(
         pageIndex: Int,
         pageSize: Int,
-        eventsFilter: EventsRepository.EventsFilter
+        searchQuery: String,
+        filter: FilterParamsEvents
     ): List<Event> =
         withContext(ioDispatcher) {
             delay(1000)
@@ -318,7 +320,7 @@ class InMemoryEventsRepository @Inject constructor(
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
             val eventsFound = events.filter {
-                containsAnyCase(it.name, eventsFilter.eventName)
+                containsAnyCase(it.name, searchQuery)
             }.sortedBy { it.dateFrom }
 
             // TODO SORT BY DATE

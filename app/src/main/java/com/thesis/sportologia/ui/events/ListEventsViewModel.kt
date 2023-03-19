@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -9,6 +10,8 @@ import androidx.paging.map
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.events.EventsRepository
 import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
@@ -20,12 +23,14 @@ import kotlinx.coroutines.flow.*
 
 // TODO бесконечная загрузка при попытке подписаться через посты и через мероприятия
 abstract class ListEventsViewModel constructor(
+    filterParams: FilterParamsEvents,
     private val userId: String,
     private val eventsRepository: EventsRepository,
     logger: Logger
 ) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener, EventsHeaderAdapter.FilterListener {
 
-    internal val search = MutableLiveData("")
+    protected val searchLive = MutableLiveData("")
+    protected val filterParamsLive = MutableLiveData<FilterParamsEvents>()
 
     private val isUpcomingOnlyLiveData = MutableLiveData(true)
     var isUpcomingOnly: Boolean
@@ -48,8 +53,9 @@ abstract class ListEventsViewModel constructor(
 
     val eventsFlow: Flow<PagingData<EventListItem>>
 
-
     init {
+        filterParamsLive.value = filterParams
+
         val originEventsFlow = this.getDataFlow()
 
         eventsFlow = combine(
@@ -113,14 +119,14 @@ abstract class ListEventsViewModel constructor(
         refresh()
     }
 
-    fun setSearchBy(searchQuery: String) {
-        if (this.search.value == searchQuery) return
-        this.search.value = searchQuery
+    fun setSearchBy(searchQuery: String, filterParams: FilterParamsEvents) {
+        this.filterParamsLive.value = filterParams
+        this.searchLive.value = searchQuery
         scrollListToTop()
     }
 
     fun refresh() {
-        this.search.postValue(this.search.value)
+        this.searchLive.postValue(this.searchLive.value)
     }
 
     fun onEventCreated() {

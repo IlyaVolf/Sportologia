@@ -27,19 +27,18 @@ class UsersHeaderAdapterSearch(
         fragment: Fragment,
         binding: FragmentListUsersHeaderBinding,
         var filterParamsUsers: FilterParamsUsers,
-    ) : Holder(fragment, binding) {
+    ) : Holder(binding) {
 
-        override val update: (FilterParamsUsers) -> Unit = { filterParamsUsers ->
-            this.filterParamsUsers = filterParamsUsers
+        override val renderHeader = {
+            enableUsersChosenFilters(parser)
+        }
+
+        private val parser = {
             restrictionsParser()
             sortingParser()
         }
 
-        override val renderHeader = {
-            enableUsersChosenFilters()
-        }
-
-        override val restrictionsParser: () -> Unit = {
+        val restrictionsParser: () -> Unit = {
             val restrictionBlockList = mutableListOf<String>()
 
             when (filterParamsUsers.usersType) {
@@ -97,7 +96,7 @@ class UsersHeaderAdapterSearch(
             }
         }
 
-        override val sortingParser: () -> Unit = {
+        val sortingParser: () -> Unit = {
             binding.usersChosenFilters.sorting.text = when (filterParamsUsers.sortBy) {
                 FilterParamsUsers.UsersSortBy.RELEVANCE -> fragment.getString(R.string.filter_sort_by_relevance)
             }

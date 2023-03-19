@@ -283,6 +283,7 @@
     <string name="filter_users_hint">Тип пользователей</string>
     <string name="filter_price">Стоимость</string>
     <string name="filter_price_hint">До, руб</string>
+    <string name="under">До</string>
     <string name="within">В пределах</string>
     <string name="km">км</string>
     <string name="filter_users_extra_offer_services">Предлагает услуги</string>

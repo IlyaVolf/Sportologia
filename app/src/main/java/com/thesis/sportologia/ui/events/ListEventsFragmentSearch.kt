@@ -7,6 +7,8 @@ import com.thesis.sportologia.ui.SearchFragment
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterHome
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterSearch
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
+import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapterSearch
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +24,7 @@ class ListEventsFragmentSearch : ListEventsFragment() {
     lateinit var factory: ListEventsViewModelSearch.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(userId)
+        factory.create(filterParams, userId)
     }
 
     override val isSwipeToRefreshEnabled: Boolean = true
@@ -33,8 +35,8 @@ class ListEventsFragmentSearch : ListEventsFragment() {
         )
     }
 
-    override fun initEventHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterSearch(this, viewModel)
+    override fun initEventsHeaderAdapter(): EventsHeaderAdapter {
+        return EventsHeaderAdapterSearch(this, viewModel, filterParams)
     }
 
     companion object {
