@@ -340,7 +340,8 @@ class InMemoryPostsRepository @Inject constructor(
         updatePost(post.copy(isAddedToFavourites = false))
     }*/
 
+    // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {
-        const val PAGE_SIZE = 6
+        const val PAGE_SIZE = 10
     }
 }

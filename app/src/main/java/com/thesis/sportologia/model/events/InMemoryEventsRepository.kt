@@ -392,15 +392,14 @@ class InMemoryEventsRepository @Inject constructor(
         userId: String,
         event: Event,
         isFavourite: Boolean
-    ) =
-        withContext(ioDispatcher) {
-            delay(1000)
+    ) = withContext(ioDispatcher) {
+        delay(1000)
 
-            // TODO
-            //throw Exception("a")
+        // TODO
+        //throw Exception("a")
 
-            events.find { it.id == event.id }?.isFavourite = isFavourite
-        }
+        events.find { it.id == event.id }?.isFavourite = isFavourite
+    }
 
     /*override suspend fun likeEvent(userId: Int, event: Event) {
         delay(1000)

@@ -24,7 +24,7 @@ abstract class ListPostsViewModel constructor(
     logger: Logger
 ) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
 
-    internal val search = MutableLiveData("")
+    protected val search = MutableLiveData("")
 
     private val athTorgFLiveData = MutableLiveData<Boolean?>(null)
     var athTorgF: Boolean?
@@ -177,7 +177,6 @@ abstract class ListPostsViewModel constructor(
                 val isInProgress = localChanges.value.idsInProgress.contains(post.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[post.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
-                val localTextFlag = localChanges.value.isTextFlags[post.id]
 
                 val postWithLocalChanges = post
                 if (localFavoriteFlag != null) {
@@ -186,10 +185,6 @@ abstract class ListPostsViewModel constructor(
                 if (localLikedFlag != null) {
                     postWithLocalChanges.copy(isFavourite = localLikedFlag)
                 }
-                if (localTextFlag != null) {
-                    postWithLocalChanges.copy(text = localTextFlag)
-                }
-
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }
@@ -209,7 +204,6 @@ abstract class ListPostsViewModel constructor(
      */
     class LocalChanges {
         val idsInProgress = mutableSetOf<Long>()
-        val isTextFlags = mutableMapOf<Long, String>()
 
         // TODO фото
         val isLikedFlags = mutableMapOf<Long, Boolean>()
