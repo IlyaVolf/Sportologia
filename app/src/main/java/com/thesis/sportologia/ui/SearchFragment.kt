@@ -206,7 +206,6 @@ class SearchFragment : Fragment() {
                         }
                     })
             } else {
-                // TODO не переключает вкладку -> крашится. с HomeFragment все нормально
                 requireActivity().supportFragmentManager.setFragmentResult(
                     GO_TO_OWN_PROFILE_REQUEST_CODE,
                     bundleOf()

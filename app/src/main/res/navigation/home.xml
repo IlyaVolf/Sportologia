@@ -11,14 +11,6 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_profile_own"
-            app:destination="@id/profile_own">
-            <argument
-                android:name="userId"
-                android:defaultValue="$current_user"
-                app:argType="string" />
-        </action>
-        <action
             android:id="@+id/action_homeFragment_to_profile_nested"
             app:destination="@id/profile_nested">
             <argument
@@ -27,6 +19,5 @@
                 app:argType="string" />
         </action>
     </fragment>
-    <include app:graph="@navigation/profile_own" />
     <include app:graph="@navigation/profile_nested" />
 </navigation>

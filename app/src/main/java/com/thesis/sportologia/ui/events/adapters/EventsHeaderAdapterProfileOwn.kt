@@ -27,6 +27,7 @@ class EventsHeaderAdapterProfileOwn(
 
         override val renderHeader: () -> Unit = {
             enableEventsFilter(isUpcomingOnly)
+            enableCreateEventButton()
         }
 
     }

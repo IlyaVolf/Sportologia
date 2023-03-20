@@ -18,15 +18,6 @@
                 android:defaultValue="$current_user"
                 app:argType="string" />
         </action>
-        <action
-            android:id="@+id/action_searchFragment_to_profile_own"
-            app:destination="@id/profile_own">
-            <argument
-                android:name="userId"
-                android:defaultValue="$current_user"
-                app:argType="string" />
-        </action>
     </fragment>
     <include app:graph="@navigation/profile_nested" />
-    <include app:graph="@navigation/profile_own" />
 </navigation>
