@@ -228,6 +228,11 @@ class ItemEventView(
 
     fun setPhotos(photosURIs: List<String>?) {
         binding.eventsPhotosBlock.uploadPhotos(photosURIs ?: listOf())
+        if (photosURIs == null || photosURIs.isEmpty()) {
+            binding.eventTextSpaceBottom.visibility = GONE
+        } else {
+            binding.eventTextSpaceBottom.visibility = VISIBLE
+        }
     }
 
     private fun initListeners() {

@@ -326,8 +326,9 @@
             android:text="@string/text" />
 
         <Space
+            android:id="@+id/event_textSpaceBottom"
             android:layout_width="match_parent"
-            android:layout_height="5dp" />
+            android:layout_height="10dp" />
 
         <com.thesis.sportologia.ui.views.PhotosBlockView
             android:id="@+id/eventsPhotosBlock"
@@ -335,6 +336,7 @@
             android:layout_height="wrap_content" />
 
         <Space
+            android:id="@+id/post_photosBlockSpace"
             android:layout_width="match_parent"
             android:layout_height="15dp" />
 

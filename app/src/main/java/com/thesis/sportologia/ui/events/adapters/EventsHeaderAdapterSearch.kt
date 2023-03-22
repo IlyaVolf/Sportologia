@@ -56,11 +56,15 @@ class EventsHeaderAdapterSearch(
             if (filterParamsEvents.price != null) {
                 val restrictionBlock = StringBuilder("")
 
-                restrictionBlock.append(fragment.getString(R.string.under))
-                    .append(" ")
-                    .append(formatPrice(filterParamsEvents.price.toString()))
-                    .append(" ")
-                    .append(fragment.getString(R.string.ruble_abbreviation))
+                if (filterParamsEvents.price == 0F) {
+                    restrictionBlock.append(fragment.getString(R.string.free))
+                } else {
+                    restrictionBlock.append(fragment.getString(R.string.under))
+                        .append(" ")
+                        .append(formatPrice(filterParamsEvents.price.toString()))
+                        .append(" ")
+                        .append(fragment.getString(R.string.ruble_abbreviation))
+                }
 
                 restrictionBlockList.add(restrictionBlock.toString())
             }
