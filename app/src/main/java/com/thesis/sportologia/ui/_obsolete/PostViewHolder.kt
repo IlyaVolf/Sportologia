@@ -8,7 +8,7 @@ import com.thesis.sportologia.ui.views.OnItemPostActionListener
 import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
 import com.thesis.sportologia.utils.parseDate
 
-class PostViewHolder(
+/**class PostViewHolder(
     private val onItemPostActionListener: OnItemPostActionListener,
     private val onSpinnerMoreActionListener: OnSpinnerMoreActionListener,
     private val view: ItemPostView,
@@ -43,4 +43,4 @@ enum class ActionsMore(val action: String) {
     EDIT("Редактировать"),
     DELETE("Удалить"),
     REPORT( "Пожаловаться"),
-}
+}*/

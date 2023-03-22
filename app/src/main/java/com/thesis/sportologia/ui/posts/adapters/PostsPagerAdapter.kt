@@ -47,7 +47,7 @@ class PostsPagerAdapter(
         itemPost.setDate(postListItem.postedDate)
         itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
         itemPost.setFavs(postListItem.isFavourite)
-        itemPost.setPhotos()
+        itemPost.setPhotos(postListItem.photosUrls)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

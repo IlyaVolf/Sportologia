@@ -27,7 +27,7 @@ enum class OnItemPostAction {
 enum class OnMoreButtonAction(val action: String) {
     EDIT("Редактировать"),
     DELETE("Удалить"),
-    REPORT( "Пожаловаться"),
+    REPORT("Пожаловаться"),
 }
 
 class ItemPostView(
@@ -114,11 +114,11 @@ class ItemPostView(
     }
 
     private fun initRender() {
-        if (binding.postPhotosBlock.getPhotoNumber() == 0) {
+        /*if (binding.postPhotosBlock.getPhotoNumber() == 0) {
             binding.postPhotosBlockSpace.visibility = GONE
         } else {
             binding.postPhotosBlockSpace.visibility = VISIBLE
-        }
+        }*/
     }
 
     fun setLikes(likesCount: Int, isLiked: Boolean) {
@@ -219,7 +219,13 @@ class ItemPostView(
     }
 
     // TODO photos
-    fun setPhotos() {
+    fun setPhotos(photosURIs: List<String>?) {
+        binding.postPhotosBlock.uploadPhotos(photosURIs ?: listOf())
+        if (photosURIs == null || photosURIs.isEmpty()) {
+            binding.postPhotosBlockSpace.visibility = GONE
+        } else {
+            binding.postPhotosBlockSpace.visibility = VISIBLE
+        }
     }
 
 

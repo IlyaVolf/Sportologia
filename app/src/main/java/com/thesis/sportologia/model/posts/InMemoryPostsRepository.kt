@@ -32,7 +32,9 @@ class InMemoryPostsRepository @Inject constructor(
         isLiked = true,
         isFavourite = true,
         postedDate = Calendar.getInstance().timeInMillis,
-        photosUrls = null
+        photosUrls = mutableListOf(
+            "https://cdn.5280.com/2014/03/ss_skis.jpg"
+        )
     )
 
     private val posts = mutableListOf(
@@ -48,7 +50,18 @@ class InMemoryPostsRepository @Inject constructor(
             isLiked = false,
             isFavourite = false,
             postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = null
+            photosUrls = mutableListOf(
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+            )
         ),
         Post(
             id = 2L,
@@ -109,7 +122,8 @@ class InMemoryPostsRepository @Inject constructor(
             delay(1000)
             val offset = pageIndex * pageSize
 
-            val filteredPosts = posts.filter { it.authorId == userId }.sortedByDescending { it.postedDate }
+            val filteredPosts =
+                posts.filter { it.authorId == userId }.sortedByDescending { it.postedDate }
 
             // filteredPosts.sortedByDescending { it.postedDate }
 
@@ -239,7 +253,8 @@ class InMemoryPostsRepository @Inject constructor(
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
             val filteredPosts = if (athTorgF != null) {
-                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }.sortedByDescending { it.postedDate }
+                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }
+                    .sortedByDescending { it.postedDate }
             } else {
                 posts.filter { it.isFavourite }.sortedByDescending { it.postedDate }
             }
@@ -342,6 +357,6 @@ class InMemoryPostsRepository @Inject constructor(
 
     // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {
-        const val PAGE_SIZE = 10
+        const val PAGE_SIZE = 8
     }
 }

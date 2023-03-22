@@ -21,3 +21,19 @@ fun setAvatar(uri: String?, context: Context, avatarView: ImageView) {
             .into(avatarView)
     }
 }
+
+fun setPhoto(uri: String?, context: Context, view: ImageView) {
+    if (uri != null) {
+        if (uri.isNotBlank()) {
+            Glide.with(context)
+                .load(uri)
+                .placeholder(R.drawable.item_photo_placeholder)
+                .error(R.drawable.item_photo_placeholder)
+                .into(view)
+        }
+    } else {
+        Glide.with(context)
+            .load(R.drawable.item_photo_placeholder)
+            .into(view)
+    }
+}

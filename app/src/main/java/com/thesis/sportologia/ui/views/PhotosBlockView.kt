@@ -5,9 +5,10 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.LinearLayout
+import com.bumptech.glide.Glide
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ItemPostBinding
 import com.thesis.sportologia.databinding.ViewPhotosBlockBinding
+import com.thesis.sportologia.utils.setPhoto
 import kotlin.properties.Delegates
 
 class PhotosBlockView(
@@ -21,8 +22,9 @@ class PhotosBlockView(
     private val binding: ViewPhotosBlockBinding
 
     private var isMainPhotoSquareLimited by Delegates.notNull<Boolean>()
-    private var photosNumber by Delegates.notNull<Int>()
+    private var photosNumber = 0
 
+    //private var photos = listOf<String>()
     private var photo1 by Delegates.notNull<Int>()
     private var photo2 by Delegates.notNull<Int>()
     private var photo3 by Delegates.notNull<Int>()
@@ -75,6 +77,7 @@ class PhotosBlockView(
         inflater.inflate(R.layout.view_photos_block, this, true)
         binding = readyBinding ?: ViewPhotosBlockBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
+        //drawPhotosBeta()
     }
 
     private fun initAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
@@ -92,6 +95,8 @@ class PhotosBlockView(
             0
         }
 
+
+
         photo1 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_1, 0)
         photo2 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_2, 0)
         photo3 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_3, 0)
@@ -103,9 +108,353 @@ class PhotosBlockView(
         photo9 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_9, 0)
         photo10 = typedArray.getResourceId(R.styleable.PhotosBlockView_pb_photo_10, 0)
 
-        drawPhotos()
-
         typedArray.recycle()
+    }
+
+    fun uploadPhotos(photosURIs: List<String>) {
+        val bindingPhoto1 = if (isMainPhotoSquareLimited) binding.photo1Square else binding.photo1
+        val imageViews = listOf(
+            bindingPhoto1,
+            binding.photo2,
+            binding.photo3,
+            binding.photo4,
+            binding.photo5,
+            binding.photo6,
+            binding.photo7,
+            binding.photo8,
+            binding.photo9,
+            binding.photo10
+        )
+        photosNumber = photosURIs.size
+
+        for (i in photosURIs.indices) {
+            setPhoto(photosURIs[i], context, imageViews[i])
+            imageViews[i].adjustViewBounds = true
+        }
+
+        //////////
+
+        binding.row1.visibility = GONE
+        binding.row1.weightSum = 120f
+        binding.row1.layoutParams.height =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics)
+                .toInt()
+        binding.row2.visibility = GONE
+        binding.row2.weightSum = 120f
+        binding.row2.layoutParams.height =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics)
+                .toInt()
+        binding.row3.visibility = GONE
+        binding.row3.weightSum = 120f
+        binding.row3.layoutParams.height =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120f, resources.displayMetrics)
+                .toInt()
+        binding.photo1Square.visibility = GONE
+        binding.photo1.visibility = GONE
+        binding.photo2.visibility = GONE
+        binding.photo3.visibility = GONE
+        binding.photo4.visibility = GONE
+        binding.photo5.visibility = GONE
+        binding.photo6.visibility = GONE
+        binding.photo7.visibility = GONE
+        binding.photo8.visibility = GONE
+        binding.photo9.visibility = GONE
+        binding.photo10.visibility = GONE
+        binding.space1.visibility = GONE
+        binding.space11.visibility = GONE
+        binding.space12.visibility = GONE
+        binding.space21.visibility = GONE
+        binding.space22.visibility = GONE
+        binding.space31.visibility = GONE
+        binding.space32.visibility = GONE
+        binding.space2.visibility = GONE
+        binding.space3.visibility = GONE
+
+        when (photosNumber) {
+            0 -> {
+            }
+            1 -> {
+                bindingPhoto1.visibility = VISIBLE
+            }
+            2 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 40f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        160f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+            }
+            3 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 80f
+
+                binding.space1.visibility = VISIBLE
+
+                binding.space11.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+            }
+            4 -> {
+                binding.row1.visibility = VISIBLE
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+                binding.space12.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo4.visibility = VISIBLE
+            }
+            5 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 80f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.weightSum = 80f
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+            }
+            6 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 80f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+                binding.space22.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+                binding.photo7.visibility = VISIBLE
+            }
+            7 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+                binding.space12.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+                binding.space22.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo4.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+                binding.photo7.visibility = VISIBLE
+            }
+            8 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 80f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.weightSum = 80f
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row3.visibility = VISIBLE
+                binding.row3.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+
+                binding.space3.visibility = VISIBLE
+                binding.space31.visibility = VISIBLE
+                binding.space32.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+                binding.photo8.visibility = VISIBLE
+                binding.photo9.visibility = VISIBLE
+                binding.photo10.visibility = VISIBLE
+            }
+            9 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.weightSum = 80f
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row3.visibility = VISIBLE
+                binding.row3.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+                binding.space22.visibility = VISIBLE
+
+                binding.space3.visibility = VISIBLE
+                binding.space31.visibility = VISIBLE
+                binding.space32.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+                binding.photo7.visibility = VISIBLE
+                binding.photo8.visibility = VISIBLE
+                binding.photo9.visibility = VISIBLE
+                binding.photo10.visibility = VISIBLE
+            }
+            10 -> {
+                binding.row1.visibility = VISIBLE
+                binding.row1.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row2.visibility = VISIBLE
+                binding.row2.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.row3.visibility = VISIBLE
+                binding.row3.layoutParams.height =
+                    TypedValue.applyDimension(
+                        TypedValue.COMPLEX_UNIT_DIP,
+                        100f,
+                        resources.displayMetrics
+                    ).toInt()
+
+                binding.space1.visibility = VISIBLE
+                binding.space11.visibility = VISIBLE
+                binding.space12.visibility = VISIBLE
+
+                binding.space2.visibility = VISIBLE
+                binding.space21.visibility = VISIBLE
+                binding.space22.visibility = VISIBLE
+
+                binding.space3.visibility = VISIBLE
+                binding.space31.visibility = VISIBLE
+                binding.space32.visibility = VISIBLE
+
+                bindingPhoto1.visibility = VISIBLE
+                binding.photo2.visibility = VISIBLE
+                binding.photo3.visibility = VISIBLE
+                binding.photo4.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo5.visibility = VISIBLE
+                binding.photo6.visibility = VISIBLE
+                binding.photo7.visibility = VISIBLE
+                binding.photo8.visibility = VISIBLE
+                binding.photo9.visibility = VISIBLE
+                binding.photo10.visibility = VISIBLE
+            }
+
+        }
     }
 
     fun setMainPhotoSquareLimit(flag: Boolean) {
@@ -116,7 +465,7 @@ class PhotosBlockView(
         return photosNumber
     }
 
-    private fun drawPhotos() {
+    private fun drawPhotosBeta() {
         binding.row1.visibility = GONE
         binding.row1.weightSum = 120f
         binding.row1.layoutParams.height =

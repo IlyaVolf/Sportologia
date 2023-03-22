@@ -76,7 +76,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
             ListPostsFragmentHome.newInstance(CurrentAccount().id),
             ListEventsFragmentHome.newInstance(CurrentAccount().id),
         )
-        Log.d("BUGFIX", "afjpafjoafp ${fragments[0].hashCode()}")
+
         adapter = PagerAdapter(this, fragments)
         viewPager = binding.pager
         viewPager.adapter = adapter
