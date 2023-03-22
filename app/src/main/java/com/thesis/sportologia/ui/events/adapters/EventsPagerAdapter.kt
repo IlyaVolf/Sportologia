@@ -53,7 +53,7 @@ class EventsPagerAdapter(
         itemEvent.setDate(eventListItem.dateFrom, eventListItem.dateTo)
         itemEvent.setLikes(eventListItem.likesCount, eventListItem.isLiked)
         itemEvent.setFavs(eventListItem.isFavourite)
-        itemEvent.setPhotos()
+        itemEvent.setPhotos(eventListItem.photosUrls)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {

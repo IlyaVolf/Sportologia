@@ -83,7 +83,9 @@ class InMemoryEventsRepository @Inject constructor(
             likesCount = 10,
             isLiked = false,
             isFavourite = true,
-            photosUrls = null,
+            photosUrls = mutableListOf(
+                "https://avatars.mds.yandex.net/get-mpic/5217165/img_id5807486875283978845.jpeg/orig"
+            ),
         ),
         eventSample.copy(id = 2L),
         eventSample.copy(id = 3L),

@@ -103,7 +103,7 @@ class ItemEventView(
 
         val isMainPhotoSquareLimited =
             typedArray.getBoolean(R.styleable.ItemEventView_ie_isMainPhotoSquareLimited, false)
-        binding.eventPhotosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
+        binding.eventsPhotosBlock.setMainPhotoSquareLimit(isMainPhotoSquareLimited)
 
         typedArray.recycle()
     }
@@ -226,8 +226,8 @@ class ItemEventView(
         }
     }
 
-    // TODO photos
-    fun setPhotos() {
+    fun setPhotos(photosURIs: List<String>?) {
+        binding.eventsPhotosBlock.uploadPhotos(photosURIs ?: listOf())
     }
 
     private fun initListeners() {
@@ -257,7 +257,7 @@ class ItemEventView(
             }
         }
 
-        binding.eventPhotosBlock.setOnClickListener {
+        binding.eventsPhotosBlock.setOnClickListener {
             listeners.forEach { listener ->
                 listener?.invoke(OnItemEventAction.PHOTOS_BLOCK)
             }

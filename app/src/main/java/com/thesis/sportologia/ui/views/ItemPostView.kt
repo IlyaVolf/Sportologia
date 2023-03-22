@@ -218,7 +218,6 @@ class ItemPostView(
         binding.postDate.text = parsedDateAndTime
     }
 
-    // TODO photos
     fun setPhotos(photosURIs: List<String>?) {
         binding.postPhotosBlock.uploadPhotos(photosURIs ?: listOf())
         if (photosURIs == null || photosURIs.isEmpty()) {
