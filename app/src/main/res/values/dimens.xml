@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <dimen name="button_standard_corners">20dp</dimen>
+    <dimen name="button_short_corners">16dp</dimen>
+    <dimen name="button_standard_height">37dp</dimen>
+
+    <dimen name="margin_sides">16dp</dimen>
+
+    <dimen name="design_bottom_navigation_text_size" tools:override="true">2sp</dimen>
+    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">2sp</dimen>
+</resources>

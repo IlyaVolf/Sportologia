@@ -1,0 +1,324 @@
+<resources>
+
+    <!-- Common -->
+    <string name="app_name">Sportologia</string>
+    <string name="action_try_again">Повторить</string>
+
+    <!-- Network errors -->
+    <string name="network_connection_error">Невозможно подключиться к серверу</string>
+    <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
+
+    <!-- Errors -->
+    <string name="error">Ошибка</string>
+    <string name="error_loading_title">Ошибка подключения</string>
+    <string name="error_loading_message">Проверьте соединение с интернетом</string>
+    <string name="error_default_load_error_body">Ошибка подключения: проверьте соединение с интернетом</string>
+    <string name="error_loading">Ошибка при загрузке</string>
+    <string name="error_date">Указана неверная дата</string>
+    <string name="error_set_favorite">Не удалось добавить в избранное</string>
+
+    <!-- Actions -->
+    <string name="action_complete">Завершить</string>
+    <string name="action_next">Далее</string>
+    <string name="action_back">Назад</string>
+    <string name="action_ok">Ок</string>
+    <string name="action_delete">Удалить</string>
+    <string name="action_edit">Редактировать</string>
+    <string name="action_report">Пожаловаться</string>
+    <string name="action_cancel">Отмена</string>
+    <string name="action_create">Создать</string>
+    <string name="action_subscribe">Подписаться</string>
+    <string name="action_unsubscribe">Отписаться</string>
+    <string name="action_unsubscribe_2">В подписках</string>
+    <string name="action_open">Открыть</string>
+    <string name="action_close">Закрыть</string>
+    <string name="action_purchase">Приобрести</string>
+    <string name="action_reset">Сбросить</string>
+    <string name="action_clear">Очистить</string>
+    <string name="action_all">Все</string>
+    <string name="action_cancel_verb">Отменить</string>
+    <string name="action_apply">Применить</string>
+    <string name="action_send">Отправить</string>
+    <string name="action_save">Сохранить</string>
+    <string name="action_discard_changes">Отменить изменения</string>
+
+    <!-- Categories -->
+    <string name="categories_not_specified">Не указаны</string>
+    <string name="category_running">Бег</string>
+    <string name="category_master_classes">Мастер-класс</string>
+    <string name="category_martial_arts">Боевые искусства</string>
+    <string name="category_body_building">Бодибилдинг</string>
+    <string name="category_aerobics">Аэробика</string>
+
+    <!-- Training Programmes Categories -->
+    <string name="tp_categories_not_specified">Не указаны</string>
+    <string name="tp_category_gaining_muscles_mass">Набор мыш. массы</string>
+    <string name="tp_category_losing_weight">Похудение</string>
+    <string name="tp_category_keeping_form">Поддержание формы</string>
+    <string name="tp_category_else">Другое</string>
+
+    <!-- Dates -->
+    <string name="date_today">Сегодня</string>
+    <string name="date_yesterday">Вчера</string>
+    <string name="date_at">в</string>
+
+    <!-- Content Default -->
+    <string name="test_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+
+    <!-- Tabs -->
+    <string name="tab_home">Главная</string>
+    <string name="tab_services">Услуги</string>
+    <string name="tab_search">Поиск</string>
+    <string name="tab_profile">Профиль</string>
+
+    <!-- Sign-In and Sign-Up Pages -->
+    <string name="email">Эл. почта</string>
+    <string name="password">Пароль</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Зарегистрироваться</string>
+    <string name="back">Назад</string>
+
+    <string name="hint_email">Введите адрес эл. почты</string>
+    <string name="hint_password">Введите пароль</string>
+
+    <!-- Registration and Profile Settings Page -->
+    <string name="registration">Регистрация</string>
+    <string name="account_type">Тип учётной записи</string>
+    <string name="athlete">Спортсмен</string>
+    <string name="organization">Организация</string>
+    <string name="athlete_name">Имя пользователя</string>
+    <string name="organization_name">Название организации</string>
+    <string name="gender">Пол</string>
+    <string name="age">Дата рождения</string>
+    <string name="male">Мужской</string>
+    <string name="female">Женский</string>
+    <string name="description">Описание</string>
+    <string name="athlete_categories">Интересы</string>
+    <string name="organization_categories">Специализации</string>
+    <string name="address">Адрес</string>
+    <string name="profile_settings">Настройки профиля</string>
+
+    <string name="hint_account_type">Укажите тип учётной записи</string>
+    <string name="hint_athlete_name">Введите имя пользователя</string>
+    <string name="hint_organization_name">Введите название организации</string>
+    <string name="hint_description">Введите описание</string>
+    <string name="hint_gender">Выберите пол</string>
+    <string name="hint_age">Укажите дату рождения</string>
+    <string name="hint_athlete_interests">Укажите свои интересы</string>
+    <string name="hint_organization_specializations">Укажите свои специализации</string>
+    <string name="hint_address">Укажите свой адрес</string>
+
+    <!-- User's Page -->
+    <string name="followers">Подписчики</string>
+    <string name="followings">Подписки</string>
+    <string name="interests">Интересы</string>
+    <string name="specializations">Специализации</string>
+    <string name="photos">Фото</string>
+    <string name="posts">Публикации</string>
+    <string name="services">Услуги</string>
+    <string name="events">Мероприятия</string>
+
+    <!-- Own Profile Page -->
+    <string name="edit_verb">Редактировать</string>
+    <string name="fav">Избранное</string>
+    <string name="create_post">Создать запись</string>
+    <string name="create_service">Создать услугу</string>
+    <string name="create_event">Создать мероприятие</string>
+
+    <!-- Home Page -->
+    <string name="home">Главная</string>
+    <string name="posts_all">Все</string>
+    <string name="posts_upcoming">Предстоящие</string>
+    <string name="events_all">Все</string>
+    <string name="events_organization">Организации</string>
+    <string name="events_users">Пользователи</string>
+    <string name="usernameDefault">Иван Иванов</string>
+
+    <!-- Events Page -->
+    <string name="event_organizer">Организатор</string>
+    <string name="event_date">Дата</string>
+    <string name="event_address">Адрес</string>
+    <string name="event_price">Стоимость</string>
+    <string name="event_categories">Категории</string>
+    <string name="event_description">Описание</string>
+
+    <!-- Services Page -->
+    <string name="service">Услуга</string>
+    <string name="my_services">Мои услуги</string>
+    <string name="acquired_services">Приобретённые услуги</string>
+    <string name="service_training_program">Тренировочная программа</string>
+    <string name="service_training_program_short">Трен. программа</string>
+    <string name="service_price">Стоимость</string>
+    <string name="service_categories">Категории</string>
+    <string name="service_description">Описание</string>
+    <string name="service_acquired_number">Категории</string>
+    <string name="service_reviews_number">Отзывов</string>
+    <string name="service_rating">Рейтинг</string>
+
+    <!-- Currency Abbreviations and Prices -->
+    <string name="free">Бесплатно</string>
+    <string name="rubles">Рублей</string>
+    <string name="ruble_abbreviation">Руб.</string>
+    <string name="dollar_abbreviation">$</string>
+
+    <!-- Search Page -->
+    <string name="search_all">Все</string>
+    <string name="search_users">Пользователи</string>
+    <string name="search_athletes">Спортсмены</string>
+    <string name="search_organizations">Организации</string>
+    <string name="search_events">Мероприятия</string>
+    <string name="search_services">Услуги</string>
+
+    <!-- Filters Page -->
+    <string name="restrictions">Ограничения</string>
+    <string name="sorting">Сортировка</string>
+
+    <!-- New Review Page -->
+    <string name="my_review">Мой отзыв</string>
+    <string name="write_review">Написать отзыв</string>
+    <string name="rating">Рейтинг</string>
+    <string name="grade">Оценка</string>
+    <string name="title">Заголовок</string>
+    <string name="text">Текст</string>
+    <string name="optional">(Опционально)</string>
+
+    <!-- Service Reviews Page -->
+    <string name="out_of_5">Из 5</string>
+
+    <!-- Content data -->
+    <string name="posts_empty">Нет публикаций</string>
+    <string name="users_empty">Нет пользователей</string>
+    <string name="athletes_empty">Нет спортсменов</string>
+    <string name="organizations_empty">Нет организаций</string>
+    <string name="services_empty">Нет услуг</string>
+    <string name="events_empty">Нет мероприятий</string>
+    <string name="photos_empty">Нет фото</string>
+
+    <string name="event_ended">Мероприятия завершено</string>
+
+    <string name="post_new">Новая публикация</string>
+    <string name="service_new">Новая услуга</string>
+    <string name="program_new">Новая программа</string>
+    <string name="exercise_new">Новое упражнение</string>
+    <string name="event_new">Новое мероприятие</string>
+
+    <!-- Create/Edit/Delete Post Page -->
+    <string name="editing">Редактирование</string>
+    <string name="post">Публикация</string>
+    <string name="edit_post">Редактировать запись</string>
+
+    <string name="ask_cancel_create_post">Отменить создание записи?</string>
+    <string name="ask_cancel_edit_post">Отменить редактирование записи?</string>
+    <string name="ask_cancel_post_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_post_warning">Удалить запись?</string>
+    <string name="error_empty_post">Ошибка: пустая запись</string>
+
+    <!-- Create/Edit/Delete Event Page -->
+    <string name="event_name">Название мероприятия</string>
+    <string name="event_date_start">Начало мероприятия</string>
+    <string name="event_date_end">Конец мероприятия</string>
+    <string name="event">Мероприятие</string>
+    <string name="edit_event">Редактировать мероприятие</string>
+
+    <string name="ask_cancel_create_event">Отменить создание мероприятия?</string>
+    <string name="ask_cancel_edit_event">Отменить редактирование мероприятия?</string>
+    <string name="ask_cancel_event_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_event_warning">Удалить мероприятие?</string>
+    <string name="error_event_empty_fields">Ошибка: не указаны все поля</string>
+    <string name="error_event_incorrect_date">Ошибка: указаны неверные даты</string>
+    <string name="error_price_event">Ошибка: указана неверная цена</string>
+
+    <string name="event_name_hint">Укажите название мероприятия</string>
+    <string name="event_date_hint">Укажите дату проведения мероприятия</string>
+    <string name="event_date_hint_start"></string>
+    <string name="event_date_hint_end">Укажите дату конца</string>
+    <string name="event_date_hint_from">С</string>
+    <string name="event_date_hint_to">До</string>
+    <string name="event_date_hint_to_optionally">До (Опционально)</string>
+    <string name="event_address_hint">Укажите адрес мероприятия</string>
+    <string name="event_price_hint">Укажите стоимость мероприятия (Руб)</string>
+    <string name="event_categories_hint">Укажите категорию мероприятия</string>
+    <string name="event_description_hint">Введите описание мероприятия</string>
+
+    <!-- Create Service (Program) Page -->
+    <string name="service_type">Вид услуги</string>
+    <string name="training_program">Тренировочная программа</string>
+    <string name="program_name">Название программы</string>
+    <string name="program_price">Стоимость</string>
+    <string name="program_aim">Цель</string>
+    <string name="program_description">Описание</string>
+    <string name="program_info_for_clients">Информация для клиентов</string>
+    <string name="exercise_add">Добавить упражнение</string>
+
+
+    <string name="ask_cancel_create_service">Отменить создание услуги?</string>
+    <string name="ask_cancel_edit_service">Отменить редактирование услуги?</string>
+    <string name="ask_cancel_service_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_service_warning">Удалить услугу?</string>
+
+    <string name="service_name_hint">Укажите название мероприятия</string>
+    <string name="service_rating_hint_from">От</string>
+
+    <string name="program_name_hint">Укажите название программы</string>
+    <string name="program_aim_hint">Укажите нацеленность программы</string>
+    <string name="program_price_hint">Укажите стоимость программы</string>
+    <string name="program_description_hint">Введите описание программы</string>
+    <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
+
+    <!-- Create Exercise Page -->
+    <string name="exercises">Упражнения</string>
+    <string name="exercise">Упражнение</string>
+    <string name="exercise_name">Название</string>
+    <string name="exercise_description">Описание</string>
+    <string name="exercise_sets_number">Число подходов</string>
+    <string name="exercise_reps_number">Число повторений</string>
+    <string name="exercise_regularity">Регулярность</string>
+
+    <string name="exercise_name_hint">Укажите название упражнения</string>
+    <string name="exercise_description_hint">Укажите описание упражнения</string>
+    <string name="exercise_sets_number_hint">Укажите число подходов</string>
+    <string name="exercise_reps_number_hint">Укажите число повторений</string>
+    <string name="exercise_regularity_hint">Укажите регулярность</string>
+
+    <!-- Filters -->
+    <string name="filter_not_specified">Не указаны</string>
+
+    <string name="split_dot">•</string>
+    <string name="filter">Фильтр</string>
+    <string name="filter_city">Город</string>
+    <string name="filter_city_hint">Укажите город</string>
+    <string name="filter_sort">Сортировка</string>
+    <string name="filter_sort_by_relevance">Релевантость</string>
+    <string name="filter_sort_by_distance">Расстояние</string>
+    <string name="filter_sort_by_date">Дата</string>
+    <string name="filter_sort_by_popularity">Популярность</string>
+    <string name="filter_sort_by_price">Стоимость</string>
+    <string name="filter_sort_by_rating">Рейтинг</string>
+    <string name="filter_distance">Расстояние</string>
+    <string name="filter_distance_hint">В радиусе (км)</string>
+    <string name="filter_users">Пользователи</string>
+    <string name="filter_users_hint">Тип пользователей</string>
+    <string name="filter_price">Стоимость</string>
+    <string name="filter_price_hint">До, руб</string>
+    <string name="under">До</string>
+    <string name="within">В пределах</string>
+    <string name="km">км</string>
+    <string name="filter_users_extra_offer_services">Предлагает услуги</string>
+    <string name="filter_users_extra_hosts_events">Проводит мероприятия</string>
+    <string name="filter_posts_all">Все</string>
+    <string name="filter_posts_athletes">Спортсмены</string>
+    <string name="filter_posts_organizations">Организации</string>
+    <string name="filter_events_all">Все</string>
+    <string name="filter_events_upcoming">Предстоящие</string>
+    <string name="filter_services_all">Все</string>
+    <string name="filter_services_tr_programs">Трен. программы</string>
+
+
+    <!-- Settings Page -->
+    <string name="settings">Настройки</string>
+
+    <!-- Extra -->
+    <!-- <string name="appbar_scrolling_view_behavior" translatable="false">com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior</string> -->
+
+</resources>

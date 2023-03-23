@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:statusBarColor="@color/white"
+    tools:context="com.thesis.sportologia.ui.ProfileSettingsFragment">
+
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tb_toolbarLeftButton="@string/action_cancel"
+        app:tb_toolbarTitle="@string/profile_settings"
+        app:tb_toolbarRightButton="@string/action_save" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/margin_sides">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/avatar_holder"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:cardCornerRadius="360dp"
+                app:cardElevation="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="@drawable/photo_custom_round"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avatar_photo" />
+
+            </androidx.cardview.widget.CardView>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp" />
+
+            <com.thesis.sportologia.ui.views.SpinnerBasicView
+                android:id="@+id/account_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:spinnerHint="@string/hint_account_type"
+                app:spinnerTitle="@string/account_type" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/athlete_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_athlete_name"
+                app:editTextLimit="70"
+                app:editTextLines="2"
+                app:editTextTitle="@string/athlete_name" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/organization_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_organization_name"
+                app:editTextLimit="100"
+                app:editTextLines="2"
+                app:editTextTitle="@string/organization_name" />
+
+            <com.thesis.sportologia.ui.views.SpinnerBasicView
+                android:id="@+id/gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:spinnerHint="@string/hint_gender"
+                app:spinnerTitle="@string/gender" />
+
+            <com.thesis.sportologia.ui.views.DateBasicView
+                android:id="@+id/birth_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dateIsTimeEnabled="true"
+                app:dateIsBefore="true"
+                app:dateHint="@string/hint_age"
+                app:dateTitle="@string/age" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_description"
+                app:editTextLimit="512"
+                app:editTextLines="10"
+                app:editTextTitle="@string/description" />
+
+            <com.thesis.sportologia.ui.views.MultiChoiceBasicView
+                android:id="@+id/interests"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:multiChoiceHint="@string/hint_athlete_interests"
+                app:multiChoiceTitle="@string/athlete_categories" />
+
+            <com.thesis.sportologia.ui.views.MultiChoiceBasicView
+                android:id="@+id/specializations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:multiChoiceTitle="@string/organization_categories"
+                app:multiChoiceHint="@string/hint_organization_specializations" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_address"
+                app:editTextLines="3"
+                app:editTextTitle="@string/address" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

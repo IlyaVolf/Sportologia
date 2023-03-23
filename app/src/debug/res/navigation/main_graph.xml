@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/signInFragment">
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.thesis.sportologia.ui.SignInFragment"
+        android:label="fragment_sign_in"
+        tools:layout="@layout/fragment_sign_in" >
+        <action
+            android:id="@+id/action_signInFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_signInFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.thesis.sportologia.ui.SignUpFragment"
+        android:label="fragment_sign_up"
+        tools:layout="@layout/fragment_sign_up" />
+    <fragment
+        android:id="@+id/tabsFragment"
+        android:name="com.thesis.sportologia.ui.TabsFragment"
+        android:label="fragment_tabs"
+        tools:layout="@layout/fragment_tabs" >
+        <action
+            android:id="@+id/action_tabsFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_profileSettingsFragment"
+            app:destination="@id/profileSettingsFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_createEditPostFragment"
+            app:destination="@id/createEditPostFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_createEditEventFragment"
+            app:destination="@id/createEditEventFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_filterFragmentUsers"
+            app:destination="@id/filterFragmentUsers" />
+        <action
+            android:id="@+id/action_tabsFragment_to_filterFragmentEvents"
+            app:destination="@id/filterFragmentEvents" />
+        <action
+            android:id="@+id/action_tabsFragment_to_createEditServiceFragment"
+            app:destination="@id/createEditServiceFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.thesis.sportologia.ui.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/profileSettingsFragment"
+        android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
+        android:label="fragment_profile_settings"
+        tools:layout="@layout/fragment_profile_settings" />
+    <fragment
+        android:id="@+id/createEditPostFragment"
+        android:name="com.thesis.sportologia.ui.posts.CreateEditPostFragment"
+        android:label="fragment_create_edit_post"
+        tools:layout="@layout/fragment_create_edit_post" >
+        <argument
+            android:name="postId"
+            app:argType="com.thesis.sportologia.ui.posts.CreateEditPostFragment$PostId" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditEventFragment"
+        android:name="com.thesis.sportologia.ui.events.CreateEditEventFragment"
+        android:label="fragment_create_edit_event"
+        tools:layout="@layout/fragment_create_edit_event">
+        <argument
+            android:name="eventId"
+            app:argType="com.thesis.sportologia.ui.events.CreateEditEventFragment$EventId" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragmentUsers"
+        android:name="com.thesis.sportologia.ui.FilterFragmentUsers"
+        android:label="fragment_filter_users" >
+        <argument
+            android:name="filterParams"
+            app:argType="com.thesis.sportologia.model.FilterParams" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragmentEvents"
+        android:name="com.thesis.sportologia.ui.FilterFragmentEvents"
+        android:label="fragment_filter_events"
+        tools:layout="@layout/fragment_filter_events" >
+        <argument
+            android:name="filterParams"
+            app:argType="com.thesis.sportologia.model.FilterParams" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditServiceFragment"
+        android:name="com.thesis.sportologia.ui.services.CreateEditServiceFragment"
+        android:label="fragment_create_edit_service"
+        tools:layout="@layout/fragment_create_edit_service" >
+        <action
+            android:id="@+id/action_createEditServiceFragment_to_createEditServiceDetailedFragment"
+            app:destination="@id/createEditServiceDetailedFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditServiceDetailedFragment"
+        android:name="com.thesis.sportologia.ui.services.CreateEditServiceDetailedFragment"
+        android:label="fragment_create_edit_service_detailed"
+        tools:layout="@layout/fragment_create_edit_service_detailed" >
+        <action
+            android:id="@+id/action_createEditServiceDetailedFragment_to_createEditExerciseFragment"
+            app:destination="@id/createEditExerciseFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createEditExerciseFragment"
+        android:name="com.thesis.sportologia.ui.services.CreateEditExerciseFragment"
+        android:label="fragment_create_edit_exercise"
+        tools:layout="@layout/fragment_create_edit_exercise" />
+</navigation>

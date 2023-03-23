@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginVertical="8dp"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="64dp"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/ve_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/icon_no_internet"
+        android:layout_marginBottom="12dp"
+        app:tint="@color/element_tertiary_inverted" />
+
+    <TextView
+        style = "@style/TextStyleBold"
+        android:text="@string/error_loading_title"
+        android:textSize="16sp"
+        android:layout_marginBottom="2dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ve_text"
+        style="@style/TextAppearance.MaterialComponents.Subtitle1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/error_loading_message"
+        android:textSize="14sp"
+        android:textColor="@color/element_tertiary_inverted"
+        android:textAlignment="center" />
+
+    <TextView
+        style = "@style/TextStyleBold"
+        android:id="@+id/ve_try_again"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="@string/action_try_again"
+        android:textColor="@color/purple_medium" />
+
+</LinearLayout>

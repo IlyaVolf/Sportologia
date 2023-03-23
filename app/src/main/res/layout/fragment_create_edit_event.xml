@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.thesis.sportologia.ui.events.CreateEditEventFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.thesis.sportologia.ui.views.ToolbarBasicView
+            android:id="@+id/fcee_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tb_toolbarLeftButton="@string/action_cancel"
+            app:tb_toolbarRightButton="@string/action_create"
+            app:tb_toolbarTitle="@string/event_new" />
+
+        <ScrollView
+            android:id="@+id/fcee_event_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginHorizontal="@dimen/margin_sides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fcee_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextInputType="textSingleLine"
+                    app:editTextLimit="100"
+                    app:editTextLines="2"
+                    app:editTextTitle="@string/event_name"
+                    app:editTextHint="@string/event_name_hint"/>
+
+                <com.thesis.sportologia.ui.views.DateIntervalView
+                    android:id="@+id/fcee_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:divHintLeft="@string/event_date_hint_from"
+                    app:divHintRight="@string/event_date_hint_to_optionally"
+                    app:divIsTimeEnabled="true"
+                    app:divIsAfter="true"
+                    app:divIsBefore="false"
+                    app:divTitle="@string/event_date"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fcee_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_address"
+                    app:editTextHint="@string/event_address_hint"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fcee_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextInputType="number"
+                    app:editTextTitle="@string/event_price"
+                    app:editTextHint="@string/event_price_hint"/>
+
+                <com.thesis.sportologia.ui.views.MultiChoiceBasicView
+                    android:id="@+id/fcee_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:multiChoiceTitle="@string/event_categories"
+                    app:multiChoiceHint="@string/event_categories_hint"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fcee_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextInputType="textMultiLine"
+                    app:editTextLimit="2000"
+                    app:editTextLines="20"
+                    app:editTextTitle="@string/event_description"
+                    app:editTextHint="@string/event_description_hint"/>
+
+                <!-- TODO добавить фото -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <include
+            android:id="@+id/fcee_loading"
+            layout="@layout/view_loading"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/fcee_error"
+            layout="@layout/view_error"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <com.thesis.sportologia.ui.views.ButtonRoundView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_sides"
+        android:layout_marginBottom="36dp"
+        app:br_drawable="@drawable/icon_album"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

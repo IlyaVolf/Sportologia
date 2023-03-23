@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thesis.sportologia.ui.SearchFragment">
+
+    <include
+        android:id="@+id/search_bar"
+        layout="@layout/view_search_bar" />
+
+    <com.thesis.sportologia.ui.views.ContentTabsView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentTabsActiveByDefault="4"
+        app:contentTabsText1="@string/search_athletes"
+        app:contentTabsText2="@string/search_organizations"
+        app:contentTabsText3="@string/search_events"
+        app:contentTabsText4="@string/search_services" />
+
+    <com.thesis.sportologia.ui.views.ChosenFilterView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cf_isRestrictionsBlockEnabled="true"
+        app:cf_isSortingBlockEnabled="true" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/fragment_list_services" />
+
+            <com.thesis.sportologia.ui.views.ItemServiceView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:is_isMainPhotoSquareLimited="false" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

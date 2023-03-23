@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <com.thesis.sportologia.ui.views.ButtonBasicView
+        android:id="@+id/create_post_button"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
+        android:paddingHorizontal="@dimen/margin_sides"
+        app:icon="@drawable/icon_plus"
+        app:text="@string/create_post" />
+
+    <Space
+        android:id="@+id/create_post_button_space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+    <include
+        android:id="@+id/posts_filter"
+        layout="@layout/view_content_filter" />
+
+    <Space
+        android:id="@+id/posts_filter_space"
+        android:layout_width="match_parent"
+        android:layout_height="8dp" />
+
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.thesis.sportologia.ui.FollowersFragment">
+
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
+        android:id="@+id/followers_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tb_toolbarLeftButton="@string/action_back"
+        app:tb_isToolbarUnderlined="false"
+        app:tb_toolbarTitle="@string/followers"/>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/followings_list_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

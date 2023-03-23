@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.thesis.sportologia.ui.views.ToolbarBasicView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tb_toolbarLeftButton="@string/action_cancel"
+            app:tb_toolbarRightButton="@string/action_save"
+            app:tb_toolbarTitle="@string/exercise" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginHorizontal="@dimen/margin_sides"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/exercise_name"
+                    app:editTextHint="@string/exercise_name_hint"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/event_description"
+                    app:editTextHint="@string/event_description_hint"
+                    app:editTextLimit="2000"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/exercise_sets_number"
+                    app:editTextHint="@string/exercise_sets_number_hint"
+                    app:editTextLines="1"
+                    app:editTextLimit="5"
+                    app:editTextInputType="number"/>
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextTitle="@string/exercise_reps_number"
+                    app:editTextHint="@string/exercise_reps_number_hint"
+                    app:editTextLines="1"
+                    app:editTextLimit="5"
+                    app:editTextInputType="number"/>
+
+                <com.thesis.sportologia.ui.views.MultiChoiceBasicView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:multiChoiceTitle="@string/exercise_regularity"
+                    app:multiChoiceHint="@string/exercise_regularity_hint"/>
+
+                <!-- TODO добавить фото -->
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <com.thesis.sportologia.ui.views.ButtonRoundView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/margin_sides"
+        android:layout_marginBottom="36dp"
+        app:br_drawable="@drawable/icon_album"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
