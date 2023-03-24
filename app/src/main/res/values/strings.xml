@@ -301,6 +301,8 @@
     <string name="filter_users_hint">Тип пользователей</string>
     <string name="filter_price">Стоимость</string>
     <string name="filter_price_hint">До, руб</string>
+    <string name="filter_rating">Рейтинг</string>
+    <string name="filter_rating_hint">От</string>
     <string name="under">До</string>
     <string name="within">В пределах</string>
     <string name="km">км</string>
@@ -311,8 +313,10 @@
     <string name="filter_posts_organizations">Организации</string>
     <string name="filter_events_all">Все</string>
     <string name="filter_events_upcoming">Предстоящие</string>
+    <string name="filter_service_type">Тип</string>
     <string name="filter_services_all">Все</string>
     <string name="filter_services_tr_programs">Трен. программы</string>
+    <string name="filter_services_tr_programs_short">Трен. программы</string>
 
 
     <!-- Settings Page -->

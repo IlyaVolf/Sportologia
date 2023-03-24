@@ -142,7 +142,7 @@ class SpinnerOutlinedView @JvmOverloads constructor(
 
     /// Save
 
-    override fun onSaveInstanceState(): Parcelable {
+    /*override fun onSaveInstanceState(): Parcelable {
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
 
@@ -200,6 +200,6 @@ class SpinnerOutlinedView @JvmOverloads constructor(
                 }
             }
         }
-    }
+    }*/
 
 }

@@ -73,7 +73,7 @@ class ServicesHeaderAdapterSearch(
 
                 restrictionBlock.append(fragment.getString(R.string.service_rating_hint_from))
                     .append(" ")
-                    .append(formatFloat(filterParamsServices.ratingFrom!!, 1))
+                    .append(formatFloat(filterParamsServices.ratingFrom!!, 1, true))
 
                 restrictionBlockList.add(restrictionBlock.toString())
             }

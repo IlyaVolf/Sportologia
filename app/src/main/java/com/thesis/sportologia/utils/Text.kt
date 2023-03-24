@@ -4,14 +4,20 @@ fun removeEmptyStrings(text: String): String {
     return text.replace("^\\n+|\\n+\$".toRegex(), "")
 }
 
-fun formatFloat(number: Float, accuracy: Int): String {
+fun formatFloat(number: Float, accuracy: Int, removeLeadingZeros: Boolean): String {
     val numberString = "%.${accuracy}f".format(number)
     val numberSplit = numberString.split(".")
-    return if (numberSplit.last() == "0") {
-        numberSplit.first()
-    } else {
-        numberString
-    }
+    var fraction = numberSplit.last()
+    if (removeLeadingZeros) {
+        while (fraction.last() == '0') {
+            fraction = fraction.substring(0, fraction.length - 2)
+        }
+        return if (fraction.last() == '.') {
+            numberSplit.first()
+        } else {
+            numberSplit.first() + fraction
+        }
+    } else return numberString
 }
 
 fun concatMap(map: Map<String, Boolean>?, separator: String): String {

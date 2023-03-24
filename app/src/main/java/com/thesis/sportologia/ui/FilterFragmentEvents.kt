@@ -182,7 +182,7 @@ class FilterFragmentEvents : Fragment() {
         if (currentCategories.containsValue(true)) {
             currentFilterParamsEvents.categories = currentCategories
         } else {
-            currentFilterParamsEvents.distance = null
+            currentFilterParamsEvents.categories = null
         }
 
         val distance =

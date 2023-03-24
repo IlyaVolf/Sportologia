@@ -23,6 +23,7 @@ import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.services.ListServicesFragmentSearch
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
@@ -65,13 +66,13 @@ class SearchFragment : Fragment() {
                         SearchTab.Tab.SERVICES,
                         ListServicesFragmentSearch.newInstance(CurrentAccount().id),
                         { filterParams ->
-                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(
+                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentServices(
                                 filterParams
                             )
                         },
                         getString(R.string.search_services),
                         SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
-                        FilterParamsUsers.newEmptyInstance()
+                        FilterParamsServices.newEmptyInstance()
                     ),
                     SearchTab(
                         SearchTab.Tab.EVENTS,
