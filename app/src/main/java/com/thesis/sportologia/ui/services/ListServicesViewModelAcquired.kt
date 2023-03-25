@@ -14,7 +14,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.*
 
-class ListServicesViewModelFavourites @AssistedInject constructor(
+class ListServicesViewModelAcquired @AssistedInject constructor(
     @Assisted filterParams: FilterParamsServices,
     @Assisted private val userId: String,
     private val servicesRepository: ServicesRepository,
@@ -24,13 +24,13 @@ class ListServicesViewModelFavourites @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<Service>> {
         return searchLive.asFlow()
             .flatMapLatest {
-                servicesRepository.getPagedUserFavouriteServices(userId, serviceType)
+                servicesRepository.getPagedUserAcquiredServices(userId, serviceType)
             }.cachedIn(viewModelScope)
     }
 
     @AssistedFactory
     interface Factory {
-        fun create(filterParams: FilterParamsServices, userId: String): ListServicesViewModelFavourites
+        fun create(filterParams: FilterParamsServices, userId: String): ListServicesViewModelAcquired
     }
 
 }

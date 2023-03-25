@@ -36,5 +36,12 @@ class TabsFragment : Fragment(R.layout.fragment_tabs) {
         ) { _, _ ->
             binding.bottomNavigationView.selectedItemId = R.id.profile_own
         }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            ServicesAcquiredFragment.GO_TO_OWN_PROFILE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, _ ->
+            binding.bottomNavigationView.selectedItemId = R.id.profile_own
+        }
     }
 }

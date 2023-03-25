@@ -9,7 +9,9 @@ interface ServicesRepository {
 
     suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>>
 
-    suspend fun getPagedUserFavouriteServices(serviceType: Service.ServiceType?): Flow<PagingData<Service>>
+    suspend fun getPagedUserFavouriteServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>>
+
+    suspend fun getPagedUserAcquiredServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>>
 
     suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<Service>>
 

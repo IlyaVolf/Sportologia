@@ -46,10 +46,21 @@ class ServicesPagerAdapter(
             }
         }
 
-        itemService.setCategories(serviceListItem.categories)
+        itemService.setCategories(
+            TrainingProgrammesCategories.getLocalizedTrainingProgrammesCategories(
+                context,
+                serviceListItem.categories
+            )
+        )
         itemService.setServiceName(serviceListItem.name)
         itemService.setDescription(serviceListItem.description)
         itemService.setAuthorName(serviceListItem.authorName)
+        itemService.setAuthorType(
+            Localization.convertUserTypeEnumToLocalized(
+                context,
+                serviceListItem.authorType
+            )
+        )
         itemService.setAuthorAvatar(serviceListItem.profilePictureUrl)
         itemService.setPrice(serviceListItem.price, serviceListItem.currency)
         itemService.setFavs(serviceListItem.isFavourite)

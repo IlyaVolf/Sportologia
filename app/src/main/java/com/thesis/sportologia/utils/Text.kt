@@ -7,12 +7,9 @@ fun removeEmptyStrings(text: String): String {
 fun formatFloat(number: Float, accuracy: Int, removeLeadingZeros: Boolean): String {
     val numberString = "%.${accuracy}f".format(number)
     val numberSplit = numberString.split(".")
-    if (numberSplit.size == 1) {
-        return numberString
-    }
     var fraction = numberSplit.last()
     return if (removeLeadingZeros) {
-        while (fraction.last() == '0') {
+        while (fraction.lastOrNull() == '0') {
             fraction = fraction.substring(0, fraction.length - 1)
         }
         if (fraction == "") {

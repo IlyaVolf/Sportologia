@@ -7,10 +7,8 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemServiceBinding
-import com.thesis.sportologia.utils.Categories
-import com.thesis.sportologia.utils.concatMap
-import com.thesis.sportologia.utils.getPriceWithCurrency
-import com.thesis.sportologia.utils.setAvatar
+import com.thesis.sportologia.model.users.entities.UserType
+import com.thesis.sportologia.utils.*
 import java.net.URI
 import kotlin.properties.Delegates
 
@@ -157,6 +155,10 @@ class ItemServiceView(
         binding.serviceUserName.text = username
     }
 
+    fun setAuthorType(userType: String) {
+        binding.serviceUserType.text = userType
+    }
+
     fun setAuthorAvatar(uriImage: String?) {
         setAvatar(uriImage, context, binding.serviceAvatar)
     }
@@ -179,8 +181,7 @@ class ItemServiceView(
     }
 
     fun setCategories(categories: Map<String, Boolean>) {
-        val categoriesLocalized = Categories.getLocalizedCategories(context, categories)
-        val categoriesString = concatMap(categoriesLocalized, ", ")
+        val categoriesString = concatMap(categories, ", ")
         if (categoriesString != "") {
             binding.serviceCategories.text = categoriesString
         } else {

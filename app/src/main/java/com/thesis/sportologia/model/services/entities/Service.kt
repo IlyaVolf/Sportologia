@@ -1,5 +1,7 @@
 package com.thesis.sportologia.model.services.entities
 
+import com.thesis.sportologia.model.users.entities.UserType
+
 data class Service(
     val id: Long,
     val name: String,
@@ -16,13 +18,10 @@ data class Service(
     var currency: String,
     var categories: Map<String, Boolean>,
     var isFavourite: Boolean,
+    var isAcquired: Boolean,
     var photosUrls: List<String>?,
 ) {
     enum class ServiceType {
         TRAINING_PROGRAM
-    }
-
-    enum class UserType {
-        ATHLETE, ORGANIZATION
     }
 }

@@ -9,5 +9,15 @@
         android:id="@+id/servicesAcquiredFragment"
         android:name="com.thesis.sportologia.ui.ServicesAcquiredFragment"
         android:label="fragment_services_acquired"
-        tools:layout="@layout/fragment_services_acquired" />
+        tools:layout="@layout/fragment_services_acquired">
+        <action
+            android:id="@+id/action_servicesAcquiredFragment_to_profile_nested"
+            app:destination="@id/profile_nested">
+            <argument
+                android:name="userId"
+                android:defaultValue="$current_user"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/profile_nested" />
 </navigation>

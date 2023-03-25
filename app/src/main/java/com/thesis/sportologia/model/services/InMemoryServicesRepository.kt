@@ -6,7 +6,9 @@ import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
+import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.Categories
+import com.thesis.sportologia.utils.TrainingProgrammesCategories
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -25,19 +27,46 @@ class InMemoryServicesRepository @Inject constructor(
         id = 0L,
         name = "Программа быстрого похудения",
         type = Service.ServiceType.TRAINING_PROGRAM,
-        publicDescription = "Я Игорю и я провожу лучшие занятия по лыжам",
+        publicDescription = "Результат уже через 5 недель",
         authorId = "stroitel",
         authorName = "Тренажёрный зал Строитель",
-        authorType = Service.UserType.ORGANIZATION,
+        authorType = UserType.ORGANIZATION,
         profilePictureUrl = null,
         price = 3200f,
         currency = "Rubles",
         categories = hashMapOf(
-            Pair(Categories.MARTIAL_ARTS, false),
-            Pair(Categories.RUNNING, true),
-            Pair(Categories.MASTER_CLASS, false),
+            Pair(TrainingProgrammesCategories.KEEPING_FORM, false),
+            Pair(TrainingProgrammesCategories.LOSING_WEIGHT, true),
+            Pair(TrainingProgrammesCategories.GAINING_MUSCLES_MASS, false),
+            Pair(TrainingProgrammesCategories.ELSE, false),
         ),
         isFavourite = false,
+        isAcquired = false,
+        photosUrls = mutableListOf("https://best5supplements.com/wp-content/uploads/2017/11/bicep-before-after-1024x536.jpg"),
+        rating = 5.0F,
+        acquiredNumber = 13,
+        reviewsNumber = 2,
+    )
+
+    private val serviceSample2 = Service(
+        id = 1L,
+        name = "Набор мышечной массы гантялями",
+        type = Service.ServiceType.TRAINING_PROGRAM,
+        publicDescription = "Нет денег на зал, но есть гантели дома? - не беда.",
+        authorId = "i_volf",
+        authorName = "Илья Вольф",
+        authorType = UserType.ATHLETE,
+        profilePictureUrl = null,
+        price = 0f,
+        currency = "Rubles",
+        categories = hashMapOf(
+            Pair(TrainingProgrammesCategories.KEEPING_FORM, false),
+            Pair(TrainingProgrammesCategories.LOSING_WEIGHT, false),
+            Pair(TrainingProgrammesCategories.GAINING_MUSCLES_MASS, true),
+            Pair(TrainingProgrammesCategories.ELSE, false),
+        ),
+        isFavourite = false,
+        isAcquired = true,
         photosUrls = null,
         rating = 5.0F,
         acquiredNumber = 13,
@@ -45,8 +74,9 @@ class InMemoryServicesRepository @Inject constructor(
     )
 
     private val services = mutableListOf(
-        serviceSample.copy(isFavourite = true),
-        serviceSample.copy(id = 2L),
+        serviceSample,
+        serviceSample2,
+        serviceSample.copy(id = 2L, isFavourite = true, isAcquired = true),
         serviceSample.copy(id = 3L),
         serviceSample.copy(id = 4L),
         serviceSample.copy(id = 5L),
@@ -57,6 +87,7 @@ class InMemoryServicesRepository @Inject constructor(
         serviceSample.copy(id = 10L),
         serviceSample.copy(id = 11L),
         serviceSample.copy(id = 12L),
+        serviceSample.copy(id = 13L),
         serviceSample.copy(id = 14L),
         serviceSample.copy(id = 15L),
         serviceSample.copy(id = 16L),
@@ -158,9 +189,25 @@ class InMemoryServicesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouriteServices(serviceType: Service.ServiceType?): Flow<PagingData<Service>> {
+    override suspend fun getPagedUserFavouriteServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>> {
         val loader: ServicesPageLoader = { pageIndex, pageSize ->
-            getUserFavouriteServices(pageIndex, pageSize, serviceType)
+            getUserFavouriteServices(pageIndex, pageSize, userId, serviceType)
+        }
+
+        return Pager(
+            config = PagingConfig(
+                pageSize = PAGE_SIZE,
+                initialLoadSize = PAGE_SIZE,
+                prefetchDistance = PAGE_SIZE / 2,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = { ServicesPagingSource(loader) }
+        ).flow
+    }
+
+    override suspend fun getPagedUserAcquiredServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>> {
+        val loader: ServicesPageLoader = { pageIndex, pageSize ->
+            getUserAcquiredServices(pageIndex, pageSize, userId, serviceType)
         }
 
         return Pager(
@@ -183,6 +230,7 @@ class InMemoryServicesRepository @Inject constructor(
     suspend fun getUserFavouriteServices(
         pageIndex: Int,
         pageSize: Int,
+        userId: String,
         serviceType: Service.ServiceType?
     ): List<Service> = withContext(ioDispatcher) {
         delay(1000)
@@ -192,6 +240,32 @@ class InMemoryServicesRepository @Inject constructor(
         val filteredServices = services.filter { it.isFavourite }.sortedBy { it.rating }
 
         filteredServices.sortedBy { it.rating }
+
+        // TODO SORT BY DATE
+
+        // TODO
+        //throw Exception("a")
+
+        if (offset >= filteredServices.size) {
+            return@withContext listOf<Service>()
+        } else if (offset + pageSize >= filteredServices.size) {
+            return@withContext filteredServices.subList(offset, filteredServices.size)
+        } else {
+            return@withContext filteredServices.subList(offset, offset + pageSize)
+        }
+    }
+
+    suspend fun getUserAcquiredServices(
+        pageIndex: Int,
+        pageSize: Int,
+        userId: String,
+        serviceType: Service.ServiceType?
+    ): List<Service> = withContext(ioDispatcher) {
+        delay(1000)
+        val offset = pageIndex * pageSize
+
+        // временный и корявый метод! Ибо тут не учитыааются пользователи
+        val filteredServices = services.filter { it.isAcquired }
 
         // TODO SORT BY DATE
 

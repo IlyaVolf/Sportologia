@@ -24,7 +24,7 @@ class ListServicesFragmentProfileOther : ListServicesFragment() {
         factory.create(filterParams, userId)
     }
 
-    override val isSwipeToRefreshEnabled: Boolean = true
+    override val isSwipeToRefreshEnabled: Boolean = false
     override val onAuthorBlockPressedAction: (String) -> Unit = { userId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
