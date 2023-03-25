@@ -241,7 +241,7 @@
     <string name="event_categories_hint">Укажите категорию мероприятия</string>
     <string name="event_description_hint">Введите описание мероприятия</string>
 
-    <!-- Create Service (Program) Page -->
+    <!-- Create/Edit/Delete Service (Program) Page -->
     <string name="service_type">Вид услуги</string>
     <string name="training_program">Тренировочная программа</string>
     <string name="program_name">Название программы</string>
@@ -303,6 +303,7 @@
     <string name="filter_price_hint">До, руб</string>
     <string name="filter_rating">Рейтинг</string>
     <string name="filter_rating_hint">От</string>
+    <string name="rating_from">Рейтинг от</string>
     <string name="under">До</string>
     <string name="within">В пределах</string>
     <string name="km">км</string>

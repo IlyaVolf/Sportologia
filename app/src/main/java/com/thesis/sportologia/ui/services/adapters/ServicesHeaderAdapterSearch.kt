@@ -71,7 +71,7 @@ class ServicesHeaderAdapterSearch(
             if (filterParamsServices.ratingFrom != null) {
                 val restrictionBlock = StringBuilder("")
 
-                restrictionBlock.append(fragment.getString(R.string.service_rating_hint_from))
+                restrictionBlock.append(fragment.getString(R.string.rating_from))
                     .append(" ")
                     .append(formatFloat(filterParamsServices.ratingFrom!!, 1, true))
 
