@@ -224,7 +224,7 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun getService(serviceId: Long): Service? = withContext(ioDispatcher) {
         delay(1000)
 
-        throw Exception("abc")
+        //throw Exception("abc")
 
         return@withContext if (services.none { it.id == serviceId }) null else services.filter { it.id == serviceId }[0]
     }
