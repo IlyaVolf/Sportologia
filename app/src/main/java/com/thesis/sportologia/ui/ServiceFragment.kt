@@ -90,9 +90,9 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     private fun renderService(serviceDetailedViewItem: ServiceDetailedViewItem) {
         if (serviceDetailedViewItem.isAcquired) {
-            binding.toolbar.setRightButtonText(getString(R.string.action_acquire))
-        } else {
             binding.toolbar.setRightButtonText(null)
+        } else {
+            binding.toolbar.setRightButtonText(getString(R.string.action_acquire))
         }
 
         renderGeneralInfo(serviceDetailedViewItem)
@@ -306,9 +306,11 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     private fun setDetailedPhotos(photosURIs: List<String>?) {
         binding.servicePhotosBlockDetailed.uploadPhotos(photosURIs ?: listOf())
         if (photosURIs == null || photosURIs.isEmpty()) {
-            binding.serviceTextSpaceBottomDetailed.visibility = GONE
+            binding.servicePhotosBlockBeforeDetailed.visibility = GONE
+            binding.servicePhotosBlockAfterDetailed.visibility = GONE
         } else {
-            binding.serviceTextSpaceBottomDetailed.visibility = VISIBLE
+            binding.servicePhotosBlockBeforeDetailed.visibility = VISIBLE
+            binding.servicePhotosBlockAfterDetailed.visibility = VISIBLE
         }
     }
 
