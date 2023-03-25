@@ -125,7 +125,7 @@ class ServiceViewModel @AssistedInject constructor(
                     holder.value = DataHolder.READY(
                         it.copy(
                             serviceDetailed = it.serviceDetailed.copy(
-                                isFavourite = value ?: it.isAcquired
+                                isAcquired = value ?: it.isAcquired
                             )
                         )
                     )
