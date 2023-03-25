@@ -3,9 +3,9 @@ package com.thesis.sportologia.ui.services.entities
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.users.entities.UserType
 
-data class ServiceListItem(
-    val service: Service,
-    val isInProgress: Boolean,
+data class ServiceFullItem(
+    var service: Service,
+    var isFavourite: Boolean = service.isFavourite
 ) {
     val id: Long get() = service.id
     val name: String get() = service.name
@@ -21,6 +21,5 @@ data class ServiceListItem(
     val acquiredNumber: Int get() = service.acquiredNumber
     val reviewsNumber: Int get() = service.reviewsNumber
     val rating: Float get() = service.rating
-    val isFavourite: Boolean get() = service.isFavourite
     val photosUrls: List<String>? get() = service.photosUrls
 }

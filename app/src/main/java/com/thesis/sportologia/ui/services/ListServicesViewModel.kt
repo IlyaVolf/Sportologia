@@ -122,7 +122,7 @@ abstract class ListServicesViewModel constructor(
 
     private suspend fun setFavoriteFlag(serviceListItem: ServiceListItem) {
         val newFlagValue = !serviceListItem.isFavourite
-        servicesRepository.setIsFavourite(userId, serviceListItem.service, newFlagValue)
+        servicesRepository.setIsFavourite(userId, serviceListItem.service.id, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }

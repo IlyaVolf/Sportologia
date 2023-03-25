@@ -17,12 +17,14 @@ interface ServicesRepository {
 
     suspend fun getService(postId: Long): Service?
 
-    suspend fun createService(post: Service)
+    suspend fun createService(service: Service)
 
-    suspend fun updateService(post: Service)
+    suspend fun updateService(service: Service)
 
-    suspend fun deleteService(postId: Long)
+    suspend fun deleteService(serviceId: Long)
 
-    suspend fun setIsFavourite(userId: String, post: Service, isFavourite: Boolean)
+    suspend fun acquireService(serviceId: Long)
+
+    suspend fun setIsFavourite(userId: String, serviceId: Long, isFavourite: Boolean)
 
 }

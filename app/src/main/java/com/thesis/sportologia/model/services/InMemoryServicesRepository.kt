@@ -224,6 +224,8 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun getService(serviceId: Long): Service? = withContext(ioDispatcher) {
         delay(1000)
 
+        throw Exception("abc")
+
         return@withContext if (services.none { it.id == serviceId }) null else services.filter { it.id == serviceId }[0]
     }
 
@@ -361,9 +363,14 @@ class InMemoryServicesRepository @Inject constructor(
         services.removeIf { it.id == serviceId }
     }
 
+    override suspend fun acquireService(serviceId: Long) {
+        delay(1000)
+        services.find { it.id == serviceId }?.isAcquired = true
+    }
+
     override suspend fun setIsFavourite(
         userId: String,
-        service: Service,
+        serviceId: Long,
         isFavourite: Boolean
     ) = withContext(ioDispatcher) {
         delay(1000)
@@ -371,7 +378,7 @@ class InMemoryServicesRepository @Inject constructor(
         // TODO
         //throw Exception("a")
 
-        services.find { it.id == service.id }?.isFavourite = isFavourite
+        services.find { it.id == serviceId }?.isFavourite = isFavourite
     }
 
     /*override suspend fun likeService(userId: Int, service: Service) {

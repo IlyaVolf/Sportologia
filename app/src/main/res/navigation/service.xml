@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/service"
+    app:startDestination="@id/serviceNotAcquiredFragment">
+    <fragment
+        android:id="@+id/serviceNotAcquiredFragment"
+        android:name="com.thesis.sportologia.ui.ServiceNotAcquiredFragment"
+        android:label="fragment_service_not_acquired"
+        tools:layout="@layout/fragment_service_not_acquired">
+        <argument
+            android:name="serviceId"
+            app:argType="long" />
+        <action
+            android:id="@+id/action_serviceNotAcquiredFragment_to_profile_nested"
+            app:destination="@id/profile_nested">
+            <argument
+                android:name="userId"
+                android:defaultValue="$current_user"
+                app:argType="string" />
+        </action>
+    </fragment>
+    <include app:graph="@navigation/profile_nested" />
+</navigation>

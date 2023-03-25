@@ -14,6 +14,7 @@
     <string name="error_loading_message">Проверьте соединение с интернетом</string>
     <string name="error_default_load_error_body">Ошибка подключения: проверьте соединение с интернетом</string>
     <string name="error_loading">Ошибка при загрузке</string>
+    <string name="error_acquiring">Ошибка при приобретении</string>
     <string name="error_date">Указана неверная дата</string>
     <string name="error_set_favorite">Не удалось добавить в избранное</string>
 
@@ -32,7 +33,7 @@
     <string name="action_unsubscribe_2">В подписках</string>
     <string name="action_open">Открыть</string>
     <string name="action_close">Закрыть</string>
-    <string name="action_purchase">Приобрести</string>
+    <string name="action_acquire">Приобрести</string>
     <string name="action_reset">Сбросить</string>
     <string name="action_clear">Очистить</string>
     <string name="action_all">Все</string>
@@ -155,6 +156,7 @@
     <string name="service_acquired_number">Категории</string>
     <string name="service_reviews_number">Отзывов</string>
     <string name="service_rating">Рейтинг</string>
+    <string name="service_general_info">Общая информация</string>
 
     <!-- Currency Abbreviations and Prices -->
     <string name="free">Бесплатно</string>

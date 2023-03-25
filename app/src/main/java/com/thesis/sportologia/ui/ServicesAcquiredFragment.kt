@@ -31,13 +31,15 @@ class ServicesAcquiredFragment : Fragment() {
         binding = FragmentServicesAcquiredBinding.inflate(inflater, container, false)
 
         initOnAuthorPressed()
+        initOnInfoPressed()
         initContentBlock()
 
         return binding.root
     }
 
     private fun initContentBlock() {
-        val listServicesFragmentAcquired =  ListServicesFragmentAcquired.newInstance(CurrentAccount().id)
+        val listServicesFragmentAcquired =
+            ListServicesFragmentAcquired.newInstance(CurrentAccount().id)
 
         adapter = PagerAdapter(this, arrayListOf(listServicesFragmentAcquired))
         viewPager = binding.pager
@@ -74,6 +76,29 @@ class ServicesAcquiredFragment : Fragment() {
         }
     }
 
+    private fun initOnInfoPressed() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getLong(SERVICE_ID)
+            val direction =
+                ServicesAcquiredFragmentDirections.actionServicesAcquiredFragmentToService(
+                    serviceId
+                )
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }
+    }
+
     companion object {
         const val GO_TO_OWN_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE_FROM_SERV_AQC"
         const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_SERV_AQC"
@@ -81,5 +106,6 @@ class ServicesAcquiredFragment : Fragment() {
         const val GO_TO_SERVICE_REQUEST_CODE = "GO_TO_SERVICE_REQUEST_CODE_FROM_SERV_AQC"
 
         const val USER_ID = "USER_ID"
+        const val SERVICE_ID = "SERVICE_ID"
     }
 }

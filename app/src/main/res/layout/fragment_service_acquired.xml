@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tb_toolbarLeftButton="@string/action_close"
-        app:tb_toolbarRightButton="@string/action_purchase"
+        app:tb_toolbarRightButton="@string/action_acquire"
         app:tb_toolbarTitle="@string/service_training_program_short" />
 
     <ScrollView

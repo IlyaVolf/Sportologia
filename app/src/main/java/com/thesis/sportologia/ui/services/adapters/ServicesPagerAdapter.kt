@@ -63,6 +63,9 @@ class ServicesPagerAdapter(
         )
         itemService.setAuthorAvatar(serviceListItem.profilePictureUrl)
         itemService.setPrice(serviceListItem.price, serviceListItem.currency)
+        itemService.setAcquiredNumber(serviceListItem.acquiredNumber)
+        itemService.setReviewsNumber(serviceListItem.reviewsNumber)
+        itemService.setRating(serviceListItem.rating)
         itemService.setFavs(serviceListItem.isFavourite)
         itemService.setPhotos(serviceListItem.photosUrls)
     }

@@ -35,7 +35,6 @@ class ItemServiceView(
     private val binding: ItemServiceBinding
 
     private var isAddedToFavs by Delegates.notNull<Boolean>()
-    private var mode = Mode.PREVIEW
 
     private var listeners = mutableListOf<OnItemServiceActionListener?>()
 
@@ -83,7 +82,6 @@ class ItemServiceView(
         inflater.inflate(R.layout.item_service, this, true)
         binding = readyBinding ?: ItemServiceBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
-        setUpModeRender()
         initListeners()
     }
 
@@ -100,24 +98,6 @@ class ItemServiceView(
         typedArray.recycle()
     }
 
-    fun setMode(mode: Mode) {
-        this.mode = mode
-        setUpModeRender()
-    }
-
-    private fun setUpModeRender() {
-        when (mode) {
-            Mode.PREVIEW -> {
-                binding.serviceMore.visibility = GONE
-                binding.serviceInfo.visibility = VISIBLE
-            }
-            Mode.DETAILED -> {
-                binding.serviceMore.visibility = VISIBLE
-                binding.serviceInfo.visibility = GONE
-            }
-        }
-    }
-
     fun setFavs(isAddedToFavs: Boolean) {
         this.isAddedToFavs = isAddedToFavs
 
@@ -130,7 +110,6 @@ class ItemServiceView(
         }
     }
 
-    // TODO временный метод. Нужно через setFavs после + ответа с сервера
     private fun toggleFavs() {
         isAddedToFavs = !isAddedToFavs
 
@@ -164,18 +143,17 @@ class ItemServiceView(
     }
 
     fun setAcquiredNumber(acquiredNumber: Int) {
-        binding.serviceAcquiredNumber.text = acquiredNumber.toString()
+        binding.serviceAcquiredNumber.text = formatQuantity(acquiredNumber)
     }
 
     fun setReviewsNumber(reviewsNumber: Int) {
-        binding.serviceReviewsNumber.text = reviewsNumber.toString()
+        binding.serviceReviewsNumber.text = formatQuantity(reviewsNumber)
     }
 
-    fun setRating(rating: String) {
-        binding.serviceRatingAverage.text = rating
+    fun setRating(rating: Float) {
+        binding.serviceRatingAverage.text = rating.toString()
     }
 
-    // TODO логика преобразования валют в VM
     fun setPrice(price: Float, currency: String) {
         binding.servicePrice.text = getPriceWithCurrency(context, price, currency)
     }
@@ -230,11 +208,6 @@ class ItemServiceView(
             }
         }
 
-        binding.serviceMore.setOnClickListener {
-            listeners.forEach { listener ->
-                listener?.invoke(OnItemServiceAction.MORE)
-            }
-        }
     }
 
     fun setListener(listener: OnItemServiceActionListener?) {
@@ -243,10 +216,6 @@ class ItemServiceView(
 
     fun removeListener(listener: OnItemServiceActionListener?) {
         listeners.remove(listener)
-    }
-
-    enum class Mode {
-        PREVIEW, DETAILED
     }
 
     // SAVE
