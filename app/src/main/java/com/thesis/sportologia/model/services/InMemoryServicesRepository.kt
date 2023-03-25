@@ -6,6 +6,8 @@ import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
+import com.thesis.sportologia.model.services.entities.ServiceDetailed
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.TrainingProgrammesCategories
@@ -23,11 +25,11 @@ class InMemoryServicesRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ServicesRepository {
 
-    private val serviceSample = Service(
+    private val serviceSample = ServiceDetailed(
         id = 0L,
         name = "Программа быстрого похудения",
-        type = Service.ServiceType.TRAINING_PROGRAM,
-        publicDescription = "Результат уже через 5 недель",
+        type = ServiceType.TRAINING_PROGRAM,
+        generalDescription = "Результат уже через 5 недель",
         authorId = "stroitel",
         authorName = "Тренажёрный зал Строитель",
         authorType = UserType.ORGANIZATION,
@@ -42,17 +44,20 @@ class InMemoryServicesRepository @Inject constructor(
         ),
         isFavourite = false,
         isAcquired = false,
-        photosUrls = mutableListOf("https://best5supplements.com/wp-content/uploads/2017/11/bicep-before-after-1024x536.jpg"),
+        generalPhotosUrls = mutableListOf("https://best5supplements.com/wp-content/uploads/2017/11/bicep-before-after-1024x536.jpg"),
         rating = 5.0F,
         acquiredNumber = 13,
         reviewsNumber = 2,
+        detailedDescription = "Тренер Наталья. Для связи используйте WhatsApp",
+        detailedPhotosUrls = null,
+        exercises = listOf()
     )
 
-    private val serviceSample2 = Service(
+    private val serviceSample2 = ServiceDetailed(
         id = 1L,
         name = "Набор мышечной массы гантялями",
-        type = Service.ServiceType.TRAINING_PROGRAM,
-        publicDescription = "Нет денег на зал, но есть гантели дома? - не беда.",
+        type = ServiceType.TRAINING_PROGRAM,
+        generalDescription = "Нет денег на зал, но есть гантели дома? - не беда.",
         authorId = "i_volf",
         authorName = "Илья Вольф",
         authorType = UserType.ATHLETE,
@@ -67,13 +72,16 @@ class InMemoryServicesRepository @Inject constructor(
         ),
         isFavourite = false,
         isAcquired = true,
-        photosUrls = null,
+        generalPhotosUrls = null,
         rating = 5.0F,
         acquiredNumber = 13,
         reviewsNumber = 2,
+        detailedDescription = "Делать надо качсетвенно. Отписываться сюда: ***.com",
+        detailedPhotosUrls = null,
+        exercises = listOf()
     )
 
-    private val services = mutableListOf(
+    private val servicesDetailed = mutableListOf(
         serviceSample,
         serviceSample2,
         serviceSample.copy(id = 2L, isFavourite = true, isAcquired = true),
@@ -101,6 +109,8 @@ class InMemoryServicesRepository @Inject constructor(
         serviceSample.copy(id = 24L),
         serviceSample.copy(id = 25L),
     )
+
+    private val services = servicesDetailed.map { it.toGeneral() }.toMutableList()
 
     private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
 
@@ -189,7 +199,10 @@ class InMemoryServicesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouriteServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>> {
+    override suspend fun getPagedUserFavouriteServices(
+        userId: String,
+        serviceType: ServiceType?
+    ): Flow<PagingData<Service>> {
         val loader: ServicesPageLoader = { pageIndex, pageSize ->
             getUserFavouriteServices(pageIndex, pageSize, userId, serviceType)
         }
@@ -205,7 +218,10 @@ class InMemoryServicesRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedUserAcquiredServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>> {
+    override suspend fun getPagedUserAcquiredServices(
+        userId: String,
+        serviceType: ServiceType?
+    ): Flow<PagingData<Service>> {
         val loader: ServicesPageLoader = { pageIndex, pageSize ->
             getUserAcquiredServices(pageIndex, pageSize, userId, serviceType)
         }
@@ -226,14 +242,31 @@ class InMemoryServicesRepository @Inject constructor(
 
         //throw Exception("abc")
 
-        return@withContext if (services.none { it.id == serviceId }) null else services.filter { it.id == serviceId }[0]
+        return@withContext if (services.none { it.id == serviceId }) {
+            null
+        } else {
+            services.filter { it.id == serviceId }[0]
+        }
     }
 
-    suspend fun getUserFavouriteServices(
+    override suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed? =
+        withContext(ioDispatcher) {
+            delay(1000)
+
+            //throw Exception("abc")
+
+            return@withContext if (servicesDetailed.none { it.id == serviceId }) {
+                null
+            } else {
+                servicesDetailed.filter { it.id == serviceId }[0]
+            }
+        }
+
+    private suspend fun getUserFavouriteServices(
         pageIndex: Int,
         pageSize: Int,
         userId: String,
-        serviceType: Service.ServiceType?
+        serviceType: ServiceType?
     ): List<Service> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
@@ -261,7 +294,7 @@ class InMemoryServicesRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         userId: String,
-        serviceType: Service.ServiceType?
+        serviceType: ServiceType?
     ): List<Service> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
@@ -380,26 +413,6 @@ class InMemoryServicesRepository @Inject constructor(
 
         services.find { it.id == serviceId }?.isFavourite = isFavourite
     }
-
-    /*override suspend fun likeService(userId: Int, service: Service) {
-        delay(1000)
-        updateService(service.copy(isLiked = true, likesCount = service.likesCount + 1))
-    }
-
-    override suspend fun unlikeService(userId: Int, service: Service) {
-        delay(1000)
-        updateService(service.copy(isLiked = false, likesCount = service.likesCount - 1))
-    }
-
-    override suspend fun addServiceToFavourites(userId: Int, service: Service) {
-        delay(1000)
-        updateService(service.copy(isAddedToFavourites = true))
-    }
-
-    override suspend fun removeServiceFromFavourites(userId: Int, service: Service) {
-        delay(1000)
-        updateService(service.copy(isAddedToFavourites = false))
-    }*/
 
     private companion object {
         const val PAGE_SIZE = 6

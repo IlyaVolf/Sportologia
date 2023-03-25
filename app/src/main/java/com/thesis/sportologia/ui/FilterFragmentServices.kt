@@ -17,6 +17,7 @@ import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
 import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
@@ -92,7 +93,7 @@ class FilterFragmentServices : Fragment() {
                 ),
                 Pair(
                     getString(R.string.filter_services_tr_programs_short),
-                    Service.ServiceType.TRAINING_PROGRAM
+                    ServiceType.TRAINING_PROGRAM
                 ),
             )
         )

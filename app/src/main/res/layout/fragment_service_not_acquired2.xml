@@ -5,7 +5,7 @@
     android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.thesis.sportologia.ui.ServiceAcquiredFragment">
+    tools:context="com.thesis.sportologia.ui.ServiceNotAcquiredFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/materialup.appbar"
@@ -66,10 +66,7 @@
                     android:layout_gravity="start"
                     android:layout_marginHorizontal="@dimen/margin_sides"
                     android:text="Название"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toTopOf="@id/space_1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="20sp" />
 
 
                 <TextView
@@ -80,10 +77,7 @@
                     android:layout_gravity="start"
                     android:layout_marginHorizontal="@dimen/margin_sides"
                     android:text="Вид услуги"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toTopOf="@id/space_1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textSize="12sp" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -95,19 +89,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginHorizontal="@dimen/margin_sides"
-                    android:text="@string/service_general_info"
-                    app:layout_constraintBottom_toTopOf="@id/space_1"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:text="@string/service_general_info" />
 
                 <Space
-                    android:id="@+id/space_1"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    app:layout_constraintBottom_toTopOf="@id/text_block"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/title" />
+                    android:layout_height="1dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -379,18 +365,18 @@
                         android:text="@string/test_text" />
 
                     <Space
-                        android:id="@+id/service_textSpaceBottom"
+                        android:id="@+id/service_textSpaceBottom_general"
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
 
                     <!-- app:pb_isMainPhotoSquareLimited="true" -->
                     <com.thesis.sportologia.ui.views.PhotosBlockView
-                        android:id="@+id/service_photosBlock"
+                        android:id="@+id/service_photosBlock_general"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <Space
-                        android:id="@+id/service_photosBlockSpace"
+                        android:id="@+id/service_photosBlockSpace_general"
                         android:layout_width="match_parent"
                         android:layout_height="15dp" />
 
@@ -411,6 +397,57 @@
                             app:tint="@color/background_inverted" />
 
                     </FrameLayout>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+
+                <TextView
+                    style="@style/TextStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:layout_marginHorizontal="@dimen/margin_sides"
+                    android:text="@string/service_detailed_info" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_card"
+                    android:orientation="vertical"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="16dp">
+
+                    <TextView
+                        android:id="@+id/service_detailedDescription"
+                        style="@style/TextStyleRegular"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_sides"
+                        android:maxLength="1000"
+                        android:text="@string/test_text" />
+
+                    <Space
+                        android:id="@+id/service_textSpaceBottom_detailed"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <!-- app:pb_isMainPhotoSquareLimited="true" -->
+                    <com.thesis.sportologia.ui.views.PhotosBlockView
+                        android:id="@+id/service_photosBlock_Detailed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                    <Space
+                        android:id="@+id/service_photosBlockSpace_detailed"
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
 
                 </LinearLayout>
 

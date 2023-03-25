@@ -3,19 +3,23 @@ package com.thesis.sportologia.model.services
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceDetailed
+import com.thesis.sportologia.model.services.entities.ServiceType
 import kotlinx.coroutines.flow.Flow
 
 interface ServicesRepository {
 
     suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>>
 
-    suspend fun getPagedUserFavouriteServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>>
+    suspend fun getPagedUserFavouriteServices(userId: String, serviceType: ServiceType?): Flow<PagingData<Service>>
 
-    suspend fun getPagedUserAcquiredServices(userId: String, serviceType: Service.ServiceType?): Flow<PagingData<Service>>
+    suspend fun getPagedUserAcquiredServices(userId: String, serviceType: ServiceType?): Flow<PagingData<Service>>
 
     suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<Service>>
 
-    suspend fun getService(postId: Long): Service?
+    suspend fun getService(serviceId: Long): Service?
+
+    suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed?
 
     suspend fun createService(service: Service)
 

@@ -3,17 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/service"
-    app:startDestination="@id/serviceNotAcquiredFragment">
+    app:startDestination="@id/serviceFragment">
     <fragment
-        android:id="@+id/serviceNotAcquiredFragment"
-        android:name="com.thesis.sportologia.ui.ServiceNotAcquiredFragment"
-        android:label="fragment_service_not_acquired"
-        tools:layout="@layout/fragment_service_not_acquired">
+        android:id="@+id/serviceFragment"
+        android:name="com.thesis.sportologia.ui.ServiceFragment"
+        android:label="fragment_service"
+        tools:layout="@layout/fragment_service">
         <argument
             android:name="serviceId"
             app:argType="long" />
         <action
-            android:id="@+id/action_serviceNotAcquiredFragment_to_profile_nested"
+            android:id="@+id/action_serviceFragment_to_profile_nested"
             app:destination="@id/profile_nested">
             <argument
                 android:name="userId"

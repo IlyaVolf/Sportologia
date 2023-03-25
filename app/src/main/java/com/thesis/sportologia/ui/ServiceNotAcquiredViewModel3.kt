@@ -15,7 +15,6 @@ import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.posts.CreateEditPostViewModel
 import com.thesis.sportologia.ui.posts.ListPostsViewModel
 import com.thesis.sportologia.ui.posts.entities.PostListItem
-import com.thesis.sportologia.ui.services.entities.ServiceFullItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted

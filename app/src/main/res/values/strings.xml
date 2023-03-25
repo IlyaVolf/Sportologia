@@ -43,6 +43,15 @@
     <string name="action_save">Сохранить</string>
     <string name="action_discard_changes">Отменить изменения</string>
 
+    <!-- Photos -->
+    <string name="mon_short">пн</string>
+    <string name="tue_short">вт</string>
+    <string name="wen_short">ср</string>
+    <string name="thu_short">чт</string>
+    <string name="fri_short">пт</string>
+    <string name="sat_short">сб</string>
+    <string name="sun_short">вс</string>
+
     <!-- Categories -->
     <string name="categories_not_specified">Не указаны</string>
     <string name="category_running">Бег</string>
@@ -157,6 +166,7 @@
     <string name="service_reviews_number">Отзывов</string>
     <string name="service_rating">Рейтинг</string>
     <string name="service_general_info">Общая информация</string>
+    <string name="service_detailed_info">Подробная информация</string>
 
     <!-- Currency Abbreviations and Prices -->
     <string name="free">Бесплатно</string>
@@ -276,6 +286,13 @@
     <string name="exercise_sets_number">Число подходов</string>
     <string name="exercise_reps_number">Число повторений</string>
     <string name="exercise_regularity">Регулярность</string>
+
+    <string name="exercise_of_sets">подходов</string>
+    <string name="exercise_of_reps">повторений</string>
+    <string name="exercise_everyday">каждый день</string>
+    <string name="exercise_in_a_day">через день</string>
+    <string name="exercise_photo">фото</string>
+
 
     <string name="exercise_name_hint">Укажите название упражнения</string>
     <string name="exercise_description_hint">Укажите описание упражнения</string>

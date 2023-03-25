@@ -6,7 +6,7 @@ import com.thesis.sportologia.model.FilterParams
 data class FilterParamsServices(
     var categories: HashMap<String, Boolean>?,
     var sortBy: ServicesSortBy,
-    var serviceType: Service.ServiceType?,
+    var serviceType: ServiceType?,
     var ratingFrom: Float?,
     var priceFrom: Float?,
 ) : FilterParams {

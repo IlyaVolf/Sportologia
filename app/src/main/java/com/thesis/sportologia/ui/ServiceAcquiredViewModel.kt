@@ -1,11 +1,12 @@
 package com.thesis.sportologia.ui
 
 
-import androidx.lifecycle.viewModelScope
+/**import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.ui.base.BaseViewModel
+import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
 import com.thesis.sportologia.ui.services.entities.ServiceViewItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
@@ -16,13 +17,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-/**class ServiceNotAcquiredViewModel @AssistedInject constructor(
+class ServiceAcquiredViewModel @AssistedInject constructor(
     @Assisted private val serviceId: Long,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
 
-    private val _serviceHolder = ObservableHolder<ServiceViewItem>(DataHolder.loading())
+    private val _serviceHolder = ObservableHolder<ServiceDetailedViewItem>(DataHolder.loading())
     val serviceHolder = _serviceHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
@@ -39,11 +40,11 @@ import kotlinx.coroutines.withContext
             withContext(Dispatchers.Main) {
                 _serviceHolder.value = DataHolder.loading()
             }
-            val service = servicesRepository.getService(serviceId)
+            val serviceDetailed = servicesRepository.getServiceDetailed(serviceId)
             withContext(Dispatchers.Main) {
-                if (service != null) {
+                if (serviceDetailed != null) {
                     _serviceHolder.value =
-                        DataHolder.ready(ServiceViewItem(service.copy()))
+                        DataHolder.ready(ServiceDetailedViewItem(serviceDetailed.copy()))
                 } else {
                     _serviceHolder.value = DataHolder.error(Exception("no such service"))
                 }
@@ -102,7 +103,7 @@ import kotlinx.coroutines.withContext
         ACQUIRE_ERROR, FAVS_ERROR
     }
 
-    class LocalChanges(val holder: ObservableHolder<ServiceViewItem>) {
+    class LocalChanges(val holder: ObservableHolder<ServiceDetailedViewItem>) {
         var isLoading = false
 
         var isFavouriteFlag: Boolean? = null
@@ -110,7 +111,7 @@ import kotlinx.coroutines.withContext
                 holder.value?.onReady {
                     holder.value = DataHolder.READY(
                         it.copy(
-                            service = it.service.copy(
+                            serviceDetailed = it.serviceDetailed.copy(
                                 isFavourite = value ?: it.isFavourite
                             )
                         )
@@ -122,7 +123,7 @@ import kotlinx.coroutines.withContext
 
     @AssistedFactory
     interface Factory {
-        fun create(serviceId: Long): ServiceNotAcquiredViewModel
+        fun create(serviceId: Long): ServiceAcquiredViewModel
     }
 
 }*/

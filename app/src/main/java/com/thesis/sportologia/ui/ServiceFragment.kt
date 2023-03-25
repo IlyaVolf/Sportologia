@@ -12,31 +12,32 @@ import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentServiceNotAcquiredBinding
+import com.thesis.sportologia.databinding.FragmentServiceBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.services.entities.ServiceViewItem
+import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
+import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlin.properties.Delegates
 
-/**@AndroidEntryPoint
-class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_acquired) {
+@AndroidEntryPoint
+class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     @Inject
-    lateinit var factory: ServiceNotAcquiredViewModel.Factory
+    lateinit var factory: ServiceViewModel.Factory
 
     override val viewModel by viewModelCreator {
         factory.create(serviceId)
     }
 
-    private val args by navArgs<ServiceNotAcquiredFragmentArgs>()
+    private val args by navArgs<ServiceFragmentArgs>()
 
-    private lateinit var binding: FragmentServiceNotAcquiredBinding
+    private lateinit var binding: FragmentServiceBinding
     private var serviceId by Delegates.notNull<Long>()
 
     private fun getServiceIdArg(): Long = args.serviceId
@@ -45,7 +46,7 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentServiceNotAcquiredBinding.inflate(inflater, container, false)
+        binding = FragmentServiceBinding.inflate(inflater, container, false)
         serviceId = getServiceIdArg()
 
         initToolbar()
@@ -63,22 +64,23 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
         }
     }
 
-    private fun initListeners(serviceFullItem: ServiceViewItem) {
+    private fun initGeneralListeners(serviceDetailedViewItem: ServiceDetailedViewItem) {
         binding.serviceStatsBlock.setOnClickListener {
             //
         }
 
         binding.serviceOrganizerBlock.setOnClickListener {
-            onAuthorPressed(serviceFullItem.authorId)
+            onAuthorPressed(serviceDetailedViewItem.authorId)
         }
 
         binding.serviceStar.setOnClickListener {
-            //setFavs(!serviceFullItem.isFavourite)
+            //setFavs(!serviceDetailedViewItem.isFavourite)
             viewModel.onToggleFavouriteFlag()
         }
 
-        binding.servicePhotosBlock.setOnClickListener { }
+        binding.servicePhotosBlockGeneral.setOnClickListener { }
     }
+
 
     private fun initRetryListener() {
         binding.serviceViewLoadState.flpError.veTryAgain.setOnClickListener {
@@ -86,36 +88,51 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
         }
     }
 
-    private fun renderService(serviceFullItem: ServiceViewItem) {
-        renderGeneralInfo(serviceFullItem)
+    private fun renderService(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        renderGeneralInfo(serviceDetailedViewItem)
+        if (serviceDetailedViewItem.isAcquired) {
+            binding.detailedContent.visibility = VISIBLE
+            renderDetailedInfo(serviceDetailedViewItem)
+        } else {
+            binding.detailedContent.visibility = GONE
+        }
     }
 
-    private fun renderGeneralInfo(serviceFullItem: ServiceViewItem) {
-        initListeners(serviceFullItem)
+    private fun renderGeneralInfo(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        initGeneralListeners(serviceDetailedViewItem)
 
         setCategories(
             TrainingProgrammesCategories.getLocalizedTrainingProgrammesCategories(
                 context!!,
-                serviceFullItem.categories
+                serviceDetailedViewItem.categories
             )
         )
-        setServiceName(serviceFullItem.name)
-        setServiceType(serviceFullItem.serviceType)
-        setDescription(serviceFullItem.generalDescription)
-        setAuthorName(serviceFullItem.authorName)
+        setServiceName(serviceDetailedViewItem.name)
+        setServiceType(serviceDetailedViewItem.serviceType)
+        setGeneralDescription(serviceDetailedViewItem.generalDescription)
+        setAuthorName(serviceDetailedViewItem.authorName)
         setAuthorType(
             Localization.convertUserTypeEnumToLocalized(
                 context!!,
-                serviceFullItem.authorType
+                serviceDetailedViewItem.authorType
             )
         )
-        setAuthorAvatar(serviceFullItem.profilePictureUrl)
-        setPrice(serviceFullItem.price, serviceFullItem.currency)
-        setAcquiredNumber(serviceFullItem.acquiredNumber)
-        setReviewsNumber(serviceFullItem.reviewsNumber)
-        setRating(serviceFullItem.rating)
-        setFavs(serviceFullItem.isFavourite)
-        setPhotos(serviceFullItem.generalPhotosUrls)
+        setAuthorAvatar(serviceDetailedViewItem.profilePictureUrl)
+        setPrice(serviceDetailedViewItem.price, serviceDetailedViewItem.currency)
+        setAcquiredNumber(serviceDetailedViewItem.acquiredNumber)
+        setReviewsNumber(serviceDetailedViewItem.reviewsNumber)
+        setRating(serviceDetailedViewItem.rating)
+        setFavs(serviceDetailedViewItem.isFavourite)
+        setGeneralPhotos(serviceDetailedViewItem.generalPhotosUrls)
+    }
+
+    private fun renderDetailedInfo(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        setDetailedDescription(serviceDetailedViewItem.detailedDescription)
+        setDetailedPhotos(serviceDetailedViewItem.detailedPhotosUrls)
+
+        val adapter = ExercisesAdapter(onExercisePressed)
+        binding.exercisesList.adapter = adapter
+        adapter.setupItems(serviceDetailedViewItem.exercises)
     }
 
     override fun observeViewModel() {
@@ -147,8 +164,8 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
 
         viewModel.toastMessageEvent.observe(viewLifecycleOwner) { holder ->
             val toastText = when (holder.get()) {
-                ServiceNotAcquiredViewModel.ErrorType.FAVS_ERROR -> getString(R.string.error)
-                ServiceNotAcquiredViewModel.ErrorType.ACQUIRE_ERROR -> getString(R.string.error_acquiring)
+                ServiceViewModel.ErrorType.FAVS_ERROR -> getString(R.string.error)
+                ServiceViewModel.ErrorType.ACQUIRE_ERROR -> getString(R.string.error_acquiring)
                 null -> getString(R.string.error)
             }
             toast(context, toastText)
@@ -158,7 +175,7 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
     private fun onAuthorPressed(userIdToGo: String) {
         if (userIdToGo != CurrentAccount().id) {
             val direction =
-                ServiceNotAcquiredFragmentDirections.actionServiceNotAcquiredFragmentToProfileNested(
+                ServiceFragmentDirections.actionServiceFragmentToProfileNested(
                     userIdToGo
                 )
             findNavController().navigate(
@@ -179,13 +196,30 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
         }
     }
 
+    private val onExercisePressed: (Exercise) -> Unit = {
+        /*val direction =
+            ServiceNotAcquiredFragmentDirections.actionServiceNotAcquiredFragmentToProfileNested(
+                userIdToGo
+            )
+        findNavController().navigate(
+            direction,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })*/
+    }
+
+
     private fun onBackButtonPressed() {
         findNavController().navigateUp()
     }
 
     private fun onAcquireButtonPressed() {
         viewModel.acquireService()
-        findNavController().navigateUp()
     }
 
     private fun setFavs(isAddedToFavs: Boolean) {
@@ -207,7 +241,7 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
             Localization.convertServiceTypeEnumToLocalized(context!!, serviceType)
     }
 
-    private fun setDescription(description: String) {
+    private fun setGeneralDescription(description: String) {
         binding.serviceGeneralDescription.text = description
     }
 
@@ -248,13 +282,26 @@ class ServiceNotAcquiredFragment : BaseFragment(R.layout.fragment_service_not_ac
         }
     }
 
-    private fun setPhotos(photosURIs: List<String>?) {
-        binding.servicePhotosBlock.uploadPhotos(photosURIs ?: listOf())
+    private fun setGeneralPhotos(photosURIs: List<String>?) {
+        binding.servicePhotosBlockGeneral.uploadPhotos(photosURIs ?: listOf())
         if (photosURIs == null || photosURIs.isEmpty()) {
-            binding.serviceTextSpaceBottom.visibility = GONE
+            binding.serviceTextSpaceBottomGeneral.visibility = GONE
         } else {
-            binding.serviceTextSpaceBottom.visibility = VISIBLE
+            binding.serviceTextSpaceBottomGeneral.visibility = VISIBLE
         }
     }
 
-}*/
+    private fun setDetailedDescription(description: String) {
+        binding.serviceDetailedDescription.text = description
+    }
+
+    private fun setDetailedPhotos(photosURIs: List<String>?) {
+        binding.servicePhotosBlockDetailed.uploadPhotos(photosURIs ?: listOf())
+        if (photosURIs == null || photosURIs.isEmpty()) {
+            binding.serviceTextSpaceBottomDetailed.visibility = GONE
+        } else {
+            binding.serviceTextSpaceBottomDetailed.visibility = VISIBLE
+        }
+    }
+
+}

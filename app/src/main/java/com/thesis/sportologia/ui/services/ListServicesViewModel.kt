@@ -9,6 +9,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.services.adapters.ServicesHeaderAdapter
 import com.thesis.sportologia.ui.services.adapters.ServicesPagerAdapter
@@ -30,8 +31,8 @@ abstract class ListServicesViewModel constructor(
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsServices>()
 
-    private val serviceTypeLiveData = MutableLiveData<Service.ServiceType?>(null)
-    var serviceType: Service.ServiceType?
+    private val serviceTypeLiveData = MutableLiveData<ServiceType?>(null)
+    var serviceType: ServiceType?
         get() = serviceTypeLiveData.value
         set(value) {
             serviceTypeLiveData.value = value
@@ -95,7 +96,7 @@ abstract class ListServicesViewModel constructor(
         }
     }
 
-    override fun filterApply(serviceType: Service.ServiceType?) {
+    override fun filterApply(serviceType: ServiceType?) {
         if (this.serviceType == serviceType) return
 
         this.serviceType = serviceType
