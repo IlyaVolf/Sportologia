@@ -25,7 +25,7 @@ class ServiceViewModel @AssistedInject constructor(
     private val _serviceHolder = ObservableHolder<ServiceDetailedViewItem>(DataHolder.loading())
     val serviceHolder = _serviceHolder.share()
 
-    private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
+    private val _toastMessageEvent = MutableLiveEvent<ResponseType>()
     val toastMessageEvent = _toastMessageEvent.share()
 
     private val localChanges = LocalChanges(_serviceHolder)
@@ -65,11 +65,12 @@ class ServiceViewModel @AssistedInject constructor(
                 }
                 servicesRepository.acquireService(serviceId)
                 withContext(Dispatchers.Main) {
-                    localChanges.isAcquired = true
+                    _toastMessageEvent.publishEvent(ResponseType.ACQUIRED_SUCCESSFULLY)
+                    localChanges.isAcquiredFlag = true
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    _toastMessageEvent.publishEvent(ErrorType.ACQUIRE_ERROR)
+                    _toastMessageEvent.publishEvent(ResponseType.ACQUIRE_ERROR)
                 }
             } finally {
                 withContext(Dispatchers.Main) {
@@ -101,7 +102,7 @@ class ServiceViewModel @AssistedInject constructor(
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
-                        _toastMessageEvent.publishEvent(ErrorType.FAVS_ERROR)
+                        _toastMessageEvent.publishEvent(ResponseType.FAVS_ERROR)
                     }
                 } finally {
                     withContext(Dispatchers.Main) {
@@ -112,14 +113,14 @@ class ServiceViewModel @AssistedInject constructor(
         }
     }
 
-    enum class ErrorType {
-        ACQUIRE_ERROR, FAVS_ERROR
+    enum class ResponseType {
+        ACQUIRE_ERROR, FAVS_ERROR, ACQUIRED_SUCCESSFULLY
     }
 
     class LocalChanges(val holder: ObservableHolder<ServiceDetailedViewItem>) {
         var isLoading = false
 
-        var isAcquired: Boolean? = null
+        var isAcquiredFlag: Boolean? = null
             set(value) {
                 holder.value?.onReady {
                     holder.value = DataHolder.READY(

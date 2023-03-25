@@ -57,7 +57,7 @@ class ToolbarBasicView(
             attrs, R.styleable.ToolbarBasicView, defStyleAttr, defStyleRes
         )
 
-        val title = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarTitle)
+        val title = typedArray.getString(R.styleable.ToolbarBasicView_tb_toolbarTitle)
         binding.title.text = title ?: "Title"
 
         isUnderlined =
@@ -68,21 +68,11 @@ class ToolbarBasicView(
             binding.underline.visibility = INVISIBLE
         }
 
-        val leftButtonText = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarLeftButton)
-        if (leftButtonText == null) {
-            binding.leftButton.visibility = GONE
-        } else {
-            binding.leftButton.visibility = VISIBLE
-            binding.leftButton.text = leftButtonText
-        }
+        val leftButtonText = typedArray.getString(R.styleable.ToolbarBasicView_tb_toolbarLeftButton)
+        setLeftButtonText(leftButtonText)
 
-        val rightButtonText = typedArray.getText(R.styleable.ToolbarBasicView_tb_toolbarRightButton)
-        if (rightButtonText == null) {
-            binding.rightButton.visibility = GONE
-        } else {
-            binding.rightButton.visibility = VISIBLE
-            binding.rightButton.text = rightButtonText
-        }
+        val rightButtonText = typedArray.getString(R.styleable.ToolbarBasicView_tb_toolbarRightButton)
+        setRightButtonText(rightButtonText)
 
         typedArray.recycle()
     }
@@ -100,16 +90,26 @@ class ToolbarBasicView(
         }
     }
 
-    fun setLeftButtonText(text: String) {
-        binding.leftButton.text = text
+    fun setLeftButtonText(text: String?) {
+        if (text == null) {
+            binding.leftButton.visibility = GONE
+        } else {
+            binding.leftButton.visibility = VISIBLE
+            binding.leftButton.text = text
+        }
     }
 
     fun setTitle(text: String) {
         binding.title.text = text
     }
 
-    fun setRightButtonText(text: String) {
-        binding.rightButton.text = text
+    fun setRightButtonText(text: String?) {
+        if (text == null) {
+            binding.rightButton.visibility = GONE
+        } else {
+            binding.rightButton.visibility = VISIBLE
+            binding.rightButton.text = text
+        }
     }
 
     fun setListener(listener: OnToolbarBasicActionListener?) {

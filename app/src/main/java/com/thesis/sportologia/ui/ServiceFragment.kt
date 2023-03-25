@@ -89,12 +89,19 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     }
 
     private fun renderService(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        if (serviceDetailedViewItem.isAcquired) {
+            binding.toolbar.setRightButtonText(getString(R.string.action_acquire))
+        } else {
+            binding.toolbar.setRightButtonText(null)
+        }
+
         renderGeneralInfo(serviceDetailedViewItem)
         if (serviceDetailedViewItem.isAcquired) {
-            binding.detailedContent.visibility = VISIBLE
+            //binding.detailedContent.visibility = VISIBLE
             renderDetailedInfo(serviceDetailedViewItem)
         } else {
-            binding.detailedContent.visibility = GONE
+            //binding.detailedContent.visibility = GONE
+            renderDetailedInfo(serviceDetailedViewItem)
         }
     }
 
@@ -164,8 +171,9 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
         viewModel.toastMessageEvent.observe(viewLifecycleOwner) { holder ->
             val toastText = when (holder.get()) {
-                ServiceViewModel.ErrorType.FAVS_ERROR -> getString(R.string.error)
-                ServiceViewModel.ErrorType.ACQUIRE_ERROR -> getString(R.string.error_acquiring)
+                ServiceViewModel.ResponseType.ACQUIRED_SUCCESSFULLY -> getString(R.string.service_acquired_successfully)
+                ServiceViewModel.ResponseType.FAVS_ERROR -> getString(R.string.error)
+                ServiceViewModel.ResponseType.ACQUIRE_ERROR -> getString(R.string.error_acquiring)
                 null -> getString(R.string.error)
             }
             toast(context, toastText)

@@ -109,6 +109,7 @@ class SearchFragment : Fragment() {
         initSearchBar()
         initFilterResultListener()
         initContentBlock()
+        initOnInfoPressed()
         initNavToProfile()
 
         //sendSearchQuery()
@@ -213,6 +214,29 @@ class SearchFragment : Fragment() {
                     bundleOf()
                 )
             }
+        }
+    }
+
+    private fun initOnInfoPressed() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getLong(SERVICE_ID)
+            val direction =
+                SearchFragmentDirections.actionSearchFragmentToService(
+                    serviceId
+                )
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
         }
     }
 

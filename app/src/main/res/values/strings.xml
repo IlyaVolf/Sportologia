@@ -165,6 +165,7 @@
     <string name="service_acquired_number">Категории</string>
     <string name="service_reviews_number">Отзывов</string>
     <string name="service_rating">Рейтинг</string>
+    <string name="service_acquired_successfully">Успешное приобретение</string>
     <string name="service_general_info">Общая информация</string>
     <string name="service_detailed_info">Подробная информация</string>
 

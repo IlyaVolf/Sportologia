@@ -84,7 +84,7 @@ class InMemoryServicesRepository @Inject constructor(
     private val servicesDetailed = mutableListOf(
         serviceSample,
         serviceSample2,
-        serviceSample.copy(id = 2L, isFavourite = true, isAcquired = true),
+        serviceSample.copy(id = 2L, isFavourite = true, isAcquired = false),
         serviceSample.copy(id = 3L),
         serviceSample.copy(id = 4L),
         serviceSample.copy(id = 5L),
