@@ -7,17 +7,20 @@ fun removeEmptyStrings(text: String): String {
 fun formatFloat(number: Float, accuracy: Int, removeLeadingZeros: Boolean): String {
     val numberString = "%.${accuracy}f".format(number)
     val numberSplit = numberString.split(".")
+    if (numberSplit.size == 1) {
+        return numberString
+    }
     var fraction = numberSplit.last()
-    if (removeLeadingZeros) {
+    return if (removeLeadingZeros) {
         while (fraction.last() == '0') {
             fraction = fraction.substring(0, fraction.length - 1)
         }
-        return if (fraction == "") {
+        if (fraction == "") {
             numberSplit.first()
         } else {
             numberSplit.first() + "." + fraction
         }
-    } else return numberString
+    } else numberString
 }
 
 fun concatMap(map: Map<String, Boolean>?, separator: String): String {
