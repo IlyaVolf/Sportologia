@@ -89,6 +89,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     }
 
     private fun renderService(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        // TODO баг при приобретении все равно виден. А также пррблемы с видимостью
         if (serviceDetailedViewItem.isAcquired) {
             binding.toolbar.setRightButtonText(null)
         } else {
@@ -136,10 +137,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     private fun renderDetailedInfo(serviceDetailedViewItem: ServiceDetailedViewItem) {
         setDetailedDescription(serviceDetailedViewItem.detailedDescription)
         setDetailedPhotos(serviceDetailedViewItem.detailedPhotosUrls)
-
-        val adapter = ExercisesAdapter(onExercisePressed)
-        binding.exercisesList.adapter = adapter
-        adapter.setupItems(serviceDetailedViewItem.exercises)
+        setExercises(serviceDetailedViewItem.exercises)
     }
 
     override fun observeViewModel() {
@@ -312,6 +310,20 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
             binding.servicePhotosBlockBeforeDetailed.visibility = VISIBLE
             binding.servicePhotosBlockAfterDetailed.visibility = VISIBLE
         }
+    }
+
+    private fun setExercises(exercises: List<Exercise>) {
+        if (exercises.isEmpty()) {
+            binding.exercisesListEmpty.visibility = VISIBLE
+            binding.exercisesList.visibility = GONE
+        } else {
+            binding.exercisesListEmpty.visibility = GONE
+            binding.exercisesList.visibility = VISIBLE
+        }
+
+        val adapter = ExercisesAdapter(onExercisePressed)
+        binding.exercisesList.adapter = adapter
+        adapter.setupItems(exercises)
     }
 
 }

@@ -30,7 +30,6 @@
                     android:layout_height="wrap_content"
                     app:tb_isToolbarUnderlined="false"
                     app:tb_toolbarLeftButton="@string/action_back"
-                    app:tb_toolbarRightButton="@string/action_acquire"
                     app:tb_toolbarTitle="@string/service_training_program_short" />
 
             </LinearLayout>
@@ -436,7 +435,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/margin_sides"
-                            android:maxLength="1000"
+                            android:maxLength="10000"
                             android:text="@string/test_text" />
 
                         <Space
@@ -479,7 +478,15 @@
                         android:background="@drawable/background_card"
                         android:orientation="vertical"
                         android:paddingTop="12dp"
-                        android:paddingBottom="16dp">
+                        android:paddingBottom="12dp">
+
+                        <TextView
+                            android:id="@+id/exercises_list_empty"
+                            style="@style/TextStyleRegular"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/margin_sides"
+                            android:text="@string/no_exercises" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/exercises_list"
@@ -493,6 +500,10 @@
                             tools:listitem="@layout/item_exercise" />
 
                     </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="16dp" />
 
                 </LinearLayout>
 

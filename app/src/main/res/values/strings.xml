@@ -169,6 +169,8 @@
     <string name="service_general_info">Общая информация</string>
     <string name="service_detailed_info">Подробная информация</string>
 
+    <string name="no_exercises">Нет упражнений</string>
+
     <!-- Currency Abbreviations and Prices -->
     <string name="free">Бесплатно</string>
     <string name="rubles">Рублей</string>
