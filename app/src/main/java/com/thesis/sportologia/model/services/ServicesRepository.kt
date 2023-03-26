@@ -21,9 +21,9 @@ interface ServicesRepository {
 
     suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed?
 
-    suspend fun createService(service: Service)
+    suspend fun createService(servicesDetailed: ServiceDetailed)
 
-    suspend fun updateService(service: Service)
+    suspend fun updateService(servicesDetailed: ServiceDetailed)
 
     suspend fun deleteService(serviceId: Long)
 

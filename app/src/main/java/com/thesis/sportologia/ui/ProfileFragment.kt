@@ -118,6 +118,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButtonsBlock.visibility = View.VISIBLE
 
         initToolbar()
+        initOnInfoPressed()
         initFollowersButton()
         initFollowingsButton()
         initRefreshLayout()
@@ -476,6 +477,29 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             })
     }
 
+    private fun initOnInfoPressed() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getLong(SERVICE_ID)
+            val direction =
+                ProfileFragmentDirections.actionProfileFragmentToService(
+                    serviceId
+                )
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }
+    }
+
     companion object {
         const val DEFAULT_USER_ID = "\$current_user"
 
@@ -485,7 +509,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
         const val USER_ID = "USER_ID"
         const val SERVICE_ID = "SERVICE_ID"
-
 
         const val REFRESH_REQUEST_CODE = "REFRESH_REQUEST_CODE"
         const val REFRESH = "REFRESH"

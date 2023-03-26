@@ -110,7 +110,11 @@ class InMemoryServicesRepository @Inject constructor(
         serviceSample.copy(id = 25L),
     )
 
-    private val services = servicesDetailed.map { it.toGeneral() }.toMutableList()
+    //private val services = servicesDetailed.map { it.toGeneral() }.toMutableList()
+
+    private fun List<ServiceDetailed>.toServices(): MutableList<Service> {
+        return this.map { it.toGeneral() }.toMutableList()
+    }
 
     private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
 
@@ -131,7 +135,8 @@ class InMemoryServicesRepository @Inject constructor(
             delay(1000)
             val offset = pageIndex * pageSize
 
-            val filteredServices = services.filter { it.authorId == userId }.sortedBy { it.rating }
+            val filteredServices =
+                servicesDetailed.filter { it.authorId == userId }.sortedBy { it.rating }.toServices()
 
             // TODO
             // throw Exception("a")
@@ -181,7 +186,7 @@ class InMemoryServicesRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         followersIds.forEach { id ->
-            res.addAll(services.filter { it.authorId == id })
+            res.addAll(servicesDetailed.filter { it.authorId == id }.toServices())
         }
 
         res.sortedBy { it.rating }
@@ -242,10 +247,10 @@ class InMemoryServicesRepository @Inject constructor(
 
         //throw Exception("abc")
 
-        return@withContext if (services.none { it.id == serviceId }) {
+        return@withContext if (servicesDetailed.none { it.id == serviceId }) {
             null
         } else {
-            services.filter { it.id == serviceId }[0]
+            servicesDetailed.filter { it.id == serviceId }.toServices()[0]
         }
     }
 
@@ -272,9 +277,7 @@ class InMemoryServicesRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         // временный и корявый метод! Ибо тут не учитыааются пользователи
-        val filteredServices = services.filter { it.isFavourite }.sortedBy { it.rating }
-
-        filteredServices.sortedBy { it.rating }
+        val filteredServices = servicesDetailed.filter { it.isFavourite }.sortedBy { it.rating }.toServices()
 
         // TODO SORT BY DATE
 
@@ -300,7 +303,7 @@ class InMemoryServicesRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         // временный и корявый метод! Ибо тут не учитыааются пользователи
-        val filteredServices = services.filter { it.isAcquired }
+        val filteredServices = servicesDetailed.filter { it.isAcquired }.toServices()
 
         // TODO SORT BY DATE
 
@@ -344,9 +347,9 @@ class InMemoryServicesRepository @Inject constructor(
             val offset = pageIndex * pageSize
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val servicesFound = services.filter {
+            val servicesFound = servicesDetailed.filter {
                 containsAnyCase(it.name, searchQuery)
-            }.sortedBy { it.rating }
+            }.sortedBy { it.rating }.toServices()
 
             // TODO SORT BY DATE
 
@@ -377,28 +380,27 @@ class InMemoryServicesRepository @Inject constructor(
         return res
     }*/
 
-    override suspend fun createService(service: Service) {
+    override suspend fun createService(serviceDetailed: ServiceDetailed) {
         delay(1000)
-        services.add(service)
+        servicesDetailed.add(serviceDetailed)
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updateService(service: Service) {
+    override suspend fun updateService(serviceDetailed: ServiceDetailed) {
         delay(1000)
 
-        services[services.indexOfFirst { it.id == service.id }] = service
-
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == serviceDetailed.id }] = serviceDetailed
     }
 
     override suspend fun deleteService(serviceId: Long) {
         delay(1000)
-        services.removeIf { it.id == serviceId }
+        servicesDetailed.removeIf { it.id == serviceId }
     }
 
     override suspend fun acquireService(serviceId: Long) {
         delay(1000)
-        services.find { it.id == serviceId }?.isAcquired = true
+        servicesDetailed.find { it.id == serviceId }?.isAcquired = true
     }
 
     override suspend fun setIsFavourite(
@@ -411,7 +413,7 @@ class InMemoryServicesRepository @Inject constructor(
         // TODO
         //throw Exception("a")
 
-        services.find { it.id == serviceId }?.isFavourite = isFavourite
+        servicesDetailed.find { it.id == serviceId }?.isFavourite = isFavourite
     }
 
     private companion object {

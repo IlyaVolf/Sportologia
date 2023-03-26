@@ -9,7 +9,7 @@
         android:id="@+id/profileFragment"
         android:name="com.thesis.sportologia.ui.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_profile">
         <action
             android:id="@+id/action_profileFragment_to_favouritesFragment"
             app:destination="@id/favouritesFragment" />
@@ -27,23 +27,37 @@
             app:destination="@id/profileFragment" />
         <argument
             android:name="userId"
-            app:argType="string"
-            android:defaultValue="$current_user" />
+            android:defaultValue="$current_user"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_profileFragment_to_service"
+            app:destination="@id/service" >
+            <argument
+                android:name="serviceId"
+                app:argType="long" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
         android:name="com.thesis.sportologia.ui.FavouritesFragment"
         android:label="fragment_favourites"
-        tools:layout="@layout/fragment_favourites" >
+        tools:layout="@layout/fragment_favourites">
         <action
             android:id="@+id/action_favouritesFragment_to_profileFragment"
             app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_favouritesFragment_to_service"
+            app:destination="@id/service" >
+            <argument
+                android:name="serviceId"
+                app:argType="long" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/followersFragment"
         android:name="com.thesis.sportologia.ui.FollowersFragment"
         android:label="fragment_followers"
-        tools:layout="@layout/fragment_followers" >
+        tools:layout="@layout/fragment_followers">
         <argument
             android:name="userId"
             app:argType="string" />
@@ -55,7 +69,7 @@
         android:id="@+id/followingsFragment"
         android:name="com.thesis.sportologia.ui.FollowingsFragment"
         android:label="fragment_followings"
-        tools:layout="@layout/fragment_followings" >
+        tools:layout="@layout/fragment_followings">
         <argument
             android:name="userId"
             app:argType="string" />
@@ -68,4 +82,5 @@
         android:name="com.thesis.sportologia.ui.PhotosFragment"
         android:label="fragment_photos"
         tools:layout="@layout/fragment_photos" />
+    <include app:graph="@navigation/service" />
 </navigation>

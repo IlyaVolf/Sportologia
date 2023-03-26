@@ -12,14 +12,5 @@
         <argument
             android:name="serviceId"
             app:argType="long" />
-        <action
-            android:id="@+id/action_serviceFragment_to_profile_nested"
-            app:destination="@id/profile_nested">
-            <argument
-                android:name="userId"
-                android:defaultValue="$current_user"
-                app:argType="string" />
-        </action>
     </fragment>
-    <include app:graph="@navigation/profile_nested" />
 </navigation>

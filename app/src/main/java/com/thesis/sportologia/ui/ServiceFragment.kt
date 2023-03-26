@@ -98,11 +98,11 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
         renderGeneralInfo(serviceDetailedViewItem)
         if (serviceDetailedViewItem.isAcquired) {
-            //binding.detailedContent.visibility = VISIBLE
+            binding.detailedContent.visibility = VISIBLE
             renderDetailedInfo(serviceDetailedViewItem)
         } else {
-            //binding.detailedContent.visibility = GONE
-            renderDetailedInfo(serviceDetailedViewItem)
+            binding.detailedContent.visibility = GONE
+            //renderDetailedInfo(serviceDetailedViewItem)
         }
     }
 
@@ -180,12 +180,9 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     private fun onAuthorPressed(userIdToGo: String) {
         if (userIdToGo != CurrentAccount().id) {
-            val direction =
-                ServiceFragmentDirections.actionServiceFragmentToProfileNested(
-                    userIdToGo
-                )
             findNavController().navigate(
-                direction,
+                R.navigation.service,
+                bundleOf(Pair("userId", userIdToGo)),
                 navOptions {
                     anim {
                         enter = R.anim.slide_in_right
