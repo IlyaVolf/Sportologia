@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -135,8 +136,8 @@ abstract class ListPostsViewModel constructor(
     private suspend fun setFavoriteFlag(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isFavourite
         postsRepository.setIsFavourite(userId, postListItem.post, newFlagValue)
-        localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
-        localChangesFlow.value = OnChange(localChanges)
+        //localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
+        //localChangesFlow.value = OnChange(localChanges)
     }
 
     private suspend fun delete(postListItem: PostListItem) {
@@ -172,19 +173,21 @@ abstract class ListPostsViewModel constructor(
         posts: PagingData<Post>,
         localChanges: OnChange<LocalChanges>
     ): PagingData<PostListItem> {
+        Log.d("LSVM", "1 ${posts}")
         return posts
             .map { post ->
                 val isInProgress = localChanges.value.idsInProgress.contains(post.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[post.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
 
-                val postWithLocalChanges = post
+                val postWithLocalChanges = post.copy()
                 if (localFavoriteFlag != null) {
                     postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
                     postWithLocalChanges.copy(isFavourite = localLikedFlag)
                 }
+                Log.d("LSVM", "Post2 $localLikedFlag ${post.hashCode()} ${postWithLocalChanges.hashCode()}")
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }

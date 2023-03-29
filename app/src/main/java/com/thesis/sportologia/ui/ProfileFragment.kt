@@ -478,7 +478,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun initOnInfoPressed() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(
+        /*requireActivity().supportFragmentManager.setFragmentResultListener(
             GO_TO_SERVICE_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -497,7 +497,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                         popExit = R.anim.slide_out_right
                     }
                 })
-        }
+        }*/
     }
 
     companion object {

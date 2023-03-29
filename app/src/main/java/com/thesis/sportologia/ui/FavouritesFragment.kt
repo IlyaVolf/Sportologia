@@ -96,7 +96,7 @@ class FavouritesFragment : Fragment() {
     }
 
     private fun initOnInfoPressed() {
-        requireActivity().supportFragmentManager.setFragmentResultListener(
+        /*requireActivity().supportFragmentManager.setFragmentResultListener(
             GO_TO_SERVICE_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -115,7 +115,7 @@ class FavouritesFragment : Fragment() {
                         popExit = R.anim.slide_out_right
                     }
                 })
-        }
+        }*/
     }
 
     private fun onBackButtonPressed() {

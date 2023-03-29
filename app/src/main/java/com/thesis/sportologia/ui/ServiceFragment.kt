@@ -180,9 +180,12 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     private fun onAuthorPressed(userIdToGo: String) {
         if (userIdToGo != CurrentAccount().id) {
+            val direction =
+                ServiceFragmentDirections.actionServiceFragmentToProfileNested(
+                    userIdToGo
+                )
             findNavController().navigate(
-                R.navigation.service,
-                bundleOf(Pair("userId", userIdToGo)),
+                direction,
                 navOptions {
                     anim {
                         enter = R.anim.slide_in_right

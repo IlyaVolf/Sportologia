@@ -1,5 +1,6 @@
 package com.thesis.sportologia.ui.services
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -125,7 +126,11 @@ abstract class ListServicesViewModel constructor(
         val newFlagValue = !serviceListItem.isFavourite
         servicesRepository.setIsFavourite(userId, serviceListItem.service.id, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
+        Log.d("LSVM", "1 ${localChangesFlow.value.value.isFavouriteFlags}")
+
         localChangesFlow.value = OnChange(localChanges)
+        Log.d("LSVM", "2 ${localChangesFlow.value.value.isFavouriteFlags}")
+
     }
 
     private suspend fun delete(serviceListItem: ServiceListItem) {
@@ -163,14 +168,20 @@ abstract class ListServicesViewModel constructor(
     ): PagingData<ServiceListItem> {
         return services
             .map { service ->
+                Log.d("LSVM", "3 ${localChangesFlow.value.value.isFavouriteFlags}")
                 val isInProgress = localChanges.value.idsInProgress.contains(service.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[service.id]
 
-                val serviceWithLocalChanges = service
-                if (localFavoriteFlag != null) {
-                    serviceWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                val serviceWithLocalChanges = if (localFavoriteFlag == null) {
+                    service
+                } else {
+                    service.copy(isFavourite = localFavoriteFlag)
                 }
 
+                Log.d(
+                    "LSVM",
+                    "4 ${localChangesFlow.value.value.isFavouriteFlags} $localFavoriteFlag ${serviceWithLocalChanges}"
+                )
                 ServiceListItem(serviceWithLocalChanges, isInProgress)
             }
     }

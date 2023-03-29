@@ -112,8 +112,8 @@ class InMemoryServicesRepository @Inject constructor(
 
     //private val services = servicesDetailed.map { it.toGeneral() }.toMutableList()
 
-    private fun List<ServiceDetailed>.toServices(): MutableList<Service> {
-        return this.map { it.toGeneral() }.toMutableList()
+    private fun List<ServiceDetailed>.toServices(): List<Service> {
+        return this.map { it.copy().toGeneral().copy() }
     }
 
     private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
