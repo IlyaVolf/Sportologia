@@ -94,7 +94,7 @@ abstract class ListPostsFragment : Fragment() {
 
     /* Visible when either error, in the process of loading or empty result */
     private fun setExtrasBlockVisibility(isVisible: Boolean) {
-        binding.postsExtrasBlock.isVisible = isVisible
+        binding.postsExtrasBlock.isVisible = true
     }
 
     private fun initResultsProcessing() {
