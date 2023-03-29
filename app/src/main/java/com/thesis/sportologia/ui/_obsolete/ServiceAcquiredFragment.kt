@@ -1,36 +1,5 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.View.GONE
-import android.view.View.VISIBLE
-import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.widget.SearchView
-import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentServiceAcquiredBinding
-import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.model.services.entities.ServiceType
-import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.services.ListServicesViewModelAcquired
-import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
-import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
-import com.thesis.sportologia.ui.views.OnItemServiceAction
-import com.thesis.sportologia.ui.views.OnToolbarBasicAction
-import com.thesis.sportologia.utils.*
-import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
-import kotlin.properties.Delegates
-
 /**@AndroidEntryPoint
 class ServiceAcquiredFragment : BaseFragment(R.layout.fragment_service_not_acquired) {
 

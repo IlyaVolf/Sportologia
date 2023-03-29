@@ -152,22 +152,20 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     private fun onSaveButtonPressed() {
-        viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
-            if (holder !is DataHolder.LOADING) {
-                viewModel.onSaveButtonPressed(
-                    EventCreateEditItem(
-                        binding.fceeName.getText(),
-                        binding.fceeDescription.getText(),
-                        binding.fceeDate.getDateFromMillis(),
-                        binding.fceeDate.getDateToMillis(),
-                        null,
-                        binding.fceePrice.getText(),
-                        getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
-                        binding.fceeCategories.getCheckedDataMap(Categories.emptyCategoriesMap.keys.toTypedArray()),
-                        photosUrls
-                    )
+        viewModel.saveHolder.value?.onNotLoading {
+            viewModel.onSaveButtonPressed(
+                EventCreateEditItem(
+                    binding.fceeName.getText(),
+                    binding.fceeDescription.getText(),
+                    binding.fceeDate.getDateFromMillis(),
+                    binding.fceeDate.getDateToMillis(),
+                    null,
+                    binding.fceePrice.getText(),
+                    getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
+                    binding.fceeCategories.getCheckedDataMap(Categories.emptyCategoriesMap.keys.toTypedArray()),
+                    photosUrls
                 )
-            }
+            )
         }
     }
 

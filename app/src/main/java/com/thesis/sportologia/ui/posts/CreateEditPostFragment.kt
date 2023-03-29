@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -126,10 +127,8 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
 
     private fun onSaveButtonPressed() {
-        viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
-            if (holder !is DataHolder.LOADING) {
-                viewModel.onSaveButtonPressed(binding.text.text.toString(), photosUrls)
-            }
+        viewModel.saveHolder.value?.onNotLoading {
+            viewModel.onSaveButtonPressed(binding.text.text.toString(), photosUrls)
         }
     }
 

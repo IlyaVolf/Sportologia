@@ -1,6 +1,6 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.app.AlertDialog
+/**import android.app.AlertDialog
 import android.content.DialogInterface.BUTTON_NEGATIVE
 import android.content.DialogInterface.BUTTON_NEUTRAL
 import android.os.Bundle
@@ -151,4 +151,4 @@ class CreatePostFragment : BaseFragment(R.layout.fragment_create_post) {
         const val REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
         const val IS_CREATED = "IS_CREATED"
     }
-}
+}*/

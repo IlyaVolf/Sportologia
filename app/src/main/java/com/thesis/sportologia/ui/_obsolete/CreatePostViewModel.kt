@@ -1,7 +1,7 @@
 package com.thesis.sportologia.ui._obsolete
 
 
-import androidx.lifecycle.viewModelScope
+/**import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.posts.PostsRepository
@@ -88,4 +88,4 @@ class CreatePostViewModel @Inject constructor(
         EMPTY_POST
     }
 
-}
+}*/

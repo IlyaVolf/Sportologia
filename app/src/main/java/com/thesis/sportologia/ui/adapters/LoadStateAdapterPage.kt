@@ -44,13 +44,14 @@ class LoadStateAdapterPage(
         }
 
         fun bind(loadState: LoadState) = with(binding) {
-            // если есть swipeRefreshLayout, то не зачем показывать свой flpLoading
+            // если есть swipeRefreshLayout, то не зачем показывать свой flpLoading и flpError
             if (swipeRefreshLayout != null) {
                 flpError.root.isVisible = loadState is LoadState.Error
                 swipeRefreshLayout.isRefreshing = loadState is LoadState.Loading
                 flpLoading.root.isVisible = false
             } else {
-                //flpLoading.root.isVisible = loadState is LoadState.Loading
+                flpError.root.isVisible = loadState is LoadState.Error
+                flpLoading.root.isVisible = loadState is LoadState.Loading
             }
         }
     }

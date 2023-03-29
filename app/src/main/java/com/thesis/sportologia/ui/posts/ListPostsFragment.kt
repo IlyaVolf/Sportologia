@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isInvisible
@@ -14,6 +15,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.adapters.*
@@ -43,7 +45,6 @@ abstract class ListPostsFragment : Fragment() {
     protected var userId by Delegates.notNull<String>()
     protected lateinit var binding: FragmentListPostsBinding
     private lateinit var adapter: PostsPagerAdapter
-    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,10 @@ abstract class ListPostsFragment : Fragment() {
         Log.d("LIFE", "onCreateView ${this.hashCode()}")
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
+        setExtrasBlockVisibility(false)
+
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
+
         initResultsProcessing()
         initSwipeToRefresh()
         initPostsList()
@@ -85,6 +90,11 @@ abstract class ListPostsFragment : Fragment() {
         handleListVisibility(adapter)
 
         return binding.root
+    }
+
+    /* Visible when either error, in the process of loading or empty result */
+    private fun setExtrasBlockVisibility(isVisible: Boolean) {
+        binding.postsExtrasBlock.isVisible = isVisible
     }
 
     private fun initResultsProcessing() {
@@ -135,23 +145,12 @@ abstract class ListPostsFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout
-        } else {
-            null
-        }
         val postsHeaderAdapter = initPostHeaderAdapter()
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
         binding.postsList.adapter = concatAdapter
         (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
-
-        mainLoadStateHolder = LoadStateAdapterPage.Holder(
-            binding.loadStateView,
-            swipeRefreshLayout,
-            tryAgainAction
-        )
     }
 
     private fun initSwipeToRefresh() {
@@ -177,22 +176,40 @@ abstract class ListPostsFragment : Fragment() {
         // you can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
+
+                val isError = state.refresh is LoadState.Error
+                val isLoading = state.refresh is LoadState.Loading
+                val isEmpty = (state.source.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached && adapter.itemCount < 1)
+
                 // main indicator in the center of the screen
-                mainLoadStateHolder.bind(state.refresh)
+                binding.loadStateView.flpError.root.isVisible = isError
+                if (isSwipeToRefreshEnabled) {
+                    binding.postsSwipeRefreshLayout.isRefreshing = isLoading
+                    binding.loadStateView.flpLoading.root.isVisible = false
+                } else {
+                    binding.loadStateView.flpLoading.root.isVisible = isLoading
+                }
+                binding.postsEmptyBlock.isVisible = isEmpty
+                binding.postsList.isVisible = !isError
+
+                setExtrasBlockVisibility(state.refresh is LoadState.Error || state.refresh is LoadState.Loading || isEmpty)
             }
         }
 
-        adapter.addLoadStateListener { loadState ->
+        /*adapter.addLoadStateListener { loadState ->
             if (loadState.source.refresh is LoadState.NotLoading
                 && loadState.append.endOfPaginationReached && adapter.itemCount < 1
             ) {
+                setExtrasBlockVisibility(true)
                 binding.postsList.isVisible = false
                 binding.postsEmptyBlock.isVisible = true
             } else {
+                setExtrasBlockVisibility(false)
                 binding.postsList.isVisible = true
                 binding.postsEmptyBlock.isVisible = false
             }
-        }
+        }*/
     }
 
     private fun handleListVisibility(adapter: PostsPagerAdapter) = lifecycleScope.launch {

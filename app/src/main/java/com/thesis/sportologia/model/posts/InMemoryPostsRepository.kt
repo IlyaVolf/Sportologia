@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.posts
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -292,6 +293,7 @@ class InMemoryPostsRepository @Inject constructor(
     override suspend fun createPost(post: Post) {
         delay(1000)
         posts.add(post)
+        Log.d("abcdef", posts.filter { it.id == -1L }.toString())
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }

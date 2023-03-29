@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
