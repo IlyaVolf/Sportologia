@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.utils.Categories
@@ -11,6 +12,7 @@ import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
@@ -19,8 +21,10 @@ import javax.inject.Singleton
 @Singleton
 class InMemoryEventsRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) :
-    EventsRepository {
+) : EventsRepository {
+
+    override val localChanges = EventsLocalChanges()
+    override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     private val dateFrom: Calendar = Calendar.getInstance()
     private val dateTo: Calendar = Calendar.getInstance()

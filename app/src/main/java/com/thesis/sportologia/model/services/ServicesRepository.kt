@@ -1,13 +1,18 @@
 package com.thesis.sportologia.model.services
 
 import androidx.paging.PagingData
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface ServicesRepository {
+
+    val localChanges: ServicesLocalChanges
+    val localChangesFlow: MutableStateFlow<OnChange<ServicesLocalChanges>>
 
     suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>>
 

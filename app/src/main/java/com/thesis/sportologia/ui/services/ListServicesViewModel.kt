@@ -7,6 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.thesis.sportologia.R
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.services.ServicesLocalChanges
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
@@ -32,15 +34,15 @@ abstract class ListServicesViewModel constructor(
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsServices>()
 
+    val localChanges = servicesRepository.localChanges
+    val localChangesFlow = servicesRepository.localChangesFlow
+
     private val serviceTypeLiveData = MutableLiveData<ServiceType?>(null)
     var serviceType: ServiceType?
         get() = serviceTypeLiveData.value
         set(value) {
             serviceTypeLiveData.value = value
         }
-
-    private val localChanges = LocalChanges()
-    private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     private val _errorServices = MutableLiveEvent<Int>()
     val errorServices = _errorServices.share()
@@ -164,7 +166,7 @@ abstract class ListServicesViewModel constructor(
 
     private fun merge(
         services: PagingData<Service>,
-        localChanges: OnChange<LocalChanges>
+        localChanges: OnChange<ServicesLocalChanges>
     ): PagingData<ServiceListItem> {
         return services
             .map { service ->
@@ -186,23 +188,5 @@ abstract class ListServicesViewModel constructor(
             }
     }
 
-    /**
-     * Non-data class which allows passing the same reference to the
-     * MutableStateFlow multiple times in a row.
-     */
-    class OnChange<T>(val value: T)
-
-    /**
-     * Contains:
-     * 1) identifiers of items which are processed now (deleting or favorite
-     * flag updating).
-     * 2) local isLiked and isFavourite flag updates to avoid list reloading
-     */
-    class LocalChanges {
-        val idsInProgress = mutableSetOf<Long>()
-
-        // TODO фото
-        val isFavouriteFlags = mutableMapOf<Long, Boolean>()
-    }
 
 }

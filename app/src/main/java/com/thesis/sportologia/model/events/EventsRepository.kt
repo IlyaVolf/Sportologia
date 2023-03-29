@@ -1,12 +1,16 @@
 package com.thesis.sportologia.model.events
 
 import androidx.paging.PagingData
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface EventsRepository {
+
+    val localChanges: EventsLocalChanges
+    val localChangesFlow: MutableStateFlow<OnChange<EventsLocalChanges>>
 
     suspend fun getPagedUserEvents(userId: String): Flow<PagingData<Event>>
 

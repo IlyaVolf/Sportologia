@@ -1,26 +1,18 @@
 package com.thesis.sportologia.ui.users
 
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.thesis.sportologia.R
-import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.users.UsersRepository
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserSnippet
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersPagerAdapter
-import com.thesis.sportologia.ui.users.entities.UserListItem
 import com.thesis.sportologia.ui.users.entities.UserSnippetListItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
-import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
 // TODO баг при отписки от пользователя, возврату на экран с подписками и послед обновлением страницы
@@ -34,7 +26,7 @@ abstract class ListUsersViewModel constructor(
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsUsers>()
 
-    private val localChanges = LocalChanges()
+    private val localChanges = UsersLocalChanges()
     private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     private val _errorEvents = MutableLiveEvent<Int>()
@@ -98,7 +90,7 @@ abstract class ListUsersViewModel constructor(
 
     private fun merge(
         users: PagingData<UserSnippet>,
-        localChanges: OnChange<LocalChanges>
+        localChanges: OnChange<UsersLocalChanges>
     ): PagingData<UserSnippetListItem> {
         return users
             .map { userSnippet ->
@@ -109,18 +101,13 @@ abstract class ListUsersViewModel constructor(
     }
 
     /**
-     * Non-data class which allows passing the same reference to the
-     * MutableStateFlow multiple times in a row.
-     */
-    class OnChange<T>(val value: T)
-
-    /**
      * Contains:
      * 1) identifiers of items which are processed now (deleting or favorite
      * flag updating).
      * 2) local isLiked and isFavourite flag updates to avoid list reloading
      */
-    class LocalChanges {
+    // TODO что с этим делать?
+    class UsersLocalChanges {
         val idsInProgress = mutableSetOf<String>()
     }
 

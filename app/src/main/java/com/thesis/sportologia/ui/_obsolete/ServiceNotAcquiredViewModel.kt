@@ -1,4 +1,4 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui._obsolete
 
 
 import androidx.lifecycle.viewModelScope

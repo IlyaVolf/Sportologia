@@ -4,19 +4,19 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.model.users.entities.UserType
-import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.TrainingProgrammesCategories
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
-import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,6 +24,11 @@ import javax.inject.Singleton
 class InMemoryServicesRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ServicesRepository {
+
+    override val localChanges = ServicesLocalChanges()
+    override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
+
+    /////////////////////////////////////////////////////////////////////////////////
 
     private val serviceSample = ServiceDetailed(
         id = 0L,
@@ -128,27 +133,24 @@ class InMemoryServicesRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         userId: String
-    ): List<Service> =
-        withContext(
-            ioDispatcher
-        ) {
-            delay(1000)
-            val offset = pageIndex * pageSize
+    ): List<Service> = withContext(ioDispatcher) {
+        delay(1000)
+        val offset = pageIndex * pageSize
 
-            val filteredServices =
-                servicesDetailed.filter { it.authorId == userId }.sortedBy { it.rating }.toServices()
+        val filteredServices =
+            servicesDetailed.filter { it.authorId == userId }.sortedBy { it.rating }.toServices()
 
-            // TODO
-            // throw Exception("a")
+        // TODO
+        // throw Exception("a")
 
-            if (offset >= filteredServices.size) {
-                return@withContext listOf<Service>()
-            } else if (offset + pageSize >= filteredServices.size) {
-                return@withContext filteredServices.subList(offset, filteredServices.size)
-            } else {
-                return@withContext filteredServices.subList(offset, offset + pageSize)
-            }
+        if (offset >= filteredServices.size) {
+            return@withContext listOf<Service>()
+        } else if (offset + pageSize >= filteredServices.size) {
+            return@withContext filteredServices.subList(offset, filteredServices.size)
+        } else {
+            return@withContext filteredServices.subList(offset, offset + pageSize)
         }
+    }
 
     override suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>> {
         val loader: ServicesPageLoader = { pageIndex, pageSize ->
@@ -277,7 +279,8 @@ class InMemoryServicesRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         // временный и корявый метод! Ибо тут не учитыааются пользователи
-        val filteredServices = servicesDetailed.filter { it.isFavourite }.sortedBy { it.rating }.toServices()
+        val filteredServices =
+            servicesDetailed.filter { it.isFavourite }.sortedBy { it.rating }.toServices()
 
         // TODO SORT BY DATE
 
@@ -390,7 +393,8 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun updateService(serviceDetailed: ServiceDetailed) {
         delay(1000)
 
-        servicesDetailed[servicesDetailed.indexOfFirst { it.id == serviceDetailed.id }] = serviceDetailed
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == serviceDetailed.id }] =
+            serviceDetailed
     }
 
     override suspend fun deleteService(serviceId: Long) {

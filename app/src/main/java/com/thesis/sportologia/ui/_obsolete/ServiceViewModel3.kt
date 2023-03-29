@@ -1,25 +1,6 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui._obsolete
 
-
-import androidx.lifecycle.viewModelScope
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.di.IoDispatcher
-import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.OnChange
-import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
-import com.thesis.sportologia.utils.*
-import com.thesis.sportologia.utils.logger.Logger
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-
-class ServiceViewModel @AssistedInject constructor(
+/**class ServiceViewModel @AssistedInject constructor(
     @Assisted private val serviceId: Long,
     private val servicesRepository: ServicesRepository,
     logger: Logger
@@ -39,28 +20,32 @@ class ServiceViewModel @AssistedInject constructor(
         initMergeChanges()
     }
 
-    fun getService() {
-        viewModelScope.launch {
-            try {
+    fun getService() = viewModelScope.launch(Dispatchers.IO) {
+        try {
+            withContext(Dispatchers.Main) {
                 _serviceHolder.value = DataHolder.loading()
-                val serviceDetailed = servicesRepository.getServiceDetailed(serviceId)
+            }
+            val serviceDetailed = servicesRepository.getServiceDetailed(serviceId)
+            withContext(Dispatchers.Main) {
                 if (serviceDetailed != null) {
                     _serviceHolder.value =
                         DataHolder.ready(ServiceDetailedViewItem(serviceDetailed.copy()))
                 } else {
                     _serviceHolder.value = DataHolder.error(Exception("no such service"))
                 }
-            } catch (e: Exception) {
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
                 _serviceHolder.value = DataHolder.error(e)
             }
         }
     }
 
 
-    private fun initMergeChanges() {
-        viewModelScope.launch {
-            localChangesFlow.collectLatest { localChanges ->
+    private fun initMergeChanges() = viewModelScope.launch(Dispatchers.IO) {
+        localChangesFlow.collectLatest { localChanges ->
 
+            withContext(Dispatchers.Main) {
                 _serviceHolder.value?.onReady { service ->
                     _serviceHolder.value = DataHolder.READY(
                         service.copy(
@@ -86,7 +71,7 @@ class ServiceViewModel @AssistedInject constructor(
         }
     }
 
-    private fun setProgress(serviceId: Long, inProgress: Boolean) {
+    private suspend fun setProgress(serviceId: Long, inProgress: Boolean) = withContext(Dispatchers.Main) {
         if (inProgress) {
             localChanges.idsInProgress.add(serviceId)
         } else {
@@ -112,16 +97,24 @@ class ServiceViewModel @AssistedInject constructor(
     fun acquireService() {
         if (isInProgress(serviceId)) return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                setProgress(serviceId, true)
+                withContext(Dispatchers.Main) {
+                    setProgress(serviceId, true)
+                }
                 servicesRepository.acquireService(serviceId)
-                _toastMessageEvent.publishEvent(ResponseType.ACQUIRED_SUCCESSFULLY)
-                setAcquiredFlag(serviceId, true)
+                withContext(Dispatchers.Main) {
+                    _toastMessageEvent.publishEvent(ResponseType.ACQUIRED_SUCCESSFULLY)
+                    setAcquiredFlag(serviceId, true)
+                }
             } catch (e: Exception) {
-                _toastMessageEvent.publishEvent(ResponseType.ACQUIRE_ERROR)
+                withContext(Dispatchers.Main) {
+                    _toastMessageEvent.publishEvent(ResponseType.ACQUIRE_ERROR)
+                }
             } finally {
-                setProgress(serviceId, false)
+                withContext(Dispatchers.Main) {
+                    setProgress(serviceId, false)
+                }
             }
         }
     }
@@ -131,9 +124,11 @@ class ServiceViewModel @AssistedInject constructor(
 
             if (isInProgress(serviceId)) return
 
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    setProgress(serviceId, true)
+                    withContext(Dispatchers.Main) {
+                        setProgress(serviceId, true)
+                    }
                     val newIsFavourite =
                         !(localChanges.isFavouriteFlags[serviceId]
                             ?: serviceFullEvent.isFavourite)
@@ -142,11 +137,17 @@ class ServiceViewModel @AssistedInject constructor(
                         serviceId,
                         newIsFavourite
                     )
-                    setFavouriteFlag(serviceId, newIsFavourite)
+                    withContext(Dispatchers.Main) {
+                        setFavouriteFlag(serviceId, newIsFavourite)
+                    }
                 } catch (e: Exception) {
-                    _toastMessageEvent.publishEvent(ResponseType.FAVS_ERROR)
+                    withContext(Dispatchers.Main) {
+                        _toastMessageEvent.publishEvent(ResponseType.FAVS_ERROR)
+                    }
                 } finally {
-                    setProgress(serviceId, false)
+                    withContext(Dispatchers.Main) {
+                        setProgress(serviceId, false)
+                    }
                 }
             }
         }
@@ -193,4 +194,4 @@ class ServiceViewModel @AssistedInject constructor(
         fun create(serviceId: Long): ServiceViewModel
     }
 
-}
+}*/

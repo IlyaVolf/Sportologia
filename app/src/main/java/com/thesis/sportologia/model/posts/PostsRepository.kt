@@ -1,10 +1,15 @@
 package com.thesis.sportologia.model.posts
 
 import androidx.paging.PagingData
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.entities.Post
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface PostsRepository {
+
+    val localChanges: PostsLocalChanges
+    val localChangesFlow: MutableStateFlow<OnChange<PostsLocalChanges>>
 
     suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>>
 

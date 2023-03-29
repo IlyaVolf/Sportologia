@@ -1,16 +1,13 @@
-package com.thesis.sportologia.ui
+package com.thesis.sportologia.ui._obsolete
 
 
-import androidx.lifecycle.viewModelScope
+/**import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.R
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.posts.CreateEditPostViewModel
-import com.thesis.sportologia.ui.posts.ListPostsViewModel
-import com.thesis.sportologia.ui.posts.entities.PostListItem
+import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
+import com.thesis.sportologia.ui.services.entities.ServiceViewItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -19,38 +16,35 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
 
-/**class ServiceNotAcquiredViewModel2 @AssistedInject constructor(
+class ServiceAcquiredViewModel @AssistedInject constructor(
     @Assisted private val serviceId: Long,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
-    
-    private val _serviceHolder = ObservableHolder<ServiceFullItem>(DataHolder.loading())
+
+    private val _serviceHolder = ObservableHolder<ServiceDetailedViewItem>(DataHolder.loading())
     val serviceHolder = _serviceHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
     val toastMessageEvent = _toastMessageEvent.share()
 
-    init {
-        init()
-    }
+    private val localChanges = LocalChanges(_serviceHolder)
 
-    private fun init() = viewModelScope.launch(Dispatchers.IO) {
-        withContext(Dispatchers.Main) {
-            _serviceHolder.value = DataHolder.loading()
-        }
+    init {
         getService()
     }
 
-    private suspend fun getService() {
+    fun getService() = viewModelScope.launch(Dispatchers.IO) {
         try {
-            val service = servicesRepository.getService(serviceId)
             withContext(Dispatchers.Main) {
-                if (service != null) {
+                _serviceHolder.value = DataHolder.loading()
+            }
+            val serviceDetailed = servicesRepository.getServiceDetailed(serviceId)
+            withContext(Dispatchers.Main) {
+                if (serviceDetailed != null) {
                     _serviceHolder.value =
-                        DataHolder.ready(ServiceFullItem(service.copy(), false))
+                        DataHolder.ready(ServiceDetailedViewItem(serviceDetailed.copy()))
                 } else {
                     _serviceHolder.value = DataHolder.error(Exception("no such service"))
                 }
@@ -73,22 +67,24 @@ import kotlin.properties.Delegates
     }
 
     fun onToggleFavouriteFlag() {
-        _serviceHolder.value?.onReady { servicerFullEvent ->
+        _serviceHolder.value?.onReady { serviceFullEvent ->
 
-            if (servicerFullEvent.isLoading) return
+            if (localChanges.isLoading) return
 
-            viewModelScope.launch {
+            viewModelScope.launch(Dispatchers.IO) {
                 try {
                     withContext(Dispatchers.Main) {
-                        servicerFullEvent.isLoading = true
+                        localChanges.isLoading = true
                     }
+                    val newIsFavourite =
+                        !(localChanges.isFavouriteFlag ?: serviceFullEvent.isFavourite)
                     servicesRepository.setIsFavourite(
                         CurrentAccount().id,
                         serviceId,
-                        !servicerFullEvent.isFavourite
+                        newIsFavourite
                     )
                     withContext(Dispatchers.Main) {
-                        servicerFullEvent.isFavourite = true
+                        localChanges.isFavouriteFlag = newIsFavourite
                     }
                 } catch (e: Exception) {
                     withContext(Dispatchers.Main) {
@@ -96,12 +92,10 @@ import kotlin.properties.Delegates
                     }
                 } finally {
                     withContext(Dispatchers.Main) {
-                        servicerFullEvent.isLoading = false
+                        localChanges.isLoading = false
                     }
                 }
             }
-
-            //_serviceHolder.value = DataHolder.ready(servicerFullEvent.copy(is))
         }
     }
 
@@ -109,10 +103,27 @@ import kotlin.properties.Delegates
         ACQUIRE_ERROR, FAVS_ERROR
     }
 
+    class LocalChanges(val holder: ObservableHolder<ServiceDetailedViewItem>) {
+        var isLoading = false
+
+        var isFavouriteFlag: Boolean? = null
+            set(value) {
+                holder.value?.onReady {
+                    holder.value = DataHolder.READY(
+                        it.copy(
+                            serviceDetailed = it.serviceDetailed.copy(
+                                isFavourite = value ?: it.isFavourite
+                            )
+                        )
+                    )
+                }
+                field = value
+            }
+    }
 
     @AssistedFactory
     interface Factory {
-        fun create(serviceId: Long): ServiceNotAcquiredViewModel2
+        fun create(serviceId: Long): ServiceAcquiredViewModel
     }
 
 }*/

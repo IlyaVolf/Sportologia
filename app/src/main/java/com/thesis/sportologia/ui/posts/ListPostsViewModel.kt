@@ -8,6 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.thesis.sportologia.R
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.posts.PostsLocalChanges
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.ui.base.BaseViewModel
@@ -34,8 +36,8 @@ abstract class ListPostsViewModel constructor(
             athTorgFLiveData.value = value
         }
 
-    private val localChanges = LocalChanges()
-    private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
+    private val localChanges = postsRepository.localChanges
+    private val localChangesFlow = postsRepository.localChangesFlow
 
     private val _errorEvents = MutableLiveEvent<Int>()
     val errorEvents = _errorEvents.share()
@@ -171,7 +173,7 @@ abstract class ListPostsViewModel constructor(
 
     private fun merge(
         posts: PagingData<Post>,
-        localChanges: OnChange<LocalChanges>
+        localChanges: OnChange<PostsLocalChanges>
     ): PagingData<PostListItem> {
         Log.d("LSVM", "1 ${posts}")
         return posts
@@ -191,26 +193,6 @@ abstract class ListPostsViewModel constructor(
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }
-    }
-
-    /**
-     * Non-data class which allows passing the same reference to the
-     * MutableStateFlow multiple times in a row.
-     */
-    class OnChange<T>(val value: T)
-
-    /**
-     * Contains:
-     * 1) identifiers of items which are processed now (deleting or favorite
-     * flag updating).
-     * 2) local isLiked and isFavourite flag updates to avoid list reloading
-     */
-    class LocalChanges {
-        val idsInProgress = mutableSetOf<Long>()
-
-        // TODO фото
-        val isLikedFlags = mutableMapOf<Long, Boolean>()
-        val isFavouriteFlags = mutableMapOf<Long, Boolean>()
     }
 
 }

@@ -1,16 +1,15 @@
 package com.thesis.sportologia.model.posts
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
+import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.entities.Post
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
@@ -20,6 +19,9 @@ import javax.inject.Singleton
 class InMemoryPostsRepository @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : PostsRepository {
+
+    override val localChanges = PostsLocalChanges()
+    override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     val postSample = Post(
         id = 0L,
