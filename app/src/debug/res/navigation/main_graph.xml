@@ -101,24 +101,12 @@
         android:name="com.thesis.sportologia.ui.services.CreateEditServiceFragment"
         android:label="fragment_create_edit_service"
         tools:layout="@layout/fragment_create_edit_service" >
-        <action
-            android:id="@+id/action_createEditServiceFragment_to_createEditServiceDetailedFragment"
-            app:destination="@id/createEditServiceDetailedFragment" />
         <argument
             android:name="serviceId"
             app:argType="com.thesis.sportologia.ui.services.CreateEditServiceFragment$ServiceId" />
-    </fragment>
-    <fragment
-        android:id="@+id/createEditServiceDetailedFragment"
-        android:name="com.thesis.sportologia.ui.services.CreateEditServiceDetailedFragment"
-        android:label="fragment_create_edit_service_detailed"
-        tools:layout="@layout/fragment_create_edit_service_detailed" >
         <action
-            android:id="@+id/action_createEditServiceDetailedFragment_to_createEditExerciseFragment"
+            android:id="@+id/action_createEditServiceFragment_to_createEditExerciseFragment2"
             app:destination="@id/createEditExerciseFragment" />
-        <argument
-            android:name="serviceGeneral"
-            app:argType="com.thesis.sportologia.ui.services.entities.ServiceGeneralCreateEditItem" />
     </fragment>
     <fragment
         android:id="@+id/createEditExerciseFragment"

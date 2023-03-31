@@ -262,8 +262,8 @@
     <string name="program_name">Название программы</string>
     <string name="program_price">Стоимость</string>
     <string name="program_aim">Цель</string>
-    <string name="program_description">Описание</string>
-    <string name="program_info_for_clients">Информация для клиентов</string>
+    <string name="program_general_description">Описание программы</string>
+    <string name="program_detailed_description_for_clients">Информация для клиентов</string>
     <string name="exercise_add">Добавить упражнение</string>
 
 

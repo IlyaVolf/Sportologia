@@ -140,7 +140,7 @@ class SpinnerBasicView @JvmOverloads constructor(
     }
 
     fun setItem(value: String) {
-        currentValue = value
+        binding.spinnerBlock.setSelection(data.indexOf(value))
     }
 
     fun setListener(listener: OnSpinnerBasicActionListener?) {
