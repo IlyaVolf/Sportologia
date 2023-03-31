@@ -272,12 +272,16 @@
     <string name="ask_cancel_service_warning">Все изменения будут утеряны</string>
     <string name="ask_delete_service_warning">Удалить услугу?</string>
 
+    <string name="service_name">Название услуги</string>
+    <string name="service_aims">Цели</string>
+
+    <string name="service_type_hint">Выберите вид услуги</string>
     <string name="service_name_hint">Укажите название мероприятия</string>
+    <string name="service_aims_hint">Укажите нацеленность</string>
     <string name="service_rating_hint_from">От</string>
 
     <string name="program_name_hint">Укажите название программы</string>
-    <string name="program_aim_hint">Укажите нацеленность программы</string>
-    <string name="program_price_hint">Укажите стоимость программы</string>
+    <string name="program_price_hint">Укажите стоимость программы (Руб)</string>
     <string name="program_description_hint">Введите описание программы</string>
     <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
 

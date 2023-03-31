@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -55,7 +56,8 @@ class InMemoryServicesRepository @Inject constructor(
         reviewsNumber = 2,
         detailedDescription = "Тренер Наталья. Для связи используйте WhatsApp",
         detailedPhotosUrls = null,
-        exercises = listOf()
+        exercises = listOf(),
+        dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
 
     private val serviceSample2 = ServiceDetailed(
@@ -83,7 +85,8 @@ class InMemoryServicesRepository @Inject constructor(
         reviewsNumber = 2,
         detailedDescription = "Делать надо качсетвенно. Отписываться сюда: ***.com",
         detailedPhotosUrls = null,
-        exercises = listOf()
+        exercises = listOf(),
+        dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
 
     private val servicesDetailed = mutableListOf(

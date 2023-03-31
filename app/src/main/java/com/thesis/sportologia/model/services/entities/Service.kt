@@ -13,7 +13,7 @@ data class Service(
     var profilePictureUrl: String?,
     var acquiredNumber: Int,
     var reviewsNumber: Int,
-    var rating: Float,
+    var rating: Float?,
     var price: Float,
     var currency: String,
     var categories: Map<String, Boolean>,

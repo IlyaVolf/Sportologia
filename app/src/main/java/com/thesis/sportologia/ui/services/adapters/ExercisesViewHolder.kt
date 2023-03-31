@@ -1,5 +1,6 @@
 package com.thesis.sportologia.ui.services.adapters
 
+import androidx.core.view.isVisible
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemExerciseBinding
 import com.thesis.sportologia.model.services.entities.Exercise
@@ -9,7 +10,8 @@ import com.thesis.sportologia.utils.concatList
 
 class ExercisesViewHolder(
     private val binding: ItemExerciseBinding,
-    private val onItemClick: (Exercise) -> Unit
+    private val onItemClick: (Exercise) -> Unit,
+    private val itemId: Int,
 ) : BaseViewHolder<Exercise>(binding) {
 
     override fun bindItem(item: Exercise) {
@@ -17,6 +19,8 @@ class ExercisesViewHolder(
         binding.root.setOnClickListener {
             onItemClick(item)
         }
+
+        binding.itemExerciseSplitter.isVisible = itemId != 0
 
         binding.exerciseNameBlock.text = item.name
         binding.exercisePropertiesBlock.text = parseProperties(item)

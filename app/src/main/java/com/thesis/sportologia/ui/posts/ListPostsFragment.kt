@@ -73,10 +73,7 @@ abstract class ListPostsFragment : Fragment() {
         Log.d("LIFE", "onCreateView ${this.hashCode()}")
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
-        setExtrasBlockVisibility(false)
-
-        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
-
+        initErrorActions()
         initResultsProcessing()
         initSwipeToRefresh()
         initPostsList()
@@ -92,9 +89,8 @@ abstract class ListPostsFragment : Fragment() {
         return binding.root
     }
 
-    /* Visible when either error, in the process of loading or empty result */
-    private fun setExtrasBlockVisibility(isVisible: Boolean) {
-        binding.postsExtrasBlock.isVisible = true
+    private fun initErrorActions() {
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
     }
 
     private fun initResultsProcessing() {
@@ -173,7 +169,7 @@ abstract class ListPostsFragment : Fragment() {
     }
 
     private fun observeLoadState(adapter: PostsPagerAdapter) {
-        // you can also use adapter.addLoadStateListener
+        // can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
 
@@ -192,24 +188,8 @@ abstract class ListPostsFragment : Fragment() {
                 }
                 binding.postsEmptyBlock.isVisible = isEmpty
                 binding.postsList.isVisible = !isError
-
-                setExtrasBlockVisibility(state.refresh is LoadState.Error || state.refresh is LoadState.Loading || isEmpty)
             }
         }
-
-        /*adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                setExtrasBlockVisibility(true)
-                binding.postsList.isVisible = false
-                binding.postsEmptyBlock.isVisible = true
-            } else {
-                setExtrasBlockVisibility(false)
-                binding.postsList.isVisible = true
-                binding.postsEmptyBlock.isVisible = false
-            }
-        }*/
     }
 
     private fun handleListVisibility(adapter: PostsPagerAdapter) = lifecycleScope.launch {

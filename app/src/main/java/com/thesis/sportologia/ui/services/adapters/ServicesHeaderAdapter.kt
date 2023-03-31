@@ -129,7 +129,7 @@ abstract class ServicesHeaderAdapter(
         }
 
         private fun onCreateServiceButtonPressed() {
-            /*val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
+            val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
                 CreateEditServiceFragment.ServiceId(null)
             )
 
@@ -141,7 +141,7 @@ abstract class ServicesHeaderAdapter(
                         popEnter = R.anim.pop_enter
                         popExit = R.anim.pop_exit
                     }
-                })*/
+                })
         }
 
     }

@@ -8,7 +8,7 @@ class TrainingProgrammesCategories {
 
     companion object {
 
-        val emptyTrainingProgrammesCategoriesMap
+        val emptyCategoriesMap
             get() = hashMapOf(
                 Pair(GAINING_MUSCLES_MASS, false),
                 Pair(LOSING_WEIGHT, false),
@@ -16,7 +16,7 @@ class TrainingProgrammesCategories {
                 Pair(ELSE, false),
             )
 
-        fun getLocalizedTrainingProgrammesCategories(
+        fun getLocalizedCategories(
             context: Context,
             hashMap: Map<String, Boolean>
         ): Map<String, Boolean> {
@@ -24,13 +24,13 @@ class TrainingProgrammesCategories {
             val localizedHashMap = hashMapOf<String, Boolean>()
 
             hashMap.forEach {
-                localizedHashMap[convertEnumToTrainingProgrammeCategory(context, it.key)!!] = it.value
+                localizedHashMap[convertEnumToCategory(context, it.key)!!] = it.value
             }
 
             return localizedHashMap
         }
 
-        fun convertEnumToTrainingProgrammeCategory(
+        fun convertEnumToCategory(
             context: Context?,
             categoryEnum: String
         ): String? {
@@ -49,7 +49,6 @@ class TrainingProgrammesCategories {
         const val LOSING_WEIGHT = "Losing weight"
         const val KEEPING_FORM = "Keeping form"
         const val ELSE = "Else"
-
     }
 
 }

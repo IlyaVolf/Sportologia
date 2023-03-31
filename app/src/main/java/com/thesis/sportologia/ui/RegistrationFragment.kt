@@ -29,7 +29,7 @@ class RegistrationFragment : Fragment() {
 
         Log.d("BUGFIX", "")
 
-        Log.d("BUGFIX", spinnerBlockAccountType.getCurrentAccountType())
+        Log.d("BUGFIX", spinnerBlockAccountType.getCurrentValue())
 
         //updateLayout(CurrentAccountType.NONE)
 

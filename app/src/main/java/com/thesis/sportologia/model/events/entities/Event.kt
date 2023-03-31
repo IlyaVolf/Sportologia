@@ -23,20 +23,4 @@ data class Event(
     var isLiked: Boolean,
     var isFavourite: Boolean,
     var photosUrls: List<String>?,
-) {
-
-    fun toEventCreateEditItem(): EventCreateEditItem {
-        return EventCreateEditItem(
-            name,
-            description,
-            dateFrom,
-            dateTo,
-            address,
-            price.toString(),
-            currency,
-            categories,
-            photosUrls
-        )
-    }
-
-}
+)

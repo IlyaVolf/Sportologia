@@ -16,6 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.thesis.sportologia.ui.views.ToolbarBasicView
+            android:id="@+id/fces_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tb_toolbarLeftButton="@string/action_cancel"
@@ -23,13 +24,14 @@
             app:tb_toolbarTitle="@string/service_new" />
 
         <ScrollView
+            android:id="@+id/fces_service_block"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_marginHorizontal="@dimen/margin_sides"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_sides"
                 android:orientation="vertical">
 
                 <Space
@@ -37,39 +39,122 @@
                     android:layout_height="16dp" />
 
                 <com.thesis.sportologia.ui.views.SpinnerBasicView
+                    android:id="@+id/fces_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:spinnerTitle="@string/service_type"/>
+                    app:spinnerHint="@string/service_type_hint"
+                    app:spinnerTitle="@string/service_type" />
 
                 <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fces_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/event_name"
-                    app:editTextHint="@string/program_name_hint"/>
+                    app:editTextHint="@string/program_name_hint"
+                    app:editTextTitle="@string/service_name" />
 
-                <com.thesis.sportologia.ui.views.SpinnerBasicView
+                <com.thesis.sportologia.ui.views.MultiChoiceBasicView
+                    android:id="@+id/fces_aims"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:spinnerTitle="@string/program_aim"/>
-
-                <com.thesis.sportologia.ui.views.EditTextBasicView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:editTextTitle="@string/program_price"
-                    app:editTextHint="@string/program_price_hint"/>
+                    app:multiChoiceHint="@string/service_aims_hint"
+                    app:multiChoiceTitle="@string/service_aims" />
 
                 <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fces_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/program_description"
+                    app:editTextHint="@string/program_price_hint"
+                    app:editTextInputType="number"
+                    app:editTextTitle="@string/program_price" />
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fces_general_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     app:editTextHint="@string/program_description_hint"
-                    app:editTextLimit="2000"/>
+                    app:editTextLimit="2000"
+                    app:editTextTitle="@string/program_description" />
+
+                <com.thesis.sportologia.ui.views.EditTextBasicView
+                    android:id="@+id/fces_detailed_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:editTextHint="@string/program_info_for_clients_hint"
+                    app:editTextInputType=""
+                    app:editTextLimit="2000"
+                    app:editTextTitle="@string/program_info_for_clients" />
+
+                <TextView
+                    style="@style/TextStyleBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    android:text="@string/exercises" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/background_card"
+                    android:orientation="vertical"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/exercises_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_sides"
+                        android:scrollbars="vertical"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                        app:spanCount="1"
+                        tools:listitem="@layout/item_exercise" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_sides"
+                        android:layout_marginVertical="4dp"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextStyleRegular"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/exercise_add"
+                            android:textColor="@color/purple_medium" />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/icon_plus"
+                            app:tint="@color/purple_medium" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
                 <!-- TODO добавить фото -->
 
             </LinearLayout>
 
         </ScrollView>
+
+        <include
+            android:id="@+id/fces_loading"
+            layout="@layout/view_loading"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/fces_error"
+            layout="@layout/view_error"
+            android:visibility="gone" />
 
     </LinearLayout>
 

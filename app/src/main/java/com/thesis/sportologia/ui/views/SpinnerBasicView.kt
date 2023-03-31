@@ -114,7 +114,6 @@ class SpinnerBasicView @JvmOverloads constructor(
             ) {
                 if (view != null) {
                     val value = parent.getItemAtPosition(position).toString()
-                    Log.d("FFFF", "onitemselected: $value")
                     if (value == data[0]) {
                         view.findViewById<TextView>(R.id.dropdown_text)
                             .setTextColor(context.getColor(R.color.text_hint))
@@ -135,8 +134,13 @@ class SpinnerBasicView @JvmOverloads constructor(
         }
     }
 
-    fun getCurrentAccountType(): String {
+
+    fun getCurrentValue(): String {
         return currentValue
+    }
+
+    fun setItem(value: String) {
+        currentValue = value
     }
 
     fun setListener(listener: OnSpinnerBasicActionListener?) {
@@ -155,7 +159,6 @@ class SpinnerBasicView @JvmOverloads constructor(
     /// Save
 
     override fun onSaveInstanceState(): Parcelable {
-        Log.d("FFFF", "save")
         val superState = super.onSaveInstanceState()!!
         val savedState = SavedState(superState)
 
@@ -166,7 +169,6 @@ class SpinnerBasicView @JvmOverloads constructor(
     }
 
     override fun onRestoreInstanceState(state: Parcelable?) {
-        Log.d("FFFF", "restore")
         val savedState = state as SavedState
         super.onRestoreInstanceState(savedState.superState)
 

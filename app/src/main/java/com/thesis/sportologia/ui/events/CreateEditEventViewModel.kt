@@ -8,6 +8,7 @@ import com.thesis.sportologia.model.events.EventsRepository
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
+import com.thesis.sportologia.ui.events.entities.toCreateEditItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -24,7 +25,6 @@ class CreateEditEventViewModel @AssistedInject constructor(
 ) : BaseViewModel(logger) {
 
     // TODO
-
     private val currentAccount = CurrentAccount()
 
     private var mode: Mode
@@ -50,40 +50,22 @@ class CreateEditEventViewModel @AssistedInject constructor(
         }
     }
 
-    fun onSaveButtonPressed(newEventCreateEditItem: EventCreateEditItem) {
-        if (!validateText(newEventCreateEditItem.name, ErrorType.EMPTY_NAME)) {
+    fun onSaveButtonPressed(event: EventCreateEditItem) {
+        if (!validateData(event)) {
             return
         }
-        if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_DESCRIPTION)) {
-            return
-        }
-        if (!validatePrice(newEventCreateEditItem.priceString)) {
-            return
-        }
-        if (!validateDate(newEventCreateEditItem.dateFrom, newEventCreateEditItem.dateTo)) {
-            return
-        }
-        /*if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_DATE_FROM)) {
-            return
-        }
-        if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_DATE_TO)) {
-            return
-        }
-        if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_ADDRESS)) {
-            return
-        }*/
 
         // check whether text has left the same
         var savedEvent: Event? = null
         _eventHolder.value!!.onReady {
             savedEvent = it
         }
-        if (savedEvent?.toEventCreateEditItem() == newEventCreateEditItem) {
+        if (savedEvent?.toCreateEditItem() == event) {
             goBack()
         }
 
-        val reformattedName = reformatText(newEventCreateEditItem.name)
-        val reformattedDescription = reformatText(newEventCreateEditItem.description)
+        val reformattedName = reformatText(event.name)
+        val reformattedDescription = reformatText(event.description)
 
         lateinit var newEvent: Event
         when (mode) {
@@ -96,16 +78,16 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     organizerName = currentAccount.userName,
                     isOrganizerAthlete = currentAccount.isAthlete,
                     profilePictureUrl = currentAccount.profilePictureUrl,
-                    dateFrom = newEventCreateEditItem.dateFrom!!,
-                    dateTo = newEventCreateEditItem.dateTo,
-                    address = newEventCreateEditItem.address,
-                    price = newEventCreateEditItem.priceString.toFloat(),
-                    currency = newEventCreateEditItem.currency,
-                    categories = newEventCreateEditItem.categories,
+                    dateFrom = event.dateFrom!!,
+                    dateTo = event.dateTo,
+                    address = event.address,
+                    price = event.priceString.toFloat(),
+                    currency = event.currency,
+                    categories = event.categories,
                     likesCount = 0,
                     isLiked = false,
                     isFavourite = false,
-                    photosUrls = newEventCreateEditItem.photosUrls,
+                    photosUrls = event.photosUrls,
                 )
             Mode.EDIT ->
                 _eventHolder.value!!.onReady {
@@ -113,13 +95,13 @@ class CreateEditEventViewModel @AssistedInject constructor(
                         it!!.copy(
                             name = reformattedName,
                             description = reformattedDescription,
-                            dateFrom = newEventCreateEditItem.dateFrom!!,
-                            dateTo = newEventCreateEditItem.dateTo,
-                            address = newEventCreateEditItem.address,
-                            price = newEventCreateEditItem.priceString.toFloat(),
-                            currency = newEventCreateEditItem.currency,
-                            categories = newEventCreateEditItem.categories,
-                            photosUrls = newEventCreateEditItem.photosUrls,
+                            dateFrom = event.dateFrom!!,
+                            dateTo = event.dateTo,
+                            address = event.address,
+                            price = event.priceString.toFloat(),
+                            currency = event.currency,
+                            categories = event.categories,
+                            photosUrls = event.photosUrls,
                         )
                 }
         }
@@ -143,8 +125,6 @@ class CreateEditEventViewModel @AssistedInject constructor(
                 }
             }
         }
-
-        return
     }
 
     private fun getEvent() = viewModelScope.launch(Dispatchers.IO) {
@@ -161,6 +141,26 @@ class CreateEditEventViewModel @AssistedInject constructor(
                 _eventHolder.value = DataHolder.error(e)
             }
         }
+    }
+
+    private fun validateData(event: EventCreateEditItem): Boolean {
+        if (!validateText(event.name, ErrorType.EMPTY_NAME)) {
+            return false
+        }
+        if (!validateText(event.description, ErrorType.EMPTY_DESCRIPTION)) {
+            return false
+        }
+        if (!validatePrice(event.priceString)) {
+            return false
+        }
+        if (!validateDate(event.dateFrom, event.dateTo)) {
+            return false
+        }
+        /* if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_ADDRESS)) {
+            return false
+        }*/
+
+        return true
     }
 
     private fun validateDate(dateFromMillis: Long?, dateToMillis: Long?): Boolean {

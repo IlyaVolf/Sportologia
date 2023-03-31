@@ -47,7 +47,7 @@ class ServicesPagerAdapter(
         }
 
         itemService.setCategories(
-            TrainingProgrammesCategories.getLocalizedTrainingProgrammesCategories(
+            TrainingProgrammesCategories.getLocalizedCategories(
                 context,
                 serviceListItem.categories
             )

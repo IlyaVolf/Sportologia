@@ -21,7 +21,7 @@ data class ServiceListItem(
     val categories: Map<String, Boolean> get() = service.categories
     val acquiredNumber: Int get() = service.acquiredNumber
     val reviewsNumber: Int get() = service.reviewsNumber
-    val rating: Float get() = service.rating
+    val rating: Float? get() = service.rating
     val isFavourite: Boolean get() = service.isFavourite
     val photosUrls: List<String>? get() = service.generalPhotosUrls
 }

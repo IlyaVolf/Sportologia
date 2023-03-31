@@ -24,6 +24,13 @@ class Localization {
             }
         }
 
+        fun convertServiceTypeLocalizedToEnum(context: Context, localized: String): ServiceType? {
+            return when (localized) {
+                context.getString(R.string.service_training_program) -> ServiceType.TRAINING_PROGRAM
+                else -> null
+            }
+        }
+
         fun convertExerciseRegularityEnumToLocalized(context: Context, regularity: Exercise.Regularity): String {
             return when (regularity) {
                 Exercise.Regularity.EVERYDAY -> context.getString(R.string.exercise_everyday)

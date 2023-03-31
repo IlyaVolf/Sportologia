@@ -75,6 +75,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         initMode()
         initToolbar()
         initCategoriesSelector()
+        initRetryButton()
     }
 
     private fun initMode() {
@@ -131,6 +132,12 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     private fun initCurrentEventCreateEditItem(savedInstanceState: Bundle?) {
         currentEventCreateEditItem =
             savedInstanceState?.getSerializable(EVENT_KEY) as EventCreateEditItem?
+    }
+
+    private fun initRetryButton() {
+        binding.fceeError.veTryAgain.setOnClickListener {
+            onSaveButtonPressed()
+        }
     }
 
     private fun renderData(event: Event?) {
@@ -246,13 +253,6 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                     binding.fceeError.veText.text = holder.failure.message
                 }
             }
-        }
-    }
-
-    override fun setupViews() {
-        super.setupViews()
-        binding.fceeError.veTryAgain.setOnClickListener {
-            onSaveButtonPressed()
         }
     }
 

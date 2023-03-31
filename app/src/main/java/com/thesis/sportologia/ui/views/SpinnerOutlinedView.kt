@@ -121,7 +121,7 @@ class SpinnerOutlinedView @JvmOverloads constructor(
         binding.spinnerBlock.setSelection(data.indexOf(text))
     }
 
-    fun getCurrentAccountType(): String {
+    fun getCurrentValue(): String {
         return currentValue
     }
 

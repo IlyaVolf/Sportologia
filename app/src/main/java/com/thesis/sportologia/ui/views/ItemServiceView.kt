@@ -150,8 +150,8 @@ class ItemServiceView(
         binding.serviceReviewsNumber.text = formatQuantity(reviewsNumber)
     }
 
-    fun setRating(rating: Float) {
-        binding.serviceRatingAverage.text = rating.toString()
+    fun setRating(rating: Float?) {
+        binding.serviceRatingAverage.text = rating?.toString() ?: "-"
     }
 
     fun setPrice(price: Float, currency: String) {

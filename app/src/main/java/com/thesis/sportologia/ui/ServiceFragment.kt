@@ -17,6 +17,7 @@ import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.services.CreateEditServiceFragment
 import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
 import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
@@ -37,6 +38,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     private val args by navArgs<ServiceFragmentArgs>()
 
+    private lateinit var mode: Mode
     private lateinit var binding: FragmentServiceBinding
     private var serviceId by Delegates.notNull<Long>()
 
@@ -55,18 +57,35 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         return binding.root
     }
 
+    private fun initMode(serviceDetailedViewItem: ServiceDetailedViewItem) {
+        if (serviceDetailedViewItem.authorId == CurrentAccount().id) {
+            mode = Mode.OWN_SERVICE
+            return
+        }
+
+        mode = if (serviceDetailedViewItem.isAcquired) {
+            Mode.ACQUIRED_SERVICE
+        } else {
+            Mode.NOT_ACQUIRED_SERVICE
+        }
+    }
+
     private fun initToolbar() {
         binding.toolbar.setListener {
             when (it) {
                 OnToolbarBasicAction.LEFT -> onBackButtonPressed()
-                OnToolbarBasicAction.RIGHT -> onAcquireButtonPressed()
+                OnToolbarBasicAction.RIGHT ->
+                    when (mode) {
+                        Mode.OWN_SERVICE -> onEditButtonPressed()
+                        Mode.NOT_ACQUIRED_SERVICE -> onAcquireButtonPressed()
+                        Mode.ACQUIRED_SERVICE -> {}
+                    }
             }
         }
     }
 
     private fun initGeneralListeners(serviceDetailedViewItem: ServiceDetailedViewItem) {
         binding.serviceStatsBlock.setOnClickListener {
-            //
         }
 
         binding.serviceOrganizerBlock.setOnClickListener {
@@ -74,7 +93,6 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         }
 
         binding.serviceStar.setOnClickListener {
-            //setFavs(!serviceDetailedViewItem.isFavourite)
             viewModel.onToggleFavouriteFlag()
         }
 
@@ -89,20 +107,24 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     }
 
     private fun renderService(serviceDetailedViewItem: ServiceDetailedViewItem) {
-        // TODO баг при приобретении все равно виден. А также пррблемы с видимостью
-        if (serviceDetailedViewItem.isAcquired) {
-            binding.toolbar.setRightButtonText(null)
-        } else {
-            binding.toolbar.setRightButtonText(getString(R.string.action_acquire))
-        }
-
+        initMode(serviceDetailedViewItem)
         renderGeneralInfo(serviceDetailedViewItem)
-        if (serviceDetailedViewItem.isAcquired) {
-            binding.detailedContent.visibility = VISIBLE
-            renderDetailedInfo(serviceDetailedViewItem)
-        } else {
-            binding.detailedContent.visibility = GONE
-            //renderDetailedInfo(serviceDetailedViewItem)
+
+        when (mode) {
+            Mode.ACQUIRED_SERVICE -> {
+                binding.detailedContent.visibility = VISIBLE
+                renderDetailedInfo(serviceDetailedViewItem)
+                binding.toolbar.setRightButtonText(null)
+            }
+            Mode.NOT_ACQUIRED_SERVICE -> {
+                binding.detailedContent.visibility = GONE
+                binding.toolbar.setRightButtonText(getString(R.string.action_acquire))
+            }
+            Mode.OWN_SERVICE -> {
+                binding.detailedContent.visibility = VISIBLE
+                renderDetailedInfo(serviceDetailedViewItem)
+                binding.toolbar.setRightButtonText(getString(R.string.action_edit))
+            }
         }
     }
 
@@ -110,7 +132,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         initGeneralListeners(serviceDetailedViewItem)
 
         setCategories(
-            TrainingProgrammesCategories.getLocalizedTrainingProgrammesCategories(
+            TrainingProgrammesCategories.getLocalizedCategories(
                 context!!,
                 serviceDetailedViewItem.categories
             )
@@ -228,6 +250,22 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         viewModel.acquireService()
     }
 
+    private fun onEditButtonPressed() {
+        val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
+            CreateEditServiceFragment.ServiceId(serviceId)
+        )
+
+        findTopNavController().navigate(direction,
+            navOptions {
+                anim {
+                    enter = R.anim.enter
+                    exit = R.anim.exit
+                    popEnter = R.anim.pop_enter
+                    popExit = R.anim.pop_exit
+                }
+            })
+    }
+
     private fun setFavs(isAddedToFavs: Boolean) {
         if (isAddedToFavs) {
             binding.serviceStar.setImageResource(R.drawable.icon_star_pressed)
@@ -271,8 +309,8 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         binding.serviceReviewsNumber.text = formatQuantity(reviewsNumber)
     }
 
-    private fun setRating(rating: Float) {
-        binding.serviceRatingAverage.text = rating.toString()
+    private fun setRating(rating: Float?) {
+        binding.serviceRatingAverage.text = rating?.toString() ?: "-"
     }
 
     private fun setPrice(price: Float, currency: String) {
@@ -324,6 +362,10 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         val adapter = ExercisesAdapter(onExercisePressed)
         binding.exercisesList.adapter = adapter
         adapter.setupItems(exercises)
+    }
+
+    enum class Mode {
+        OWN_SERVICE, ACQUIRED_SERVICE, NOT_ACQUIRED_SERVICE
     }
 
 }

@@ -16,3 +16,17 @@ data class EventCreateEditItem(
     var categories: Map<String, Boolean>,
     var photosUrls: List<String>?,
 ) : java.io.Serializable
+
+fun Event.toCreateEditItem(): EventCreateEditItem {
+    return EventCreateEditItem(
+        name,
+        description,
+        dateFrom,
+        dateTo,
+        address,
+        price.toString(),
+        currency,
+        categories,
+        photosUrls
+    )
+}

@@ -13,7 +13,7 @@ data class ServiceDetailed(
     var profilePictureUrl: String?,
     var acquiredNumber: Int,
     var reviewsNumber: Int,
-    var rating: Float,
+    var rating: Float?,
     var price: Float,
     var currency: String,
     var categories: Map<String, Boolean>,
@@ -23,6 +23,7 @@ data class ServiceDetailed(
     var detailedDescription: String,
     var detailedPhotosUrls: List<String>?,
     var exercises: List<Exercise>,
+    var dateCreatedMillis: Long,
 ) {
     fun toGeneral(): Service {
         return Service(
