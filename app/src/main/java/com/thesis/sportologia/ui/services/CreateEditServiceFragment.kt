@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.services
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -323,6 +324,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     }
 
     private fun observeGoBackEvent() = viewModel.goBackEvent.observeEvent(viewLifecycleOwner) {
+        Log.d("abcdef", "observeGoBackEvent")
         goBack(true)
     }
 
@@ -353,7 +355,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
 
-        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
-        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
+        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_SERVICE"
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_SERVICE"
     }
 }

@@ -321,8 +321,8 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
 
-        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
-        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
+        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_EVENT"
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_EVENT"
     }
 
 }

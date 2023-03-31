@@ -282,8 +282,8 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
 
-        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
-        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
+        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_POST"
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_POST"
     }
 
 }

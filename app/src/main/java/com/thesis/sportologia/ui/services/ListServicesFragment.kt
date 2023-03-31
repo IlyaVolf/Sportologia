@@ -125,6 +125,7 @@ abstract class ListServicesFragment : Fragment() {
             CreateEditServiceFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
+            Log.d("abcdef", "IS_CREATED_REQUEST_CODE")
             val isSaved = data.getBoolean(CreateEditServiceFragment.IS_CREATED)
             if (isSaved) {
                 viewModel.onServiceCreated()

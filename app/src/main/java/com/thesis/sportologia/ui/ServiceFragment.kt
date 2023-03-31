@@ -81,7 +81,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
                 OnToolbarBasicAction.LEFT -> goBack(false)
                 OnToolbarBasicAction.RIGHT ->
                     when (mode) {
-                        Mode.OWN_SERVICE -> onEditButtonPressed()
+                        Mode.OWN_SERVICE -> {}
                         Mode.NOT_ACQUIRED_SERVICE -> onAcquireButtonPressed()
                         Mode.ACQUIRED_SERVICE -> {}
                     }
@@ -140,7 +140,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
             Mode.OWN_SERVICE -> {
                 binding.detailedContent.visibility = VISIBLE
                 renderDetailedInfo(serviceDetailedViewItem)
-                binding.toolbar.setRightButtonText(getString(R.string.action_edit))
+                binding.toolbar.setRightButtonText(null)
             }
         }
     }
@@ -479,7 +479,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     }
 
     companion object {
-        const val IS_DELETED_REQUEST_CODE = "IS_DELETED_REQUEST_CODE"
+        const val IS_DELETED_REQUEST_CODE = "IS_DELETED_REQUEST_CODE_SERVICE"
         const val IS_DELETED = "IS_DELETED"
     }
 
