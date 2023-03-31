@@ -187,7 +187,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private fun getServiceIdArg(): Long? = args.serviceId.value
 
     private fun onCancelButtonPressed() {
-        createDialog()
+        createDialogCancel()
     }
 
     private fun getCurrentData() {
@@ -217,7 +217,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         }
     }
 
-    private fun createDialog() {
+    private fun createDialogCancel() {
         val messageText = getString(R.string.ask_cancel_event_warning)
 
         val neutralButtonText = getString(R.string.action_back)

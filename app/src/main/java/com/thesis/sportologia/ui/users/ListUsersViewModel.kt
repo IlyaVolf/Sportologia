@@ -61,7 +61,7 @@ abstract class ListUsersViewModel constructor(
     }
 
     fun refresh() {
-        this.searchLive.postValue(this.searchLive.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     private fun setProgress(userListItemId: String, inProgress: Boolean) {

@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui.posts
 
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -27,7 +26,7 @@ abstract class ListPostsViewModel constructor(
     logger: Logger
 ) : BaseViewModel(logger), PostsPagerAdapter.MoreButtonListener, PostsHeaderAdapter.FilterListener {
 
-    protected val search = MutableLiveData("")
+    protected val searchLive = MutableLiveData("")
 
     private val athTorgFLiveData = MutableLiveData<Boolean?>(null)
     var athTorgF: Boolean?
@@ -116,7 +115,7 @@ abstract class ListPostsViewModel constructor(
     }
 
     fun refresh() {
-        this.search.postValue(this.search.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     fun onPostCreated() {

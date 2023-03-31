@@ -113,7 +113,7 @@ abstract class ListServicesViewModel constructor(
     }
 
     fun refresh() {
-        this.searchLive.postValue(this.searchLive.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     fun onServiceCreated() {
@@ -121,6 +121,10 @@ abstract class ListServicesViewModel constructor(
     }
 
     fun onServiceEdited() {
+        invalidateList()
+    }
+
+    fun onServiceDeleted() {
         invalidateList()
     }
 

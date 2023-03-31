@@ -19,6 +19,7 @@ import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.SearchFragment
+import com.thesis.sportologia.ui.ServiceFragment
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
@@ -141,6 +142,16 @@ abstract class ListServicesFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
+            ServiceFragment.IS_DELETED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val isDeleted = data.getBoolean(ServiceFragment.IS_DELETED)
+            if (isDeleted) {
+                viewModel.onServiceDeleted()
+            }
+        }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
             ProfileFragment.REFRESH_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -149,6 +160,7 @@ abstract class ListServicesFragment : Fragment() {
                 viewModel.refresh()
             }
         }
+
     }
 
     private fun initServicesList() {

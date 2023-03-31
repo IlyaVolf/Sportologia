@@ -3,11 +3,13 @@ package com.thesis.sportologia.ui
 
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
+import com.thesis.sportologia.R
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.ui.base.BaseViewModel
+import com.thesis.sportologia.ui.services.CreateEditServiceViewModel
 import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
@@ -28,8 +30,14 @@ class ServiceViewModel @AssistedInject constructor(
     private val _serviceHolder = ObservableHolder<ServiceDetailedViewItem>(DataHolder.loading())
     val serviceHolder = _serviceHolder.share()
 
+    private val _deleteHolder = ObservableHolder(DataHolder.ready(null))
+    val deleteHolder = _deleteHolder.share()
+
     private val _toastMessageEvent = MutableLiveEvent<ResponseType>()
     val toastMessageEvent = _toastMessageEvent.share()
+
+    private val _goBackEvent = MutableUnitLiveEvent()
+    val goBackEvent = _goBackEvent.share()
 
     val localChanges = servicesRepository.localChanges
     val localChangesFlow = servicesRepository.localChangesFlow
@@ -55,7 +63,29 @@ class ServiceViewModel @AssistedInject constructor(
             }
         }
     }
+    
+    fun deleteService() {
+        if (_serviceHolder.value?.isNotReady == true) {
+            return
+        }
 
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Main) {
+                    _deleteHolder.value = DataHolder.loading()
+                }
+                    servicesRepository.deleteService(serviceId)
+                withContext(Dispatchers.Main) {
+                    _deleteHolder.value = DataHolder.ready(null)
+                    goBack()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _deleteHolder.value = DataHolder.error(e)
+                }
+            }
+        }
+    }
 
     private fun initMergeChanges() {
         viewModelScope.launch {
@@ -156,37 +186,7 @@ class ServiceViewModel @AssistedInject constructor(
         ACQUIRE_ERROR, FAVS_ERROR, ACQUIRED_SUCCESSFULLY
     }
 
-/*class LocalChanges(val holder: ObservableHolder<ServiceDetailedViewItem>) {
-    var isLoading = false
-
-    var isAcquiredFlag: Boolean? = null
-        set(value) {
-            holder.value?.onReady {
-                holder.value = DataHolder.READY(
-                    it.copy(
-                        serviceDetailed = it.serviceDetailed.copy(
-                            isAcquired = value ?: it.isAcquired
-                        )
-                    )
-                )
-            }
-            field = value
-        }
-
-    var isFavouriteFlag: Boolean? = null
-        set(value) {
-            holder.value?.onReady {
-                holder.value = DataHolder.READY(
-                    it.copy(
-                        serviceDetailed = it.serviceDetailed.copy(
-                            isFavourite = value ?: it.isFavourite
-                        )
-                    )
-                )
-            }
-            field = value
-        }
-}*/
+    private fun goBack() = _goBackEvent.publishEvent()
 
     @AssistedFactory
     interface Factory {

@@ -20,7 +20,7 @@ class ListPostsViewModelFavourites @AssistedInject constructor(
 ) : ListPostsViewModel(userId, postsRepository, logger) {
 
     override fun getDataFlow(): Flow<PagingData<Post>> {
-        return search.asFlow()
+        return searchLive.asFlow()
             .flatMapLatest {
                 postsRepository.getPagedUserFavouritePosts(athTorgF)
             }.cachedIn(viewModelScope)

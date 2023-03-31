@@ -128,7 +128,7 @@ abstract class ListEventsViewModel constructor(
     }
 
     fun refresh() {
-        this.searchLive.postValue(this.searchLive.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     fun onEventCreated() {

@@ -110,6 +110,11 @@ sealed class DataHolder<out TData> {
     inline val isReady get() = this is READY
 
     /**
+     * Проверка на состояние неготовности
+     */
+    inline val isNotReady get() = this !is READY
+
+    /**
      * Проверка на состояние ошибки
      */
     inline val isError get() = this is ERROR

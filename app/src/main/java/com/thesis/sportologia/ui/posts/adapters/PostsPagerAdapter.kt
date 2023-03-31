@@ -46,7 +46,6 @@ class PostsPagerAdapter(
         itemPost.setUsername(postListItem.authorName)
         itemPost.setAuthorAvatar(postListItem.profilePictureUrl)
         itemPost.setDate(postListItem.postedDate)
-        Log.d("abcdef", "${postListItem.isLiked}")
         itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
         itemPost.setFavs(postListItem.isFavourite)
         itemPost.setPhotos(postListItem.photosUrls)
@@ -63,7 +62,7 @@ class PostsPagerAdapter(
         val binding: ItemPostBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    private fun createOnEditDialog(postListItem: PostListItem) {
+    private fun createOnDeleteDialog(postListItem: PostListItem) {
         createSimpleDialog(
             context,
             null,
@@ -96,7 +95,7 @@ class PostsPagerAdapter(
                     },
                     Pair(getString(R.string.action_delete)) { _, _ ->
                         run {
-                            createOnEditDialog(postListItem)
+                            createOnDeleteDialog(postListItem)
                         }
                     },
                 )

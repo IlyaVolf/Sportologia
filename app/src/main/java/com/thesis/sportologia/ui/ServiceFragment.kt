@@ -15,8 +15,10 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentServiceBinding
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.ui.services.CreateEditServiceFragment
 import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
 import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
@@ -55,6 +57,8 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         initRetryListener()
         initResultsProcessing()
 
+        observeGoBackEvent()
+
         return binding.root
     }
 
@@ -74,7 +78,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     private fun initToolbar() {
         binding.toolbar.setListener {
             when (it) {
-                OnToolbarBasicAction.LEFT -> onBackButtonPressed()
+                OnToolbarBasicAction.LEFT -> goBack(false)
                 OnToolbarBasicAction.RIGHT ->
                     when (mode) {
                         Mode.OWN_SERVICE -> onEditButtonPressed()
@@ -144,6 +148,9 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     private fun renderGeneralInfo(serviceDetailedViewItem: ServiceDetailedViewItem) {
         initGeneralListeners(serviceDetailedViewItem)
 
+        binding.postMore.setOnClickListener {
+            onMoreButtonPressed(serviceDetailedViewItem)
+        }
         setCategories(
             TrainingProgrammesCategories.getLocalizedCategories(
                 context!!,
@@ -202,6 +209,34 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
             }
         }
 
+        viewModel.deleteHolder.observe(viewLifecycleOwner) { holder ->
+            when (holder) {
+                DataHolder.LOADING -> {
+                    binding.serviceContentBlock.visibility = GONE
+                    binding.serviceViewLoadState.root.visibility = VISIBLE
+                    binding.serviceViewLoadState.flpLoading.root.visibility = VISIBLE
+                    binding.serviceViewLoadState.flpError.root.visibility = GONE
+                }
+                is DataHolder.READY -> {
+                    binding.serviceContentBlock.visibility = VISIBLE
+                    binding.serviceViewLoadState.root.visibility = GONE
+                }
+                is DataHolder.ERROR -> {
+                    binding.serviceContentBlock.visibility = GONE
+                    binding.serviceViewLoadState.root.visibility = VISIBLE
+                    binding.serviceViewLoadState.flpLoading.root.visibility = GONE
+                    binding.serviceViewLoadState.flpError.root.visibility = VISIBLE
+
+                    toast(context, holder.failure.message ?: getString(R.string.error))
+
+                    binding.serviceViewLoadState.flpError.veTryAgain.setOnClickListener {
+                        viewModel.deleteService()
+                    }
+                }
+                else -> {}
+            }
+        }
+
         viewModel.toastMessageEvent.observe(viewLifecycleOwner) { holder ->
             val toastText = when (holder.get()) {
                 ServiceViewModel.ResponseType.ACQUIRED_SUCCESSFULLY -> getString(R.string.service_acquired_successfully)
@@ -254,9 +289,71 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
             })*/
     }
 
+    private fun createOnDeleteDialog() {
+        createSimpleDialog(
+            context!!,
+            null,
+            ResourcesUtils.getString(R.string.ask_delete_service_warning),
+            ResourcesUtils.getString(R.string.action_delete),
+            { _, _ ->
+                run {
+                    viewModel.deleteService()
+                }
+            },
+            ResourcesUtils.getString(R.string.action_cancel),
+            { dialog, _ ->
+                run {
+                    dialog.cancel()
+                }
+            },
+            null,
+            null,
+        )
+    }
 
-    private fun onBackButtonPressed() {
+    private fun onMoreButtonPressed(service: ServiceDetailedViewItem) {
+        val actionsMore: Array<Pair<String, DialogOnClickAction?>> =
+            if (service.authorId == CurrentAccount().id) {
+                arrayOf(
+                    Pair(ResourcesUtils.getString(R.string.action_edit)) { _, _ ->
+                        run {
+                            onEditButtonPressed()
+                        }
+                    },
+                    Pair(ResourcesUtils.getString(R.string.action_delete)) { _, _ ->
+                        run {
+                            createOnDeleteDialog()
+                        }
+                    },
+                )
+            } else {
+                arrayOf(
+                    Pair(ResourcesUtils.getString(R.string.action_report)) { _, _ -> }
+                )
+            }
+
+        createSpinnerDialog(
+            context!!,
+            null,
+            null,
+            actionsMore
+        )
+    }
+
+    private fun observeGoBackEvent() = viewModel.goBackEvent.observeEvent(viewLifecycleOwner) {
+        goBack(true)
+    }
+
+    private fun goBack(isSaved: Boolean) {
+        sendResult(isSaved)
         findNavController().navigateUp()
+    }
+
+    private fun sendResult(isSaved: Boolean) {
+        requireActivity().supportFragmentManager.setFragmentResult(
+            IS_DELETED_REQUEST_CODE,
+            bundleOf(IS_DELETED to isSaved)
+        )
     }
 
     private fun onAcquireButtonPressed() {
@@ -379,6 +476,11 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     enum class Mode {
         OWN_SERVICE, ACQUIRED_SERVICE, NOT_ACQUIRED_SERVICE
+    }
+
+    companion object {
+        const val IS_DELETED_REQUEST_CODE = "IS_DELETED_REQUEST_CODE"
+        const val IS_DELETED = "IS_DELETED"
     }
 
 }
