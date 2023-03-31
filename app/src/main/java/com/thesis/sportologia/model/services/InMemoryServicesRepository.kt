@@ -55,7 +55,7 @@ class InMemoryServicesRepository @Inject constructor(
         acquiredNumber = 13,
         reviewsNumber = 2,
         detailedDescription = "Тренер Наталья. Для связи используйте WhatsApp",
-        detailedPhotosUrls = null,
+        detailedPhotosUrls = listOf(),
         exercises = listOf(),
         dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
@@ -79,12 +79,12 @@ class InMemoryServicesRepository @Inject constructor(
         ),
         isFavourite = false,
         isAcquired = true,
-        generalPhotosUrls = null,
+        generalPhotosUrls = listOf(),
         rating = 5.0F,
         acquiredNumber = 13,
         reviewsNumber = 2,
         detailedDescription = "Делать надо качсетвенно. Отписываться сюда: ***.com",
-        detailedPhotosUrls = null,
+        detailedPhotosUrls = listOf(),
         exercises = listOf(),
         dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
@@ -403,6 +403,7 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun deleteService(serviceId: Long) {
         delay(1000)
         servicesDetailed.removeIf { it.id == serviceId }
+        localChanges.remove(serviceId)
     }
 
     override suspend fun acquireService(serviceId: Long) {

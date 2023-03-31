@@ -53,6 +53,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
         initToolbar()
         initRetryListener()
+        initResultsProcessing()
 
         return binding.root
     }
@@ -97,6 +98,18 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         }
 
         binding.servicePhotosBlockGeneral.setOnClickListener { }
+    }
+
+    private fun initResultsProcessing() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditServiceFragment.IS_EDITED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val isSaved = data.getBoolean(CreateEditServiceFragment.IS_EDITED)
+            if (isSaved) {
+                viewModel.getService()
+            }
+        }
     }
 
 

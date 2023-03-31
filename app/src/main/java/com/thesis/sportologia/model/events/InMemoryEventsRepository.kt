@@ -375,6 +375,7 @@ class InMemoryEventsRepository @Inject constructor(
     override suspend fun deleteEvent(eventId: Long) {
         delay(1000)
         events.removeIf { it.id == eventId }
+        localChanges.remove(eventId)
     }
 
     override suspend fun setIsLiked(userId: String, event: Event, isLiked: Boolean) {

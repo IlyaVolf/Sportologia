@@ -19,9 +19,9 @@ data class ServiceDetailed(
     var categories: Map<String, Boolean>,
     var isFavourite: Boolean,
     var isAcquired: Boolean,
-    var generalPhotosUrls: List<String>?,
+    var generalPhotosUrls: List<String>,
     var detailedDescription: String,
-    var detailedPhotosUrls: List<String>?,
+    var detailedPhotosUrls: List<String>,
     var exercises: List<Exercise>,
     var dateCreatedMillis: Long,
 ) {

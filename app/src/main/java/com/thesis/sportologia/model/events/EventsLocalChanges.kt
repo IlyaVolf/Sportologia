@@ -8,6 +8,12 @@ class EventsLocalChanges {
     val isLikedFlags = mutableMapOf<Long, Boolean>()
     val isFavouriteFlags = mutableMapOf<Long, Boolean>()
 
+    fun remove(id: Long) {
+        idsInProgress.remove(id)
+        isLikedFlags.remove(id)
+        isFavouriteFlags.remove(id)
+    }
+
     fun clear() {
         idsInProgress.clear()
         isFavouriteFlags.clear()

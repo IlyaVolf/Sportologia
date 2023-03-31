@@ -175,7 +175,7 @@ abstract class ListServicesViewModel constructor(
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[service.id]
 
                 val serviceWithLocalChanges = if (localFavoriteFlag == null) {
-                    service
+                    service.copy()
                 } else {
                     service.copy(isFavourite = localFavoriteFlag)
                 }

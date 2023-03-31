@@ -311,6 +311,7 @@ class InMemoryPostsRepository @Inject constructor(
     override suspend fun deletePost(postId: Long) {
         delay(1000)
         posts.removeIf { it.id == postId }
+        localChanges.remove(postId)
     }
 
     override suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean) {

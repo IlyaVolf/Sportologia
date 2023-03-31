@@ -120,7 +120,7 @@ abstract class ListServicesFragment : Fragment() {
     }
 
     private fun initResultsProcessing() {
-        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+        requireActivity().supportFragmentManager.setFragmentResultListener(
             CreateEditServiceFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -138,7 +138,7 @@ abstract class ListServicesFragment : Fragment() {
             if (isSaved) {
                 viewModel.onServiceEdited()
             }
-        }*/
+        }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
             ProfileFragment.REFRESH_REQUEST_CODE,

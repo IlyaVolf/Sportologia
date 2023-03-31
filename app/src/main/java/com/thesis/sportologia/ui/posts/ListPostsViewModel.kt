@@ -175,21 +175,19 @@ abstract class ListPostsViewModel constructor(
         posts: PagingData<Post>,
         localChanges: OnChange<PostsLocalChanges>
     ): PagingData<PostListItem> {
-        Log.d("LSVM", "1 ${posts}")
         return posts
             .map { post ->
                 val isInProgress = localChanges.value.idsInProgress.contains(post.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[post.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
 
-                val postWithLocalChanges = post.copy()
+                var postWithLocalChanges = post.copy()
                 if (localFavoriteFlag != null) {
-                    postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    postWithLocalChanges = postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
-                    postWithLocalChanges.copy(isFavourite = localLikedFlag)
+                    postWithLocalChanges = postWithLocalChanges.copy(isLiked = localLikedFlag)
                 }
-                Log.d("LSVM", "Post2 $localLikedFlag ${post.hashCode()} ${postWithLocalChanges.hashCode()}")
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }

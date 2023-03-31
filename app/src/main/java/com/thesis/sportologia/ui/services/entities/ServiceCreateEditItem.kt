@@ -33,18 +33,6 @@ data class ServiceCreateEditItem(
             )
         }
     }
-
-    /*fun toServiceGeneralCreateEditItem(): ServiceGeneralCreateEditItem {
-        return ServiceGeneralCreateEditItem(
-            name = name!!,
-            generalDescription = generalDescription!!,
-            priceString = priceString!!,
-            currency = currency!!,
-            categories = categories!!,
-            type = type!!,
-            generalPhotosUris = generalPhotosUris!!
-        )
-    }*/
 }
 
 fun ServiceDetailed.toCreateEditItem(): ServiceCreateEditItem {
@@ -55,7 +43,7 @@ fun ServiceDetailed.toCreateEditItem(): ServiceCreateEditItem {
         currency = currency,
         categories = categories,
         type = type,
-        generalPhotosUrls = generalPhotosUrls!!,
+        generalPhotosUrls = generalPhotosUrls,
         detailedDescription = detailedDescription,
         detailedPhotosUrls = detailedPhotosUrls,
         exercises = exercises

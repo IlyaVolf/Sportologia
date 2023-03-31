@@ -94,9 +94,9 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     categories = service.categories!!,
                     isFavourite = false,
                     isAcquired = true,
-                    generalPhotosUrls = service.generalPhotosUrls,
+                    generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                     detailedDescription = reformattedDetailedDescription,
-                    detailedPhotosUrls = service.detailedPhotosUrls,
+                    detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
                     exercises = listOf(),
                     dateCreatedMillis = Calendar.getInstance().timeInMillis
                 )
@@ -106,13 +106,13 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                         it!!.copy(
                             name = reformattedName,
                             generalDescription = reformattedGeneralDescription,
-                            type = newService.type,
-                            price = newService.price,
-                            currency = newService.currency,
-                            categories = newService.categories,
-                            generalPhotosUrls = newService.generalPhotosUrls,
+                            type = service.type!!,
+                            price = service.priceString!!.toFloat(),
+                            currency = service.currency!!,
+                            categories = service.categories!!,
+                            generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                             detailedDescription = reformattedDetailedDescription,
-                            detailedPhotosUrls = newService.detailedPhotosUrls,
+                            detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
                             exercises = listOf(),
                         )
                 }

@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -45,6 +46,7 @@ class PostsPagerAdapter(
         itemPost.setUsername(postListItem.authorName)
         itemPost.setAuthorAvatar(postListItem.profilePictureUrl)
         itemPost.setDate(postListItem.postedDate)
+        Log.d("abcdef", "${postListItem.isLiked}")
         itemPost.setLikes(postListItem.likesCount, postListItem.isLiked)
         itemPost.setFavs(postListItem.isFavourite)
         itemPost.setPhotos(postListItem.photosUrls)

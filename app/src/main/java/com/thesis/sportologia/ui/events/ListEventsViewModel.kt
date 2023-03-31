@@ -193,12 +193,12 @@ abstract class ListEventsViewModel constructor(
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[event.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[event.id]
 
-                val eventWithLocalChanges = event
+                var eventWithLocalChanges = event.copy()
                 if (localFavoriteFlag != null) {
-                    eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    eventWithLocalChanges = eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
-                    eventWithLocalChanges.copy(isFavourite = localLikedFlag)
+                    eventWithLocalChanges = eventWithLocalChanges.copy(isLiked = localLikedFlag)
                 }
 
                 EventListItem(eventWithLocalChanges, isInProgress)
