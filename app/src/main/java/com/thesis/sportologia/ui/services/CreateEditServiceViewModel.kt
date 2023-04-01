@@ -38,7 +38,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
     private val _serviceHolder = ObservableHolder<ServiceDetailed?>(DataHolder.ready(null))
     val serviceHolder = _serviceHolder.share()
 
-    private val _saveHolder = ObservableHolder(DataHolder.ready(null))
+    private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
     val saveHolder = _saveHolder.share()
 
     private val _toastMessageService = MutableLiveEvent<ErrorType>()
@@ -128,7 +128,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     Mode.EDIT -> servicesRepository.updateService(newService)
                 }
                 withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(null)
+                    _saveHolder.value = DataHolder.ready(Unit)
                     goBack()
                 }
             } catch (e: Exception) {

@@ -167,6 +167,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
     override fun observeViewModel() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fcpLoading.root.visibility = VISIBLE
                     binding.fcpError.root.visibility = GONE

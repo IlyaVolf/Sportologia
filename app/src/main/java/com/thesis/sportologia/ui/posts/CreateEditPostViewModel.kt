@@ -32,7 +32,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
     private val _postHolder = ObservableHolder<Post?>(DataHolder.ready(null))
     val postHolder = _postHolder.share()
 
-    private val _saveHolder = ObservableHolder(DataHolder.ready(null))
+    private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
     val saveHolder = _saveHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
@@ -98,7 +98,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
                     Mode.EDIT -> postsRepository.updatePost(newPost)
                 }
                 withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(null)
+                    _saveHolder.value = DataHolder.ready(Unit)
                     goBack()
                 }
             } catch (e: Exception) {

@@ -55,7 +55,6 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         serviceId = getServiceIdArg()
 
         initToolbar()
-        initRetryListener()
         initResultsProcessing()
 
         observeGoBackEvent()
@@ -114,13 +113,6 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
             if (isSaved) {
                 viewModel.getService()
             }
-        }
-    }
-
-
-    private fun initRetryListener() {
-        binding.serviceViewLoadState.flpError.veTryAgain.setOnClickListener {
-            viewModel.getService()
         }
     }
 

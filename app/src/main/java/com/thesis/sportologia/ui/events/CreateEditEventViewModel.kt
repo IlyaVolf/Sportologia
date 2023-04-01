@@ -32,7 +32,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
     private val _eventHolder = ObservableHolder<Event?>(DataHolder.ready(null))
     val eventHolder = _eventHolder.share()
 
-    private val _saveHolder = ObservableHolder(DataHolder.ready(null))
+    private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
     val saveHolder = _saveHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
@@ -116,7 +116,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     Mode.EDIT -> eventsRepository.updateEvent(newEvent)
                 }
                 withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(null)
+                    _saveHolder.value = DataHolder.ready(Unit)
                     goBack()
                 }
             } catch (e: Exception) {
@@ -127,7 +127,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getEvent() = viewModelScope.launch(Dispatchers.IO) {
+    fun getEvent() = viewModelScope.launch(Dispatchers.IO) {
         try {
             withContext(Dispatchers.Main) {
                 _eventHolder.value = DataHolder.loading()

@@ -116,13 +116,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private fun renderSelectedCategories(event: Event?) {
         val categoriesMap = event?.categories ?: Categories.emptyCategoriesMap
-        val categoriesLocalizedMap = hashMapOf<String, Boolean>()
-        categoriesMap.map {
-            categoriesLocalizedMap.put(
-                Categories.convertEnumToCategory(context, it.key)!!,
-                it.value
-            )
-        }
+        val categoriesLocalizedMap = Categories.getLocalizedCategories(context!!, categoriesMap)
         binding.fceeCategories.initMultiChoiceList(
             categoriesLocalizedMap,
             getString(R.string.event_categories_hint)
@@ -169,7 +163,10 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                     null,
                     binding.fceePrice.getText(),
                     getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
-                    binding.fceeCategories.getCheckedDataMap(Categories.emptyCategoriesMap.keys.toTypedArray()),
+                    Categories.getCategoriesFromLocalized(
+                        context!!,
+                        binding.fceeCategories.getCheckedDataMap()
+                    ),
                     photosUrls
                 )
             )
@@ -211,6 +208,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     override fun observeViewModel() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fceeLoading.root.visibility = VISIBLE
                     binding.fceeError.root.visibility = GONE
@@ -227,6 +225,9 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                     binding.fceeEventBlock.visibility = GONE
 
                     binding.fceeError.veText.text = holder.failure.message
+                    binding.fceeError.veTryAgain.setOnClickListener {
+                        onSaveButtonPressed()
+                    }
                 }
             }
         }
@@ -251,6 +252,9 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                     binding.fceeEventBlock.visibility = GONE
 
                     binding.fceeError.veText.text = holder.failure.message
+                    binding.fceeError.veTryAgain.setOnClickListener {
+                        viewModel.getEvent()
+                    }
                 }
             }
         }
@@ -258,14 +262,6 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private fun goBack(isSaved: Boolean) {
         sendResult(isSaved)
-
-        /*val bundle = if (isSaved) {
-            bundleOf(EDIT_RESULT to EditResult(isSaved, eventId, binding.text.text.toString()))
-        } else {
-            bundleOf(EDIT_RESULT to EditResult(isSaved, null, null))
-        }
-        requireActivity().supportFragmentManager.setFragmentResult(REQUEST_CODE, bundle)*/
-
         findNavController().navigateUp()
     }
 

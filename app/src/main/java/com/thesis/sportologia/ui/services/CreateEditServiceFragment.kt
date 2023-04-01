@@ -115,13 +115,8 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
     private fun renderSelectedCategories(categories: Map<String, Boolean>?) {
         val categoriesMap = categories ?: TrainingProgrammesCategories.emptyCategoriesMap
-        val categoriesLocalizedMap = hashMapOf<String, Boolean>()
-        categoriesMap.map {
-            categoriesLocalizedMap.put(
-                TrainingProgrammesCategories.convertEnumToCategory(context, it.key)!!,
-                it.value
-            )
-        }
+        val categoriesLocalizedMap =
+            TrainingProgrammesCategories.getLocalizedCategories(context!!, categoriesMap)
         binding.fcesAims.initMultiChoiceList(
             categoriesLocalizedMap,
             getString(R.string.service_aims_hint)
@@ -202,7 +197,10 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             priceString = binding.fcesPrice.getText()
             currency = getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)
             categories =
-                binding.fcesAims.getCheckedDataMap(TrainingProgrammesCategories.emptyCategoriesMap.keys.toTypedArray())
+                TrainingProgrammesCategories.getCategoriesFromLocalized(
+                    context!!,
+                    binding.fcesAims.getCheckedDataMap()
+                )
             type = Localization.convertServiceTypeLocalizedToEnum(
                 context!!,
                 binding.fcesType.getCurrentValue()
@@ -253,6 +251,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     override fun observeViewModel() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fcesLoading.root.visibility = View.VISIBLE
                     binding.fcesError.root.visibility = View.GONE
@@ -324,7 +323,6 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     }
 
     private fun observeGoBackEvent() = viewModel.goBackEvent.observeEvent(viewLifecycleOwner) {
-        Log.d("abcdef", "observeGoBackEvent")
         goBack(true)
     }
 

@@ -40,8 +40,36 @@ class Categories {
             }
         }
 
-        const val RUNNING = "Running"
-        const val MASTER_CLASS = "Master class"
+        fun getCategoriesFromLocalized(
+            context: Context,
+            hashMap: Map<String, Boolean>
+        ): Map<String, Boolean> {
+
+            val localizedHashMap = hashMapOf<String, Boolean>()
+
+            hashMap.forEach {
+                localizedHashMap[convertCategoryToEnum(context, it.key)!!] = it.value
+            }
+
+            return localizedHashMap
+        }
+
+        fun convertCategoryToEnum(
+            context: Context?,
+            category: String
+        ): String? {
+            context ?: return null
+
+            return when (category) {
+                context.getString(R.string.category_running) -> RUNNING
+                context.getString(R.string.category_master_classes) -> MASTER_CLASS
+                context.getString(R.string.category_martial_arts) -> MARTIAL_ARTS
+                else -> null
+            }
+        }
+
+        const val RUNNING = "RUNNING"
+        const val MASTER_CLASS = "MASTER_CLASS"
         const val MARTIAL_ARTS = "Martial arts"
     }
 
