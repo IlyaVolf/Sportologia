@@ -29,9 +29,9 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_marginHorizontal="@dimen/margin_sides"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_sides"
                 android:orientation="vertical">
 
                 <Space
@@ -42,43 +42,43 @@
                     android:id="@+id/fcex_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/exercise_name"
-                    app:editTextHint="@string/exercise_name_hint"/>
+                    app:editTextHint="@string/exercise_name_hint"
+                    app:editTextTitle="@string/exercise_name" />
 
                 <com.thesis.sportologia.ui.views.EditTextBasicView
                     android:id="@+id/fcex_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/event_description"
                     app:editTextHint="@string/event_description_hint"
-                    app:editTextLimit="2000"/>
+                    app:editTextLimit="2000"
+                    app:editTextTitle="@string/event_description" />
 
                 <com.thesis.sportologia.ui.views.EditTextBasicView
                     android:id="@+id/fcex_sets_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/exercise_sets_number"
                     app:editTextHint="@string/exercise_sets_number_hint"
-                    app:editTextLines="1"
+                    app:editTextInputType="number"
                     app:editTextLimit="5"
-                    app:editTextInputType="number"/>
+                    app:editTextLines="1"
+                    app:editTextTitle="@string/exercise_sets_number" />
 
                 <com.thesis.sportologia.ui.views.EditTextBasicView
                     android:id="@+id/fcex_reps_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:editTextTitle="@string/exercise_reps_number"
                     app:editTextHint="@string/exercise_reps_number_hint"
-                    app:editTextLines="1"
+                    app:editTextInputType="number"
                     app:editTextLimit="5"
-                    app:editTextInputType="number"/>
+                    app:editTextLines="1"
+                    app:editTextTitle="@string/exercise_reps_number" />
 
                 <com.thesis.sportologia.ui.views.MultiChoiceBasicView
                     android:id="@+id/fcex_regularity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:multiChoiceTitle="@string/exercise_regularity"
-                    app:multiChoiceHint="@string/exercise_regularity_hint"/>
+                    app:multiChoiceHint="@string/exercise_regularity_hint"
+                    app:multiChoiceTitle="@string/exercise_regularity" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -88,10 +88,11 @@
                     android:id="@+id/fcex_delete"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     app:backgroundColor="@color/red_accent"
+                    app:isIconOn="false"
                     app:text="@string/action_delete"
-                    app:textColor="@color/white"
-                    app:isIconOn="false"/>
+                    app:textColor="@color/white" />
 
                 <!-- TODO добавить фото -->
 
