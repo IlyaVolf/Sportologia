@@ -3,6 +3,8 @@ package com.thesis.sportologia.ui.services
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
@@ -120,9 +122,12 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         binding.fcexSetsNumber.setText(exercise.setsNumber.toString())
         binding.fcexRepsNumber.setText(exercise.repsNumber.toString())
         if (mode == Mode.EDIT) {
-            binding.fcexDelete.setListener {
+            binding.fcexDelete.visibility = VISIBLE
+            binding.fcexDelete.setOnClickListener {
                 onDeleteButtonPressed(exercise)
             }
+        } else {
+            binding.fcexDelete.visibility = GONE
         }
     }
 
@@ -197,7 +202,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         createSimpleDialog(
             context!!,
             null,
-            ResourcesUtils.getString(R.string.ask_delete_post_warning),
+            ResourcesUtils.getString(R.string.ask_delete_exercise_warning),
             ResourcesUtils.getString(R.string.action_delete),
             { _, _ ->
                 run {
