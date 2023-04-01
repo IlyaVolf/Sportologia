@@ -114,13 +114,9 @@
         android:label="fragment_create_edit_exercise"
         tools:layout="@layout/fragment_create_edit_exercise" >
         <argument
-            android:name="serviceId"
-            app:argType="long"
-            android:defaultValue="-2L"/>
-        <argument
-            android:name="exerciseId"
-            app:argType="long"
-            android:defaultValue="-2L" />
+            android:name="exercise"
+            app:argType="com.thesis.sportologia.model.services.entities.Exercise"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/filterFragmentServices"

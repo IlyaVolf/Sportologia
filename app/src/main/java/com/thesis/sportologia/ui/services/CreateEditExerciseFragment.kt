@@ -34,13 +34,12 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     lateinit var factory: CreateEditExerciseViewModel.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(serviceId, exerciseId)
+        factory.create(exercise)
     }
 
     private val args by navArgs<CreateEditExerciseFragmentArgs>()
-    
-    private var serviceId: Long? = null
-    private var exerciseId: Long? = null
+
+    private var exercise: Exercise? = null
     private var currentExerciseCreateEditItem: ExerciseCreateEditItem? = null
     
     private lateinit var mode: Mode
@@ -66,10 +65,9 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     }
 
     private fun initMode() {
-        serviceId = getServiceIdArg()
-        exerciseId = getExerciseIdArg()
+        exercise = getExerciseArg()
 
-        mode = if (exerciseId == null) {
+        mode = if (exercise == null) {
             Mode.CREATE
         } else {
             Mode.EDIT
@@ -131,8 +129,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         }
     }
 
-    private fun getServiceIdArg(): Long? = if (args.serviceId == Service.NULL) null else args.serviceId
-    private fun getExerciseIdArg(): Long? = if (args.exerciseId == Exercise.NULL) null else args.exerciseId
+    private fun getExerciseArg(): Exercise? = args.exercise
 
     private fun onCancelButtonPressed() {
         createDialogCancel()
@@ -225,21 +222,21 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             when (holder) {
                 DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
-                    binding.fcexLoading.root.visibility = View.VISIBLE
-                    binding.fcexError.root.visibility = View.GONE
-                    binding.fcexExerciseBlock.visibility = View.GONE
+                    binding.fcexLoading.root.visibility = VISIBLE
+                    binding.fcexError.root.visibility = GONE
+                    binding.fcexExerciseBlock.visibility = GONE
                 }
                 is DataHolder.READY -> {
-                    binding.fcexLoading.root.visibility = View.GONE
-                    binding.fcexError.root.visibility = View.GONE
-                    binding.fcexExerciseBlock.visibility = View.VISIBLE
+                    binding.fcexLoading.root.visibility = GONE
+                    binding.fcexError.root.visibility = GONE
+                    binding.fcexExerciseBlock.visibility = VISIBLE
 
                     goBack(holder.data)
                 }
                 is DataHolder.ERROR -> {
-                    binding.fcexLoading.root.visibility = View.GONE
-                    binding.fcexError.root.visibility = View.VISIBLE
-                    binding.fcexExerciseBlock.visibility = View.GONE
+                    binding.fcexLoading.root.visibility = GONE
+                    binding.fcexError.root.visibility = VISIBLE
+                    binding.fcexExerciseBlock.visibility = GONE
 
                     binding.fcexError.veText.text = holder.failure.message
                     binding.fcexError.veTryAgain.setOnClickListener {
@@ -252,21 +249,21 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         viewModel.exerciseHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 is DataHolder.LOADING -> {
-                    binding.fcexLoading.root.visibility = View.VISIBLE
-                    binding.fcexError.root.visibility = View.GONE
-                    binding.fcexExerciseBlock.visibility = View.GONE
+                    binding.fcexLoading.root.visibility = VISIBLE
+                    binding.fcexError.root.visibility = GONE
+                    binding.fcexExerciseBlock.visibility = GONE
                 }
                 is DataHolder.READY -> {
-                    binding.fcexLoading.root.visibility = View.GONE
-                    binding.fcexError.root.visibility = View.GONE
-                    binding.fcexExerciseBlock.visibility = View.VISIBLE
+                    binding.fcexLoading.root.visibility = GONE
+                    binding.fcexError.root.visibility = GONE
+                    binding.fcexExerciseBlock.visibility = VISIBLE
 
                     renderData(holder.data)
                 }
                 is DataHolder.ERROR -> {
-                    binding.fcexLoading.root.visibility = View.GONE
-                    binding.fcexError.root.visibility = View.VISIBLE
-                    binding.fcexExerciseBlock.visibility = View.GONE
+                    binding.fcexLoading.root.visibility = GONE
+                    binding.fcexError.root.visibility = VISIBLE
+                    binding.fcexExerciseBlock.visibility = GONE
 
                     binding.fcexError.veText.text = holder.failure.message
                     binding.fcexError.veTryAgain.setOnClickListener {

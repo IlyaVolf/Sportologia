@@ -68,6 +68,9 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     }
 
     override fun onDestroyView() {
+        if (currentServiceCreateEditItem == null) {
+            currentServiceCreateEditItem = ServiceCreateEditItem.getEmptyInstance()
+        }
         getCurrentData()
         super.onDestroyView()
     }
@@ -180,9 +183,9 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     }
 
     private fun renderData() {
-        if (currentServiceCreateEditItem == null) return
+        renderSelectedCategories(currentServiceCreateEditItem?.categories)
 
-        renderSelectedCategories(currentServiceCreateEditItem!!.categories)
+        if (currentServiceCreateEditItem == null) return
 
         if (currentServiceCreateEditItem!!.name != null) {
             binding.fcesName.setText(currentServiceCreateEditItem!!.name!!)
@@ -224,8 +227,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private fun onCreateExercisePressed() {
         val direction =
             CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(
-                serviceId = serviceId ?: Service.NULL,
-                exerciseId = Exercise.NULL
+                null
             )
         findNavController().navigate(
             direction,
@@ -242,8 +244,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private val onExercisePressed: (Exercise) -> Unit = { exercise ->
         val direction =
             CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(
-                serviceId = serviceId ?: Service.NULL,
-                exerciseId = exercise.id
+                exercise
             )
         findNavController().navigate(
             direction,
@@ -357,13 +358,10 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
                     binding.fcesServiceBlock.visibility = View.VISIBLE
 
                     // Мы не будем рендерить инфу, если она уже отрендерена
-                    Log.d("abcdef", "${holder.data} ${currentServiceCreateEditItem}")
-                    if (holder.data != null) {
-                        if (currentServiceCreateEditItem == null) {
-                            currentServiceCreateEditItem = holder.data.toCreateEditItem()
-                        }
-                        renderData()
+                    if (currentServiceCreateEditItem == null && holder.data != null) {
+                        currentServiceCreateEditItem = holder.data.toCreateEditItem()
                     }
+                    renderData()
                 }
                 is DataHolder.ERROR -> {
                     binding.fcesLoading.root.visibility = View.GONE

@@ -1,35 +1,20 @@
 package com.thesis.sportologia.ui.services
 
-
-import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
-import com.thesis.sportologia.model.services.entities.ServiceType
-import com.thesis.sportologia.ui.ExerciseViewModel
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.events.CreateEditEventViewModel
 import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
-import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
-import com.thesis.sportologia.ui.services.entities.ServiceGeneralCreateEditItem
-import com.thesis.sportologia.ui.services.entities.toCreateEditItem
 
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Calendar
 
 class CreateEditExerciseViewModel @AssistedInject constructor(
-    @Assisted("serviceId") private val serviceId: Long?,
-    @Assisted("exerciseId") private val exerciseId: Long?,
+    @Assisted private val exercise: Exercise?,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -49,7 +34,7 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
     val toastMessageService = _toastMessageService.share()
 
     init {
-        if (exerciseId == null || serviceId == null) {
+        if (exercise == null) {
             mode = Mode.CREATE
         } else {
             mode = Mode.EDIT
@@ -94,20 +79,8 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
         _saveHolder.value = DataHolder.ready(newExercise)
     }
 
-    fun getExercise() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            withContext(Dispatchers.Main) {
-                _exerciseHolder.value = DataHolder.loading()
-            }
-            val exercise = servicesRepository.getExercise(serviceId!!, exerciseId!!)
-            withContext(Dispatchers.Main) {
-                _exerciseHolder.value = DataHolder.ready(exercise)
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                _exerciseHolder.value = DataHolder.error(e)
-            }
-        }
+    fun getExercise() {
+        _exerciseHolder.value = DataHolder.ready(exercise)
     }
 
     private fun validateData(exercise: ExerciseCreateEditItem): Boolean {
@@ -117,10 +90,20 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
         if (!validateText(exercise.description, ErrorType.EMPTY_DESCRIPTION)) {
             return false
         }
-        if (!validateInt(exercise.setsNumber, ErrorType.EMPTY_SETS_NUMBER, ErrorType.INCORRECT_SETS_NUMBER)) {
+        if (!validateInt(
+                exercise.setsNumber,
+                ErrorType.EMPTY_SETS_NUMBER,
+                ErrorType.INCORRECT_SETS_NUMBER
+            )
+        ) {
             return false
         }
-        if (!validateInt(exercise.repsNumber, ErrorType.EMPTY_REPS_NUMBER, ErrorType.INCORRECT_REPS_NUMBER)) {
+        if (!validateInt(
+                exercise.repsNumber,
+                ErrorType.EMPTY_REPS_NUMBER,
+                ErrorType.INCORRECT_REPS_NUMBER
+            )
+        ) {
             return false
         }
 
@@ -181,8 +164,7 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            @Assisted("serviceId") serviceId: Long?,
-            @Assisted("exerciseId") exerciseId: Long?
+            exercise: Exercise?
         ): CreateEditExerciseViewModel
     }
 

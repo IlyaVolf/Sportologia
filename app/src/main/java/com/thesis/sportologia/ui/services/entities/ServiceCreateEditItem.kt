@@ -46,6 +46,6 @@ fun ServiceDetailed.toCreateEditItem(): ServiceCreateEditItem {
         generalPhotosUrls = generalPhotosUrls,
         detailedDescription = detailedDescription,
         detailedPhotosUrls = detailedPhotosUrls,
-        exercises = exercises
+        exercises = exercises.toMutableList()
     )
 }
