@@ -5,10 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
-import com.thesis.sportologia.model.services.entities.ServiceType
+import com.thesis.sportologia.model.services.entities.*
 import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.TrainingProgrammesCategories
 import com.thesis.sportologia.utils.containsAnyCase
@@ -85,7 +82,30 @@ class InMemoryServicesRepository @Inject constructor(
         reviewsNumber = 2,
         detailedDescription = "Делать надо качсетвенно. Отписываться сюда: ***.com",
         detailedPhotosUrls = listOf(),
-        exercises = listOf(),
+        exercises = listOf(
+            Exercise(
+                0L,
+                "Отжимания",
+                "Грудью касаемся пола",
+                3,
+                30,
+                listOf(Exercise.Regularity.EVERYDAY),
+                listOf("https://roliki-magazin.ru/wp-content/uploads/8/a/3/8a3c052b55651b2419bada36d4038ad7.jpeg"),
+            ),
+            Exercise(
+                1L,
+                "Подтягивания",
+                "До подбородка",
+                2,
+                12,
+                listOf(
+                    Exercise.Regularity.MONDAY,
+                    Exercise.Regularity.WEDNESDAY,
+                    Exercise.Regularity.FRIDAY
+                ),
+                listOf(),
+            )
+        ),
         dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
 
@@ -258,6 +278,23 @@ class InMemoryServicesRepository @Inject constructor(
             servicesDetailed.filter { it.id == serviceId }.toServices()[0]
         }
     }
+
+    override suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise? =
+        withContext(ioDispatcher) {
+            delay(1000)
+
+            //throw Exception("abc")
+
+            val a =5
+
+            return@withContext if (servicesDetailed.none { it.id == serviceId }) {
+                null
+            } else if (servicesDetailed.first { it.id == serviceId }.exercises.none { it.id == exerciseId }) {
+                null
+            } else {
+                servicesDetailed.first { it.id == serviceId }.exercises.first { it.id == exerciseId }
+            }
+        }
 
     override suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed? =
         withContext(ioDispatcher) {

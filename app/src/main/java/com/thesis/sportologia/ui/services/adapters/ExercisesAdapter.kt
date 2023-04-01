@@ -18,8 +18,7 @@ class ExercisesAdapter(
                 parent,
                 false
             ),
-            onItemClick,
-            parent.id
+            onItemClick
         )
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Exercise> =

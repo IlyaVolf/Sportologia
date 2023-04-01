@@ -271,10 +271,11 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         }
     }
 
-    private val onExercisePressed: (Exercise) -> Unit = {
-        /*val direction =
-            ServiceNotAcquiredFragmentDirections.actionServiceNotAcquiredFragmentToProfileNested(
-                userIdToGo
+    private val onExercisePressed: (Exercise) -> Unit = { exercise ->
+        val direction =
+            ServiceFragmentDirections.actionServiceFragmentToExerciseFragment(
+                serviceId = serviceId,
+                exerciseId = exercise.id
             )
         findNavController().navigate(
             direction,
@@ -285,7 +286,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
                     popEnter = R.anim.slide_in_left
                     popExit = R.anim.slide_out_right
                 }
-            })*/
+            })
     }
 
     private fun createOnDeleteDialog() {

@@ -2,10 +2,7 @@ package com.thesis.sportologia.model.services
 
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.OnChange
-import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
-import com.thesis.sportologia.model.services.entities.ServiceType
+import com.thesis.sportologia.model.services.entities.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -23,6 +20,8 @@ interface ServicesRepository {
     suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<Service>>
 
     suspend fun getService(serviceId: Long): Service?
+
+    suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise?
 
     suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed?
 

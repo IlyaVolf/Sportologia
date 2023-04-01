@@ -288,7 +288,7 @@
     <!-- Create Exercise Page -->
     <string name="exercises">Упражнения</string>
     <string name="exercise">Упражнение</string>
-    <string name="exercise_name">Название</string>
+    <string name="exercise_name">Название упражнения</string>
     <string name="exercise_description">Описание</string>
     <string name="exercise_sets_number">Число подходов</string>
     <string name="exercise_reps_number">Число повторений</string>

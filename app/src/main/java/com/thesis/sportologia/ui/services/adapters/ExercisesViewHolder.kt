@@ -11,7 +11,6 @@ import com.thesis.sportologia.utils.concatList
 class ExercisesViewHolder(
     private val binding: ItemExerciseBinding,
     private val onItemClick: (Exercise) -> Unit,
-    private val itemId: Int,
 ) : BaseViewHolder<Exercise>(binding) {
 
     override fun bindItem(item: Exercise) {
@@ -20,7 +19,7 @@ class ExercisesViewHolder(
             onItemClick(item)
         }
 
-        binding.itemExerciseSplitter.isVisible = itemId != 0
+        binding.itemExerciseSplitter.isVisible = position != 0
 
         binding.exerciseNameBlock.text = item.name
         binding.exercisePropertiesBlock.text = parseProperties(item)
@@ -41,6 +40,7 @@ class ExercisesViewHolder(
         }
         res.append(concatList(regularityLocalized, ", "))
         if (item.photosUris.isNotEmpty()) {
+            res.append(splittingDot)
             res.append(item.photosUris.size).append(" ").append(getString(R.string.exercise_photo))
         }
 

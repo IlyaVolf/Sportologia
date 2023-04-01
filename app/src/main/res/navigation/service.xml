@@ -20,6 +20,21 @@
                 android:defaultValue="$current_user"
                 app:argType="string" />
         </action>
+        <action
+            android:id="@+id/action_serviceFragment_to_exerciseFragment"
+            app:destination="@id/exerciseFragment" />
     </fragment>
     <include app:graph="@navigation/profile_nested" />
+    <fragment
+        android:id="@+id/exerciseFragment"
+        android:name="com.thesis.sportologia.ui.ExerciseFragment"
+        android:label="fragment_exercise"
+        tools:layout="@layout/fragment_exercise" >
+        <argument
+            android:name="exerciseId"
+            app:argType="long" />
+        <argument
+            android:name="serviceId"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -90,6 +90,10 @@
 
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"                        />
+
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
@@ -508,14 +512,15 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/background_card"
                         android:orientation="vertical"
-                        android:paddingTop="12dp"
-                        android:paddingBottom="12dp">
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp">
 
                         <TextView
                             android:id="@+id/exercises_list_empty"
                             style="@style/TextStyleRegular"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginVertical="12dp"
                             android:layout_marginHorizontal="@dimen/margin_sides"
                             android:text="@string/no_exercises" />
 
