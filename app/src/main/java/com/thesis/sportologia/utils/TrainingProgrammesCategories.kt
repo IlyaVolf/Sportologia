@@ -2,7 +2,6 @@ package com.thesis.sportologia.utils
 
 import android.content.Context
 import com.thesis.sportologia.R
-import com.thesis.sportologia.model.events.entities.Event
 
 class TrainingProgrammesCategories {
 

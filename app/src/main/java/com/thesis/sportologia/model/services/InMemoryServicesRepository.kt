@@ -7,6 +7,7 @@ import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.entities.*
 import com.thesis.sportologia.model.users.entities.UserType
+import com.thesis.sportologia.utils.Regularity
 import com.thesis.sportologia.utils.TrainingProgrammesCategories
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
@@ -53,7 +54,7 @@ class InMemoryServicesRepository @Inject constructor(
         reviewsNumber = 2,
         detailedDescription = "Тренер Наталья. Для связи используйте WhatsApp",
         detailedPhotosUrls = listOf(),
-        exercises = listOf(),
+        exercises = mutableListOf(),
         dateCreatedMillis = Calendar.getInstance().timeInMillis
     )
 
@@ -82,14 +83,24 @@ class InMemoryServicesRepository @Inject constructor(
         reviewsNumber = 2,
         detailedDescription = "Делать надо качсетвенно. Отписываться сюда: ***.com",
         detailedPhotosUrls = listOf(),
-        exercises = listOf(
+        exercises = mutableListOf(
             Exercise(
                 0L,
                 "Отжимания",
                 "Грудью касаемся пола",
                 3,
                 30,
-                listOf(Exercise.Regularity.EVERYDAY),
+                hashMapOf(
+                    Pair(Regularity.EVERYDAY, true),
+                    Pair(Regularity.IN_A_DAY, false),
+                    Pair(Regularity.MONDAY, false),
+                    Pair(Regularity.TUESDAY, false),
+                    Pair(Regularity.WEDNESDAY, false),
+                    Pair(Regularity.THURSDAY, false),
+                    Pair(Regularity.FRIDAY, false),
+                    Pair(Regularity.SATURDAY, false),
+                    Pair(Regularity.SUNDAY, false),
+                ),
                 listOf("https://roliki-magazin.ru/wp-content/uploads/8/a/3/8a3c052b55651b2419bada36d4038ad7.jpeg"),
             ),
             Exercise(
@@ -98,10 +109,16 @@ class InMemoryServicesRepository @Inject constructor(
                 "До подбородка",
                 2,
                 12,
-                listOf(
-                    Exercise.Regularity.MONDAY,
-                    Exercise.Regularity.WEDNESDAY,
-                    Exercise.Regularity.FRIDAY
+                hashMapOf(
+                    Pair(Regularity.EVERYDAY, false),
+                    Pair(Regularity.IN_A_DAY, false),
+                    Pair(Regularity.MONDAY, true),
+                    Pair(Regularity.TUESDAY, false),
+                    Pair(Regularity.WEDNESDAY, true),
+                    Pair(Regularity.THURSDAY, false),
+                    Pair(Regularity.FRIDAY, true),
+                    Pair(Regularity.SATURDAY, false),
+                    Pair(Regularity.SUNDAY, false),
                 ),
                 listOf(),
             )
@@ -285,7 +302,7 @@ class InMemoryServicesRepository @Inject constructor(
 
             //throw Exception("abc")
 
-            val a =5
+            val a = 5
 
             return@withContext if (servicesDetailed.none { it.id == serviceId }) {
                 null
@@ -460,6 +477,27 @@ class InMemoryServicesRepository @Inject constructor(
 
         servicesDetailed.find { it.id == serviceId }?.isFavourite = isFavourite
     }
+
+    /*override suspend fun createExercise(exercise: Exercise) {
+        delay(1000)
+
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == exercise.serviceId }].exercises.add(
+            exercise
+        )
+        //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
+    }
+
+    override suspend fun updateExercise(exercise: Exercise) {
+        delay(1000)
+
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == exercise.serviceId }].exercises[servicesDetailed.indexOfFirst { it.id == exercise.id }] =
+            exercise
+    }
+
+    override suspend fun deleteExercise(exercise: Exercise) {
+        delay(1000)
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == exercise.serviceId }].exercises.removeIf { it.id == exercise.id }
+    }*/
 
     private companion object {
         const val PAGE_SIZE = 6

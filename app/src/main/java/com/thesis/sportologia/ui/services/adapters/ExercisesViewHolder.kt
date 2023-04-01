@@ -5,8 +5,8 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemExerciseBinding
 import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.ui.base.BaseViewHolder
-import com.thesis.sportologia.utils.Localization
-import com.thesis.sportologia.utils.concatList
+import com.thesis.sportologia.utils.Regularity
+import com.thesis.sportologia.utils.concatMap
 
 class ExercisesViewHolder(
     private val binding: ItemExerciseBinding,
@@ -30,15 +30,10 @@ class ExercisesViewHolder(
 
         res.append(item.setsNumber).append(" ").append(getString(R.string.exercise_of_sets))
         res.append(splittingDot)
-        res.append(item.setsNumber).append(" ").append(getString(R.string.exercise_of_reps))
+        res.append(item.repsNumber).append(" ").append(getString(R.string.exercise_of_reps))
         res.append(splittingDot)
-        val regularityLocalized = item.regularity.map {
-            Localization.convertExerciseRegularityEnumToLocalized(
-                context,
-                it
-            )
-        }
-        res.append(concatList(regularityLocalized, ", "))
+        val regularitiesLocalized = Regularity.getLocalizedRegularities(context, item.regularity)
+        res.append(concatMap(regularitiesLocalized, ", "))
         if (item.photosUris.isNotEmpty()) {
             res.append(splittingDot)
             res.append(item.photosUris.size).append(" ").append(getString(R.string.exercise_photo))

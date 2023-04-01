@@ -6,10 +6,15 @@ data class Exercise(
     var description: String,
     var setsNumber: Int,
     var repsNumber: Int,
-    var regularity: List<Regularity>,
+    var regularity: Map<String, Boolean>,
     var photosUris: List<String>,
-) {
-    enum class Regularity {
-        EVERYDAY, IN_A_DAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+) : java.io.Serializable {
+
+    companion object {
+        const val NULL = -2L
     }
+
+    /*enum class Regularity {
+        EVERYDAY, IN_A_DAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+    }*/
 }

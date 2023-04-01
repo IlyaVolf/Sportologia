@@ -7,15 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navOptions
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditServiceBinding
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
+import com.thesis.sportologia.ui.REFRESH_SERVICES_LIST_KEY
+import com.thesis.sportologia.ui.ServiceFragment
+import com.thesis.sportologia.ui.ServiceFragmentDirections
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
+import com.thesis.sportologia.ui.services.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,25 +44,11 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private val args by navArgs<CreateEditServiceFragmentArgs>()
 
     private var serviceId: Long? = null
-    private var currentEventCreateEditItem: ServiceCreateEditItem? = null
+    private var currentServiceCreateEditItem: ServiceCreateEditItem? = null
+    private val exercisesAdapter by lazy { ExercisesAdapter(onExercisePressed) }
 
     private lateinit var mode: Mode
     private lateinit var binding: FragmentCreateEditServiceBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        currentEventCreateEditItem =
-            savedInstanceState?.getSerializable(SERVICE_KEY) as ServiceCreateEditItem?
-    }
-
-    // TODO onSaveInstanceState
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        getCurrentData()
-        renderRestoredData()
-        outState.putSerializable(SERVICE_KEY, currentEventCreateEditItem)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +59,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         initMode()
         initRender()
         initServiceTypeSelector()
+        initResultsProcessing()
 
         observeToastMessageService()
         observeGoBackEvent()
@@ -71,10 +67,21 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         return binding.root
     }
 
+    override fun onDestroyView() {
+        getCurrentData()
+        super.onDestroyView()
+    }
+
     private fun initRender() {
-        initMode()
         initToolbar()
         initCategoriesSelector()
+        initCreateExerciseButton()
+    }
+
+    private fun initCreateExerciseButton() {
+        binding.fcesAddExercise.setOnClickListener {
+            onCreateExercisePressed()
+        }
     }
 
     private fun initMode() {
@@ -109,6 +116,42 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         }
     }
 
+    private fun initResultsProcessing() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditExerciseFragment.IS_CREATED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_CREATED) as Exercise?
+                ?: return@setFragmentResultListener
+            currentServiceCreateEditItem!!.exercises.add(exercise)
+            setExercises(currentServiceCreateEditItem!!.exercises)
+            exercisesAdapter.notifyDataSetChanged()
+        }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditExerciseFragment.IS_EDITED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_EDITED) as Exercise?
+                ?: return@setFragmentResultListener
+            currentServiceCreateEditItem!!.exercises[currentServiceCreateEditItem!!.exercises.indexOfFirst { it.id == exercise.id }] =
+                exercise
+            setExercises(currentServiceCreateEditItem!!.exercises)
+            exercisesAdapter.notifyDataSetChanged()
+        }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            CreateEditExerciseFragment.IS_DELETED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_DELETED) as Exercise?
+                ?: return@setFragmentResultListener
+            currentServiceCreateEditItem!!.exercises.remove(exercise)
+            setExercises(currentServiceCreateEditItem!!.exercises)
+            exercisesAdapter.notifyDataSetChanged()
+        }
+    }
+
     private fun initCategoriesSelector() {
         binding.fcesAims.setListener { }
     }
@@ -136,48 +179,40 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         binding.fcesType.initAdapter(options.getFirsts())
     }
 
-    private fun renderRestoredData() {
-        currentEventCreateEditItem ?: return
+    private fun renderData() {
+        if (currentServiceCreateEditItem == null) return
 
-        renderSelectedCategories(currentEventCreateEditItem!!.categories)
+        renderSelectedCategories(currentServiceCreateEditItem!!.categories)
 
-        if (currentEventCreateEditItem!!.name != null) {
-            binding.fcesName.setText(currentEventCreateEditItem!!.name!!)
+        if (currentServiceCreateEditItem!!.name != null) {
+            binding.fcesName.setText(currentServiceCreateEditItem!!.name!!)
         }
-        if (currentEventCreateEditItem!!.type != null) {
+        if (currentServiceCreateEditItem!!.type != null) {
             binding.fcesType.setItem(
                 Localization.convertServiceTypeEnumToLocalized(
                     context!!,
-                    currentEventCreateEditItem!!.type!!
+                    currentServiceCreateEditItem!!.type!!
                 )
             )
         }
-        if (currentEventCreateEditItem!!.generalDescription != null) {
-            binding.fcesGeneralDescription.setText(currentEventCreateEditItem!!.generalDescription!!)
+        if (currentServiceCreateEditItem!!.generalDescription != null) {
+            binding.fcesGeneralDescription.setText(currentServiceCreateEditItem!!.generalDescription!!)
         }
-        if (currentEventCreateEditItem!!.priceString != null) {
-            binding.fcesPrice.setText(formatPrice(currentEventCreateEditItem!!.priceString!!))
+        if (currentServiceCreateEditItem!!.priceString != null) {
+            binding.fcesPrice.setText(formatPrice(currentServiceCreateEditItem!!.priceString!!))
         }
-        if (currentEventCreateEditItem!!.detailedDescription != null) {
-            binding.fcesGeneralDescription.setText(currentEventCreateEditItem!!.detailedDescription!!)
+        if (currentServiceCreateEditItem!!.detailedDescription != null) {
+            binding.fcesDetailedDescription.setText(currentServiceCreateEditItem!!.detailedDescription!!)
         }
+        setExercises(currentServiceCreateEditItem!!.exercises)
     }
 
-    private fun renderData(service: ServiceDetailed?) {
-        renderSelectedCategories(service?.categories)
+    private fun setExercises(exercises: List<Exercise>) {
+        binding.exercisesList.isVisible = exercises.isNotEmpty()
+        binding.itemAddExerciseSplitter.isVisible = exercises.isNotEmpty()
 
-        if (service == null) return
-
-        binding.fcesName.setText(service.name)
-        binding.fcesType.setItem(
-            Localization.convertServiceTypeEnumToLocalized(
-                context!!,
-                service.type
-            )
-        )
-        binding.fcesGeneralDescription.setText(service.generalDescription)
-        binding.fcesPrice.setText(formatPrice(service.price.toString()))
-        binding.fcesDetailedDescription.setText(service.detailedDescription)
+        binding.exercisesList.adapter = exercisesAdapter
+        exercisesAdapter.setupItems(exercises)
     }
 
     private fun getServiceIdArg(): Long? = args.serviceId.value
@@ -186,12 +221,46 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         createDialogCancel()
     }
 
-    private fun getCurrentData() {
-        if (currentEventCreateEditItem == null) {
-            currentEventCreateEditItem = ServiceCreateEditItem.getEmptyInstance()
-        }
+    private fun onCreateExercisePressed() {
+        val direction =
+            CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(
+                serviceId = serviceId ?: Service.NULL,
+                exerciseId = Exercise.NULL
+            )
+        findNavController().navigate(
+            direction,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
 
-        with(currentEventCreateEditItem!!) {
+    private val onExercisePressed: (Exercise) -> Unit = { exercise ->
+        val direction =
+            CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(
+                serviceId = serviceId ?: Service.NULL,
+                exerciseId = exercise.id
+            )
+        findNavController().navigate(
+            direction,
+            navOptions {
+                anim {
+                    enter = R.anim.slide_in_right
+                    exit = R.anim.slide_out_left
+                    popEnter = R.anim.slide_in_left
+                    popExit = R.anim.slide_out_right
+                }
+            })
+    }
+
+    private fun getCurrentData() {
+        if (currentServiceCreateEditItem == null) return
+
+        with(currentServiceCreateEditItem!!) {
             name = binding.fcesName.getText()
             generalDescription = binding.fcesGeneralDescription.getText()
             priceString = binding.fcesPrice.getText()
@@ -212,7 +281,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private fun onSaveButtonPressed() {
         getCurrentData()
         viewModel.saveHolder.value?.onNotLoading {
-            viewModel.onSaveButtonPressed(currentEventCreateEditItem!!)
+            viewModel.onSaveButtonPressed(currentServiceCreateEditItem!!)
         }
     }
 
@@ -269,7 +338,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
                     binding.fcesError.veText.text = holder.failure.message
                     binding.fcesError.veTryAgain.setOnClickListener {
-                        viewModel.onSaveButtonPressed(currentEventCreateEditItem!!)
+                        viewModel.onSaveButtonPressed(currentServiceCreateEditItem!!)
                     }
                 }
             }
@@ -277,7 +346,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
         viewModel.serviceHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
-                DataHolder.LOADING -> {
+                is DataHolder.LOADING -> {
                     binding.fcesLoading.root.visibility = View.VISIBLE
                     binding.fcesError.root.visibility = View.GONE
                     binding.fcesServiceBlock.visibility = View.GONE
@@ -287,7 +356,14 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
                     binding.fcesError.root.visibility = View.GONE
                     binding.fcesServiceBlock.visibility = View.VISIBLE
 
-                    renderData(holder.data)
+                    // Мы не будем рендерить инфу, если она уже отрендерена
+                    Log.d("abcdef", "${holder.data} ${currentServiceCreateEditItem}")
+                    if (holder.data != null) {
+                        if (currentServiceCreateEditItem == null) {
+                            currentServiceCreateEditItem = holder.data.toCreateEditItem()
+                        }
+                        renderData()
+                    }
                 }
                 is DataHolder.ERROR -> {
                     binding.fcesLoading.root.visibility = View.GONE

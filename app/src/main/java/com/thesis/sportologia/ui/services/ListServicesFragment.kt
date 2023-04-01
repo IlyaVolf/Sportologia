@@ -120,7 +120,6 @@ abstract class ListServicesFragment : Fragment() {
             CreateEditServiceFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            Log.d("abcdef", "IS_CREATED_REQUEST_CODE")
             val isSaved = data.getBoolean(CreateEditServiceFragment.IS_CREATED)
             if (isSaved) {
                 viewModel.onServiceCreated()
@@ -151,14 +150,12 @@ abstract class ListServicesFragment : Fragment() {
             REFRESH_SERVICES_LIST_KEY,
             viewLifecycleOwner
         ) { _, _ ->
-            Log.d("abcdef", "REFRESH_SERVICES_LIST_KEY")
             viewModel.refresh()
         }
 
     }
 
     private fun initServicesList() {
-
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
 

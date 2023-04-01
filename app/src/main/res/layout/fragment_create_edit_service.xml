@@ -113,11 +113,19 @@
                         app:spanCount="1"
                         tools:listitem="@layout/item_exercise" />
 
+                    <View
+                        android:id="@+id/item_add_exercise_splitter"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="@dimen/margin_sides"
+                        android:background="@color/element_tertiary" />
+
                     <LinearLayout
+                        android:id="@+id/fces_add_exercise"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_sides"
-                        android:layout_marginVertical="4dp"
+                        android:layout_marginVertical="8dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 

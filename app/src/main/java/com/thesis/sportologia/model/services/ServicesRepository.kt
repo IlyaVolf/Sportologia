@@ -21,8 +21,6 @@ interface ServicesRepository {
 
     suspend fun getService(serviceId: Long): Service?
 
-    suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise?
-
     suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed?
 
     suspend fun createService(servicesDetailed: ServiceDetailed)
@@ -34,5 +32,7 @@ interface ServicesRepository {
     suspend fun acquireService(serviceId: Long)
 
     suspend fun setIsFavourite(userId: String, serviceId: Long, isFavourite: Boolean)
+
+    suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise?
 
 }

@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -12,7 +11,6 @@ import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentExerciseBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.entities.ExerciseViewItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
@@ -114,14 +112,9 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
         binding.exerciseDescription.text = description
     }
 
-    private fun setRegularity(regularityList: List<Exercise.Regularity>) {
-        val regularityLocalized = regularityList.map {
-            Localization.convertExerciseRegularityEnumToLocalized(
-                context!!,
-                it
-            )
-        }
-        binding.exerciseRegularity.text = concatList(regularityLocalized, ", ")
+    private fun setRegularity(regularities: Map<String, Boolean>) {
+        val regularitiesLocalized = Regularity.getLocalizedRegularities(context!!, regularities)
+        binding.exerciseRegularity.text = concatMap(regularitiesLocalized, ", ")
     }
 
     private fun setSetsNumber(number: Int) {
@@ -129,7 +122,7 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
     }
 
     private fun setsRepsNumber(number: Int) {
-        binding.exerciseSetsNumber.text = number.toString()
+        binding.exerciseRepsNumber.text = number.toString()
     }
 
     private fun setPhotos(photosURIs: List<String>?) {

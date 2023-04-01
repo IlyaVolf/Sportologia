@@ -266,6 +266,7 @@
     <string name="program_detailed_description_for_clients">Информация для клиентов</string>
     <string name="exercise_add">Добавить упражнение</string>
 
+    <string name="create_exercise">Создать упражение</string>
 
     <string name="ask_cancel_create_service">Отменить создание услуги?</string>
     <string name="ask_cancel_edit_service">Отменить редактирование услуги?</string>
@@ -285,7 +286,7 @@
     <string name="program_description_hint">Введите описание программы</string>
     <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
 
-    <!-- Create Exercise Page -->
+    <!-- Create/Edit/Delete Service Exercise Page -->
     <string name="exercises">Упражнения</string>
     <string name="exercise">Упражнение</string>
     <string name="exercise_name">Название упражнения</string>
@@ -296,10 +297,14 @@
 
     <string name="exercise_of_sets">подходов</string>
     <string name="exercise_of_reps">повторений</string>
-    <string name="exercise_everyday">каждый день</string>
-    <string name="exercise_in_a_day">через день</string>
+    <string name="exercise_everyday">Каждый день</string>
+    <string name="exercise_in_a_day">Через день</string>
     <string name="exercise_photo">фото</string>
 
+    <string name="ask_cancel_create_exercise">Отменить создание упражнения?</string>
+    <string name="ask_cancel_edit_exercise">Отменить редактирование упражнения?</string>
+    <string name="ask_cancel_exercise_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_exercise_warning">Удалить упражнение?</string>
 
     <string name="exercise_name_hint">Укажите название упражнения</string>
     <string name="exercise_description_hint">Укажите описание упражнения</string>

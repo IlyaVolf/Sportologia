@@ -97,7 +97,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                     detailedDescription = reformattedDetailedDescription,
                     detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                    exercises = listOf(),
+                    exercises = service.exercises,
                     dateCreatedMillis = Calendar.getInstance().timeInMillis
                 )
             Mode.EDIT ->
@@ -113,7 +113,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                             generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                             detailedDescription = reformattedDetailedDescription,
                             detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                            exercises = listOf(),
+                            exercises = service.exercises,
                         )
                 }
         }

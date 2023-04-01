@@ -31,7 +31,7 @@ class Localization {
             }
         }
 
-        fun convertExerciseRegularityEnumToLocalized(context: Context, regularity: Exercise.Regularity): String {
+        /*fun convertExerciseRegularityEnumToLocalized(context: Context, regularity: Exercise.Regularity): String {
             return when (regularity) {
                 Exercise.Regularity.EVERYDAY -> context.getString(R.string.exercise_everyday)
                 Exercise.Regularity.IN_A_DAY -> context.getString(R.string.exercise_in_a_day)
@@ -43,7 +43,7 @@ class Localization {
                 Exercise.Regularity.SATURDAY -> context.getString(R.string.sat_short)
                 Exercise.Regularity.SUNDAY -> context.getString(R.string.sun_short)
             }
-        }
+        }*/
 
     }
 

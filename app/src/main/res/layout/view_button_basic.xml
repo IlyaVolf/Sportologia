@@ -9,7 +9,7 @@
     <View
         android:id="@+id/background"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="37dp"
         android:background="@drawable/background_basic"
         android:backgroundTint="@color/element_primary"
         app:layout_constraintBottom_toBottomOf="parent"

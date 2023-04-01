@@ -10,6 +10,6 @@ data class ExerciseViewItem(
     val description: String get() = exercise.description
     val setsNumber: Int get() = exercise.setsNumber
     val repsNumber: Int get() = exercise.repsNumber
-    val regularity: List<Exercise.Regularity> get() = exercise.regularity
+    val regularity: Map<String, Boolean> get() = exercise.regularity
     val photosUris: List<String> get() = exercise.photosUris
 }

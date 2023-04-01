@@ -20,4 +20,8 @@ data class Service(
     var isFavourite: Boolean,
     var isAcquired: Boolean,
     var generalPhotosUrls: List<String>?,
-)
+) {
+    companion object {
+        const val NULL = -2L
+    }
+}
