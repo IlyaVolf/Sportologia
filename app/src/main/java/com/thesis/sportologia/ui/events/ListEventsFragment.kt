@@ -16,15 +16,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.REFRESH_EVENTS_LIST_KEY
 import com.thesis.sportologia.ui.SearchFragment
-import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -133,13 +130,11 @@ abstract class ListEventsFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            REFRESH_EVENTS_LIST_KEY,
             viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
+        ) { _, _ ->
+            Log.d("abcdef", "REFRESH_EVENTS_LIST_KEY")
+            viewModel.refresh()
         }
     }
 

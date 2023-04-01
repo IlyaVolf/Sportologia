@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -186,12 +187,14 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         viewModel.serviceHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
+                    Log.d("abcdef", "DataHolder.LOADING")
                     binding.serviceContentBlock.visibility = GONE
                     binding.serviceViewLoadState.root.visibility = VISIBLE
                     binding.serviceViewLoadState.flpLoading.root.visibility = VISIBLE
                     binding.serviceViewLoadState.flpError.root.visibility = GONE
                 }
                 is DataHolder.READY -> {
+                    Log.d("abcdef", "DataHolder.READY")
                     binding.serviceContentBlock.visibility = VISIBLE
                     binding.serviceViewLoadState.root.visibility = GONE
 
@@ -203,6 +206,10 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
                     binding.serviceViewLoadState.flpLoading.root.visibility = GONE
                     binding.serviceViewLoadState.flpError.root.visibility = VISIBLE
 
+                    binding.serviceViewLoadState.flpError.veTryAgain.setOnClickListener {
+                        viewModel.getService()
+                    }
+
                     toast(context, holder.failure.message ?: getString(R.string.error))
                 }
                 else -> {}
@@ -211,6 +218,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
         viewModel.deleteHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.serviceContentBlock.visibility = GONE
                     binding.serviceViewLoadState.root.visibility = VISIBLE
@@ -233,7 +241,6 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
                         viewModel.deleteService()
                     }
                 }
-                else -> {}
             }
         }
 

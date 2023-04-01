@@ -167,11 +167,22 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun initRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
+            Log.d("abcdef", "initRefreshLayout")
             viewModel.refresh()
 
             requireActivity().supportFragmentManager.setFragmentResult(
-                REFRESH_REQUEST_CODE,
-                bundleOf(REFRESH to true)
+                REFRESH_POSTS_LIST_KEY,
+                bundleOf()
+            )
+
+            requireActivity().supportFragmentManager.setFragmentResult(
+                REFRESH_SERVICES_LIST_KEY,
+                bundleOf()
+            )
+
+            requireActivity().supportFragmentManager.setFragmentResult(
+                REFRESH_EVENTS_LIST_KEY,
+                bundleOf()
             )
         }
 
@@ -510,7 +521,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         const val USER_ID = "USER_ID"
         const val SERVICE_ID = "SERVICE_ID"
 
-        const val REFRESH_REQUEST_CODE = "REFRESH_REQUEST_CODE"
+        const val ABCDEFG = "ABCDEFG"
         const val REFRESH = "REFRESH"
     }
 

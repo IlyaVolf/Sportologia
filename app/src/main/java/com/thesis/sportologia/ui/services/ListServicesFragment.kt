@@ -16,16 +16,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListServicesBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.ui.ProfileFragment
-import com.thesis.sportologia.ui.SearchFragment
-import com.thesis.sportologia.ui.ServiceFragment
-import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
+import com.thesis.sportologia.ui.*
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.services.adapters.ServicesHeaderAdapter
 import com.thesis.sportologia.ui.services.adapters.ServicesPagerAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -153,13 +148,11 @@ abstract class ListServicesFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            REFRESH_SERVICES_LIST_KEY,
             viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
+        ) { _, _ ->
+            Log.d("abcdef", "REFRESH_SERVICES_LIST_KEY")
+            viewModel.refresh()
         }
 
     }

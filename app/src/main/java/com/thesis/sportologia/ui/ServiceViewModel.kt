@@ -30,7 +30,7 @@ class ServiceViewModel @AssistedInject constructor(
     private val _serviceHolder = ObservableHolder<ServiceDetailedViewItem>(DataHolder.loading())
     val serviceHolder = _serviceHolder.share()
 
-    private val _deleteHolder = ObservableHolder(DataHolder.ready(null))
+    private val _deleteHolder = ObservableHolder<Unit>(DataHolder.init())
     val deleteHolder = _deleteHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ResponseType>()
@@ -76,7 +76,7 @@ class ServiceViewModel @AssistedInject constructor(
                 }
                     servicesRepository.deleteService(serviceId)
                 withContext(Dispatchers.Main) {
-                    _deleteHolder.value = DataHolder.ready(null)
+                    _deleteHolder.value = DataHolder.ready(Unit)
                     goBack()
                 }
             } catch (e: Exception) {

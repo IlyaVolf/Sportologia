@@ -15,9 +15,8 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.REFRESH_POSTS_LIST_KEY
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
@@ -114,14 +113,13 @@ abstract class ListPostsFragment : Fragment() {
             }
         }
 
+        // TODO ничего не приходит
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            REFRESH_POSTS_LIST_KEY,
             viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
+        ) { _, _ ->
+            Log.d("abcdef", "REFRESH_POSTS_LIST_KEY")
+            viewModel.refresh()
         }
     }
 
