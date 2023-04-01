@@ -67,5 +67,9 @@
         android:id="@+id/photosFragment"
         android:name="com.thesis.sportologia.ui.PhotosFragment"
         android:label="fragment_photos"
-        tools:layout="@layout/fragment_photos" />
+        tools:layout="@layout/fragment_photos" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </fragment>
 </navigation>
