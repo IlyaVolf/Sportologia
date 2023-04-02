@@ -15,17 +15,14 @@ class PhotosPagerAdapter(
     val fragment: Fragment,
 ) : PagingDataAdapter<PhotoListItem, PhotosPagerAdapter.Holder>(PostsDiffCallback()) {
 
-    private lateinit var context: Context
-
     override fun onBindViewHolder(holder: Holder, position: Int) {
 
         val photoListItem = getItem(position) ?: return
 
-        setPhoto(photoListItem.photoUri, context, holder.binding.photoItem)
+        setPhoto(photoListItem.photoUri, fragment.context!!, holder.binding.photoItem)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
-        context = parent.context
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemPhotoBinding.inflate(inflater, parent, false)
         return Holder(binding)
@@ -39,7 +36,7 @@ class PhotosPagerAdapter(
 
 class PostsDiffCallback : DiffUtil.ItemCallback<PhotoListItem>() {
     override fun areItemsTheSame(oldItem: PhotoListItem, newItem: PhotoListItem): Boolean {
-        return oldItem.photoUri == newItem.photoUri
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: PhotoListItem, newItem: PhotoListItem): Boolean {

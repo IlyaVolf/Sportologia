@@ -22,7 +22,7 @@ class SquareImageView : AppCompatImageView {
         if ((measuredHeight.toFloat() / measuredWidth.toFloat()) > 1) {
             setMeasuredDimension(measuredWidth, measuredWidth)
         } else {
-            setMeasuredDimension(measuredWidth, measuredHeight)
+            setMeasuredDimension(measuredHeight, measuredHeight)
         }
     }
 }

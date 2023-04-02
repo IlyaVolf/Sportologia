@@ -11,7 +11,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.thesis.sportologia.databinding.FragmentListPhotosBinding
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.photos.adapters.PhotosPagerAdapter
@@ -43,8 +45,8 @@ class ListPhotosFragment : Fragment() {
 
     private val isSwipeToRefreshEnabled = true
 
-    protected var userId by Delegates.notNull<String>()
-    protected lateinit var binding: FragmentListPhotosBinding
+    private var userId by Delegates.notNull<String>()
+    private lateinit var binding: FragmentListPhotosBinding
     private lateinit var adapter: PhotosPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,7 +96,7 @@ class ListPhotosFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        binding.photosList.layoutManager = LinearLayoutManager(context)
+        binding.photosList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
         binding.photosList.adapter = adapterWithLoadState
         (binding.photosList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
     }

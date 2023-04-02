@@ -10,6 +10,6 @@ interface PhotosRepository {
 
     suspend fun createPhoto(photo: Photo)
 
-    suspend fun deletePhoto(photo: Photo)
+    suspend fun deletePhoto(photoId: Long)
 
 }

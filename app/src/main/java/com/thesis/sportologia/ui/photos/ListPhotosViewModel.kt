@@ -42,7 +42,8 @@ class ListPhotosViewModel @AssistedInject constructor(
     init {
         val originPhotosFlow = this.getDataFlow()
 
-        photosFlow = originPhotosFlow.map { it.map { photo -> PhotoListItem(photo.photoUrl) } }
+        photosFlow =
+            originPhotosFlow.map { it.map { photo -> PhotoListItem(photo.id, photo.photoUrl) } }
     }
 
     private fun getDataFlow(): Flow<PagingData<Photo>> {
