@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.users.entities
 
 import android.location.Address
+import com.thesis.sportologia.model.photos.entities.Photo
 import com.thesis.sportologia.model.users.entities.User
 
 abstract class UserListItem(
@@ -15,4 +16,6 @@ abstract class UserListItem(
     val address: Address? get() = user.address
     val categories: Map<String, Boolean> get() = user.categories
     val isSubscribed: Boolean get() = user.isSubscribed
+    val photosCount: Int get() = user.photosCount
+    val photosSnippets: List<Photo> get() = user.photosSnippets
 }

@@ -1,6 +1,7 @@
 package com.thesis.sportologia.model.users.entities
 
 import android.location.Address
+import com.thesis.sportologia.model.photos.entities.Photo
 
 // TODO photo count?
 abstract class User {
@@ -14,6 +15,8 @@ abstract class User {
     abstract var categories: Map<String, Boolean>
     abstract var isSubscribed: Boolean
     abstract var innerRating: Int // 0..100
+    abstract var photosCount: Int
+    abstract var photosSnippets: List<Photo>
 
     fun toUserSnippet(): UserSnippet {
         return UserSnippet(

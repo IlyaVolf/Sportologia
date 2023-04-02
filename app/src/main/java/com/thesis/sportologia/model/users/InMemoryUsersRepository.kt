@@ -5,6 +5,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
+import com.thesis.sportologia.model.photos.entities.Photo
 import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.ui.FilterFragmentUsers
@@ -47,6 +48,25 @@ class InMemoryUsersRepository @Inject constructor(
             ),
             false,
             50,
+            23,
+            listOf(
+                Photo(
+                    0,
+                    "https://kartinkin.net/pics/uploads/posts/2022-07/1658445549_58-kartinkin-net-p-shveitsarskie-alpi-priroda-krasivo-foto-63.jpg"
+                ),
+                Photo(
+                    1,
+                    "https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666403296_34-mykaleidoscope-ru-p-alpi-tsugshpittse-pinterest-40.jpg"
+                ),
+                Photo(
+                    2,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    3,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+            )
         ),
         Athlete(
             true,
@@ -64,6 +84,8 @@ class InMemoryUsersRepository @Inject constructor(
             ),
             true,
             0,
+            0,
+            listOf()
         ),
         Athlete(
             true,
@@ -81,6 +103,8 @@ class InMemoryUsersRepository @Inject constructor(
             ),
             true,
             50,
+            1,
+            listOf(Photo(4, "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"))
         ),
         Organization(
             null,
@@ -97,6 +121,8 @@ class InMemoryUsersRepository @Inject constructor(
             ),
             false,
             50,
+            0,
+            listOf()
         ),
 
         )
@@ -291,9 +317,9 @@ class InMemoryUsersRepository @Inject constructor(
         val usersFound = when (filter.usersType) {
             FilterParamsUsers.UsersType.ATHLETES ->
                 users.filter { it is Athlete && containsAnyCase(it.name, searchQuery) }
-            FilterParamsUsers.UsersType.ORGANIZATIONS  ->
+            FilterParamsUsers.UsersType.ORGANIZATIONS ->
                 users.filter { it is Organization && containsAnyCase(it.name, searchQuery) }
-            FilterParamsUsers.UsersType.ALL  -> users.filter {
+            FilterParamsUsers.UsersType.ALL -> users.filter {
                 containsAnyCase(it.name, searchQuery)
             }
         }.sortedByDescending { it.innerRating }.map { it.toUserSnippet() }

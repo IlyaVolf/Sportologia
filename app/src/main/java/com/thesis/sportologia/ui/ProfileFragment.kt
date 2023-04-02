@@ -17,6 +17,7 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileBinding
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.photos.entities.Photo
 import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOther
 import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOwn
 import com.thesis.sportologia.ui.adapters.PagerAdapter
@@ -326,12 +327,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButton.setButtonPressed(userItem.isSubscribed)
     }
 
+    private fun renderPhotosBlock(photosCount: Int, photosSnippets: List<Photo>) {
+        binding.photosBlock.photoLabelAndCount.text =
+            getString(R.string.photos) + " (" + photosCount + ")"
+        binding.photosBlock.photosRow.setPhotos(photosSnippets.map { it.photoUrl})
+    }
+
     private fun renderUserDetails(userItem: UserListItem) {
         binding.subscribeButton.setOnClickListener {
             onSubscribeButtonPressed()
         }
 
-        binding.photosBlock.setOnClickListener {
+        binding.photosBlock.root.setOnClickListener {
             onOpenPhotosButtonPressed()
         }
 
@@ -350,6 +357,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         setAvatar(userItem.profilePhotoURI, context!!, binding.avatar)
 
         renderUserDetailsOnSubscriptionAction(userItem)
+        renderPhotosBlock(userItem.photosCount, userItem.photosSnippets)
     }
 
     private fun getCategoriesText(userItem: UserListItem): String {

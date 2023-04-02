@@ -96,7 +96,7 @@ class ListPhotosFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        binding.photosList.layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+        binding.photosList.layoutManager = LinearLayoutManager(context)
         binding.photosList.adapter = adapterWithLoadState
         (binding.photosList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
     }

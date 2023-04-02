@@ -28,7 +28,7 @@ class InMemoryPhotosRepository @Inject constructor(
                 ),
                 Photo(
                     1,
-                    "http://www.fotosselect.ru/wp-content/uploads/2016/01/Горы_Альпы_Alps_Alpes_Alpi_коровы_пасутся_у_Альп_в_горах_Европа.jpg"
+                    "https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666403296_34-mykaleidoscope-ru-p-alpi-tsugshpittse-pinterest-40.jpg"
                 ),
                 Photo(
                     2,
@@ -124,6 +124,30 @@ class InMemoryPhotosRepository @Inject constructor(
                 ),
                 Photo(
                     25,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    26,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    27,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    28,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    29,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    30,
+                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                ),
+                Photo(
+                    31,
                     "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
                 ),
             )

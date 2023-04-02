@@ -1,6 +1,7 @@
 package com.thesis.sportologia.model.users.entities
 
 import android.location.Address
+import com.thesis.sportologia.model.photos.entities.Photo
 
 data class Athlete(
     val isMale: Boolean,
@@ -14,4 +15,6 @@ data class Athlete(
     override var categories: Map<String, Boolean>,
     override var isSubscribed: Boolean,
     override var innerRating: Int,
+    override var photosCount: Int,
+    override var photosSnippets: List<Photo>,
 ) : User()
