@@ -22,5 +22,5 @@ data class Event(
     var likesCount: Int,
     var isLiked: Boolean,
     var isFavourite: Boolean,
-    var photosUrls: List<String>?,
+    var photosUrls: List<String>,
 )

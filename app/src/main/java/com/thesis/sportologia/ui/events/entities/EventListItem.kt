@@ -23,5 +23,5 @@ data class EventListItem(
     val categories: Map<String, Boolean> get() = event.categories
     val isLiked: Boolean get() = event.isLiked
     val isFavourite: Boolean get() = event.isFavourite
-    val photosUrls: List<String>? get() = event.photosUrls
+    val photosUrls: List<String> get() = event.photosUrls
 }

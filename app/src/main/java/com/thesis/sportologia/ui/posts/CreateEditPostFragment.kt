@@ -1,6 +1,11 @@
 package com.thesis.sportologia.ui.posts
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +13,8 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -46,8 +53,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
     private val args by navArgs<CreateEditPostFragmentArgs>()
 
     // TODO
-    private val photosUrls = mutableListOf<String>()
-
+    private var photosUrls = mutableListOf<String>()
     private var savedText: String? = null
 
     private lateinit var binding: FragmentCreateEditPostBinding
@@ -96,6 +102,28 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
             }
         }
 
+        initAddPhotosButton()
+
+    }
+
+    private fun initAddPhotosButton() {
+        binding.addPhotosButton.setOnClickListener {
+            Log.d("abcdef", "setListener")
+            if (ContextCompat.checkSelfPermission(
+                    context!!,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            } else {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
     }
 
     private fun initMode() {
@@ -108,11 +136,16 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         }
     }
 
-    private fun setEditableText(post: Post?) {
+    private fun renderData(post: Post?) {
         if (post == null) return
 
+        photosUrls = post.photosUrls.toMutableList()
+        setEditableText(post.text)
+    }
+
+    private fun setEditableText(text: String) {
         if (savedText == null) {
-            binding.text.setText(post.text)
+            binding.text.setText(text)
         } else {
             binding.text.setText(savedText)
         }
@@ -161,7 +194,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
             },
             null,
             null,
-            )
+        )
     }
 
     override fun observeViewModel() {
@@ -200,7 +233,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
                     binding.fcpError.root.visibility = GONE
                     binding.textBlock.visibility = VISIBLE
 
-                    setEditableText(holder.data)
+                    renderData(holder.data)
                 }
                 is DataHolder.ERROR -> {
                     binding.fcpLoading.root.visibility = GONE
@@ -285,6 +318,30 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
         const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_POST"
         const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_POST"
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
+            val pickedPhoto = data.data
+            photosUrls.add(pickedPhoto.toString())
+            Log.d("abcdef", "$photosUrls")
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

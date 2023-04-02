@@ -113,6 +113,7 @@
     </LinearLayout>
 
     <com.thesis.sportologia.ui.views.ButtonRoundView
+        android:id="@+id/addPhotosButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_sides"

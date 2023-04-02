@@ -8,7 +8,7 @@ class TrainingProgrammesCategories {
     companion object {
 
         val emptyCategoriesAssociativeList
-            get() = AssociativeList(
+            get() = com.thesis.sportologia.utils.AssociativeList(
                 listOf(
                     Pair(GAINING_MUSCLES_MASS, false),
                     Pair(LOSING_WEIGHT, false),

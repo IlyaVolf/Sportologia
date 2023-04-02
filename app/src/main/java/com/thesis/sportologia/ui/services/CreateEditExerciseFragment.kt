@@ -1,12 +1,19 @@
 package com.thesis.sportologia.ui.services
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
@@ -53,6 +60,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
 
         initMode()
         initRender()
+        initAddPhotosButton()
 
         observeToastMessageService()
         
@@ -92,6 +100,25 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             when (it) {
                 OnToolbarBasicAction.LEFT -> onCancelButtonPressed()
                 OnToolbarBasicAction.RIGHT -> onSaveButtonPressed()
+            }
+        }
+    }
+
+    private fun initAddPhotosButton() {
+        binding.addPhotosButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    context!!,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            } else {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
             }
         }
     }
@@ -327,4 +354,32 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_EXERCISE"
         const val IS_DELETED_REQUEST_CODE = "IS_DELETED_REQUEST_CODE_EXERCISE"
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
+            val pickedPhoto = data.data
+
+            if (currentExerciseCreateEditItem == null) {
+                currentExerciseCreateEditItem = ExerciseCreateEditItem.getEmptyInstance()
+            }
+            currentExerciseCreateEditItem!!.photosUris.add(pickedPhoto.toString())
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
 }

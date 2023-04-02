@@ -16,5 +16,5 @@ data class PostListItem(
     val isLiked: Boolean get() = post.isLiked
     val isFavourite: Boolean get() = post.isFavourite
     val postedDate: Long get() = post.postedDate
-    val photosUrls: List<String>? get() = post.photosUrls
+    val photosUrls: List<String> get() = post.photosUrls
 }

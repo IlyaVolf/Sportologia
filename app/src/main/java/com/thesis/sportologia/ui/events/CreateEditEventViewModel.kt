@@ -87,7 +87,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     likesCount = 0,
                     isLiked = false,
                     isFavourite = false,
-                    photosUrls = event.photosUrls,
+                    photosUrls = event.photosUrls ?: mutableListOf(),
                 )
             Mode.EDIT ->
                 _eventHolder.value!!.onReady {
@@ -101,7 +101,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                             price = event.priceString.toFloat(),
                             currency = event.currency,
                             categories = event.categories,
-                            photosUrls = event.photosUrls,
+                            photosUrls = event.photosUrls ?: mutableListOf(),
                         )
                 }
         }

@@ -24,8 +24,8 @@ data class ServiceDetailedViewItem(
     val rating: Float? get() = serviceDetailed.rating
     val isFavourite: Boolean get() = serviceDetailed.isFavourite
     val isAcquired: Boolean get() = serviceDetailed.isAcquired
-    val generalPhotosUrls: List<String>? get() = serviceDetailed.generalPhotosUrls
+    val generalPhotosUrls: List<String> get() = serviceDetailed.generalPhotosUrls
     val detailedDescription: String get() = serviceDetailed.detailedDescription
-    val detailedPhotosUrls: List<String>? get() = serviceDetailed.detailedPhotosUrls
+    val detailedPhotosUrls: List<String> get() = serviceDetailed.detailedPhotosUrls
     val exercises: List<Exercise> get() = serviceDetailed.exercises
 }

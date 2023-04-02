@@ -29,4 +29,6 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
     open fun setupViews() {}
 
     open fun observeViewModel() {}
+
+
 }

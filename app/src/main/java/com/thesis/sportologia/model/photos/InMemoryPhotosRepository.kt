@@ -200,7 +200,7 @@ class InMemoryPhotosRepository @Inject constructor(
     }
 
     private companion object {
-        const val PAGE_SIZE = 21
+        const val PAGE_SIZE = 18
     }
 
 }

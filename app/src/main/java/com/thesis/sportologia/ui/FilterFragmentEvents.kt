@@ -103,7 +103,7 @@ class FilterFragmentEvents : Fragment() {
     }
 
     private fun initSortBySpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(getString(R.string.filter_sort_by_date), FilterParamsEvents.EventsSortBy.Date),
                 Pair(

@@ -1,13 +1,19 @@
 package com.thesis.sportologia.ui.events
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -17,7 +23,6 @@ import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
-import com.thesis.sportologia.ui.posts.CreateEditPostViewModel
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,6 +68,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
         initMode()
         initRender()
+        initAddPhotosButton()
         initCurrentEventCreateEditItem(savedInstanceState)
 
         observeGoBackEvent()
@@ -131,6 +137,25 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     private fun initRetryButton() {
         binding.fceeError.veTryAgain.setOnClickListener {
             onSaveButtonPressed()
+        }
+    }
+
+    private fun initAddPhotosButton() {
+        binding.addPhotosButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    context!!,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            } else {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
         }
     }
 
@@ -319,6 +344,30 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
         const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_EVENT"
         const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_EVENT"
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
+            val pickedPhoto = data.data
+            photosUrls.add(pickedPhoto.toString())
+            Log.d("abcdef", "$photosUrls")
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

@@ -85,7 +85,7 @@ class FilterFragmentServices : Fragment() {
     }
 
     private fun initServiceTypeSpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(
                     getString(R.string.filter_services_all),
@@ -111,7 +111,7 @@ class FilterFragmentServices : Fragment() {
     }
 
     private fun initSortBySpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(
                     getString(R.string.filter_sort_by_popularity),

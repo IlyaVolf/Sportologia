@@ -19,7 +19,7 @@ data class Service(
     var categories: Map<String, Boolean>,
     var isFavourite: Boolean,
     var isAcquired: Boolean,
-    var generalPhotosUrls: List<String>?,
+    var generalPhotosUrls: List<String>,
 ) {
     companion object {
         const val NULL = -2L

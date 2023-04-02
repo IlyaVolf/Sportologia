@@ -23,5 +23,5 @@ data class ServiceViewItem(
     val isAcquired: Boolean get() = service.isAcquired
     val rating: Float? get() = service.rating
     val isFavourite: Boolean get() = service.isFavourite
-    val generalPhotosUrls: List<String>? get() = service.generalPhotosUrls
+    val generalPhotosUrls: List<String> get() = service.generalPhotosUrls
 }

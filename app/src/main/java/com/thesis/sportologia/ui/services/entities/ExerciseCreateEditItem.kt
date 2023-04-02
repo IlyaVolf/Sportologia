@@ -9,7 +9,7 @@ data class ExerciseCreateEditItem(
     var setsNumber: String?,
     var repsNumber: String?,
     var regularity: Map<String, Boolean>?,
-    var photosUris: List<String>?,
+    var photosUris: MutableList<String>,
 ) : java.io.Serializable {
     companion object {
         fun getEmptyInstance(): ExerciseCreateEditItem {
@@ -20,7 +20,7 @@ data class ExerciseCreateEditItem(
                 null,
                 null,
                 null,
-                null,
+                mutableListOf(),
             )
         }
     }
@@ -34,6 +34,6 @@ fun Exercise.toCreateEditItem(): ExerciseCreateEditItem {
         setsNumber = setsNumber.toString(),
         repsNumber = repsNumber.toString(),
         regularity = regularity,
-        photosUris = photosUris
+        photosUris = photosUris.toMutableList()
     )
 }

@@ -11,5 +11,5 @@ data class Post(
     var isLiked: Boolean,
     var isFavourite: Boolean,
     var postedDate: Long,
-    var photosUrls: List<String>?,
+    var photosUrls: List<String>,
 )

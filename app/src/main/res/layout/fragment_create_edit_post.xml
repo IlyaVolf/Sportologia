@@ -68,6 +68,8 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/margin_sides"
         android:layout_marginBottom="36dp"
+        android:clickable="true"
+        android:focusable="true"
         app:br_drawable="@drawable/icon_album"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent" />

@@ -78,7 +78,7 @@ class FilterFragmentUsers : Fragment() {
     }
 
     private fun initUserTypeSpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(getString(R.string.search_all), FilterParamsUsers.UsersType.ALL),
                 Pair(

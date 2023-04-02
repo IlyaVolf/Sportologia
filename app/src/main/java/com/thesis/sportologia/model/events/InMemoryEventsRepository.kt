@@ -61,7 +61,7 @@ class InMemoryEventsRepository @Inject constructor(
         likesCount = 5,
         isLiked = false,
         isFavourite = false,
-        photosUrls = null,
+        photosUrls = mutableListOf(),
     )
 
     private val events = mutableListOf(

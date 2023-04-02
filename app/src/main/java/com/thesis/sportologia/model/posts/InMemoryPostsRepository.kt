@@ -77,7 +77,7 @@ class InMemoryPostsRepository @Inject constructor(
             isLiked = true,
             isFavourite = true,
             postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = null
+            photosUrls = mutableListOf()
         ),
         postSample.copy(id = 3L),
         postSample.copy(id = 4L),
