@@ -7,17 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.navigation.navOptions
 import androidx.viewpager2.widget.ViewPager2
-import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentPhotosBinding
 import com.thesis.sportologia.ui.adapters.PagerAdapter
-import com.thesis.sportologia.ui.users.ListUsersFragmentFollowers
+import com.thesis.sportologia.ui.photos.ListPhotosFragment
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import dagger.hilt.android.AndroidEntryPoint
-import java.net.URI
 
-/**@AndroidEntryPoint
+@AndroidEntryPoint
 class PhotosFragment : Fragment() {
     private val args by navArgs<PhotosFragmentArgs>()
 
@@ -51,9 +48,9 @@ class PhotosFragment : Fragment() {
     }
 
     private fun initContentBlock() {
-        val listUsersFragmentFollowers = ListPhotosFragment.newInstance(userId)
+        val listPhotosFragment = ListPhotosFragment.newInstance(userId)
 
-        adapter = PagerAdapter(this, arrayListOf(listUsersFragmentFollowers))
+        adapter = PagerAdapter(this, arrayListOf(listPhotosFragment))
         viewPager = binding.pager
         viewPager.adapter = adapter
     }
@@ -62,4 +59,4 @@ class PhotosFragment : Fragment() {
         findNavController().navigateUp()
     }
 
-}*/
+}

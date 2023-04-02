@@ -69,21 +69,6 @@ abstract class ListServicesViewModel constructor(
 
     abstract fun getDataFlow(): Flow<PagingData<Service>>
 
-    override fun onServiceDelete(serviceListItem: ServiceListItem) {
-        if (isInProgress(serviceListItem.id)) return
-
-        viewModelScope.launch {
-            try {
-                setProgress(serviceListItem.id, true)
-                delete(serviceListItem)
-            } catch (e: Exception) {
-                showError(R.string.error_loading_title)
-            } finally {
-                setProgress(serviceListItem.id, false)
-            }
-        }
-    }
-
     override fun onToggleFavouriteFlag(serviceListItem: ServiceListItem) {
         if (isInProgress(serviceListItem.id)) return
 
@@ -132,16 +117,7 @@ abstract class ListServicesViewModel constructor(
         val newFlagValue = !serviceListItem.isFavourite
         servicesRepository.setIsFavourite(userId, serviceListItem.service.id, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
-        Log.d("LSVM", "1 ${localChangesFlow.value.value.isFavouriteFlags}")
-
         localChangesFlow.value = OnChange(localChanges)
-        Log.d("LSVM", "2 ${localChangesFlow.value.value.isFavouriteFlags}")
-
-    }
-
-    private suspend fun delete(serviceListItem: ServiceListItem) {
-        servicesRepository.deleteService(serviceListItem.id)
-        invalidateList()
     }
 
     private fun setProgress(serviceListItemId: Long, inProgress: Boolean) {
@@ -174,7 +150,6 @@ abstract class ListServicesViewModel constructor(
     ): PagingData<ServiceListItem> {
         return services
             .map { service ->
-                Log.d("LSVM", "3 ${localChangesFlow.value.value.isFavouriteFlags}")
                 val isInProgress = localChanges.value.idsInProgress.contains(service.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[service.id]
 
@@ -183,11 +158,6 @@ abstract class ListServicesViewModel constructor(
                 } else {
                     service.copy(isFavourite = localFavoriteFlag)
                 }
-
-                Log.d(
-                    "LSVM",
-                    "4 ${localChangesFlow.value.value.isFavouriteFlags} $localFavoriteFlag ${serviceWithLocalChanges}"
-                )
                 ServiceListItem(serviceWithLocalChanges, isInProgress)
             }
     }

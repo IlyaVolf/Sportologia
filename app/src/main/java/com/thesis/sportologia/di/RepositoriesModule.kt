@@ -2,6 +2,8 @@ package com.thesis.sportologia.di
 
 import com.thesis.sportologia.model.events.EventsRepository
 import com.thesis.sportologia.model.events.InMemoryEventsRepository
+import com.thesis.sportologia.model.photos.InMemoryPhotosRepository
+import com.thesis.sportologia.model.photos.PhotosRepository
 import com.thesis.sportologia.model.posts.InMemoryPostsRepository
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.services.InMemoryServicesRepository
@@ -37,6 +39,12 @@ abstract class RepositoriesModule {
     abstract fun bindUsersRepository(
         inMemoryUsersRepository: InMemoryUsersRepository
     ): UsersRepository
+
+    @Binds
+    abstract fun bindPhotosRepository(
+        inMemoryPhotosRepository: InMemoryPhotosRepository
+    ): PhotosRepository
+
 
 
 }

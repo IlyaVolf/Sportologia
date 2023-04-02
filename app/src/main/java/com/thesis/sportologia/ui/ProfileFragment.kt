@@ -54,12 +54,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private val args by navArgs<ProfileFragmentArgs>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        Log.d("SEARCHH", "onCreate PROFILE")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -167,7 +161,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private fun initRefreshLayout() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            Log.d("abcdef", "initRefreshLayout")
             viewModel.refresh()
 
             requireActivity().supportFragmentManager.setFragmentResult(
@@ -281,17 +274,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     override fun observeViewModel() {
         viewModel.userHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
-                DataHolder.LOADING -> {
-                    binding.swipeRefreshLayout.isRefreshing = true
-                    binding.fpLoading.root.visibility = View.INVISIBLE
-                    binding.fpError.root.visibility = View.INVISIBLE
-                    binding.fpContentBlock.visibility = View.VISIBLE
-                }
                 DataHolder.INIT -> {
                     binding.swipeRefreshLayout.isRefreshing = false
                     binding.fpLoading.root.visibility = View.VISIBLE
                     binding.fpError.root.visibility = View.INVISIBLE
                     binding.fpContentBlock.visibility = View.INVISIBLE
+                }
+                DataHolder.LOADING -> {
+                    binding.swipeRefreshLayout.isRefreshing = true
+                    binding.fpLoading.root.visibility = View.INVISIBLE
+                    binding.fpError.root.visibility = View.INVISIBLE
+                    binding.fpContentBlock.visibility = View.VISIBLE
                 }
                 is DataHolder.READY -> {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -300,16 +293,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     binding.fpContentBlock.visibility = View.VISIBLE
 
                     renderUserDetails(holder.data)
-                    // TODO идея, чтобы при подписке все не перезагружать. Но работает так себе
-                    // TODO при переходе от одного экрана  к другому, видимо, все заново грузит
-                    /*    when (holder.data.lastAction) {
-                            UserListItem.LastAction.INIT -> {
-                                renderUserDetails(holder.data)
-                            }
-                            UserListItem.LastAction.SUBSCRIBE_CHANGED -> {
-                                renderUserDetailsOnSubscriptionAction(holder.data)
-                            }
-                     }*/
                 }
                 is DataHolder.ERROR -> {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -348,7 +331,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             onSubscribeButtonPressed()
         }
 
-        binding.openPhotosButton.setOnClickListener {
+        binding.photosBlock.setOnClickListener {
             onOpenPhotosButtonPressed()
         }
 
@@ -446,8 +429,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun onOpenPhotosButtonPressed() {
-        findNavController().navigate(R.id.action_profileFragment_to_photosFragment,
-            null,
+        val direction =
+            ProfileFragmentDirections.actionProfileFragmentToPhotosFragment(userId)
+        findNavController().navigate(
+            direction,
             navOptions {
                 anim {
                     enter = R.anim.slide_in_right
