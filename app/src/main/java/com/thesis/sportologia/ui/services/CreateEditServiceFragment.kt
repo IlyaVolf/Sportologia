@@ -18,6 +18,7 @@ import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
+import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
 import com.thesis.sportologia.ui.services.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
@@ -112,7 +113,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_CREATED) as Exercise?
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_CREATED) as ExerciseCreateEditItem?
                 ?: return@setFragmentResultListener
             currentServiceCreateEditItem.exercises.add(exercise)
             setExercises(currentServiceCreateEditItem.exercises)
@@ -124,7 +125,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_EDITED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_EDITED) as Exercise?
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_EDITED) as ExerciseCreateEditItem?
                 ?: return@setFragmentResultListener
             currentServiceCreateEditItem.exercises[currentServiceCreateEditItem.exercises.indexOfFirst { it.id == exercise.id }] =
                 exercise
@@ -137,9 +138,8 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_DELETED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_DELETED) as Exercise?
-                ?: return@setFragmentResultListener
-            currentServiceCreateEditItem.exercises.remove(exercise)
+            val exerciseId = data.getLong(CreateEditExerciseFragment.IS_DELETED)
+            currentServiceCreateEditItem.exercises.removeIf { it.id == exerciseId }
             setExercises(currentServiceCreateEditItem.exercises)
             exercisesAdapter.notifyDataSetChanged()
         }
@@ -198,7 +198,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         setExercises(currentServiceCreateEditItem.exercises)
     }
 
-    private fun setExercises(exercises: List<Exercise>) {
+    private fun setExercises(exercises: List<ExerciseCreateEditItem>) {
         binding.exercisesList.isVisible = exercises.isNotEmpty()
         binding.itemAddExerciseSplitter.isVisible = exercises.isNotEmpty()
 
@@ -233,7 +233,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         getCurrentData()
         val direction =
             CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(
-                exercise
+                exercise.toCreateEditItem()
             )
         findNavController().navigate(
             direction,
@@ -351,7 +351,6 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
                     // Мы не будем рендерить инфу, если она уже отрендерена
                     if (holder.data != null && !isDataReceived) {
-                        Log.d("abcdef", "observe ${holder.data}")
                         currentServiceCreateEditItem = holder.data.toCreateEditItem()
                         isDataReceived = true
                     }

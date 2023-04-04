@@ -24,6 +24,22 @@ data class ExerciseCreateEditItem(
             )
         }
     }
+
+    fun toExercise() : Exercise {
+        return Exercise(
+            id = id!!,
+            name = name!!,
+            description = description!!,
+            setsNumber = setsNumber!!.toInt(),
+            repsNumber = repsNumber!!.toInt(),
+            regularity = regularity!!,
+            photosUris = photosUris.toMutableList()
+        )
+    }
+}
+
+fun List<ExerciseCreateEditItem>.toExercise(): List<Exercise> {
+    return this.map { it.toExercise() }
 }
 
 fun Exercise.toCreateEditItem(): ExerciseCreateEditItem {

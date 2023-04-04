@@ -28,6 +28,7 @@ import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
+import com.thesis.sportologia.ui.services.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,13 +42,13 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     lateinit var factory: CreateEditExerciseViewModel.Factory
 
     override val viewModel by viewModelCreator {
-        factory.create(exercise)
+        factory.create(currentExerciseCreateEditItem)
     }
 
     private val args by navArgs<CreateEditExerciseFragmentArgs>()
 
-    private var exercise: Exercise? = null
-    private var currentExerciseCreateEditItem: ExerciseCreateEditItem? = null
+    private var isDataReceived = false
+    private lateinit var currentExerciseCreateEditItem: ExerciseCreateEditItem
     
     private lateinit var mode: Mode
     private lateinit var binding: FragmentCreateEditExerciseBinding
@@ -73,13 +74,15 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     }
 
     private fun initMode() {
-        exercise = getExerciseArg()
+        val originalExercise = getExerciseArg()
 
-        mode = if (exercise == null) {
+        mode = if (originalExercise == null) {
             Mode.CREATE
         } else {
             Mode.EDIT
         }
+
+        currentExerciseCreateEditItem = originalExercise ?: ExerciseCreateEditItem.getEmptyInstance()
     }
 
     private fun initToolbar() {
@@ -137,41 +140,43 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         )
     }
 
-    private fun renderData(exercise: Exercise?) {
-        renderSelectedRegularity(exercise?.regularity)
-        
-        if (exercise == null) return
+    private fun renderData() {
+        renderSelectedRegularity(currentExerciseCreateEditItem.regularity)
 
-        binding.fcexName.setText(exercise.name)
-        binding.fcexDescription.setText(exercise.description)
-        binding.fcexSetsNumber.setText(exercise.setsNumber.toString())
-        binding.fcexRepsNumber.setText(exercise.repsNumber.toString())
+        if (currentExerciseCreateEditItem.name != null) {
+            binding.fcexName.setText(currentExerciseCreateEditItem.name!!)
+        }
+        if(currentExerciseCreateEditItem.description != null) {
+            binding.fcexDescription.setText(currentExerciseCreateEditItem.description!!)
+        }
+        if(currentExerciseCreateEditItem.setsNumber != null) {
+            binding.fcexSetsNumber.setText(currentExerciseCreateEditItem.setsNumber.toString())
+        }
+        if(currentExerciseCreateEditItem.repsNumber != null) {
+            binding.fcexSetsNumber.setText(currentExerciseCreateEditItem.repsNumber.toString())
+        }
         if (mode == Mode.EDIT) {
             binding.fcexDelete.visibility = VISIBLE
             binding.fcexDelete.setOnClickListener {
-                onDeleteButtonPressed(exercise)
+                onDeleteButtonPressed()
             }
         } else {
             binding.fcexDelete.visibility = GONE
         }
     }
 
-    private fun getExerciseArg(): Exercise? = args.exercise
+    private fun getExerciseArg(): ExerciseCreateEditItem? = args.exercise
 
     private fun onCancelButtonPressed() {
         createDialogCancel()
     }
 
-    private fun onDeleteButtonPressed(exercise: Exercise) {
-        createDialogDelete(exercise)
+    private fun onDeleteButtonPressed() {
+        createDialogDelete()
     }
 
     private fun getCurrentData() {
-        if (currentExerciseCreateEditItem == null) {
-            currentExerciseCreateEditItem = ExerciseCreateEditItem.getEmptyInstance()
-        }
-
-        with(currentExerciseCreateEditItem!!) {
+        with(currentExerciseCreateEditItem) {
             name = binding.fcexName.getText()
             description = binding.fcexDescription.getText()
             setsNumber = binding.fcexSetsNumber.getText()
@@ -207,7 +212,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             negativeButtonText,
             { dialog, _ ->
                 run {
-                    goBack(null)
+                    goBack(false)
                     dialog.cancel()
                 }
             },
@@ -222,7 +227,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         )
     }
 
-    private fun createDialogDelete(exercise: Exercise) {
+    private fun createDialogDelete() {
         createSimpleDialog(
             context!!,
             null,
@@ -230,7 +235,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             ResourcesUtils.getString(R.string.action_delete),
             { _, _ ->
                 run {
-                    goBackAndDelete(exercise)
+                    goBackAndDelete()
                 }
             },
             ResourcesUtils.getString(R.string.action_cancel),
@@ -258,7 +263,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
                     binding.fcexError.root.visibility = GONE
                     binding.fcexExerciseBlock.visibility = VISIBLE
 
-                    goBack(holder.data)
+                    goBack(true)
                 }
                 is DataHolder.ERROR -> {
                     binding.fcexLoading.root.visibility = GONE
@@ -267,7 +272,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
 
                     binding.fcexError.veText.text = holder.failure.message
                     binding.fcexError.veTryAgain.setOnClickListener {
-                        viewModel.onSaveButtonPressed(currentExerciseCreateEditItem!!)
+                        viewModel.onSaveButtonPressed(currentExerciseCreateEditItem)
                     }
                 }
             }
@@ -275,6 +280,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
 
         viewModel.exerciseHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                is DataHolder.INIT -> {}
                 is DataHolder.LOADING -> {
                     binding.fcexLoading.root.visibility = VISIBLE
                     binding.fcexError.root.visibility = GONE
@@ -285,7 +291,11 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
                     binding.fcexError.root.visibility = GONE
                     binding.fcexExerciseBlock.visibility = VISIBLE
 
-                    renderData(holder.data)
+                    if (holder.data != null && !isDataReceived) {
+                        currentExerciseCreateEditItem = holder.data
+                        isDataReceived = true
+                    }
+                    renderData()
                 }
                 is DataHolder.ERROR -> {
                     binding.fcexLoading.root.visibility = GONE
@@ -301,30 +311,32 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         }
     }
 
-    private fun goBackAndDelete(exercise: Exercise) {
+    private fun goBackAndDelete() {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_DELETED_REQUEST_CODE,
-                bundleOf(IS_DELETED to exercise)
+                bundleOf(IS_DELETED to currentExerciseCreateEditItem.id)
             )
         findNavController().navigateUp()
     }
 
-    private fun goBack(exercise: Exercise?) {
-        sendResult(exercise)
+    private fun goBack(isSaved: Boolean) {
+        sendResult(!isSaved)
         findNavController().navigateUp()
     }
 
-    private fun sendResult(exercise: Exercise?) {
-        Log.d("abcdef", "$exercise")
+    private fun sendResult(isSaved: Boolean) {
+        if (!isSaved) return
+
+        getCurrentData()
         if (mode == Mode.CREATE) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_CREATED_REQUEST_CODE,
-                bundleOf(IS_CREATED to exercise)
+                bundleOf(IS_CREATED to currentExerciseCreateEditItem)
             )
         } else if (mode == Mode.EDIT) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_EDITED_REQUEST_CODE,
-                bundleOf(IS_EDITED to exercise)
+                bundleOf(IS_EDITED to currentExerciseCreateEditItem)
             )
         }
     }
@@ -375,10 +387,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
             val pickedPhoto = data.data
 
-            if (currentExerciseCreateEditItem == null) {
-                currentExerciseCreateEditItem = ExerciseCreateEditItem.getEmptyInstance()
-            }
-            currentExerciseCreateEditItem!!.photosUris.add(pickedPhoto.toString())
+            currentExerciseCreateEditItem.photosUris.add(pickedPhoto.toString())
             Log.d("abcdef", "$currentExerciseCreateEditItem")
         }
         super.onActivityResult(requestCode, resultCode, data)

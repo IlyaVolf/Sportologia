@@ -13,6 +13,7 @@ import com.thesis.sportologia.ui.events.CreateEditEventViewModel
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
 import com.thesis.sportologia.ui.services.entities.ServiceGeneralCreateEditItem
 import com.thesis.sportologia.ui.services.entities.toCreateEditItem
+import com.thesis.sportologia.ui.services.entities.toExercise
 
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
@@ -35,7 +36,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _serviceHolder = ObservableHolder<ServiceDetailed?>(DataHolder.ready(null))
+    private val _serviceHolder = ObservableHolder<ServiceDetailed?>(DataHolder.init())
     val serviceHolder = _serviceHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
@@ -97,7 +98,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                     detailedDescription = reformattedDetailedDescription,
                     detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                    exercises = service.exercises,
+                    exercises = service.exercises.toExercise(),
                     dateCreatedMillis = Calendar.getInstance().timeInMillis
                 )
             Mode.EDIT ->
@@ -113,7 +114,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                             generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                             detailedDescription = reformattedDetailedDescription,
                             detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                            exercises = service.exercises,
+                            exercises = service.exercises.toExercise(),
                         )
                 }
         }

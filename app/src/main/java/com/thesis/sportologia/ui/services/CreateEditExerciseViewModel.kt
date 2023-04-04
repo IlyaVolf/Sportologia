@@ -14,7 +14,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 class CreateEditExerciseViewModel @AssistedInject constructor(
-    @Assisted private val exercise: Exercise?,
+    @Assisted private val exercise: ExerciseCreateEditItem?,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -24,22 +24,22 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _exerciseHolder = ObservableHolder<Exercise?>(DataHolder.ready(null))
+    private val _exerciseHolder = ObservableHolder<ExerciseCreateEditItem?>(DataHolder.init())
     val exerciseHolder = _exerciseHolder.share()
 
-    private val _saveHolder = ObservableHolder<Exercise?>(DataHolder.init())
+    private val _saveHolder = ObservableHolder<ExerciseCreateEditItem?>(DataHolder.init())
     val saveHolder = _saveHolder.share()
 
     private val _toastMessageService = MutableLiveEvent<ErrorType>()
     val toastMessageService = _toastMessageService.share()
 
     init {
-        if (exercise == null) {
-            mode = Mode.CREATE
+        mode = if (exercise == null) {
+            Mode.CREATE
         } else {
-            mode = Mode.EDIT
-            getExercise()
+            Mode.EDIT
         }
+        getExercise()
     }
 
     fun onSaveButtonPressed(exercise: ExerciseCreateEditItem) {
@@ -50,17 +50,17 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
         val reformattedName = reformatText(exercise.name!!)
         val reformattedDescription = reformatText(exercise.description!!)
 
-        lateinit var newExercise: Exercise
+        lateinit var newExercise: ExerciseCreateEditItem
         when (mode) {
             Mode.CREATE ->
-                newExercise = Exercise(
+                newExercise = ExerciseCreateEditItem(
                     id = -1, // не тут надо создавать!
                     name = reformattedName,
                     description = reformattedDescription,
-                    repsNumber = exercise.repsNumber!!.toInt(),
-                    setsNumber = exercise.setsNumber!!.toInt(),
+                    repsNumber = exercise.repsNumber!!,
+                    setsNumber = exercise.setsNumber!!,
                     regularity = exercise.regularity ?: hashMapOf(),
-                    photosUris = exercise.photosUris ?: listOf()
+                    photosUris = exercise.photosUris
                 )
             Mode.EDIT ->
                 _exerciseHolder.value!!.onReady {
@@ -68,10 +68,10 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
                         it!!.copy(
                             name = reformattedName,
                             description = reformattedDescription,
-                            repsNumber = exercise.repsNumber!!.toInt(),
-                            setsNumber = exercise.setsNumber!!.toInt(),
+                            repsNumber = exercise.repsNumber,
+                            setsNumber = exercise.setsNumber,
                             regularity = exercise.regularity ?: hashMapOf(),
-                            photosUris = exercise.photosUris ?: listOf()
+                            photosUris = exercise.photosUris
                         )
                 }
         }
@@ -164,7 +164,7 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            exercise: Exercise?
+            exercise: ExerciseCreateEditItem?
         ): CreateEditExerciseViewModel
     }
 
