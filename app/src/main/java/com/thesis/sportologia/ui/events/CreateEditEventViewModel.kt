@@ -9,6 +9,7 @@ import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
 import com.thesis.sportologia.ui.events.entities.toCreateEditItem
+import com.thesis.sportologia.ui.services.CreateEditServiceViewModel
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -29,7 +30,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _eventHolder = ObservableHolder<Event?>(DataHolder.ready(null))
+    private val _eventHolder = ObservableHolder<Event?>(DataHolder.init())
     val eventHolder = _eventHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
@@ -42,12 +43,12 @@ class CreateEditEventViewModel @AssistedInject constructor(
     val goBackEvent = _goBackEvent.share()
 
     init {
-        if (eventId == null) {
-            mode = Mode.CREATE
+        mode = if (eventId == null) {
+            Mode.CREATE
         } else {
-            mode = Mode.EDIT
-            getEvent()
+            Mode.EDIT
         }
+        getEvent()
     }
 
     fun onSaveButtonPressed(event: EventCreateEditItem) {
@@ -64,8 +65,8 @@ class CreateEditEventViewModel @AssistedInject constructor(
             goBack()
         }
 
-        val reformattedName = reformatText(event.name)
-        val reformattedDescription = reformatText(event.description)
+        val reformattedName = reformatText(event.name!!)
+        val reformattedDescription = reformatText(event.description!!)
 
         lateinit var newEvent: Event
         when (mode) {
@@ -81,13 +82,13 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     dateFrom = event.dateFrom!!,
                     dateTo = event.dateTo,
                     address = event.address,
-                    price = event.priceString.toFloat(),
-                    currency = event.currency,
-                    categories = event.categories,
+                    price = event.priceString!!.toFloat(),
+                    currency = event.currency!!,
+                    categories = event.categories!!,
                     likesCount = 0,
                     isLiked = false,
                     isFavourite = false,
-                    photosUrls = event.photosUrls ?: mutableListOf(),
+                    photosUrls = event.photosUrls,
                 )
             Mode.EDIT ->
                 _eventHolder.value!!.onReady {
@@ -98,10 +99,10 @@ class CreateEditEventViewModel @AssistedInject constructor(
                             dateFrom = event.dateFrom!!,
                             dateTo = event.dateTo,
                             address = event.address,
-                            price = event.priceString.toFloat(),
-                            currency = event.currency,
-                            categories = event.categories,
-                            photosUrls = event.photosUrls ?: mutableListOf(),
+                            price = event.priceString!!.toFloat(),
+                            currency = event.currency!!,
+                            categories = event.categories!!,
+                            photosUrls = event.photosUrls,
                         )
                 }
         }
@@ -127,18 +128,26 @@ class CreateEditEventViewModel @AssistedInject constructor(
         }
     }
 
-    fun getEvent() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            withContext(Dispatchers.Main) {
-                _eventHolder.value = DataHolder.loading()
-            }
-            val event = eventsRepository.getEvent(eventId!!)
-            withContext(Dispatchers.Main) {
-                _eventHolder.value = DataHolder.ready(event)
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                _eventHolder.value = DataHolder.error(e)
+    fun getEvent() {
+        if (mode == Mode.CREATE) {
+            _eventHolder.value = DataHolder.ready(null)
+            return
+        }
+
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Main) {
+                    _eventHolder.value = DataHolder.loading()
+                }
+                val event = eventsRepository.getEvent(eventId!!)
+                withContext(Dispatchers.Main) {
+                    _eventHolder.value = DataHolder.ready(event)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _eventHolder.value = DataHolder.error(e)
+                }
             }
         }
     }
@@ -148,6 +157,9 @@ class CreateEditEventViewModel @AssistedInject constructor(
             return false
         }
         if (!validateText(event.description, ErrorType.EMPTY_DESCRIPTION)) {
+            return false
+        }
+        if (!validateText(event.currency, ErrorType.EMPTY_CURRENCY)) {
             return false
         }
         if (!validatePrice(event.priceString)) {
@@ -179,9 +191,9 @@ class CreateEditEventViewModel @AssistedInject constructor(
         return true
     }
 
-    private fun validateText(text: String, errorType: ErrorType): Boolean {
+    private fun validateText(text: String?, errorType: ErrorType): Boolean {
         // check whether the text is empty
-        if (text == "") {
+        if (text == null || text == "") {
             _toastMessageEvent.publishEvent(errorType)
             return false
         }
@@ -189,9 +201,9 @@ class CreateEditEventViewModel @AssistedInject constructor(
         return true
     }
 
-    private fun validatePrice(price: String): Boolean {
+    private fun validatePrice(price: String?): Boolean {
         // check whether the text is empty
-        if (price == "") {
+        if (price== null || price == "") {
             _toastMessageEvent.publishEvent(ErrorType.EMPTY_PRICE)
             return false
         }
@@ -219,6 +231,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
         EMPTY_DESCRIPTION,
         EMPTY_PRICE,
         EMPTY_DATE,
+        EMPTY_CURRENCY,
         INCORRECT_PRICE,
         INCORRECT_DATE,
         EMPTY_ADDRESS

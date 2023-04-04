@@ -325,7 +325,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
                     binding.fcesError.veText.text = holder.failure.message
                     binding.fcesError.veTryAgain.setOnClickListener {
-                        viewModel.onSaveButtonPressed(currentServiceCreateEditItem!!)
+                        viewModel.onSaveButtonPressed(currentServiceCreateEditItem)
                     }
                 }
             }

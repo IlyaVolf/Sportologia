@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.widget.ImageView
 import android.widget.LinearLayout
 import com.bumptech.glide.Glide
 import com.thesis.sportologia.R
@@ -170,6 +171,7 @@ class PhotosBlockView(
         binding.space2.visibility = GONE
         binding.space3.visibility = GONE
 
+        // TODO БАГ // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP!
         when (photosNumber) {
             0 -> {
             }
@@ -190,6 +192,7 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             3 -> {
                 binding.row1.visibility = VISIBLE
@@ -201,7 +204,9 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             4 -> {
                 binding.row1.visibility = VISIBLE
@@ -212,8 +217,11 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo4.visibility = VISIBLE
+                // binding.photo4.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             5 -> {
                 binding.row1.visibility = VISIBLE
@@ -242,9 +250,13 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             6 -> {
                 binding.row1.visibility = VISIBLE
@@ -273,10 +285,15 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo7.visibility = VISIBLE
+                // binding.photo7.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             7 -> {
                 binding.row1.visibility = VISIBLE
@@ -305,11 +322,17 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo4.visibility = VISIBLE
+                // binding.photo4.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo7.visibility = VISIBLE
+                // binding.photo7.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             8 -> {
                 binding.row1.visibility = VISIBLE
@@ -350,12 +373,19 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo8.visibility = VISIBLE
+                // binding.photo8.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo9.visibility = VISIBLE
+                // binding.photo9.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo10.visibility = VISIBLE
+                // binding.photo10.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             9 -> {
                 binding.row1.visibility = VISIBLE
@@ -396,13 +426,21 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo7.visibility = VISIBLE
+                // binding.photo7.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo8.visibility = VISIBLE
+                // binding.photo8.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo9.visibility = VISIBLE
+                // binding.photo9.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo10.visibility = VISIBLE
+                // binding.photo10.scaleType = ImageView.ScaleType.CENTER_CROP
             }
             10 -> {
                 binding.row1.visibility = VISIBLE
@@ -443,15 +481,23 @@ class PhotosBlockView(
 
                 bindingPhoto1.visibility = VISIBLE
                 binding.photo2.visibility = VISIBLE
+                // binding.photo2.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo3.visibility = VISIBLE
+                // binding.photo3.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo4.visibility = VISIBLE
+                // binding.photo4.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo5.visibility = VISIBLE
-                binding.photo5.visibility = VISIBLE
+                // binding.photo5.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo6.visibility = VISIBLE
+                // binding.photo6.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo7.visibility = VISIBLE
+                // binding.photo7.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo8.visibility = VISIBLE
+                // binding.photo8.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo9.visibility = VISIBLE
+                // binding.photo9.scaleType = ImageView.ScaleType.CENTER_CROP
                 binding.photo10.visibility = VISIBLE
+                // binding.photo10.scaleType = ImageView.ScaleType.CENTER_CROP
             }
 
         }

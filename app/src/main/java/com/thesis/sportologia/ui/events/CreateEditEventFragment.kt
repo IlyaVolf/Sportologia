@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -20,9 +19,9 @@ import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditEventBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
+import com.thesis.sportologia.ui.events.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,20 +44,13 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private val args by navArgs<CreateEditEventFragmentArgs>()
 
-    // TODO photosUrls
-    private val photosUrls = mutableListOf<String>()
-
     private var eventId: Long? = null
-    private var currentEventCreateEditItem: EventCreateEditItem? = null
+    private var isDataReceived = false
+    private var currentEventCreateEditItem: EventCreateEditItem =
+        EventCreateEditItem.getEmptyInstance()
 
     private lateinit var mode: Mode
     private lateinit var binding: FragmentCreateEditEventBinding
-
-    // TODO onSaveInstanceState
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(EVENT_KEY, currentEventCreateEditItem)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,7 +61,6 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         initMode()
         initRender()
         initAddPhotosButton()
-        initCurrentEventCreateEditItem(savedInstanceState)
 
         observeGoBackEvent()
         observeToastMessageEvent()
@@ -120,18 +111,13 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         binding.fceeCategories.setListener { }
     }
 
-    private fun renderSelectedCategories(event: Event?) {
-        val categoriesMap = event?.categories ?: Categories.emptyCategoriesMap
+    private fun renderSelectedCategories(categories: Map<String, Boolean>?) {
+        val categoriesMap = categories ?: Categories.emptyCategoriesMap
         val categoriesLocalizedMap = Categories.getLocalizedCategories(context!!, categoriesMap)
         binding.fceeCategories.initMultiChoiceList(
             categoriesLocalizedMap,
             getString(R.string.event_categories_hint)
         )
-    }
-
-    private fun initCurrentEventCreateEditItem(savedInstanceState: Bundle?) {
-        currentEventCreateEditItem =
-            savedInstanceState?.getSerializable(EVENT_KEY) as EventCreateEditItem?
     }
 
     private fun initRetryButton() {
@@ -159,42 +145,55 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         }
     }
 
-    private fun renderData(event: Event?) {
-        renderSelectedCategories(event)
+    private fun renderData() {
+        renderSelectedCategories(currentEventCreateEditItem.categories)
 
-        if (event == null) return
-
-        binding.fceeName.setText(event.name)
-        binding.fceeDescription.setText(event.description)
-        binding.fceePrice.setText(formatPrice(event.price.toString()))
-        binding.fceeAddress.setText(event.address.toString())
-        binding.fceeDate.setDateAndTime(event.dateFrom, event.dateTo)
+        if (currentEventCreateEditItem.name != null) {
+            binding.fceeName.setText(currentEventCreateEditItem.name!!)
+        }
+        if (currentEventCreateEditItem.description != null) {
+            binding.fceeDescription.setText(currentEventCreateEditItem.description!!)
+        }
+        if (currentEventCreateEditItem.priceString != null) {
+            binding.fceePrice.setText(formatPrice(currentEventCreateEditItem.priceString!!))
+        }
+        if (currentEventCreateEditItem.address != null) {
+            binding.fceeAddress.setText(currentEventCreateEditItem.address!!.toString())
+        }
+        if (currentEventCreateEditItem.dateFrom != null) {
+            binding.fceeDate.setDateAndTime(
+                currentEventCreateEditItem.dateFrom!!,
+                currentEventCreateEditItem.dateTo
+            )
+        }
     }
 
     private fun getEventIdArg(): Long? = args.eventId.eventId
+
+    private fun getCurrentData() {
+        with(currentEventCreateEditItem) {
+            name = binding.fceeName.getText()
+            description = binding.fceeDescription.getText()
+            dateFrom = binding.fceeDate.getDateFromMillis()
+            dateTo = binding.fceeDate.getDateToMillis()
+            address = null
+            priceString = binding.fceePrice.getText()
+            currency = getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!
+            categories = Categories.getCategoriesFromLocalized(
+                context!!,
+                binding.fceeCategories.getCheckedDataMap()
+            )
+        }
+    }
 
     private fun onCancelButtonPressed() {
         createDialog()
     }
 
     private fun onSaveButtonPressed() {
+        getCurrentData()
         viewModel.saveHolder.value?.onNotLoading {
-            viewModel.onSaveButtonPressed(
-                EventCreateEditItem(
-                    binding.fceeName.getText(),
-                    binding.fceeDescription.getText(),
-                    binding.fceeDate.getDateFromMillis(),
-                    binding.fceeDate.getDateToMillis(),
-                    null,
-                    binding.fceePrice.getText(),
-                    getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!,
-                    Categories.getCategoriesFromLocalized(
-                        context!!,
-                        binding.fceeCategories.getCheckedDataMap()
-                    ),
-                    photosUrls
-                )
-            )
+            viewModel.onSaveButtonPressed(currentEventCreateEditItem)
         }
     }
 
@@ -259,6 +258,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
         viewModel.eventHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fceeLoading.root.visibility = VISIBLE
                     binding.fceeError.root.visibility = GONE
@@ -269,7 +269,12 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                     binding.fceeError.root.visibility = GONE
                     binding.fceeEventBlock.visibility = VISIBLE
 
-                    renderData(holder.data)
+                    // Мы не будем рендерить инфу, если она уже отрендерена
+                    if (holder.data != null && !isDataReceived) {
+                        currentEventCreateEditItem = holder.data.toCreateEditItem()
+                        isDataReceived = true
+                    }
+                    renderData()
                 }
                 is DataHolder.ERROR -> {
                     binding.fceeLoading.root.visibility = GONE
@@ -364,8 +369,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
             val pickedPhoto = data.data
-            photosUrls.add(pickedPhoto.toString())
-            Log.d("abcdef", "$photosUrls")
+            currentEventCreateEditItem.photosUrls.add(pickedPhoto.toString())
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
