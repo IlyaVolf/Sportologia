@@ -49,7 +49,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
 
     private var isDataReceived = false
     private lateinit var currentExerciseCreateEditItem: ExerciseCreateEditItem
-    
+
     private lateinit var mode: Mode
     private lateinit var binding: FragmentCreateEditExerciseBinding
 
@@ -64,7 +64,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         initAddPhotosButton()
 
         observeToastMessageService()
-        
+
         return binding.root
     }
 
@@ -82,7 +82,8 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             Mode.EDIT
         }
 
-        currentExerciseCreateEditItem = originalExercise ?: ExerciseCreateEditItem.getEmptyInstance()
+        currentExerciseCreateEditItem =
+            originalExercise?.toCreateEditItem() ?: ExerciseCreateEditItem.getEmptyInstance()
     }
 
     private fun initToolbar() {
@@ -146,14 +147,14 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         if (currentExerciseCreateEditItem.name != null) {
             binding.fcexName.setText(currentExerciseCreateEditItem.name!!)
         }
-        if(currentExerciseCreateEditItem.description != null) {
+        if (currentExerciseCreateEditItem.description != null) {
             binding.fcexDescription.setText(currentExerciseCreateEditItem.description!!)
         }
-        if(currentExerciseCreateEditItem.setsNumber != null) {
+        if (currentExerciseCreateEditItem.setsNumber != null) {
             binding.fcexSetsNumber.setText(currentExerciseCreateEditItem.setsNumber.toString())
         }
-        if(currentExerciseCreateEditItem.repsNumber != null) {
-            binding.fcexSetsNumber.setText(currentExerciseCreateEditItem.repsNumber.toString())
+        if (currentExerciseCreateEditItem.repsNumber != null) {
+            binding.fcexRepsNumber.setText(currentExerciseCreateEditItem.repsNumber.toString())
         }
         if (mode == Mode.EDIT) {
             binding.fcexDelete.visibility = VISIBLE
@@ -165,7 +166,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         }
     }
 
-    private fun getExerciseArg(): ExerciseCreateEditItem? = args.exercise
+    private fun getExerciseArg(): Exercise? = args.exercise
 
     private fun onCancelButtonPressed() {
         createDialogCancel()
@@ -312,15 +313,15 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     }
 
     private fun goBackAndDelete() {
-            requireActivity().supportFragmentManager.setFragmentResult(
-                IS_DELETED_REQUEST_CODE,
-                bundleOf(IS_DELETED to currentExerciseCreateEditItem.id)
-            )
+        requireActivity().supportFragmentManager.setFragmentResult(
+            IS_DELETED_REQUEST_CODE,
+            bundleOf(IS_DELETED to currentExerciseCreateEditItem.id)
+        )
         findNavController().navigateUp()
     }
 
     private fun goBack(isSaved: Boolean) {
-        sendResult(!isSaved)
+        sendResult(isSaved)
         findNavController().navigateUp()
     }
 
@@ -331,12 +332,12 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         if (mode == Mode.CREATE) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_CREATED_REQUEST_CODE,
-                bundleOf(IS_CREATED to currentExerciseCreateEditItem)
+                bundleOf(IS_CREATED to currentExerciseCreateEditItem.toExercise())
             )
         } else if (mode == Mode.EDIT) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_EDITED_REQUEST_CODE,
-                bundleOf(IS_EDITED to currentExerciseCreateEditItem)
+                bundleOf(IS_EDITED to currentExerciseCreateEditItem.toExercise())
             )
         }
     }
@@ -357,8 +358,6 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     }
 
     companion object {
-        const val EXERCISE_KEY = "EXERCISE_KEY"
-
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
         const val IS_DELETED = "IS_DELETED"

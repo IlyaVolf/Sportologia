@@ -15,7 +15,7 @@ data class ServiceCreateEditItem(
     var generalPhotosUrls: List<String>?,
     var detailedDescription: String?,
     var detailedPhotosUrls: List<String>?,
-    var exercises: MutableList<ExerciseCreateEditItem>,
+    var exercises: MutableList<Exercise>,
 ) : java.io.Serializable {
     companion object {
         fun getEmptyInstance(): ServiceCreateEditItem {
@@ -46,6 +46,6 @@ fun ServiceDetailed.toCreateEditItem(): ServiceCreateEditItem {
         generalPhotosUrls = generalPhotosUrls,
         detailedDescription = detailedDescription,
         detailedPhotosUrls = detailedPhotosUrls,
-        exercises = exercises.map {  it.toCreateEditItem() }.toMutableList()
+        exercises = exercises.toMutableList()
     )
 }

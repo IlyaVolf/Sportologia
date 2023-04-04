@@ -3,7 +3,6 @@ package com.thesis.sportologia.ui.services
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Exercise
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
 

@@ -36,6 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="40"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
@@ -48,6 +49,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="40"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
@@ -60,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="40"
+            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1" />
 
     </LinearLayout>
@@ -87,6 +90,7 @@
 
             <ImageView
                 android:id="@+id/photo_5"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
@@ -104,6 +108,7 @@
 
             <ImageView
                 android:id="@+id/photo_6"
+                android:scaleType="centerCrop"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
@@ -120,6 +125,7 @@
             android:layout_weight="40">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:id="@+id/photo_7"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -150,6 +156,7 @@
             app:layout_constraintDimensionRatio="H,1:1">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:id="@+id/photo_8"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -167,6 +174,7 @@
             android:layout_weight="40">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:id="@+id/photo_9"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
@@ -184,6 +192,7 @@
             android:layout_weight="40">
 
             <ImageView
+                android:scaleType="centerCrop"
                 android:id="@+id/photo_10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

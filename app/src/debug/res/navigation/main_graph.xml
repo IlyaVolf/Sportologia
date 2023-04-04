@@ -115,7 +115,7 @@
         tools:layout="@layout/fragment_create_edit_exercise" >
         <argument
             android:name="exercise"
-            app:argType="com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem"
+            app:argType="com.thesis.sportologia.model.services.entities.Exercise"
             app:nullable="true" />
     </fragment>
     <fragment
