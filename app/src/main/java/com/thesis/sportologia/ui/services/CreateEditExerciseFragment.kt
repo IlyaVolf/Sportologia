@@ -378,6 +378,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
                 currentExerciseCreateEditItem = ExerciseCreateEditItem.getEmptyInstance()
             }
             currentExerciseCreateEditItem!!.photosUris.add(pickedPhoto.toString())
+            Log.d("abcdef", "$currentExerciseCreateEditItem")
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
