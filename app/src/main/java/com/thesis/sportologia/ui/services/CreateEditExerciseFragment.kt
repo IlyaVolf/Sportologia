@@ -315,6 +315,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
     }
 
     private fun sendResult(exercise: Exercise?) {
+        Log.d("abcdef", "$exercise")
         if (mode == Mode.CREATE) {
             requireActivity().supportFragmentManager.setFragmentResult(
                 IS_CREATED_REQUEST_CODE,

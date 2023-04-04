@@ -48,12 +48,12 @@ class CreateEditServiceViewModel @AssistedInject constructor(
     val goBackEvent = _goBackEvent.share()
 
     init {
-        if (serviceId == null) {
-            mode = Mode.CREATE
+        mode = if (serviceId == null) {
+            Mode.CREATE
         } else {
-            mode = Mode.EDIT
-            getService()
+            Mode.EDIT
         }
+        getService()
     }
 
     fun onSaveButtonPressed(service: ServiceCreateEditItem) {
@@ -139,18 +139,31 @@ class CreateEditServiceViewModel @AssistedInject constructor(
         }
     }
 
-    fun getService() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            withContext(Dispatchers.Main) {
-                _serviceHolder.value = DataHolder.loading()
+    fun getService() {
+        if (mode == Mode.CREATE) {
+            _serviceHolder.value = DataHolder.ready(null)
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            if (mode == Mode.CREATE) {
+                withContext(Dispatchers.Main) {
+                    _serviceHolder.value = DataHolder.ready(null)
+                }
+                return@launch
             }
-            val service = servicesRepository.getServiceDetailed(serviceId!!)
-            withContext(Dispatchers.Main) {
-                _serviceHolder.value = DataHolder.ready(service)
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                _serviceHolder.value = DataHolder.error(e)
+            try {
+                withContext(Dispatchers.Main) {
+                    _serviceHolder.value = DataHolder.loading()
+                }
+                val service = servicesRepository.getServiceDetailed(serviceId!!)
+                withContext(Dispatchers.Main) {
+                    _serviceHolder.value = DataHolder.ready(service)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _serviceHolder.value = DataHolder.error(e)
+                }
             }
         }
     }

@@ -22,7 +22,7 @@ data class ServiceDetailed(
     var generalPhotosUrls: List<String>,
     var detailedDescription: String,
     var detailedPhotosUrls: List<String>,
-    var exercises: MutableList<Exercise>,
+    var exercises: List<Exercise>,
     var dateCreatedMillis: Long,
 ) {
     fun toGeneral(): Service {
