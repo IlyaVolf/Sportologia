@@ -10,6 +10,7 @@ import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.Categories
+import com.thesis.sportologia.utils.Position
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
@@ -70,7 +71,7 @@ class InMemoryUsersRepository @Inject constructor(
         ),
         Athlete(
             true,
-            null,
+            Position(54.848450, 83.043547),
             "i_chiesov",
             "Игорь Чиёсов",
             "-----",
@@ -89,7 +90,7 @@ class InMemoryUsersRepository @Inject constructor(
         ),
         Athlete(
             true,
-            null,
+            Position(54.845109, 83.092407),
             "nikita",
             "Никита Романов",
             "-----",
@@ -107,7 +108,7 @@ class InMemoryUsersRepository @Inject constructor(
             listOf(Photo(4, "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"))
         ),
         Organization(
-            null,
+            Position(55.072076, 82.965199),
             "stroitel",
             "Тренажёрный зал Строитель",
             "=====",
