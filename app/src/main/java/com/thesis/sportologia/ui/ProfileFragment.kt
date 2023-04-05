@@ -330,7 +330,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     private fun renderPhotosBlock(photosCount: Int, photosSnippets: List<Photo>) {
         binding.photosBlock.photoLabelAndCount.text =
             getString(R.string.photos) + " (" + photosCount + ")"
-        binding.photosBlock.photosRow.setPhotos(photosSnippets.map { it.photoUrl})
+        binding.photosBlock.photosRow.setPhotos(photosSnippets.map { it.photoUrl })
     }
 
     private fun renderUserDetails(userItem: UserListItem) {
@@ -347,12 +347,13 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             is AthleteListItem -> binding.userType.text = getString(R.string.athlete)
             is OrganizationListItem -> binding.userType.text = getString(R.string.organization)
         }
-        // TODO address formatting
-        binding.address.text = userItem.address.toString()
         binding.description.text = userItem.description
         binding.followersCount.text = userItem.followersCount.toString()
         binding.followingsCount.text = userItem.followingsCount.toString()
         binding.categories.text = getCategoriesText(userItem)
+
+        val addressText = YandexMaps.getAddress(context!!, userItem.position)
+        binding.address.text = addressText ?: getString(R.string.not_specified)
 
         setAvatar(userItem.profilePhotoURI, context!!, binding.avatar)
 

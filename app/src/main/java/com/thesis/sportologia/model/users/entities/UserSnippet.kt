@@ -1,11 +1,11 @@
 package com.thesis.sportologia.model.users.entities
 
-import android.location.Address
+import com.thesis.sportologia.utils.Position
 
 data class UserSnippet(
     val id: String,
     val name: String,
     val profilePhotoURI: String?,
-    val address: Address?,
+    val position: Position?,
     val categories: Map<String, Boolean>,
 )
