@@ -32,8 +32,7 @@
             android:id="@+id/photo_2"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_weight="40"
-            android:scaleType="centerCrop" />
+            android:layout_weight="40" />
 
         <Space
             android:id="@+id/space_1_1"
@@ -45,7 +44,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="40"
-            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
@@ -58,7 +56,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="40"
-            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="H,1:1" />
 
     </LinearLayout>
@@ -78,52 +75,37 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_5"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="40"
-            app:layout_constraintDimensionRatio="H,1:1">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_5"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
             android:id="@+id/space_2_1"
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_6"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="40">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_6"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
             android:id="@+id/space_2_2"
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_7"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="40">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_7"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            app:layout_constraintDimensionRatio="H,1:1" />
 
     </LinearLayout>
 
@@ -142,52 +124,36 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_8"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="40"
-            app:layout_constraintDimensionRatio="H,1:1">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_8"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
             android:id="@+id/space_3_1"
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_9"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="40">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_9"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            app:layout_constraintDimensionRatio="H,1:1" />
 
         <Space
             android:id="@+id/space_3_2"
             android:layout_width="1dp"
             android:layout_height="match_parent" />
 
-        <androidx.cardview.widget.CardView
+        <com.thesis.sportologia.ui.image_views.SquareImageView
+            android:id="@+id/photo_10"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="40">
-
-            <com.thesis.sportologia.ui.image_views.SquareImageView
-                android:id="@+id/photo_10"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_height="0dp"
+            android:layout_weight="40"
+            app:layout_constraintDimensionRatio="H,1:1" />
 
     </LinearLayout>
 
