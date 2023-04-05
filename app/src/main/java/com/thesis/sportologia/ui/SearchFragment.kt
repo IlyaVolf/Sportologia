@@ -27,6 +27,7 @@ import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.services.ListServicesFragmentSearch
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
+import com.thesis.sportologia.ui.users.SearchContainerFragmentUsers
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -128,7 +129,6 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchBar.searchView.clearFocus()
                 searchQuery = query
-                Log.d("ABCDEF", "onQueryTextSubmit")
                 sendSearchQuery()
                 return true
             }
@@ -137,7 +137,6 @@ class SearchFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (searchQuery == newText) return true
                 searchQuery = newText ?: ""
-                Log.d("ABCDEF", "onQueryTextChange")
                 sendSearchQuery()
                 return true
             }

@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
 
         MapKitFactory.setApiKey("9eb8aa69-aac3-42cb-b67f-fbe4c5bff23b")
+        //MapKitFactory.initialize(this)
 
         /*navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id) {

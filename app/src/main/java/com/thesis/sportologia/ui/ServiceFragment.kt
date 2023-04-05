@@ -179,14 +179,12 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         viewModel.serviceHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
                 DataHolder.LOADING -> {
-                    Log.d("abcdef", "DataHolder.LOADING")
                     binding.serviceContentBlock.visibility = GONE
                     binding.serviceViewLoadState.root.visibility = VISIBLE
                     binding.serviceViewLoadState.flpLoading.root.visibility = VISIBLE
                     binding.serviceViewLoadState.flpError.root.visibility = GONE
                 }
                 is DataHolder.READY -> {
-                    Log.d("abcdef", "DataHolder.READY")
                     binding.serviceContentBlock.visibility = VISIBLE
                     binding.serviceViewLoadState.root.visibility = GONE
 

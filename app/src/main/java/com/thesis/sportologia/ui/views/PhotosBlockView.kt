@@ -2,11 +2,11 @@ package com.thesis.sportologia.ui.views
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.DisplayMetrics
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.widget.ImageView
+import android.view.ViewGroup
 import android.widget.LinearLayout
-import com.bumptech.glide.Glide
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ViewPhotosBlockBinding
 import com.thesis.sportologia.utils.setPhoto
@@ -129,7 +129,11 @@ class PhotosBlockView(
         photosNumber = photosURIs.size
 
         for (i in photosURIs.indices) {
-            setPhoto(photosURIs[i], context, imageViews[i])
+            if (i == 0) {
+                setPhoto(photosURIs[0], context, imageViews[0], false)
+            } else {
+                setPhoto(photosURIs[i], context, imageViews[i])
+            }
             imageViews[i].adjustViewBounds = true
         }
 
@@ -181,12 +185,8 @@ class PhotosBlockView(
             2 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 40f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        160f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
 
@@ -197,6 +197,8 @@ class PhotosBlockView(
             3 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
 
@@ -210,6 +212,8 @@ class PhotosBlockView(
             }
             4 -> {
                 binding.row1.visibility = VISIBLE
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -226,21 +230,11 @@ class PhotosBlockView(
             5 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -261,20 +255,10 @@ class PhotosBlockView(
             6 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -297,20 +281,10 @@ class PhotosBlockView(
             }
             7 -> {
                 binding.row1.visibility = VISIBLE
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -337,29 +311,15 @@ class PhotosBlockView(
             8 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -390,28 +350,14 @@ class PhotosBlockView(
             9 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -444,28 +390,14 @@ class PhotosBlockView(
             }
             10 -> {
                 binding.row1.visibility = VISIBLE
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
 
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -560,12 +492,7 @@ class PhotosBlockView(
             2 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 40f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        160f,
-                        resources.displayMetrics
-                    ).toInt()
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
 
@@ -577,6 +504,9 @@ class PhotosBlockView(
             3 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
+                val displaymetrics = DisplayMetrics()
+                val devicewidth: Int = displaymetrics.widthPixels / 2
+                binding.row1.layoutParams.height = devicewidth
 
                 binding.space1.visibility = VISIBLE
 
@@ -591,6 +521,7 @@ class PhotosBlockView(
             }
             4 -> {
                 binding.row1.visibility = VISIBLE
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -608,21 +539,11 @@ class PhotosBlockView(
             5 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -644,20 +565,10 @@ class PhotosBlockView(
             6 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -681,20 +592,10 @@ class PhotosBlockView(
             }
             7 -> {
                 binding.row1.visibility = VISIBLE
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -722,29 +623,13 @@ class PhotosBlockView(
             8 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
                 binding.row2.weightSum = 80f
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -776,28 +661,12 @@ class PhotosBlockView(
             9 -> {
                 binding.row1.visibility = VISIBLE
                 binding.row1.weightSum = 80f
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
@@ -831,28 +700,12 @@ class PhotosBlockView(
             }
             10 -> {
                 binding.row1.visibility = VISIBLE
-                binding.row1.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row2.visibility = VISIBLE
-                binding.row2.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
-
                 binding.row3.visibility = VISIBLE
-                binding.row3.layoutParams.height =
-                    TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP,
-                        100f,
-                        resources.displayMetrics
-                    ).toInt()
+
+                binding.row1.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row2.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+                binding.row3.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
                 binding.space1.visibility = VISIBLE
                 binding.space11.visibility = VISIBLE
