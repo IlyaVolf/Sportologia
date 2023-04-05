@@ -49,6 +49,7 @@ class EventsPagerAdapter(
         itemEvent.setDescription(eventListItem.description)
         itemEvent.setOrganizerName(eventListItem.organizerName)
         itemEvent.setOrganizerAvatar(eventListItem.profilePictureUrl)
+        itemEvent.setAddress(YandexMaps.getAddress(context, eventListItem.position) ?: getString(R.string.not_specified))
         itemEvent.setPrice(eventListItem.price, eventListItem.currency)
         itemEvent.setDate(eventListItem.dateFrom, eventListItem.dateTo)
         itemEvent.setLikes(eventListItem.likesCount, eventListItem.isLiked)

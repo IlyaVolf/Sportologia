@@ -8,6 +8,8 @@
     <string name="network_connection_error">Невозможно подключиться к серверу</string>
     <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
 
+    <string name="not_specified">Не указан</string>
+
     <!-- Errors -->
     <string name="error">Ошибка</string>
     <string name="error_loading_title">Ошибка подключения</string>
@@ -242,6 +244,7 @@
     <string name="ask_delete_event_warning">Удалить мероприятие?</string>
     <string name="error_event_empty_fields">Ошибка: не указаны все поля</string>
     <string name="error_event_incorrect_date">Ошибка: указаны неверные даты</string>
+    <string name="error_event_incorrect_address">Ошибка: неверный адрес</string>
     <string name="error_price_event">Ошибка: указана неверная цена</string>
 
     <string name="event_name_hint">Укажите название мероприятия</string>

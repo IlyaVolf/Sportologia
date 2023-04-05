@@ -34,7 +34,7 @@ class MapFragment : Fragment() {
 
     private fun initMap() {
         MapKitFactory.setApiKey("9eb8aa69-aac3-42cb-b67f-fbe4c5bff23b")
-        MapKitFactory.initialize(context)
+        //MapKitFactory.initialize(context)
     }
 
     private fun renderMap() {

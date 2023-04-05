@@ -56,7 +56,6 @@ class CreateEditEventViewModel @AssistedInject constructor(
             return
         }
 
-        // check whether text has left the same
         var savedEvent: Event? = null
         _eventHolder.value!!.onReady {
             savedEvent = it
@@ -81,7 +80,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     profilePictureUrl = currentAccount.profilePictureUrl,
                     dateFrom = event.dateFrom!!,
                     dateTo = event.dateTo,
-                    address = event.address,
+                    position = event.position!!,
                     price = event.priceString!!.toFloat(),
                     currency = event.currency!!,
                     categories = event.categories!!,
@@ -98,7 +97,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                             description = reformattedDescription,
                             dateFrom = event.dateFrom!!,
                             dateTo = event.dateTo,
-                            address = event.address,
+                            position = event.position!!,
                             price = event.priceString!!.toFloat(),
                             currency = event.currency!!,
                             categories = event.categories!!,
@@ -168,11 +167,12 @@ class CreateEditEventViewModel @AssistedInject constructor(
         if (!validateDate(event.dateFrom, event.dateTo)) {
             return false
         }
-        /* if (!validateText(newEventCreateEditItem.description, ErrorType.EMPTY_ADDRESS)) {
+        if (!validatePosition(event.position)) {
             return false
-        }*/
+        }
 
         return true
+
     }
 
     private fun validateDate(dateFromMillis: Long?, dateToMillis: Long?): Boolean {
@@ -224,6 +224,16 @@ class CreateEditEventViewModel @AssistedInject constructor(
         return newText.toString()
     }
 
+    private fun validatePosition(position: Position?): Boolean {
+        // check whether the text is empty
+        if (position == null) {
+            _toastMessageEvent.publishEvent(ErrorType.INCORRECT_ADDRESS)
+            return false
+        }
+
+        return true
+    }
+
     private fun goBack() = _goBackEvent.publishEvent()
 
     enum class ErrorType {
@@ -234,7 +244,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
         EMPTY_CURRENCY,
         INCORRECT_PRICE,
         INCORRECT_DATE,
-        EMPTY_ADDRESS
+        INCORRECT_ADDRESS
     }
 
     enum class Mode {

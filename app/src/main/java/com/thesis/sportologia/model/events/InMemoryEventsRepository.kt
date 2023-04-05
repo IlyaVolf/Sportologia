@@ -8,6 +8,7 @@ import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.utils.Categories
+import com.thesis.sportologia.utils.Position
 import com.thesis.sportologia.utils.containsAnyCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -50,7 +51,7 @@ class InMemoryEventsRepository @Inject constructor(
         profilePictureUrl = null,
         dateFrom = dateFrom.timeInMillis,
         dateTo = dateTo.timeInMillis,
-        address = null,
+        position = Position(54.838235, 83.093832),
         price = 1000f,
         currency = "Rubles",
         categories = hashMapOf(
@@ -76,7 +77,7 @@ class InMemoryEventsRepository @Inject constructor(
             profilePictureUrl = null,
             dateFrom = dateFrom2.timeInMillis,
             dateTo = dateTo2.timeInMillis,
-            address = null,
+            position = Position(55.072128, 82.965262),
             price = 0f,
             currency = "Rubles",
             categories = hashMapOf(

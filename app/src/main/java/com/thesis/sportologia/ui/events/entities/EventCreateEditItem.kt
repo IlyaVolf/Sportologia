@@ -3,6 +3,7 @@ package com.thesis.sportologia.ui.events.entities
 import android.location.Address
 import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
+import com.thesis.sportologia.utils.Position
 import java.util.*
 
 // TODO parcelable!
@@ -11,7 +12,7 @@ data class EventCreateEditItem(
     var description: String?,
     var dateFrom: Long?,
     var dateTo: Long?,
-    var address: Address?,
+    var position: Position?,
     var priceString: String?,
     var currency: String?,
     var categories: Map<String, Boolean>?,
@@ -36,14 +37,14 @@ data class EventCreateEditItem(
 
 fun Event.toCreateEditItem(): EventCreateEditItem {
     return EventCreateEditItem(
-        name,
-        description,
-        dateFrom,
-        dateTo,
-        address,
-        price.toString(),
-        currency,
-        categories,
-        photosUrls.toMutableList()
+        name = name,
+        description = description,
+        dateFrom = dateFrom,
+        dateTo = dateTo,
+        position = position,
+        priceString = price.toString(),
+        currency = currency,
+        categories = categories,
+        photosUrls = photosUrls.toMutableList()
     )
 }

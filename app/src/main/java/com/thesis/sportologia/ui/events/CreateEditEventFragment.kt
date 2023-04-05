@@ -3,6 +3,8 @@ package com.thesis.sportologia.ui.events
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Geocoder
+import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -24,9 +26,12 @@ import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
 import com.thesis.sportologia.ui.events.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
+import com.yandex.runtime.Runtime.getApplicationContext
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
+import java.util.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event) {
@@ -157,8 +162,11 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         if (currentEventCreateEditItem.priceString != null) {
             binding.fceePrice.setText(formatPrice(currentEventCreateEditItem.priceString!!))
         }
-        if (currentEventCreateEditItem.address != null) {
-            binding.fceeAddress.setText(currentEventCreateEditItem.address!!.toString())
+        if (currentEventCreateEditItem.position != null) {
+            val address = getAddress()
+            if (address != null) {
+                binding.fceeAddress.setText(address)
+            }
         }
         if (currentEventCreateEditItem.dateFrom != null) {
             binding.fceeDate.setDateAndTime(
@@ -176,7 +184,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             description = binding.fceeDescription.getText()
             dateFrom = binding.fceeDate.getDateFromMillis()
             dateTo = binding.fceeDate.getDateToMillis()
-            address = null
+            position = getPosition()
             priceString = binding.fceePrice.getText()
             currency = getCurrencyByAbbreviation(context!!, R.string.ruble_abbreviation)!!
             categories = Categories.getCategoriesFromLocalized(
@@ -184,6 +192,15 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                 binding.fceeCategories.getCheckedDataMap()
             )
         }
+    }
+
+    private fun getPosition(): Position? {
+        val addressText = binding.fceeAddress.getText()
+        return YandexMaps.getPosition(context!!, addressText)
+    }
+
+    private fun getAddress(): String? {
+        return YandexMaps.getAddress(context!!, currentEventCreateEditItem.position)
     }
 
     private fun onCancelButtonPressed() {
@@ -319,6 +336,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
                 when (it) {
                     CreateEditEventViewModel.ErrorType.INCORRECT_PRICE -> getString(R.string.error_price_event)
                     CreateEditEventViewModel.ErrorType.INCORRECT_DATE -> getString(R.string.error_event_incorrect_date)
+                    CreateEditEventViewModel.ErrorType.INCORRECT_ADDRESS -> getString(R.string.error_event_incorrect_address)
                     else -> getString(R.string.error_event_empty_fields)
                 }
 
