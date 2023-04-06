@@ -135,7 +135,7 @@ class InMemoryPostsRepository @Inject constructor(
             ioDispatcher
         ) {
 
-            posts.forEach { postsDataSource.createPost(it) }
+            //posts.forEach { postsDataSource.createPost(it) }
 
             delay(1000)
             val offset = pageIndex * pageSize
@@ -325,6 +325,7 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun deletePost(postId: String) {
         delay(1000)
+        postsDataSource.deletePost(postId)
         posts.removeIf { it.id == postId }
         localChanges.remove(postId)
     }
