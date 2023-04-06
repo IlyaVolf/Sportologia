@@ -10,7 +10,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.PostsLocalChanges
 import com.thesis.sportologia.model.posts.PostsRepository
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
@@ -60,7 +60,7 @@ abstract class ListPostsViewModel constructor(
         )
     }
 
-    abstract fun getDataFlow(): Flow<PagingData<Post>>
+    abstract fun getDataFlow(): Flow<PagingData<PostDataEntity>>
 
     override fun onPostDelete(postListItem: PostListItem) {
         if (isInProgress(postListItem.id)) return
@@ -128,7 +128,7 @@ abstract class ListPostsViewModel constructor(
 
     private suspend fun setLike(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isLiked
-        postsRepository.setIsLiked(userId, postListItem.post, newFlagValue)
+        postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue)
         localChanges.isLikedFlags[postListItem.id] = newFlagValue
         //localChanges.isTextFlags[postListItem.id] = postListItem.text + "asgagasagag"
         localChangesFlow.value = OnChange(localChanges)
@@ -136,7 +136,7 @@ abstract class ListPostsViewModel constructor(
 
     private suspend fun setFavoriteFlag(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isFavourite
-        postsRepository.setIsFavourite(userId, postListItem.post, newFlagValue)
+        postsRepository.setIsFavourite(userId, postListItem.postDataEntity, newFlagValue)
         //localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
         //localChangesFlow.value = OnChange(localChanges)
     }
@@ -146,7 +146,7 @@ abstract class ListPostsViewModel constructor(
         invalidateList()
     }
 
-    private fun setProgress(postListItemId: Long, inProgress: Boolean) {
+    private fun setProgress(postListItemId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(postListItemId)
         } else {
@@ -155,7 +155,7 @@ abstract class ListPostsViewModel constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(postListItemId: Long) =
+    private fun isInProgress(postListItemId: String) =
         localChanges.idsInProgress.contains(postListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
@@ -171,7 +171,7 @@ abstract class ListPostsViewModel constructor(
     }
 
     private fun merge(
-        posts: PagingData<Post>,
+        posts: PagingData<PostDataEntity>,
         localChanges: OnChange<PostsLocalChanges>
     ): PagingData<PostListItem> {
         return posts

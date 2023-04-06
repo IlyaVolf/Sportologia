@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "513575182791",
+    "firebase_url": "https://sportologia-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "sportologia",
+    "storage_bucket": "sportologia.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:513575182791:android:e43e6fa495bc2e058779e2",
+        "android_client_info": {
+          "package_name": "com.thesis.sportologia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "513575182791-pi7u0nsa50ort8659bojaopcdnl7ll1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdn9PLDclwZgrGa0ibq3a4PJtAezXzsG0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "513575182791-pi7u0nsa50ort8659bojaopcdnl7ll1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

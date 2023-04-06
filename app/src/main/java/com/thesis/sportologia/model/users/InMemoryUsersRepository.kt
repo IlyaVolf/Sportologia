@@ -6,7 +6,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.photos.entities.Photo
-import com.thesis.sportologia.model.posts.entities.Post
 import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.Categories

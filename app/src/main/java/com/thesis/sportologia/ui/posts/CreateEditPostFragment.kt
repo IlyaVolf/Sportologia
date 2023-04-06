@@ -21,7 +21,7 @@ import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditPostBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
 import com.thesis.sportologia.ui.events.entities.toCreateEditItem
@@ -48,7 +48,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         factory.create(postId)
     }
 
-    private var postId: Long? = null
+    private var postId: String? = null
     private var isDataReceived = false
     private var currentPostCreateEditItem: PostCreateEditItem =
         PostCreateEditItem.getEmptyInstance()
@@ -137,7 +137,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         }
     }
 
-    private fun getPostIdArg(): Long? = args.postId.postId
+    private fun getPostIdArg(): String? = args.postId.postId
 
     private fun onCancelButtonPressed() {
         createDialog()
@@ -297,7 +297,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
     // TODO parcelable
     data class PostId(
-        val postId: Long?
+        val postId: String?
     ) : Serializable
 
     companion object {

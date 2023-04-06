@@ -1,27 +1,6 @@
 package com.thesis.sportologia.ui._obsolete
 
 
-import androidx.annotation.StringRes
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import androidx.paging.map
-import com.thesis.sportologia.R
-import com.thesis.sportologia.model.posts.PostsRepository
-import com.thesis.sportologia.model.posts.entities.Post
-import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
-import com.thesis.sportologia.ui.posts.entities.PostListItem
-import com.thesis.sportologia.utils.*
-import com.thesis.sportologia.utils.logger.Logger
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
-
 /** // TODO можно создать интерфейс или абстрактный, где все кроме поведения - идентично. Ибо перегружено
 class ListPostsViewModelOld @AssistedInject constructor(
     @Assisted private val mode: ListPostsMode,

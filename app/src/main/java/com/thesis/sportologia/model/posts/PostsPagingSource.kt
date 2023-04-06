@@ -2,16 +2,16 @@ package com.thesis.sportologia.model.posts
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 
-typealias PostsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Post>
+typealias PostsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<PostDataEntity>
 
 @Suppress("UnnecessaryVariable")
 class PostsPagingSource(
     private val loader: PostsPageLoader,
-) : PagingSource<Int, Post>() {
+) : PagingSource<Int, PostDataEntity>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Post> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostDataEntity> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
         val pageIndex = params.key ?: 0
 
@@ -35,7 +35,7 @@ class PostsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Post>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, PostDataEntity>): Int? {
         // get the most recently accessed index in the users list:
         val anchorPosition = state.anchorPosition ?: return null
         // convert item index to page index:

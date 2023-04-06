@@ -1,20 +1,19 @@
 package com.thesis.sportologia.ui.posts.entities
 
-import com.thesis.sportologia.model.posts.entities.Post
-import java.util.*
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 
 data class PostListItem(
-    val post: Post,
+    val postDataEntity: PostDataEntity,
     val isInProgress: Boolean,
 ) {
-    val id: Long get() = post.id
-    val authorId: String get() = post.authorId
-    val authorName: String get() = post.authorName
-    val profilePictureUrl: String? get() = post.profilePictureUrl
-    val text: String get() = post.text
-    val likesCount: Int get() = post.likesCount
-    val isLiked: Boolean get() = post.isLiked
-    val isFavourite: Boolean get() = post.isFavourite
-    val postedDate: Long get() = post.postedDate
-    val photosUrls: List<String> get() = post.photosUrls
+    val id: String get() = postDataEntity.id!!
+    val authorId: String get() = postDataEntity.authorId
+    val authorName: String get() = postDataEntity.authorName
+    val profilePictureUrl: String? get() = postDataEntity.profilePictureUrl
+    val text: String get() = postDataEntity.text
+    val likesCount: Int get() = postDataEntity.likesCount
+    val isLiked: Boolean get() = postDataEntity.isLiked
+    val isFavourite: Boolean get() = postDataEntity.isFavourite
+    val postedDate: Long get() = postDataEntity.postedDate
+    val photosUrls: List<String> get() = postDataEntity.photosUrls
 }

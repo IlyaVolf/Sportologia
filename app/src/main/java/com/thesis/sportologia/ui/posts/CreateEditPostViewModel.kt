@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.posts.PostsRepository
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.posts.entities.PostCreateEditItem
 import com.thesis.sportologia.ui.posts.entities.toCreateEditItem
@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class CreateEditPostViewModel @AssistedInject constructor(
-    @Assisted private val postId: Long?,
+    @Assisted private val postId: String?,
     private val postsRepository: PostsRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -29,7 +29,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _postHolder = ObservableHolder<Post?>(DataHolder.init())
+    private val _postHolder = ObservableHolder<PostDataEntity?>(DataHolder.init())
     val postHolder = _postHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
@@ -61,11 +61,11 @@ class CreateEditPostViewModel @AssistedInject constructor(
 
         val reformattedText = reformatText(post.text!!)
 
-        lateinit var newPost: Post
+        lateinit var newPost: PostDataEntity
         when (mode) {
             Mode.CREATE ->
-                newPost = Post(
-                    id = -1, // не тут надо создавать!
+                newPost = PostDataEntity(
+                    null,
                     authorName = currentAccount.userName,
                     authorId = currentAccount.id,
                     profilePictureUrl = currentAccount.profilePictureUrl,
@@ -155,7 +155,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
     }
 
     private fun checkIfTheSame(post: PostCreateEditItem): Boolean {
-        var savedPost: Post? = null
+        var savedPost: PostDataEntity? = null
         _postHolder.value!!.onReady {
             savedPost = it
         }
@@ -180,7 +180,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(postId: Long?): CreateEditPostViewModel
+        fun create(postId: String?): CreateEditPostViewModel
     }
 
 

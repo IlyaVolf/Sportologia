@@ -1,7 +1,7 @@
 package com.thesis.sportologia.model.posts.entities
 
-data class Post(
-    val id: Long,
+data class PostDataEntity(
+    val id: String?,
     var authorId: String,
     var authorName: String,
     var profilePictureUrl: String?,

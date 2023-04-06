@@ -6,7 +6,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.posts.sources.PostsDataSource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
@@ -18,99 +19,106 @@ import javax.inject.Singleton
 
 @Singleton
 class InMemoryPostsRepository @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val postsDataSource: PostsDataSource
 ) : PostsRepository {
 
     override val localChanges = PostsLocalChanges()
     override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
-    val postSample = Post(
-        id = 0L,
-        authorId = "i_chiesov",
-        authorName = "Игорь Чиёсов",
-        profilePictureUrl = null,
-        text = "Hello!",
-        likesCount = 5,
-        isAuthorAthlete = true,
-        isLiked = true,
-        isFavourite = true,
-        postedDate = Calendar.getInstance().timeInMillis,
-        photosUrls = mutableListOf(
-            "https://cdn.5280.com/2014/03/ss_skis.jpg"
-        )
-    )
+    lateinit var postSample: PostDataEntity
+    lateinit var posts: MutableList<PostDataEntity>
+    lateinit var followersIds: List<String>
 
-    private val posts = mutableListOf(
-        postSample,
-        Post(
-            id = 1L,
-            authorId = "stroitel",
-            authorName = "Тренажёрный зал Строитель",
+    init {
+        postSample = PostDataEntity(
+            id = java.util.UUID.randomUUID().toString(),
+            authorId = "i_chiesov",
+            authorName = "Игорь Чиёсов",
             profilePictureUrl = null,
-            text = "Построй тело свой мечты!",
-            likesCount = 0,
-            isAuthorAthlete = false,
-            isLiked = false,
-            isFavourite = false,
-            postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = mutableListOf(
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-            )
-        ),
-        Post(
-            id = 2L,
-            authorId = "nikita",
-            authorName = "Никита Романов",
-            profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
-            text = "Люблю спорт!",
-            likesCount = 1,
+            text = "Hello!",
+            likesCount = 5,
             isAuthorAthlete = true,
             isLiked = true,
             isFavourite = true,
             postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = mutableListOf()
-        ),
-        postSample.copy(id = 3L),
-        postSample.copy(id = 4L),
-        postSample.copy(id = 5L),
-        postSample.copy(id = 6L),
-        postSample.copy(id = 7L),
-        postSample.copy(id = 8L),
-        postSample.copy(id = 9L),
-        postSample.copy(id = 10L),
-        postSample.copy(id = 11L),
-        postSample.copy(id = 12L),
-        postSample.copy(
-            authorName = "Антон Игорев",
-            authorId = "best_mate",
-            id = 13L,
-            text = "abcdefghiklmnopqrstvuxwyz"
-        ),
-        postSample.copy(id = 14L),
-        postSample.copy(id = 15L),
-        postSample.copy(id = 16L),
-        postSample.copy(id = 17L),
-        postSample.copy(id = 18L),
-        postSample.copy(id = 19L),
-        postSample.copy(id = 20L),
-        postSample.copy(id = 21L),
-        postSample.copy(id = 22L),
-        postSample.copy(id = 23L),
-        postSample.copy(id = 24L),
-        postSample.copy(id = 25L),
-
+            photosUrls = mutableListOf(
+                "https://cdn.5280.com/2014/03/ss_skis.jpg"
+            )
         )
 
-    private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
+        posts = mutableListOf(
+            postSample,
+            PostDataEntity(
+                id = java.util.UUID.randomUUID().toString(),
+                authorId = "stroitel",
+                authorName = "Тренажёрный зал Строитель",
+                profilePictureUrl = null,
+                text = "Построй тело свой мечты!",
+                likesCount = 0,
+                isAuthorAthlete = false,
+                isLiked = false,
+                isFavourite = false,
+                postedDate = Calendar.getInstance().timeInMillis,
+                photosUrls = mutableListOf(
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                    "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
+                )
+            ),
+            PostDataEntity(
+                id = java.util.UUID.randomUUID().toString(),
+                authorId = "nikita",
+                authorName = "Никита Романов",
+                profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
+                text = "Люблю спорт!",
+                likesCount = 1,
+                isAuthorAthlete = true,
+                isLiked = true,
+                isFavourite = true,
+                postedDate = Calendar.getInstance().timeInMillis,
+                photosUrls = mutableListOf()
+            ),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(
+                authorName = "Антон Игорев",
+                authorId = "best_mate",
+                id = java.util.UUID.randomUUID().toString(),
+                text = "abcdefghiklmnopqrstvuxwyz"
+            ),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+
+            )
+
+        followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
+    }
+
 
     /* override suspend fun getUserPosts(userId: Int): List<Post> {
         delay(1000)
@@ -118,10 +126,17 @@ class InMemoryPostsRepository @Inject constructor(
     } */
 
 
-    private suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: String): List<Post> =
+    private suspend fun getUserPosts(
+        pageIndex: Int,
+        pageSize: Int,
+        userId: String
+    ): List<PostDataEntity> =
         withContext(
             ioDispatcher
         ) {
+
+            posts.forEach { postsDataSource.createPost(it) }
+
             delay(1000)
             val offset = pageIndex * pageSize
 
@@ -136,7 +151,7 @@ class InMemoryPostsRepository @Inject constructor(
             // throw Exception("a")
 
             if (offset >= filteredPosts.size) {
-                return@withContext listOf<Post>()
+                return@withContext listOf<PostDataEntity>()
             } else if (offset + pageSize >= filteredPosts.size) {
                 return@withContext filteredPosts.subList(offset, filteredPosts.size)
             } else {
@@ -144,7 +159,7 @@ class InMemoryPostsRepository @Inject constructor(
             }
         }
 
-    override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>> {
+    override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             getUserPosts(pageIndex, pageSize, userId)
         }
@@ -165,7 +180,7 @@ class InMemoryPostsRepository @Inject constructor(
     override suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
         athTorgF: Boolean?
-    ): Flow<PagingData<Post>> {
+    ): Flow<PagingData<PostDataEntity>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             getUserSubscribedOnPosts(pageIndex, pageSize, userId, athTorgF)
         }
@@ -188,10 +203,10 @@ class InMemoryPostsRepository @Inject constructor(
         pageSize: Int,
         userId: String,
         athTorgF: Boolean?
-    ): List<Post> = withContext(
+    ): List<PostDataEntity> = withContext(
         ioDispatcher
     ) {
-        val res = mutableListOf<Post>()
+        val res = mutableListOf<PostDataEntity>()
 
         delay(1000)
 
@@ -215,7 +230,7 @@ class InMemoryPostsRepository @Inject constructor(
         // TODO SORT BY DATE
 
         if (offset >= res.size) {
-            return@withContext listOf<Post>()
+            return@withContext listOf<PostDataEntity>()
         } else if (offset + pageSize >= res.size) {
             return@withContext res.subList(offset, res.size)
         } else {
@@ -223,7 +238,7 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<Post>> {
+    override suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<PostDataEntity>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             getUserFavouritePosts(pageIndex, pageSize, athTorgF)
         }
@@ -239,7 +254,7 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPost(postId: Long): Post? = withContext(ioDispatcher) {
+    override suspend fun getPost(postId: String): PostDataEntity? = withContext(ioDispatcher) {
         delay(1000)
 
         return@withContext if (posts.none { it.id == postId }) null else posts.filter { it.id == postId }[0]
@@ -249,7 +264,7 @@ class InMemoryPostsRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         athTorgF: Boolean?
-    ): List<Post> =
+    ): List<PostDataEntity> =
         withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
@@ -267,7 +282,7 @@ class InMemoryPostsRepository @Inject constructor(
             //throw Exception("a")
 
             if (offset >= filteredPosts.size) {
-                return@withContext listOf<Post>()
+                return@withContext listOf<PostDataEntity>()
             } else if (offset + pageSize >= filteredPosts.size) {
                 return@withContext filteredPosts.subList(offset, filteredPosts.size)
             } else {
@@ -290,35 +305,40 @@ class InMemoryPostsRepository @Inject constructor(
         return res
     }*/
 
-    override suspend fun createPost(post: Post) {
+    override suspend fun createPost(postDataEntity: PostDataEntity) {
         delay(1000)
-        posts.add(post)
-        Log.d("abcdef", posts.filter { it.id == -1L }.toString())
+        postsDataSource.createPost(postDataEntity)
+        posts.add(postDataEntity)
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updatePost(post: Post) {
+    override suspend fun updatePost(postDataEntity: PostDataEntity) {
         delay(1000)
 
-        posts.find { it.id == post.id }.apply {
-            this!!.text = post.text
-            this.photosUrls = post.photosUrls
+        posts.find { it.id == postDataEntity.id }.apply {
+            this!!.text = postDataEntity.text
+            this.photosUrls = postDataEntity.photosUrls
         }
 
     }
 
-    override suspend fun deletePost(postId: Long) {
+    override suspend fun deletePost(postId: String) {
         delay(1000)
         posts.removeIf { it.id == postId }
         localChanges.remove(postId)
     }
 
-    override suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean) {
+    override suspend fun setIsLiked(
+        userId: String,
+        postDataEntity: PostDataEntity,
+        isLiked: Boolean
+    ) {
         withContext(ioDispatcher) {
             delay(1000)
 
-            val postInList = posts.find { it.id == post.id } ?: throw IllegalStateException()
+            val postInList =
+                posts.find { it.id == postDataEntity.id } ?: throw IllegalStateException()
 
             postInList.isLiked = isLiked
 
@@ -330,14 +350,18 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
-    override suspend fun setIsFavourite(userId: String, post: Post, isFavourite: Boolean) =
+    override suspend fun setIsFavourite(
+        userId: String,
+        postDataEntity: PostDataEntity,
+        isFavourite: Boolean
+    ) =
         withContext(ioDispatcher) {
             delay(1000)
 
             // TODO
             //throw Exception("a")
 
-            posts.find { it.id == post.id }?.isFavourite = isFavourite
+            posts.find { it.id == postDataEntity.id }?.isFavourite = isFavourite
         }
 
     /*override suspend fun likePost(userId: Int, post: Post) {

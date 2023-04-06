@@ -1,6 +1,6 @@
 package com.thesis.sportologia.ui.posts.entities
 
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 
 
 // TODO parcelable!
@@ -18,7 +18,7 @@ data class PostCreateEditItem(
     }
 }
 
-fun Post.toCreateEditItem(): PostCreateEditItem {
+fun PostDataEntity.toCreateEditItem(): PostCreateEditItem {
     return PostCreateEditItem(
         text = text,
         photosUrls = photosUrls
