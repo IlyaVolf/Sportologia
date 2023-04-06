@@ -138,7 +138,7 @@ class InMemoryPostsRepository @Inject constructor(
             ioDispatcher
         ) {
 
-            posts.forEach { postsDataSource.createPost(it) }
+            //posts.forEach { postsDataSource.createPost(it) }
 
             return@withContext postsDataSource.getPagedUserPosts(userId, lastPostId, pageSize)
 
@@ -166,6 +166,8 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
         var cash: List<PostDataEntity>? = null
+
+        //posts.forEach { postsDataSource.createPost(it) }
 
         val loader: PostsPageLoader = { pageIndex, pageSize ->
             cash = postsDataSource.getPagedUserPosts(userId, cash?.lastOrNull()?.id, pageSize)
@@ -340,11 +342,12 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun setIsLiked(
         userId: String,
-        postDataEntity: PostDataEntity,
+        postId: String,
         isLiked: Boolean
     ) {
         withContext(ioDispatcher) {
-            delay(1000)
+            postsDataSource.setIsLiked(userId, postId, isLiked)
+            /*delay(1000)
 
             val postInList =
                 posts.find { it.id == postDataEntity.id } ?: throw IllegalStateException()
@@ -355,22 +358,23 @@ class InMemoryPostsRepository @Inject constructor(
                 postInList.likesCount++
             } else {
                 postInList.likesCount--
-            }
+            }*/
         }
     }
 
     override suspend fun setIsFavourite(
         userId: String,
-        postDataEntity: PostDataEntity,
+        postId: String,
         isFavourite: Boolean
     ) =
         withContext(ioDispatcher) {
-            delay(1000)
+            postsDataSource.setIsFavourite(userId, postId, isFavourite)
+            /*delay(1000)
 
             // TODO
             //throw Exception("a")
 
-            posts.find { it.id == postDataEntity.id }?.isFavourite = isFavourite
+            posts.find { it.id == postDataEntity.id }?.isFavourite = isFavourite*/
         }
 
     /*override suspend fun likePost(userId: Int, post: Post) {

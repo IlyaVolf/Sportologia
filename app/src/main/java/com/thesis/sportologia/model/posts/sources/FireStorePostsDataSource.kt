@@ -162,18 +162,30 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         postId: String,
         isLiked: Boolean
     ) {
+        Log.d("abcdef", "$isLiked")
         if (!isLiked) {
             database.collection("posts").document(postId)
                 .collection("likes")
                 .document(userId)
+                .set(hashMapOf<String, String>())
+                .addOnSuccessListener {
+                    Log.d("abcdef", "adaaddadaad")
+                }
+                .addOnFailureListener { e ->
+                    Log.d("abcdef", "$e")
+                    throw Exception(e)
+                }
+                .await()
         } else {
             database.collection("posts").document(postId)
                 .collection("likes")
                 .document(userId)
                 .delete()
                 .addOnFailureListener { e ->
+                    Log.d("abcdef", "$e")
                     throw Exception(e)
                 }
+                .await()
         }
     }
 
@@ -191,6 +203,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
+                .await()
             // TODO в пользователе удалить id поста
         }
     }
