@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -22,8 +23,12 @@ class ListPostsViewModelFavourites @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<PostDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
-                postsRepository.getPagedUserFavouritePosts(athTorgF)
+                postsRepository.getPagedUserFavouritePosts(athTorgFTransform())
             }.cachedIn(viewModelScope)
+    }
+
+    private fun athTorgFTransform(): UserType? {
+        return if (athTorgF == null) null else if (athTorgF!!) UserType.ATHLETE else UserType.ORGANIZATION
     }
 
     @AssistedFactory

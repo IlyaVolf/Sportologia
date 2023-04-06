@@ -1,5 +1,7 @@
 package com.thesis.sportologia.model.posts.entities
 
+import com.thesis.sportologia.model.users.entities.UserType
+
 data class PostDataEntity(
     val id: String?,
     var authorId: String,
@@ -7,7 +9,7 @@ data class PostDataEntity(
     var profilePictureUrl: String?,
     var text: String,
     var likesCount: Int,
-    var isAuthorAthlete: Boolean,
+    var userType: UserType,
     var isLiked: Boolean,
     var isFavourite: Boolean,
     var postedDate: Long,

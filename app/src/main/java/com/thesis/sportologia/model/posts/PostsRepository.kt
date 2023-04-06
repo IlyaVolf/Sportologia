@@ -3,6 +3,7 @@ package com.thesis.sportologia.model.posts
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -13,9 +14,9 @@ interface PostsRepository {
 
     suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPagedUserSubscribedOnPosts(userId: String, athTorgF: Boolean?): Flow<PagingData<PostDataEntity>>
+    suspend fun getPagedUserSubscribedOnPosts(userId: String, userType: UserType?): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<PostDataEntity>>
+    suspend fun getPagedUserFavouritePosts(userType: UserType?): Flow<PagingData<PostDataEntity>>
 
     suspend fun getPost(postId: String): PostDataEntity?
 

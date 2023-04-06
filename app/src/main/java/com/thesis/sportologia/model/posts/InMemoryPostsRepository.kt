@@ -8,6 +8,8 @@ import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.sources.PostsDataSource
+import com.thesis.sportologia.model.users.entities.User
+import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
@@ -38,7 +40,7 @@ class InMemoryPostsRepository @Inject constructor(
             profilePictureUrl = null,
             text = "Hello!",
             likesCount = 5,
-            isAuthorAthlete = true,
+            userType = UserType.ATHLETE,
             isLiked = true,
             isFavourite = true,
             postedDate = Calendar.getInstance().timeInMillis,
@@ -56,7 +58,7 @@ class InMemoryPostsRepository @Inject constructor(
                 profilePictureUrl = null,
                 text = "Построй тело свой мечты!",
                 likesCount = 0,
-                isAuthorAthlete = false,
+                userType = UserType.ORGANIZATION,
                 isLiked = false,
                 isFavourite = false,
                 postedDate = Calendar.getInstance().timeInMillis,
@@ -80,7 +82,7 @@ class InMemoryPostsRepository @Inject constructor(
                 profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
                 text = "Люблю спорт!",
                 likesCount = 1,
-                isAuthorAthlete = true,
+                userType = UserType.ATHLETE,
                 isLiked = true,
                 isFavourite = true,
                 postedDate = Calendar.getInstance().timeInMillis,
@@ -129,13 +131,16 @@ class InMemoryPostsRepository @Inject constructor(
     private suspend fun getUserPosts(
         pageIndex: Int,
         pageSize: Int,
-        userId: String
+        userId: String,
+        lastPostId: String?
     ): List<PostDataEntity> =
         withContext(
             ioDispatcher
         ) {
 
-            //posts.forEach { postsDataSource.createPost(it) }
+            posts.forEach { postsDataSource.createPost(it) }
+
+            return@withContext postsDataSource.getPagedUserPosts(userId, lastPostId, pageSize)
 
             delay(1000)
             val offset = pageIndex * pageSize
@@ -160,8 +165,11 @@ class InMemoryPostsRepository @Inject constructor(
         }
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
+        var cash: List<PostDataEntity>? = null
+
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserPosts(pageIndex, pageSize, userId)
+            cash = postsDataSource.getPagedUserPosts(userId, cash?.lastOrNull()?.id, pageSize)
+            cash!!
         }
 
         //delay(2000)
@@ -179,10 +187,10 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
-        athTorgF: Boolean?
+        userType: UserType?
     ): Flow<PagingData<PostDataEntity>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserSubscribedOnPosts(pageIndex, pageSize, userId, athTorgF)
+            getUserSubscribedOnPosts(pageIndex, pageSize, userId, userType)
         }
 
         //delay(2000)
@@ -202,7 +210,7 @@ class InMemoryPostsRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         userId: String,
-        athTorgF: Boolean?
+        userType: UserType?,
     ): List<PostDataEntity> = withContext(
         ioDispatcher
     ) {
@@ -216,10 +224,10 @@ class InMemoryPostsRepository @Inject constructor(
         val offset = pageIndex * pageSize
 
         followersIds.forEach { id ->
-            if (athTorgF == null) {
+            if (userType == null) {
                 res.addAll(posts.filter { it.authorId == id })
             } else {
-                res.addAll(posts.filter { it.authorId == id && it.isAuthorAthlete == athTorgF })
+                res.addAll(posts.filter { it.authorId == id && it.userType == userType })
             }
         }
 
@@ -238,9 +246,9 @@ class InMemoryPostsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<PostDataEntity>> {
+    override suspend fun getPagedUserFavouritePosts(userType: UserType?): Flow<PagingData<PostDataEntity>> {
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserFavouritePosts(pageIndex, pageSize, athTorgF)
+            getUserFavouritePosts(pageIndex, pageSize, userType)
         }
 
         return Pager(
@@ -263,15 +271,15 @@ class InMemoryPostsRepository @Inject constructor(
     suspend fun getUserFavouritePosts(
         pageIndex: Int,
         pageSize: Int,
-        athTorgF: Boolean?
+        userType: UserType?
     ): List<PostDataEntity> =
         withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
 
             // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val filteredPosts = if (athTorgF != null) {
-                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }
+            val filteredPosts = if (userType != null) {
+                posts.filter { it.isFavourite && it.userType == userType }
                     .sortedByDescending { it.postedDate }
             } else {
                 posts.filter { it.isFavourite }.sortedByDescending { it.postedDate }

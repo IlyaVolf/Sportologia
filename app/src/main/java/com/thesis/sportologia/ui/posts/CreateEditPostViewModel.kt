@@ -71,7 +71,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
                     profilePictureUrl = currentAccount.profilePictureUrl,
                     text = reformattedText,
                     likesCount = 0,
-                    isAuthorAthlete = currentAccount.isAthlete,
+                    userType = currentAccount.userType,
                     isLiked = false,
                     isFavourite = false,
                     postedDate = Calendar.getInstance().timeInMillis, // по идее в самом коцне надо создавать!
