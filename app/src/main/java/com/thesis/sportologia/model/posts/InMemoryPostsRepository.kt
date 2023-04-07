@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.posts
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -163,16 +164,13 @@ class InMemoryPostsRepository @Inject constructor(
         }
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
-        var cash: List<PostDataEntity>? = null
-
-        //posts.forEach { postsDataSource.createPost(it) }
+        var lastId: String? = null
 
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            cash = postsDataSource.getPagedUserPosts(userId, cash?.lastOrNull()?.id, pageSize)
-            cash!!
+            val cash = postsDataSource.getPagedUserPosts(userId, lastId, pageSize)
+            lastId = cash.lastOrNull()?.id
+            cash
         }
-
-        //delay(2000)
 
         return Pager(
             config = PagingConfig(
@@ -189,11 +187,13 @@ class InMemoryPostsRepository @Inject constructor(
         userId: String,
         userType: UserType?
     ): Flow<PagingData<PostDataEntity>> {
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserSubscribedOnPosts(pageIndex, pageSize, userId, userType)
-        }
+        var lastId: String? = null
 
-        //delay(2000)
+        val loader: PostsPageLoader = { pageIndex, pageSize ->
+            val cash = postsDataSource.getPagedUserSubscribedOnPosts(userId, lastId, pageSize)
+            lastId = cash.lastOrNull()?.id
+            cash
+        }
 
         return Pager(
             config = PagingConfig(

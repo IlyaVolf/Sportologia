@@ -12,6 +12,12 @@ interface PostsDataSource {
         pageSize: Int
     ): List<PostDataEntity>
 
+    suspend fun getPagedUserSubscribedOnPosts(
+        userId: String,
+        lastPostId: String?,
+        pageSize: Int
+    ): List<PostDataEntity>
+
     suspend fun getPost(postId: String, userId: String): PostDataEntity?
 
     suspend fun createPost(postDataEntity: PostDataEntity)

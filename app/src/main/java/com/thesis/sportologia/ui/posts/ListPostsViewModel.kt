@@ -184,8 +184,6 @@ abstract class ListPostsViewModel constructor(
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
                 val localLikesCountFlag = localChanges.value.likesCount[post.id]
 
-                Log.d("abcdef", "1 $post")
-
                 var postWithLocalChanges = post.copy()
                 if (localFavoriteFlag != null) {
                     postWithLocalChanges =
@@ -198,8 +196,6 @@ abstract class ListPostsViewModel constructor(
                     postWithLocalChanges =
                         postWithLocalChanges.copy(likesCount = localLikesCountFlag)
                 }
-
-                Log.d("abcdef", "2 $postWithLocalChanges")
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }

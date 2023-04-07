@@ -10,6 +10,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
 import com.thesis.sportologia.model.users.entities.User
+import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
@@ -39,6 +40,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
+
         if (lastPostId == null) {
             currentPageDocuments = database.collection("posts")
                 .whereEqualTo("authorId", userId)
@@ -49,6 +51,81 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         } else {
             currentPageDocuments = database.collection("posts")
                 .whereEqualTo("authorId", userId)
+                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastPostId)
+                .get()
+                .await()
+        }
+
+        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+
+        currentPageDocuments.forEach {
+            currentPageIds.add(it.id)
+        }
+        posts.forEach {
+            currentPageLikes.add(it.usersIdsLiked.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+        }
+
+        val res = mutableListOf<PostDataEntity>()
+        for (i in posts.indices) {
+            res.add(
+                PostDataEntity(
+                    id = currentPageIds[i],
+                    authorId = posts[i].authorId!!,
+                    authorName = posts[i].authorName!!,
+                    profilePictureUrl = posts[i].profilePictureUrl,
+                    text = posts[i].text!!,
+                    likesCount = posts[i].likesCount!!,
+                    userType = when (posts[i].userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception()
+                    },
+                    isLiked = currentPageLikes[i],
+                    isFavourite = currentPageFavs[i],
+                    postedDate = posts[i].postedDate!!,
+                    photosUrls = posts[i].photosUrls,
+                )
+            )
+        }
+
+        return res
+    }
+
+    override suspend fun getPagedUserSubscribedOnPosts(
+        userId: String,
+        lastPostId: String?,
+        pageSize: Int
+    ): List<PostDataEntity> {
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageIds = mutableListOf<String>()
+        val currentPageLikes = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
+
+
+        val userDocument = database.collection("users")
+            .document(userId)
+            .get()
+            .addOnSuccessListener {
+                if (!it.exists()) {
+                    throw Exception("no such user")
+                }
+            }.await()
+
+        val user = userDocument.toObject(UserFireStoreEntity::class.java) ?: return emptyList()
+
+        if (lastPostId == null) {
+            currentPageDocuments = database.collection("posts")
+                .whereIn("authorId", user.followersIds)
+                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection("posts")
+                .whereIn("authorId", user.followersIds)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastPostId)
