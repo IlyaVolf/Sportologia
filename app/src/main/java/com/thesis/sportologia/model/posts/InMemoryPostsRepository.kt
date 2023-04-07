@@ -139,7 +139,7 @@ class InMemoryPostsRepository @Inject constructor(
 
             //posts.forEach { postsDataSource.createPost(it) }
 
-            return@withContext postsDataSource.getPagedUserPosts(userId, lastPostId, pageSize)
+            //return@withContext postsDataSource.getPagedUserPosts(userId, lastPostId, pageSize)
 
             delay(1000)
             val offset = pageIndex * pageSize
@@ -164,11 +164,11 @@ class InMemoryPostsRepository @Inject constructor(
         }
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
-        var lastId: String? = null
+        var lastMarker: Long? = null
 
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            val cash = postsDataSource.getPagedUserPosts(userId, lastId, pageSize)
-            lastId = cash.lastOrNull()?.id
+            val cash = postsDataSource.getPagedUserPosts(userId, lastMarker, pageSize)
+            lastMarker = cash.lastOrNull()?.postedDate
             cash
         }
 
@@ -189,11 +189,14 @@ class InMemoryPostsRepository @Inject constructor(
     ): Flow<PagingData<PostDataEntity>> {
         var lastId: String? = null
 
+        var lastMarker: Long? = null
+
         val loader: PostsPageLoader = { pageIndex, pageSize ->
-            val cash = postsDataSource.getPagedUserSubscribedOnPosts(userId, lastId, pageSize)
-            lastId = cash.lastOrNull()?.id
+            val cash = postsDataSource.getPagedUserSubscribedOnPosts(userId, lastMarker, pageSize)
+            lastMarker = cash.lastOrNull()?.postedDate
             cash
         }
+
 
         return Pager(
             config = PagingConfig(

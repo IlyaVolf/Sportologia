@@ -31,7 +31,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun getPagedUserPosts(
         userId: String,
-        lastPostId: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
 
@@ -41,7 +41,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val currentPageFavs = mutableListOf<Boolean>()
 
 
-        if (lastPostId == null) {
+        if (lastMarker == null) {
             currentPageDocuments = database.collection("posts")
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -53,7 +53,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .startAfter(lastPostId)
+                .startAfter(lastMarker)
                 .get()
                 .await()
         }
@@ -96,14 +96,13 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
-        lastPostId: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
         val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
-
 
         val userDocument = database.collection("users")
             .document(userId)
@@ -116,7 +115,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val user = userDocument.toObject(UserFireStoreEntity::class.java) ?: return emptyList()
 
-        if (lastPostId == null) {
+        if (lastMarker == null) {
             currentPageDocuments = database.collection("posts")
                 .whereIn("authorId", user.followersIds)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -128,7 +127,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .whereIn("authorId", user.followersIds)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .startAfter(lastPostId)
+                .startAfter(lastMarker)
                 .get()
                 .await()
         }

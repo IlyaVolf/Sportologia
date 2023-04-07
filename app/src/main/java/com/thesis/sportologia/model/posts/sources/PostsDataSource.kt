@@ -8,13 +8,13 @@ interface PostsDataSource {
 
     suspend fun getPagedUserPosts(
         userId: String,
-        lastPostId: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity>
 
     suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
-        lastPostId: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity>
 
