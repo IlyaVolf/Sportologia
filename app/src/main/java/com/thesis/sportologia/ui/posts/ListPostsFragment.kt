@@ -43,6 +43,7 @@ abstract class ListPostsFragment : Fragment() {
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var binding: FragmentListPostsBinding
+    private lateinit var postsHeaderAdapter: PostsHeaderAdapter
     private lateinit var adapter: PostsPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +82,7 @@ abstract class ListPostsFragment : Fragment() {
         observePosts(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
+        observeFilter()
 
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
@@ -113,12 +115,10 @@ abstract class ListPostsFragment : Fragment() {
             }
         }
 
-        // TODO ничего не приходит
         requireActivity().supportFragmentManager.setFragmentResultListener(
             REFRESH_POSTS_LIST_KEY,
             viewLifecycleOwner
         ) { _, _ ->
-            Log.d("abcdef", "REFRESH_POSTS_LIST_KEY")
             viewModel.refresh()
         }
     }
@@ -139,7 +139,7 @@ abstract class ListPostsFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val postsHeaderAdapter = initPostHeaderAdapter()
+        postsHeaderAdapter = initPostHeaderAdapter()
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
@@ -233,6 +233,13 @@ abstract class ListPostsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
+            Log.d("abcdef", "observeInvalidationEvents")
+        }
+    }
+
+    private fun observeFilter() {
+        viewModel.athTorgFLiveData.observe(viewLifecycleOwner) {
+            postsHeaderAdapter.setAthTorgF(it)
         }
     }
 

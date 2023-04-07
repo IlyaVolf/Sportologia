@@ -133,7 +133,6 @@ abstract class ListEventsFragment : Fragment() {
             REFRESH_EVENTS_LIST_KEY,
             viewLifecycleOwner
         ) { _, _ ->
-            Log.d("abcdef", "REFRESH_EVENTS_LIST_KEY")
             viewModel.refresh()
         }
     }
@@ -244,6 +243,7 @@ abstract class ListEventsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: EventsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
+            Log.d("abcdef", "observeInvalidationEvents")
         }
     }
 

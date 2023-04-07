@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 
 class PostsHeaderAdapterProfileOther(
     fragment: Fragment,
-    listener: FilterListener
+    listener: FilterListener,
 ) : PostsHeaderAdapter(fragment, listener) {
 
     override val renderHeader = {

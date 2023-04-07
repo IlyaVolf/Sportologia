@@ -164,12 +164,8 @@ class InMemoryPostsRepository @Inject constructor(
         }
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
-        var lastMarker: Long? = null
-
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            val cash = postsDataSource.getPagedUserPosts(userId, lastMarker, pageSize)
-            lastMarker = cash.lastOrNull()?.postedDate
-            cash
+        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
+            postsDataSource.getPagedUserPosts(userId, lastTimestamp, pageSize)
         }
 
         return Pager(
@@ -187,16 +183,9 @@ class InMemoryPostsRepository @Inject constructor(
         userId: String,
         userType: UserType?
     ): Flow<PagingData<PostDataEntity>> {
-        var lastId: String? = null
-
-        var lastMarker: Long? = null
-
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            val cash = postsDataSource.getPagedUserSubscribedOnPosts(userId, lastMarker, pageSize)
-            lastMarker = cash.lastOrNull()?.postedDate
-            cash
+        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
+            postsDataSource.getPagedUserSubscribedOnPosts(userId, userType, lastTimestamp, pageSize)
         }
-
 
         return Pager(
             config = PagingConfig(
@@ -250,7 +239,7 @@ class InMemoryPostsRepository @Inject constructor(
     }
 
     override suspend fun getPagedUserFavouritePosts(userType: UserType?): Flow<PagingData<PostDataEntity>> {
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
+        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
             getUserFavouritePosts(pageIndex, pageSize, userType)
         }
 

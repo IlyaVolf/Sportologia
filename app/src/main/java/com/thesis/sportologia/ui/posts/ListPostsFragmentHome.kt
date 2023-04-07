@@ -1,7 +1,9 @@
 package com.thesis.sportologia.ui.posts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import com.thesis.sportologia.ui.HomeFragment
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapterHome
@@ -32,7 +34,7 @@ class ListPostsFragmentHome : ListPostsFragment() {
     }
 
     override fun initPostHeaderAdapter(): PostsHeaderAdapter {
-        return PostsHeaderAdapterHome(this, viewModel, viewModel.athTorgF)
+        return PostsHeaderAdapterHome(this, viewModel)
     }
 
     companion object {

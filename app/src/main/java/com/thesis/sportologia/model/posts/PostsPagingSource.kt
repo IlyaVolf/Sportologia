@@ -4,12 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 
-typealias PostsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<PostDataEntity>
+typealias PostsPageLoader = suspend (lastTimestamp: Long?, pageIndex: Int, pageSize: Int) -> List<PostDataEntity>
 
 @Suppress("UnnecessaryVariable")
 class PostsPagingSource(
     private val loader: PostsPageLoader,
 ) : PagingSource<Int, PostDataEntity>() {
+
+    var lastTimestamp: Long? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PostDataEntity> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
@@ -17,7 +19,9 @@ class PostsPagingSource(
 
         return try {
             // loading the desired page of users
-            val posts = loader.invoke(pageIndex, params.loadSize)
+            val posts = loader.invoke(lastTimestamp, pageIndex, params.loadSize)
+
+            lastTimestamp = posts.lastOrNull()?.postedDate
             // success! now we can return LoadResult.Page
             return LoadResult.Page(
                 data = posts,

@@ -2,6 +2,7 @@ package com.thesis.sportologia.model.posts.sources
 
 import androidx.paging.PagingData
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.flow.Flow
 
 interface PostsDataSource {
@@ -14,6 +15,7 @@ interface PostsDataSource {
 
     suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
+        userType: UserType?,
         lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity>

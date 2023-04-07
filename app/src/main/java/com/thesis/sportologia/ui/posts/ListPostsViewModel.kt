@@ -29,12 +29,8 @@ abstract class ListPostsViewModel constructor(
 
     protected val searchLive = MutableLiveData("")
 
-    private val athTorgFLiveData = MutableLiveData<Boolean?>(null)
-    var athTorgF: Boolean?
-        get() = athTorgFLiveData.value
-        set(value) {
-            athTorgFLiveData.value = value
-        }
+    private val _athTorgFLiveData = MutableLiveData<Boolean?>(null)
+    val athTorgFLiveData = _athTorgFLiveData.share()
 
     private val localChanges = postsRepository.localChanges
     private val localChangesFlow = postsRepository.localChangesFlow
@@ -49,7 +45,6 @@ abstract class ListPostsViewModel constructor(
     val invalidateEvents = _invalidateEvents.share()
 
     val postsFlow: Flow<PagingData<PostListItem>>
-
 
     init {
         val originPostsFlow = this.getDataFlow()
@@ -109,9 +104,10 @@ abstract class ListPostsViewModel constructor(
     }
 
     override fun filterApply(athTorgF: Boolean?) {
-        if (this.athTorgF == athTorgF) return
+        Log.d("abcdef", "adadadad")
+        if (_athTorgFLiveData.value == athTorgF) return
 
-        this.athTorgF = athTorgF
+        _athTorgFLiveData.value = athTorgF
         refresh()
     }
 

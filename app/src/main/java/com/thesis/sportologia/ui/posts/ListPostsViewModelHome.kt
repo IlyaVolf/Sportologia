@@ -31,7 +31,7 @@ class ListPostsViewModelHome @AssistedInject constructor(
     }
 
     private fun athTorgFTransform(): UserType? {
-        return if (athTorgF == null) null else if (athTorgF!!) UserType.ATHLETE else UserType.ORGANIZATION
+        return if (athTorgFLiveData.value == null) null else if (athTorgFLiveData.value!!) UserType.ATHLETE else UserType.ORGANIZATION
     }
 
     @AssistedFactory

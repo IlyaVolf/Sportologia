@@ -12,6 +12,7 @@ import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
 import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -29,17 +30,20 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     private val database = FirebaseFirestore.getInstance()
 
+    var c = 0
+
     override suspend fun getPagedUserPosts(
         userId: String,
         lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
 
+        delay(2000)
+
         val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
-
 
         if (lastMarker == null) {
             currentPageDocuments = database.collection("posts")
@@ -58,7 +62,15 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
         }
 
+        Log.d("abcdef", "currentPagePosts ${currentPageDocuments.documents}")
+
+        if (c == 1) {
+            c = 10
+        }
+
         val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+
+        c++
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -96,6 +108,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
+        userType: UserType?,
         lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
@@ -116,20 +129,41 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val user = userDocument.toObject(UserFireStoreEntity::class.java) ?: return emptyList()
 
         if (lastMarker == null) {
-            currentPageDocuments = database.collection("posts")
-                .whereIn("authorId", user.followersIds)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
-                .limit(pageSize.toLong())
-                .get()
-                .await()
+            if (userType == null) {
+                currentPageDocuments = database.collection("posts")
+                    .whereIn("authorId", user.followersIds)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("posts")
+                    .whereIn("authorId", user.followersIds)
+                    .whereEqualTo("userType", userType)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            }
         } else {
-            currentPageDocuments = database.collection("posts")
-                .whereIn("authorId", user.followersIds)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
-                .limit(pageSize.toLong())
-                .startAfter(lastMarker)
-                .get()
-                .await()
+            if (userType == null) {
+                currentPageDocuments = database.collection("posts")
+                    .whereIn("authorId", user.followersIds)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("posts")
+                    .whereIn("authorId", user.followersIds)
+                    .whereEqualTo("userType", userType)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .await()
+            }
         }
 
         val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
@@ -219,6 +253,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
+            .await()
 
     }
 
@@ -234,6 +269,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
+            .await()
     }
 
     override suspend fun deletePost(postId: String) {
@@ -246,6 +282,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
+            .await()
     }
 
     override suspend fun setIsLiked(
