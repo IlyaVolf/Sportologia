@@ -19,7 +19,10 @@ interface PostsRepository {
         userType: UserType?
     ): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPagedUserFavouritePosts(userType: UserType?): Flow<PagingData<PostDataEntity>>
+    suspend fun getPagedUserFavouritePosts(
+        userId: String,
+        userType: UserType?
+    ): Flow<PagingData<PostDataEntity>>
 
     suspend fun getPost(postId: String, userId: String): PostDataEntity?
 

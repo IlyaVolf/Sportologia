@@ -23,7 +23,7 @@ class ListPostsViewModelFavourites @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<PostDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
-                postsRepository.getPagedUserFavouritePosts(athTorgFTransform())
+                postsRepository.getPagedUserFavouritePosts(userId, athTorgFTransform())
             }.cachedIn(viewModelScope)
     }
 

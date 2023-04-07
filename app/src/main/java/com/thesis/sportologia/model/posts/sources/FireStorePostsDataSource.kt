@@ -1,19 +1,16 @@
 package com.thesis.sportologia.model.posts.sources
 
 import android.util.Log
-import androidx.paging.PagingData
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
-import com.google.firebase.firestore.ktx.toObject
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
-import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 import javax.inject.Inject
@@ -30,16 +27,11 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     private val database = FirebaseFirestore.getInstance()
 
-    var c = 0
-
     override suspend fun getPagedUserPosts(
         userId: String,
         lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
-
-        delay(2000)
-
         val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
@@ -62,15 +54,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
         }
 
-        Log.d("abcdef", "currentPagePosts ${currentPageDocuments.documents}")
-
-        if (c == 1) {
-            c = 10
-        }
-
         val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
-
-        c++
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -162,6 +146,111 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
+                    .await()
+            }
+        }
+
+        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+
+        currentPageDocuments.forEach {
+            currentPageIds.add(it.id)
+        }
+        posts.forEach {
+            currentPageLikes.add(it.usersIdsLiked.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+        }
+
+        val res = mutableListOf<PostDataEntity>()
+        for (i in posts.indices) {
+            res.add(
+                PostDataEntity(
+                    id = currentPageIds[i],
+                    authorId = posts[i].authorId!!,
+                    authorName = posts[i].authorName!!,
+                    profilePictureUrl = posts[i].profilePictureUrl,
+                    text = posts[i].text!!,
+                    likesCount = posts[i].likesCount!!,
+                    userType = when (posts[i].userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception()
+                    },
+                    isLiked = currentPageLikes[i],
+                    isFavourite = currentPageFavs[i],
+                    postedDate = posts[i].postedDate!!,
+                    photosUrls = posts[i].photosUrls,
+                )
+            )
+        }
+
+        return res
+    }
+
+    override suspend fun getPagedUserFavouritePosts(
+        userId: String,
+        userType: UserType?,
+        lastMarker: Long?,
+        pageSize: Int
+    ): List<PostDataEntity> {
+        val usersFavsPostsIds = mutableListOf<String>()
+
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageIds = mutableListOf<String>()
+        val currentPageLikes = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
+
+        val userFavsPostsIdsDocuments = database.collection("users")
+            .document(userId)
+            .collection("favsPosts")
+            .get()
+            .await()
+
+        userFavsPostsIdsDocuments.forEach {
+            usersFavsPostsIds.add(it.id)
+        }
+
+        if (lastMarker == null) {
+            if (userType == null) {
+                currentPageDocuments = database.collection("posts")
+                    .orderBy(FieldPath.documentId())
+                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { throw Exception(it) }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("posts")
+                    .orderBy(FieldPath.documentId())
+                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereEqualTo("userType", userType)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { throw Exception(it) }
+                    .await()
+            }
+        } else {
+            if (userType == null) {
+                currentPageDocuments = database.collection("posts")
+                    .orderBy(FieldPath.documentId())
+                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { throw Exception(it) }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("posts")
+                    .orderBy(FieldPath.documentId())
+                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereEqualTo("userType", userType)
+                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { throw Exception(it) }
                     .await()
             }
         }

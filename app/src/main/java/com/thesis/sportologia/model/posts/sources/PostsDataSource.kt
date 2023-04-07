@@ -20,6 +20,13 @@ interface PostsDataSource {
         pageSize: Int
     ): List<PostDataEntity>
 
+    suspend fun getPagedUserFavouritePosts(
+        userId: String,
+        userType: UserType?,
+        lastMarker: Long?,
+        pageSize: Int
+    ): List<PostDataEntity>
+
     suspend fun getPost(postId: String, userId: String): PostDataEntity?
 
     suspend fun createPost(postDataEntity: PostDataEntity)
