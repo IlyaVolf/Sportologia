@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -130,7 +131,9 @@ abstract class ListPostsViewModel constructor(
         val newFlagValue = !postListItem.isLiked
         postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue)
         localChanges.isLikedFlags[postListItem.id] = newFlagValue
-        localChanges.likesCount[postListItem.id]?.plus(if (newFlagValue) 1 else -1)
+        localChanges.likesCount[postListItem.id] =
+            (localChanges.likesCount[postListItem.id]
+                ?: postListItem.likesCount) + (if (newFlagValue) 1 else -1)
         localChangesFlow.value = OnChange(localChanges)
     }
 
@@ -179,14 +182,24 @@ abstract class ListPostsViewModel constructor(
                 val isInProgress = localChanges.value.idsInProgress.contains(post.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[post.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[post.id]
+                val localLikesCountFlag = localChanges.value.likesCount[post.id]
+
+                Log.d("abcdef", "1 $post")
 
                 var postWithLocalChanges = post.copy()
                 if (localFavoriteFlag != null) {
-                    postWithLocalChanges = postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    postWithLocalChanges =
+                        postWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
                     postWithLocalChanges = postWithLocalChanges.copy(isLiked = localLikedFlag)
                 }
+                if (localLikesCountFlag != null) {
+                    postWithLocalChanges =
+                        postWithLocalChanges.copy(likesCount = localLikesCountFlag)
+                }
+
+                Log.d("abcdef", "2 $postWithLocalChanges")
 
                 PostListItem(postWithLocalChanges, isInProgress)
             }
