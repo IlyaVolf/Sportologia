@@ -1,6 +1,7 @@
 package com.thesis.sportologia.model.posts.entities
 
 data class PostFireStoreEntity(
+    var id: String? = null,
     var authorId: String? = null,
     var authorName: String? = null,
     var profilePictureUrl: String? = null,

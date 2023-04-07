@@ -1,6 +1,5 @@
 package com.thesis.sportologia.model.posts.sources
 
-import android.util.Log
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -10,7 +9,6 @@ import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
 import javax.inject.Inject
@@ -195,7 +193,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val usersFavsPostsIds = mutableListOf<String>()
 
         val currentPageDocuments: QuerySnapshot?
-        val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
@@ -212,8 +209,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         if (lastMarker == null) {
             if (userType == null) {
                 currentPageDocuments = database.collection("posts")
-                    .orderBy(FieldPath.documentId())
-                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereIn("id", usersFavsPostsIds)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
@@ -221,8 +217,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     .await()
             } else {
                 currentPageDocuments = database.collection("posts")
-                    .orderBy(FieldPath.documentId())
-                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereIn("id", usersFavsPostsIds)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
@@ -233,8 +228,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         } else {
             if (userType == null) {
                 currentPageDocuments = database.collection("posts")
-                    .orderBy(FieldPath.documentId())
-                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereIn("id", usersFavsPostsIds)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
@@ -243,8 +237,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     .await()
             } else {
                 currentPageDocuments = database.collection("posts")
-                    .orderBy(FieldPath.documentId())
-                    .whereIn(FieldPath.documentId(), usersFavsPostsIds)
+                    .whereIn("id", usersFavsPostsIds)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
@@ -257,9 +250,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
 
-        currentPageDocuments.forEach {
-            currentPageIds.add(it.id)
-        }
         posts.forEach {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
@@ -269,7 +259,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         for (i in posts.indices) {
             res.add(
                 PostDataEntity(
-                    id = currentPageIds[i],
+                    id = posts[i].id,
                     authorId = posts[i].authorId!!,
                     authorName = posts[i].authorName!!,
                     profilePictureUrl = posts[i].profilePictureUrl,
@@ -337,8 +327,26 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             "usersIdsFavs" to listOf<String>()
         )
 
+        // TODO должна быть атомарной
+
+        val documentRef = database.collection("posts").document()
+
+        documentRef
+            .set(postFireStoreEntity)
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+
         database.collection("posts")
             .add(postFireStoreEntity)
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+
+        documentRef
+            .update(hashMapOf<String, Any>("id" to documentRef.id))
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -414,6 +422,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         isFavourite: Boolean
     ) {
         if (isFavourite) {
+            // TODO атомараная
             database.collection("posts")
                 .document(postDataEntity.id!!)
                 .update(
@@ -425,8 +434,18 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     throw Exception(e)
                 }
                 .await()
-            // TODO в пользователе добавить id поста
+
+            database.collection("users")
+                .document(userId)
+                .collection("favsPosts")
+                .document(postDataEntity.id)
+                .set(hashMapOf<String, Any>())
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
         } else {
+            // TODO атомараная
             database.collection("posts")
                 .document(postDataEntity.id!!)
                 .update(
@@ -438,7 +457,16 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     throw Exception(e)
                 }
                 .await()
-            // TODO в пользователе добавить id поста
+
+            database.collection("users")
+                .document(userId)
+                .collection("favsPosts")
+                .document(postDataEntity.id)
+                .delete()
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
         }
     }
 }
