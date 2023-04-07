@@ -1,6 +1,5 @@
 package com.thesis.sportologia.model.posts
 
-import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -8,7 +7,6 @@ import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.sources.PostsDataSource
-import com.thesis.sportologia.model.users.entities.User
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -28,13 +26,13 @@ class InMemoryPostsRepository @Inject constructor(
     override val localChanges = PostsLocalChanges()
     override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
-    lateinit var postSample: PostDataEntity
-    lateinit var posts: MutableList<PostDataEntity>
-    lateinit var followersIds: List<String>
+    var postSample: PostDataEntity
+    var posts: MutableList<PostDataEntity>
+    var followersIds: List<String>
 
     init {
         postSample = PostDataEntity(
-            id = java.util.UUID.randomUUID().toString(),
+            id = UUID.randomUUID().toString(),
             authorId = "i_chiesov",
             authorName = "Игорь Чиёсов",
             profilePictureUrl = null,
@@ -52,7 +50,7 @@ class InMemoryPostsRepository @Inject constructor(
         posts = mutableListOf(
             postSample,
             PostDataEntity(
-                id = java.util.UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
                 authorId = "stroitel",
                 authorName = "Тренажёрный зал Строитель",
                 profilePictureUrl = null,
@@ -76,7 +74,7 @@ class InMemoryPostsRepository @Inject constructor(
                 )
             ),
             PostDataEntity(
-                id = java.util.UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
                 authorId = "nikita",
                 authorName = "Никита Романов",
                 profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
@@ -88,33 +86,33 @@ class InMemoryPostsRepository @Inject constructor(
                 postedDate = Calendar.getInstance().timeInMillis,
                 photosUrls = mutableListOf()
             ),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
             postSample.copy(
                 authorName = "Антон Игорев",
                 authorId = "best_mate",
-                id = java.util.UUID.randomUUID().toString(),
+                id = UUID.randomUUID().toString(),
                 text = "abcdefghiklmnopqrstvuxwyz"
             ),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
-            postSample.copy(id = java.util.UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
+            postSample.copy(id = UUID.randomUUID().toString()),
 
             )
 
@@ -264,11 +262,10 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPost(postId: String): PostDataEntity? = withContext(ioDispatcher) {
-        delay(1000)
-
-        return@withContext if (posts.none { it.id == postId }) null else posts.filter { it.id == postId }[0]
-    }
+    override suspend fun getPost(postId: String, userId: String): PostDataEntity? =
+        withContext(ioDispatcher) {
+            return@withContext postsDataSource.getPost(postId, userId)
+        }
 
     suspend fun getUserFavouritePosts(
         pageIndex: Int,
@@ -316,25 +313,26 @@ class InMemoryPostsRepository @Inject constructor(
     }*/
 
     override suspend fun createPost(postDataEntity: PostDataEntity) {
-        delay(1000)
         postsDataSource.createPost(postDataEntity)
-        posts.add(postDataEntity)
+        //posts.add(postDataEntity)
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
     override suspend fun updatePost(postDataEntity: PostDataEntity) {
-        delay(1000)
+        //delay(1000)
 
-        posts.find { it.id == postDataEntity.id }.apply {
+        postsDataSource.updatePost(postDataEntity)
+
+        /*posts.find { it.id == postDataEntity.id }.apply {
             this!!.text = postDataEntity.text
             this.photosUrls = postDataEntity.photosUrls
-        }
+        }*/
 
     }
 
     override suspend fun deletePost(postId: String) {
-        delay(1000)
+        //delay(1000)
         postsDataSource.deletePost(postId)
         posts.removeIf { it.id == postId }
         localChanges.remove(postId)
@@ -342,60 +340,57 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun setIsLiked(
         userId: String,
-        postId: String,
+        postDataEntity: PostDataEntity,
         isLiked: Boolean
-    ) {
-        withContext(ioDispatcher) {
-            postsDataSource.setIsLiked(userId, postId, isLiked)
-            /*delay(1000)
+    ) = withContext(ioDispatcher) {
+        postsDataSource.setIsLiked(userId, postDataEntity, isLiked)
+        /*delay(1000)
 
-            val postInList =
-                posts.find { it.id == postDataEntity.id } ?: throw IllegalStateException()
+        val postInList =
+            posts.find { it.id == postDataEntity.id } ?: throw IllegalStateException()
 
-            postInList.isLiked = isLiked
+        postInList.isLiked = isLiked
 
-            if (isLiked) {
-                postInList.likesCount++
-            } else {
-                postInList.likesCount--
-            }*/
-        }
+        if (isLiked) {
+            postInList.likesCount++
+        } else {
+            postInList.likesCount--
+        }*/
     }
 
     override suspend fun setIsFavourite(
         userId: String,
-        postId: String,
+        postDataEntity: PostDataEntity,
         isFavourite: Boolean
-    ) =
-        withContext(ioDispatcher) {
-            postsDataSource.setIsFavourite(userId, postId, isFavourite)
-            /*delay(1000)
+    ) = withContext(ioDispatcher) {
+        postsDataSource.setIsFavourite(userId, postDataEntity, isFavourite)
+        /*delay(1000)
 
-            // TODO
-            //throw Exception("a")
+        // TODO
+        //throw Exception("a")
 
-            posts.find { it.id == postDataEntity.id }?.isFavourite = isFavourite*/
-        }
-
-    /*override suspend fun likePost(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isLiked = true, likesCount = post.likesCount + 1))
+        posts.find { it.id == postDataEntity.id }?.isFavourite = isFavourite*/
     }
 
-    override suspend fun unlikePost(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isLiked = false, likesCount = post.likesCount - 1))
-    }
+/*override suspend fun likePost(userId: Int, post: Post) {
+    delay(1000)
+    updatePost(post.copy(isLiked = true, likesCount = post.likesCount + 1))
+}
 
-    override suspend fun addPostToFavourites(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isAddedToFavourites = true))
-    }
+override suspend fun unlikePost(userId: Int, post: Post) {
+    delay(1000)
+    updatePost(post.copy(isLiked = false, likesCount = post.likesCount - 1))
+}
 
-    override suspend fun removePostFromFavourites(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isAddedToFavourites = false))
-    }*/
+override suspend fun addPostToFavourites(userId: Int, post: Post) {
+    delay(1000)
+    updatePost(post.copy(isAddedToFavourites = true))
+}
+
+override suspend fun removePostFromFavourites(userId: Int, post: Post) {
+    delay(1000)
+    updatePost(post.copy(isAddedToFavourites = false))
+}*/
 
     // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {

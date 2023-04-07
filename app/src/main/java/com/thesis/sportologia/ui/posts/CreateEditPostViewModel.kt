@@ -115,7 +115,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
                 withContext(Dispatchers.Main) {
                     _postHolder.value = DataHolder.loading()
                 }
-                val post = postsRepository.getPost(postId!!)
+                val post = postsRepository.getPost(postId!!, CurrentAccount().id)
                 withContext(Dispatchers.Main) {
                     _postHolder.value = DataHolder.ready(post)
                 }

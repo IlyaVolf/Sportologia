@@ -2,9 +2,11 @@ package com.thesis.sportologia.model.posts.sources
 
 import android.util.Log
 import androidx.paging.PagingData
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.toObject
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
 import com.thesis.sportologia.model.users.entities.User
@@ -17,6 +19,13 @@ import javax.inject.Inject
 // TODO вообще нужно проверять внимательно на сущестсование документов с указанным айди. При тестировании!
 class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
+    /** т.к. версия пробная и отсутствуют Google Cloud Functions, для ускорения загрузки во вред
+    оптимизации размера данных, мы получаем сразу все id пользователей, которыйп оставили лайк. По-началу
+    ничего страшно, когда лайков мало. Зато потом размер получаемых клиентом докмуентов будет
+    огромных, если лайков, например, миллион.
+    Поэтому вообще это нужно на сервере проверять, лайкнул или нет. И не получать эти списки ни
+    в коем случае. Но пока техническо мозможно только такая реализация */
+
     private val database = FirebaseFirestore.getInstance()
 
     override suspend fun getPagedUserPosts(
@@ -25,19 +34,20 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         pageSize: Int
     ): List<PostDataEntity> {
 
-        val currentPagePosts: QuerySnapshot?
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
         if (lastPostId == null) {
-            currentPagePosts = database.collection("posts")
+            currentPageDocuments = database.collection("posts")
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .get()
                 .await()
         } else {
-            currentPagePosts = database.collection("posts")
+            currentPageDocuments = database.collection("posts")
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
@@ -46,31 +56,15 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
         }
 
-        Log.d("abcdef", "currentPagePosts")
+        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
 
-        val currentPageIds = currentPagePosts.map { it.id }
-
-        currentPagePosts.documents.forEach {
-            it.reference.collection("likes").document(userId)
-                .get()
-                .addOnSuccessListener { documentSnapshot ->
-                    currentPageLikes.add(documentSnapshot.exists())
-                }
-                .await()
+        currentPageDocuments.forEach {
+            currentPageIds.add(it.id)
         }
-
-        currentPagePosts.documents.forEach {
-            it.reference.collection("favs").document(userId)
-                .get()
-                .addOnSuccessListener { documentSnapshot ->
-                    currentPageFavs.add(documentSnapshot.exists())
-                }
-                .await()
+        posts.forEach {
+            currentPageLikes.add(it.usersIdsLiked.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
         }
-
-        val posts = currentPagePosts.toObjects(PostFireStoreEntity::class.java)
-
-        Log.d("abcdef", "sjkslgsgsg $posts $currentPageLikes $currentPageFavs")
 
         val res = mutableListOf<PostDataEntity>()
         for (i in posts.indices) {
@@ -90,12 +84,42 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
                     postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls!!,
+                    photosUrls = posts[i].photosUrls,
                 )
             )
         }
 
-        Log.d("abcdef", "finish $res")
+        return res
+    }
+
+    override suspend fun getPost(postId: String, userId: String): PostDataEntity? {
+        val document = database.collection("posts")
+            .document(postId)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+
+        val post = document.toObject(PostFireStoreEntity::class.java) ?: return null
+
+        val res = PostDataEntity(
+            id = document.id,
+            authorId = post.authorId!!,
+            authorName = post.authorName!!,
+            profilePictureUrl = post.profilePictureUrl,
+            text = post.text!!,
+            likesCount = post.likesCount!!,
+            userType = when (post.userType) {
+                "ATHLETE" -> UserType.ATHLETE
+                "ORGANIZATION" -> UserType.ORGANIZATION
+                else -> throw Exception()
+            },
+            isLiked = post.usersIdsLiked.contains(userId),
+            isFavourite = post.usersIdsFavs.contains(userId),
+            postedDate = post.postedDate!!,
+            photosUrls = post.photosUrls,
+        )
 
         return res
     }
@@ -110,21 +134,12 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             "userType" to postDataEntity.userType,
             "postedDate" to Calendar.getInstance().timeInMillis,
             "photosUrls" to postDataEntity.photosUrls,
+            "usersIdsLiked" to listOf<String>(),
+            "usersIdsFavs" to listOf<String>()
         )
 
-        var postId: String
         database.collection("posts")
             .add(postFireStoreEntity)
-            .addOnSuccessListener { documentReference ->
-                postId = documentReference.id
-
-                database.collection("posts").document(postId)
-                    .collection("likes")
-
-                database.collection("posts").document(postId)
-                    .collection("favs")
-
-            }
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -159,56 +174,69 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun setIsLiked(
         userId: String,
-        postId: String,
+        postDataEntity: PostDataEntity,
         isLiked: Boolean
     ) {
-        Log.d("abcdef", "$isLiked")
-        if (!isLiked) {
-            database.collection("posts").document(postId)
-                .collection("likes")
-                .document(userId)
-                .set(hashMapOf<String, String>())
-                .addOnSuccessListener {
-                    Log.d("abcdef", "adaaddadaad")
-                }
+        if (isLiked) {
+            database.collection("posts")
+                .document(postDataEntity.id!!)
+                .update(
+                    hashMapOf<String, Any>(
+                        "likesCount" to FieldValue.increment(1L),
+                        "usersIdsLiked" to FieldValue.arrayUnion(userId)
+                    )
+                )
                 .addOnFailureListener { e ->
-                    Log.d("abcdef", "$e")
                     throw Exception(e)
                 }
                 .await()
         } else {
-            database.collection("posts").document(postId)
-                .collection("likes")
-                .document(userId)
-                .delete()
+            database.collection("posts")
+                .document(postDataEntity.id!!)
+                .update(
+                    hashMapOf<String, Any>(
+                        "likesCount" to FieldValue.increment(-1L),
+                        "usersIdsLiked" to FieldValue.arrayRemove(userId)
+                    )
+                )
                 .addOnFailureListener { e ->
-                    Log.d("abcdef", "$e")
                     throw Exception(e)
                 }
                 .await()
         }
     }
 
-    override suspend fun setIsFavourite(userId: String, postId: String, isFavourite: Boolean) {
-        if (!isFavourite) {
-            database.collection("posts").document(postId)
-                .collection("favs")
-                .document(userId)
+    override suspend fun setIsFavourite(
+        userId: String,
+        postDataEntity: PostDataEntity,
+        isFavourite: Boolean
+    ) {
+        if (isFavourite) {
+            database.collection("posts")
+                .document(postDataEntity.id!!)
+                .update(
+                    hashMapOf<String, Any>(
+                        "usersIdsFavs" to FieldValue.arrayUnion(userId)
+                    )
+                )
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
             // TODO в пользователе добавить id поста
         } else {
-            database.collection("posts").document(postId)
-                .collection("favs")
-                .document(userId)
-                .delete()
+            database.collection("posts")
+                .document(postDataEntity.id!!)
+                .update(
+                    hashMapOf<String, Any>(
+                        "usersIdsFavs" to FieldValue.arrayRemove(userId)
+                    )
+                )
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
                 .await()
-            // TODO в пользователе удалить id поста
+            // TODO в пользователе добавить id поста
         }
-    }
-
-    companion object {
-        const val POSTS_COLLECTION_PATH = "posts"
     }
 }

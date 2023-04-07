@@ -8,5 +8,7 @@ data class PostFireStoreEntity(
     var likesCount: Int? = null,
     var userType: String? = null,
     var postedDate: Long? = null,
-    var photosUrls: List<String>? = null,
+    var photosUrls: List<String> = mutableListOf(),
+    var usersIdsLiked: List<String> = mutableListOf(),
+    var usersIdsFavs: List<String> = mutableListOf()
 )

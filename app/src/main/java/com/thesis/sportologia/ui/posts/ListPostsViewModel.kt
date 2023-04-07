@@ -128,17 +128,17 @@ abstract class ListPostsViewModel constructor(
 
     private suspend fun setLike(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isLiked
-        postsRepository.setIsLiked(userId, postListItem.id, newFlagValue)
+        postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue)
         localChanges.isLikedFlags[postListItem.id] = newFlagValue
-        //localChanges.isTextFlags[postListItem.id] = postListItem.text + "asgagasagag"
+        localChanges.likesCount[postListItem.id]?.plus(if (newFlagValue) 1 else -1)
         localChangesFlow.value = OnChange(localChanges)
     }
 
     private suspend fun setFavoriteFlag(postListItem: PostListItem) {
         val newFlagValue = !postListItem.isFavourite
-        postsRepository.setIsFavourite(userId, postListItem.id, newFlagValue)
-        //localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
-        //localChangesFlow.value = OnChange(localChanges)
+        postsRepository.setIsFavourite(userId, postListItem.postDataEntity, newFlagValue)
+        localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
+        localChangesFlow.value = OnChange(localChanges)
     }
 
     private suspend fun delete(postListItem: PostListItem) {

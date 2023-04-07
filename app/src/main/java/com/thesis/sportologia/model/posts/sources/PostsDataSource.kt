@@ -6,7 +6,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostsDataSource {
 
-    suspend fun getPagedUserPosts(userId: String, lastPostId: String?, pageSize: Int):  List<PostDataEntity>
+    suspend fun getPagedUserPosts(
+        userId: String,
+        lastPostId: String?,
+        pageSize: Int
+    ): List<PostDataEntity>
+
+    suspend fun getPost(postId: String, userId: String): PostDataEntity?
 
     suspend fun createPost(postDataEntity: PostDataEntity)
 
@@ -14,8 +20,8 @@ interface PostsDataSource {
 
     suspend fun deletePost(postId: String)
 
-    suspend fun setIsLiked(userId: String, postId: String, isLiked: Boolean)
+    suspend fun setIsLiked(userId: String, postDataEntity: PostDataEntity, isLiked: Boolean)
 
-    suspend fun setIsFavourite(userId: String, postId: String, isFavourite: Boolean)
+    suspend fun setIsFavourite(userId: String, postDataEntity: PostDataEntity, isFavourite: Boolean)
 
 }

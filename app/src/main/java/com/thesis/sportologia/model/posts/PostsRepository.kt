@@ -21,7 +21,7 @@ interface PostsRepository {
 
     suspend fun getPagedUserFavouritePosts(userType: UserType?): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPost(postId: String): PostDataEntity?
+    suspend fun getPost(postId: String, userId: String): PostDataEntity?
 
     suspend fun createPost(postDataEntity: PostDataEntity)
 
@@ -29,8 +29,8 @@ interface PostsRepository {
 
     suspend fun deletePost(postId: String)
 
-    suspend fun setIsLiked(userId: String, postId: String, isLiked: Boolean)
+    suspend fun setIsLiked(userId: String, postDataEntity: PostDataEntity, isLiked: Boolean)
 
-    suspend fun setIsFavourite(userId: String, postId: String, isFavourite: Boolean)
+    suspend fun setIsFavourite(userId: String, postDataEntity: PostDataEntity, isFavourite: Boolean)
 
 }
