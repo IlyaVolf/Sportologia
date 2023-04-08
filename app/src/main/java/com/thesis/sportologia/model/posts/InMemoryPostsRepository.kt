@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -103,7 +104,9 @@ class InMemoryPostsRepository @Inject constructor(
         postDataEntity: PostDataEntity,
         isLiked: Boolean
     ) = withContext(ioDispatcher) {
-        postsDataSource.setIsLiked(userId, postDataEntity, isLiked)
+        withTimeout(AWAITING_TIME) {
+            postsDataSource.setIsLiked(userId, postDataEntity, isLiked)
+        }
     }
 
     override suspend fun setIsFavourite(
@@ -111,11 +114,14 @@ class InMemoryPostsRepository @Inject constructor(
         postDataEntity: PostDataEntity,
         isFavourite: Boolean
     ) = withContext(ioDispatcher) {
-        postsDataSource.setIsFavourite(userId, postDataEntity, isFavourite)
+        withTimeout(AWAITING_TIME) {
+            postsDataSource.setIsFavourite(userId, postDataEntity, isFavourite)
+        }
     }
 
     // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {
         const val PAGE_SIZE = 8
+        const val AWAITING_TIME = 10000L
     }
 }

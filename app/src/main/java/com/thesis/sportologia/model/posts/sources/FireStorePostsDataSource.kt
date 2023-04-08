@@ -1,6 +1,6 @@
 package com.thesis.sportologia.model.posts.sources
 
-import com.google.firebase.firestore.FieldPath
+import android.util.Log
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -206,6 +206,8 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             usersFavsPostsIds.add(it.id)
         }
 
+        Log.d("abcdef", "usersFavsPostsIds $usersFavsPostsIds")
+
         if (lastMarker == null) {
             if (userType == null) {
                 currentPageDocuments = database.collection("posts")
@@ -247,6 +249,8 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     .await()
             }
         }
+
+        Log.d("abcdef", "posts ${currentPageDocuments.documents}")
 
         val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
 
@@ -373,9 +377,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         database.collection("posts")
             .document(postId)
             .delete()
-            .addOnSuccessListener {
-                // TODO удалить данные из пользователя
-            }
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -422,7 +423,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         isFavourite: Boolean
     ) {
         if (isFavourite) {
-            // TODO атомараная
             database.collection("posts")
                 .document(postDataEntity.id!!)
                 .update(
@@ -433,7 +433,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
-                .await()
 
             database.collection("users")
                 .document(userId)
@@ -443,14 +442,13 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
-                .await()
         } else {
-            // TODO атомараная
             database.collection("posts")
                 .document(postDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
-                        "usersIdsFavs" to FieldValue.arrayRemove(userId)
+                        "likesCount" to FieldValue.increment(-1L),
+                        "usersIdsLiked" to FieldValue.arrayRemove(userId)
                     )
                 )
                 .addOnFailureListener { e ->
