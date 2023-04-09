@@ -8,14 +8,12 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListEventsHeaderBinding
-import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.events.CreateEditEventFragment
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
+import kotlin.properties.Delegates
 
 abstract class EventsHeaderAdapter(
     private val fragment: Fragment,
@@ -24,6 +22,7 @@ abstract class EventsHeaderAdapter(
 ) : RecyclerView.Adapter<EventsHeaderAdapter.Holder>() {
 
     protected lateinit var filterParamsEvents: FilterParamsEvents
+    private var isUpcomingOnly = true
 
     init {
         setFilterParamsEvents(filterParamsEvents)
@@ -32,6 +31,12 @@ abstract class EventsHeaderAdapter(
     @JvmName("setFilterParamsEvents1")
     fun setFilterParamsEvents(filterParamsEvents: FilterParamsEvents) {
         this.filterParamsEvents = filterParamsEvents
+        notifyDataSetChanged()
+    }
+
+    @JvmName("setIsUpcomingOnly1")
+    fun setIsUpcomingOnly(isUpcomingOnly: Boolean) {
+        this.isUpcomingOnly = isUpcomingOnly
         notifyDataSetChanged()
     }
 
@@ -50,7 +55,7 @@ abstract class EventsHeaderAdapter(
     }
 
     override fun onBindViewHolder(holder: Holder, position: Int) {
-        holder.bind()
+        holder.bind(isUpcomingOnly)
     }
 
     override fun getItemCount(): Int {
@@ -71,7 +76,10 @@ abstract class EventsHeaderAdapter(
 
         abstract val renderHeader: () -> Unit
 
-        fun bind() {
+        private var isUpcomingOnly by Delegates.notNull<Boolean>()
+
+        fun bind(isUpcomingOnly: Boolean) {
+            this.isUpcomingOnly = isUpcomingOnly
             disableAllItems()
             renderHeader()
         }
@@ -85,7 +93,7 @@ abstract class EventsHeaderAdapter(
             binding.createEventButtonSpace.isVisible = false
         }
 
-        protected fun enableEventsFilter(isUpcomingOnly: Boolean) {
+        protected fun enableEventsFilter() {
             binding.eventsFilter.root.isVisible = true
             binding.eventsFilterSpace.isVisible = true
             binding.eventsFilter.spinner.initAdapter(filterOptionsList, getFilterValue(isUpcomingOnly))

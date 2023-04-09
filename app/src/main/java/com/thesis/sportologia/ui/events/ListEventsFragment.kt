@@ -77,6 +77,7 @@ abstract class ListEventsFragment : Fragment() {
         observeEvents(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
+        observeFilter()
 
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
@@ -243,7 +244,12 @@ abstract class ListEventsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: EventsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
-            Log.d("abcdef", "observeInvalidationEvents")
+        }
+    }
+
+    private fun observeFilter() {
+        viewModel.isUpcomingOnlyLiveData.observe(viewLifecycleOwner) {
+            eventsHeaderAdapter.setIsUpcomingOnly(it)
         }
     }
 

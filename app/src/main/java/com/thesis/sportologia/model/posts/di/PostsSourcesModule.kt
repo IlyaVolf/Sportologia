@@ -1,6 +1,6 @@
 package com.thesis.sportologia.model.posts.di
 
-import com.thesis.sportologia.model.posts.sources.FireStorePostsDataSource
+import com.thesis.sportologia.model.posts.sources.FirestorePostsDataSource
 import com.thesis.sportologia.model.posts.sources.PostsDataSource
 import dagger.Binds
 import dagger.Module
@@ -15,7 +15,7 @@ interface PostsSourcesModule {
     @Binds
     @Singleton
     fun bindOrdersDataSource(
-        postsDataSource: FireStorePostsDataSource
+        postsDataSource: FirestorePostsDataSource
     ): PostsDataSource
 
 }

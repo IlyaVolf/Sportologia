@@ -122,6 +122,6 @@ class InMemoryPostsRepository @Inject constructor(
     // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {
         const val PAGE_SIZE = 8
-        const val AWAITING_TIME = 10000L
+        const val AWAITING_TIME = 5000L
     }
 }

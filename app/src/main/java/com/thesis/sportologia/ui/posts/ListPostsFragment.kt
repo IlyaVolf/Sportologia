@@ -233,7 +233,6 @@ abstract class ListPostsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
-            Log.d("abcdef", "observeInvalidationEvents")
         }
     }
 

@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events
 
 
+import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -27,17 +28,14 @@ abstract class ListEventsViewModel constructor(
     private val userId: String,
     private val eventsRepository: EventsRepository,
     logger: Logger
-) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener, EventsHeaderAdapter.FilterListener {
+) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener,
+    EventsHeaderAdapter.FilterListener {
 
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsEvents>()
 
-    private val isUpcomingOnlyLiveData = MutableLiveData(true)
-    var isUpcomingOnly: Boolean
-        get() = isUpcomingOnlyLiveData.value!!
-        set(value) {
-            isUpcomingOnlyLiveData.value = value
-        }
+    private val _isUpcomingOnlyLiveData = MutableLiveData(true)
+    val isUpcomingOnlyLiveData = _isUpcomingOnlyLiveData.share()
 
     private val localChanges = eventsRepository.localChanges
     private val localChangesFlow = eventsRepository.localChangesFlow
@@ -113,9 +111,9 @@ abstract class ListEventsViewModel constructor(
     }
 
     override fun filterApply(isUpcomingOnly: Boolean) {
-        if (this.isUpcomingOnly == isUpcomingOnly) return
+        if (_isUpcomingOnlyLiveData.value == isUpcomingOnly) return
 
-        this.isUpcomingOnly = isUpcomingOnly
+        _isUpcomingOnlyLiveData.value = isUpcomingOnly
         refresh()
     }
 
@@ -138,18 +136,28 @@ abstract class ListEventsViewModel constructor(
     }
 
     private suspend fun setLike(eventListItem: EventListItem) {
-        val newFlagValue = !eventListItem.isLiked
-        eventsRepository.setIsLiked(userId, eventListItem.eventDataEntity, newFlagValue)
-        localChanges.isLikedFlags[eventListItem.id] = newFlagValue
-        //localChanges.isTextFlags[eventListItem.id] = eventListItem.text + "asgagasagag"
-        localChangesFlow.value = OnChange(localChanges)
+        try {
+            val newFlagValue = !eventListItem.isLiked
+            eventsRepository.setIsLiked(userId, eventListItem.eventDataEntity, newFlagValue)
+            localChanges.isLikedFlags[eventListItem.id] = newFlagValue
+            localChanges.likesCount[eventListItem.id] =
+                (localChanges.likesCount[eventListItem.id]
+                    ?: eventListItem.likesCount) + (if (newFlagValue) 1 else -1)
+            localChangesFlow.value = OnChange(localChanges)
+        } catch (e: Exception) {
+            showError(R.string.error_loading_title)
+        }
     }
 
     private suspend fun setFavoriteFlag(eventListItem: EventListItem) {
-        val newFlagValue = !eventListItem.isFavourite
-        eventsRepository.setIsFavourite(userId, eventListItem.eventDataEntity, newFlagValue)
-        localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
-        localChangesFlow.value = OnChange(localChanges)
+        try {
+            val newFlagValue = !eventListItem.isFavourite
+            eventsRepository.setIsFavourite(userId, eventListItem.eventDataEntity, newFlagValue)
+            localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
+            localChangesFlow.value = OnChange(localChanges)
+        } catch (e: Exception) {
+            showError(R.string.error_loading_title)
+        }
     }
 
     private suspend fun delete(eventListItem: EventListItem) {
@@ -190,13 +198,19 @@ abstract class ListEventsViewModel constructor(
                 val isInProgress = localChanges.value.idsInProgress.contains(event.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[event.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[event.id]
+                val localLikesCountFlag = localChanges.value.likesCount[event.id]
 
                 var eventWithLocalChanges = event.copy()
                 if (localFavoriteFlag != null) {
-                    eventWithLocalChanges = eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    eventWithLocalChanges =
+                        eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
                     eventWithLocalChanges = eventWithLocalChanges.copy(isLiked = localLikedFlag)
+                }
+                if (localLikesCountFlag != null) {
+                    eventWithLocalChanges =
+                        eventWithLocalChanges.copy(likesCount = localLikesCountFlag)
                 }
 
                 EventListItem(eventWithLocalChanges, isInProgress)

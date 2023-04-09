@@ -69,7 +69,7 @@ class Categories {
 
         const val RUNNING = "RUNNING"
         const val MASTER_CLASS = "MASTER_CLASS"
-        const val MARTIAL_ARTS = "Martial arts"
+        const val MARTIAL_ARTS = "MARTIAL_ARTS"
     }
 
 }

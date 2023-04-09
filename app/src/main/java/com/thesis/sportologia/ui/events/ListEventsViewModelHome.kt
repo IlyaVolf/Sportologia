@@ -24,7 +24,7 @@ class ListEventsViewModelHome @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<EventDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
-                eventsRepository.getPagedUserSubscribedOnEvents(userId, isUpcomingOnly)
+                eventsRepository.getPagedUserSubscribedOnEvents(userId, isUpcomingOnlyLiveData.value!!)
             }.cachedIn(viewModelScope)
     }
 

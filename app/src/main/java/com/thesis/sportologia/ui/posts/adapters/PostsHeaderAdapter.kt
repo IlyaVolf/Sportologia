@@ -18,7 +18,7 @@ abstract class PostsHeaderAdapter(
     private val listener: FilterListener,
 ) : RecyclerView.Adapter<PostsHeaderAdapter.Holder>() {
 
-    protected var athTorgF: Boolean? = null
+    private var athTorgF: Boolean? = null
 
     @JvmName("setAthTorgF1")
     fun setAthTorgF(athTorgF: Boolean?) {

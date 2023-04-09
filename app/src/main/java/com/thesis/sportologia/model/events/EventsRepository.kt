@@ -12,24 +12,33 @@ interface EventsRepository {
     val localChanges: EventsLocalChanges
     val localChangesFlow: MutableStateFlow<OnChange<EventsLocalChanges>>
 
+    suspend fun getPagedEvents(
+        searchQuery: String,
+        filter: FilterParamsEvents
+    ): Flow<PagingData<EventDataEntity>>
+
     suspend fun getPagedUserEvents(userId: String): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedUserSubscribedOnEvents(userId: String, isUpcomingOnly: Boolean): Flow<PagingData<EventDataEntity>>
+    suspend fun getPagedUserSubscribedOnEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<EventDataEntity>>
+    suspend fun getPagedUserFavouriteEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedEvents(searchQuery: String, filter: FilterParamsEvents): Flow<PagingData<EventDataEntity>>
+    suspend fun getEvent(eventId: String, userId: String): EventDataEntity?
 
-    suspend fun getEvent(eventId: String): EventDataEntity?
+    suspend fun createEvent(eventDataEntity: EventDataEntity)
 
-    suspend fun createEvent(event: EventDataEntity)
-
-    suspend fun updateEvent(event: EventDataEntity)
+    suspend fun updateEvent(eventDataEntity: EventDataEntity)
 
     suspend fun deleteEvent(eventId: String)
 
-    suspend fun setIsLiked(userId: String, event: EventDataEntity, isLiked: Boolean)
+    suspend fun setIsLiked(userId: String, eventDataEntity: EventDataEntity, isLiked: Boolean)
 
-    suspend fun setIsFavourite(userId: String, event: EventDataEntity, isFavourite: Boolean)
+    suspend fun setIsFavourite(userId: String, eventDataEntity: EventDataEntity, isFavourite: Boolean)
 
 }

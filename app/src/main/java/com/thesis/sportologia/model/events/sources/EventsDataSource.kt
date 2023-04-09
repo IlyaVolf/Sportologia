@@ -1,29 +1,34 @@
 package com.thesis.sportologia.model.events.sources
 
-import androidx.paging.PagingData
 import com.thesis.sportologia.model.events.entities.EventDataEntity
-import com.thesis.sportologia.model.users.entities.UserType
-import kotlinx.coroutines.flow.Flow
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 
 interface EventsDataSource {
 
     suspend fun getPagedUserEvents(
         userId: String,
-        lastMarker: Long?,
+        filter: FilterParamsEvents,
+        lastMarker: String?,
+        pageSize: Int
+    ): List<EventDataEntity>
+
+    suspend fun getPagedUserEvents(
+        userId: String,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity>
 
     suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
-        userType: UserType?,
-        lastMarker: Long?,
+        isUpcomingOnly: Boolean,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity>
 
     suspend fun getPagedUserFavouriteEvents(
         userId: String,
-        userType: UserType?,
-        lastMarker: Long?,
+        isUpcomingOnly: Boolean,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity>
 

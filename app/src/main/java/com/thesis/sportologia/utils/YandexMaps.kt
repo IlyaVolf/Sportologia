@@ -41,7 +41,11 @@ class YandexMaps {
                 address.append(geocodeResult.thoroughfare)
                 address.append(", ")
             }
-            if (geocodeResult.featureName != null && geocodeResult.thoroughfare != geocodeResult.featureName && geocodeResult.locality != geocodeResult.featureName) {
+            if (geocodeResult.featureName != null
+                && geocodeResult.postalCode != geocodeResult.featureName
+                && geocodeResult.thoroughfare != geocodeResult.featureName
+                && geocodeResult.locality != geocodeResult.featureName
+            ) {
                 address.append(geocodeResult.featureName)
                 address.append(", ")
             }

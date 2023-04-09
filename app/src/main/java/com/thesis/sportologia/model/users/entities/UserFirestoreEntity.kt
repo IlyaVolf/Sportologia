@@ -2,7 +2,7 @@ package com.thesis.sportologia.model.users.entities
 
 import com.google.firebase.firestore.GeoPoint
 
-data class UserFireStoreEntity(
+data class UserFirestoreEntity(
     var id: String? = null,
     var name: String? = null,
     var description: String? = null,

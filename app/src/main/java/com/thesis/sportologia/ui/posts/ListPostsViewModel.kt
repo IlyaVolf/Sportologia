@@ -104,7 +104,7 @@ abstract class ListPostsViewModel constructor(
     }
 
     override fun filterApply(athTorgF: Boolean?) {
-        Log.d("abcdef", "adadadad")
+        Log.d("abcdef", "filterApply $athTorgF")
         if (_athTorgFLiveData.value == athTorgF) return
 
         _athTorgFLiveData.value = athTorgF

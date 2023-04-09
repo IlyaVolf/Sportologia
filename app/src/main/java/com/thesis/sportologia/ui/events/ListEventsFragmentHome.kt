@@ -32,7 +32,7 @@ class ListEventsFragmentHome : ListEventsFragment() {
     }
 
     override fun initEventsHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterHome(this, viewModel, filterParams, viewModel.isUpcomingOnly)
+        return EventsHeaderAdapterHome(this, viewModel, filterParams)
     }
 
     companion object {

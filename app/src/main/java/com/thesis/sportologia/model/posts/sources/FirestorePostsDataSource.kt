@@ -3,8 +3,8 @@ package com.thesis.sportologia.model.posts.sources
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
-import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
-import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
+import com.thesis.sportologia.model.posts.entities.PostFirestoreEntity
+import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 // TODO вообще нужно проверять внимательно на сущестсование документов с указанным айди. При тестировании!
 // TODO вообще храним только id автора, по которому получим пользователяя и данные: аватар, имя и т.п
-class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
+class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
     /** т.к. версия пробная и отсутствуют Google Cloud Functions, для ускорения загрузки во вред
     оптимизации размера данных, мы получаем сразу все id пользователей, которыйп оставили лайк. По-началу
@@ -50,7 +50,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+        val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
         val userDocument = database.collection("users")
             .document(userId)
@@ -59,7 +59,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 throw Exception(e)
             }
             .await()
-        val user = userDocument.toObject(UserFireStoreEntity::class.java)
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
             ?: throw Exception("error user loading")
 
         currentPageDocuments.forEach {
@@ -125,8 +125,8 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
             .await()
 
-        val users = usersDocuments.toObjects(UserFireStoreEntity::class.java)
-        val usersMap = hashMapOf<String, UserFireStoreEntity>()
+        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
+        val usersMap = hashMapOf<String, UserFirestoreEntity>()
         users.forEach { usersMap[it.id!!] = it }
 
         if (lastMarker == null) {
@@ -167,7 +167,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+        val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -213,7 +213,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val currentPageDocuments: QuerySnapshot?
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
-        val currentPageAuthors = mutableListOf<UserFireStoreEntity>()
+        val currentPageAuthors = mutableListOf<UserFirestoreEntity>()
 
         if (lastMarker == null) {
             if (userType == null) {
@@ -224,7 +224,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                     .get()
                     .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
-                Log.d("abcdef", "111")
             } else {
                 currentPageDocuments = database.collection("posts")
                     .whereArrayContains("usersIdsFavs", userId)
@@ -258,8 +257,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
-        Log.d("abcdef", "222")
+        val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
         posts.forEach {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
@@ -268,22 +266,13 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             val authorDocument = database.collection("users")
                 .document(it.authorId!!)
                 .get()
-                .addOnFailureListener {
-                    Log.d("abcdef", "$it")
-                }
                 .await()
 
-            Log.d("abcdef", "333")
-
             val author =
-                authorDocument.toObject(UserFireStoreEntity::class.java) ?: throw Exception()
-
-            Log.d("abcdef", "444 $author")
+                authorDocument.toObject(UserFirestoreEntity::class.java) ?: throw Exception()
 
             currentPageAuthors.add(author)
         }
-
-        Log.d("abcdef", "555")
 
         val res = mutableListOf<PostDataEntity>()
         for (i in posts.indices) {
@@ -312,16 +301,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun getPost(postId: String, userId: String): PostDataEntity? {
-        val userDocument = database.collection("users")
-            .document(userId)
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
-        val user = userDocument.toObject(UserFireStoreEntity::class.java)
-            ?: throw Exception("error user loading")
-
         val postDocument = database.collection("posts")
             .document(postId)
             .get()
@@ -330,7 +309,17 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
             .await()
 
-        val post = postDocument.toObject(PostFireStoreEntity::class.java) ?: return null
+        val post = postDocument.toObject(PostFirestoreEntity::class.java) ?: return null
+
+        val userDocument = database.collection("users")
+            .document(post.authorId!!)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
+            ?: throw Exception("error user loading")
 
         val res = PostDataEntity(
             id = post.id,
@@ -354,7 +343,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun createPost(postDataEntity: PostDataEntity) {
-        val postFireStoreEntity = hashMapOf(
+        val postFirestoreEntity = hashMapOf(
             "authorId" to postDataEntity.authorId,
             "text" to postDataEntity.text,
             "likesCount" to postDataEntity.likesCount,
@@ -369,14 +358,7 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         val documentRef = database.collection("posts").document()
 
         documentRef
-            .set(postFireStoreEntity)
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
-
-        database.collection("posts")
-            .add(postFireStoreEntity)
+            .set(postFirestoreEntity)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -392,14 +374,14 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun updatePost(postDataEntity: PostDataEntity) {
-        val postFireStoreEntity = hashMapOf(
+        val postFirestoreEntity = hashMapOf(
             "text" to postDataEntity.text,
             "photosUrls" to postDataEntity.photosUrls,
         )
 
         database.collection("posts")
             .document(postDataEntity.id!!)
-            .update(postFireStoreEntity)
+            .update(postFirestoreEntity)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -421,7 +403,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         postDataEntity: PostDataEntity,
         isLiked: Boolean
     ) {
-        Log.d("abcdef", "setIsLiked")
         if (isLiked) {
             database.collection("posts")
                 .document(postDataEntity.id!!)
@@ -467,15 +448,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
-
-            database.collection("users")
-                .document(userId)
-                .collection("favsPosts")
-                .document(postDataEntity.id)
-                .set(hashMapOf<String, Any>())
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
         } else {
             database.collection("posts")
                 .document(postDataEntity.id!!)
@@ -484,16 +456,6 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                         "usersIdsFavs" to FieldValue.arrayRemove(userId)
                     )
                 )
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
-                .await()
-
-            database.collection("users")
-                .document(userId)
-                .collection("favsPosts")
-                .document(postDataEntity.id)
-                .delete()
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }

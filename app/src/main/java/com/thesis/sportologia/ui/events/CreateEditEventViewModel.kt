@@ -132,13 +132,12 @@ class CreateEditEventViewModel @AssistedInject constructor(
             return
         }
 
-
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     _eventHolder.value = DataHolder.loading()
                 }
-                val event = eventsRepository.getEvent(eventId!!)
+                val event = eventsRepository.getEvent(eventId!!, CurrentAccount().id)
                 withContext(Dispatchers.Main) {
                     _eventHolder.value = DataHolder.ready(event)
                 }

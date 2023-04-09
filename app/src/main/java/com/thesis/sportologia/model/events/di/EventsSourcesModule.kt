@@ -1,6 +1,6 @@
 package com.thesis.sportologia.model.events.di
 
-import com.thesis.sportologia.model.events.sources.FireStoreEventsDataSource
+import com.thesis.sportologia.model.events.sources.FirestoreEventsDataSource
 import com.thesis.sportologia.model.events.sources.EventsDataSource
 import dagger.Binds
 import dagger.Module
@@ -15,7 +15,7 @@ interface EventsSourcesModule {
     @Binds
     @Singleton
     fun bindOrdersDataSource(
-        eventsDataSource: FireStoreEventsDataSource
+        eventsDataSource: FirestoreEventsDataSource
     ): EventsDataSource
 
 }
