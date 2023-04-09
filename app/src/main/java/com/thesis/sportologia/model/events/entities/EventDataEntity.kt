@@ -18,6 +18,7 @@ data class EventDataEntity(
     var currency: String,
     var categories: Map<String, Boolean>,
     var likesCount: Int,
+    var postedDate: Long?,
     var isLiked: Boolean,
     var isFavourite: Boolean,
     var photosUrls: List<String>,

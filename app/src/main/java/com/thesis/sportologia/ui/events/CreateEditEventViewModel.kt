@@ -86,6 +86,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
                     likesCount = 0,
                     isLiked = false,
                     isFavourite = false,
+                    postedDate = null,
                     photosUrls = event.photosUrls,
                 )
             Mode.EDIT ->

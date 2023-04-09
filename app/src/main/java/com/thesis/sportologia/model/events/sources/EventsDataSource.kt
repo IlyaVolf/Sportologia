@@ -8,27 +8,27 @@ interface EventsDataSource {
     suspend fun getPagedUserEvents(
         userId: String,
         filter: FilterParamsEvents,
-        lastMarker: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<EventDataEntity>
 
     suspend fun getPagedUserEvents(
         userId: String,
-        lastMarker: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<EventDataEntity>
 
     suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
         isUpcomingOnly: Boolean,
-        lastMarker: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<EventDataEntity>
 
     suspend fun getPagedUserFavouriteEvents(
         userId: String,
         isUpcomingOnly: Boolean,
-        lastMarker: String?,
+        lastMarker: Long?,
         pageSize: Int
     ): List<EventDataEntity>
 
