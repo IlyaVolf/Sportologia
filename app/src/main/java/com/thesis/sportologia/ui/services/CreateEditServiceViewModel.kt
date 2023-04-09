@@ -4,16 +4,12 @@ package com.thesis.sportologia.ui.services
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.events.entities.Event
 import com.thesis.sportologia.model.services.ServicesRepository
 import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.events.CreateEditEventViewModel
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
-import com.thesis.sportologia.ui.services.entities.ServiceGeneralCreateEditItem
 import com.thesis.sportologia.ui.services.entities.toCreateEditItem
-import com.thesis.sportologia.ui.services.entities.toExercise
 
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger

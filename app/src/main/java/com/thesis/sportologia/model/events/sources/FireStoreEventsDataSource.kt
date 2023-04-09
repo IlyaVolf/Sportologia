@@ -1,9 +1,13 @@
-package com.thesis.sportologia.model.posts.sources
+package com.thesis.sportologia.model.events.sources
 
 import android.util.Log
-import com.google.firebase.firestore.*
-import com.thesis.sportologia.model.posts.entities.PostDataEntity
-import com.thesis.sportologia.model.posts.entities.PostFireStoreEntity
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
+import com.thesis.sportologia.model.events.entities.EventDataEntity
+import com.thesis.sportologia.model.events.entities.EventFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserFireStoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.tasks.await
@@ -12,7 +16,7 @@ import javax.inject.Inject
 
 // TODO вообще нужно проверять внимательно на сущестсование документов с указанным айди. При тестировании!
 // TODO вообще храним только id автора, по которому получим пользователяя и данные: аватар, имя и т.п
-class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
+class FireStoreEventsDataSource @Inject constructor() : EventsDataSource {
 
     /** т.к. версия пробная и отсутствуют Google Cloud Functions, для ускорения загрузки во вред
     оптимизации размера данных, мы получаем сразу все id пользователей, которыйп оставили лайк. По-началу
@@ -23,143 +27,123 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     private val database = FirebaseFirestore.getInstance()
 
-    override suspend fun getPagedUserPosts(
+    override suspend fun getPagedUserEvents(
         userId: String,
         lastMarker: Long?,
         pageSize: Int
-    ): List<PostDataEntity> {
-        val currentPageDocuments: QuerySnapshot?
+    ): List<EventDataEntity> {
+        /*val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
         if (lastMarker == null) {
-            currentPageDocuments = database.collection("posts")
+            currentPageDocuments = database.collection("events")
                 .whereEqualTo("authorId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("eventedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .get()
                 .await()
         } else {
-            currentPageDocuments = database.collection("posts")
+            currentPageDocuments = database.collection("events")
                 .whereEqualTo("authorId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("eventedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
                 .get()
                 .await()
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
-
-        val userDocument = database.collection("users")
-            .document(userId)
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
-        val user = userDocument.toObject(UserFireStoreEntity::class.java)
-            ?: throw Exception("error user loading")
+        val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
         }
-        posts.forEach {
+        events.forEach {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
         }
 
-        val res = mutableListOf<PostDataEntity>()
-        for (i in posts.indices) {
+        val res = mutableListOf<EventDataEntity>()
+        for (i in events.indices) {
             res.add(
-                PostDataEntity(
+                EventDataEntity(
                     id = currentPageIds[i],
-                    authorId = user.id!!,
-                    authorName = user.name!!,
-                    profilePictureUrl = user.profilePhotoURI,
-                    text = posts[i].text!!,
-                    likesCount = posts[i].likesCount!!,
-                    userType = when (user.userType) {
+                    authorId = events[i].authorId!!,
+                    authorName = events[i].authorName!!,
+                    profilePictureUrl = events[i].profilePictureUrl,
+                    text = events[i].text!!,
+                    likesCount = events[i].likesCount!!,
+                    userType = when (events[i].userType) {
                         "ATHLETE" -> UserType.ATHLETE
                         "ORGANIZATION" -> UserType.ORGANIZATION
                         else -> throw Exception()
                     },
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
-                    postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls,
+                    eventedDate = events[i].eventedDate!!,
+                    photosUrls = events[i].photosUrls,
                 )
             )
         }
 
-        return res
+        return res*/
+        return emptyList()
     }
 
-    override suspend fun getPagedUserSubscribedOnPosts(
+    override suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
         userType: UserType?,
         lastMarker: Long?,
         pageSize: Int
-    ): List<PostDataEntity> {
-        val currentPageDocuments: QuerySnapshot?
+    ): List<EventDataEntity> {
+        /*val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
-        val followersIdsDocument = database.collection("users")
+        val userDocument = database.collection("users")
             .document(userId)
-            .collection("followersIds")
             .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
+            .addOnSuccessListener {
+                if (!it.exists()) {
+                    throw Exception("no such user")
+                }
             }.await()
 
-        val followersIds = followersIdsDocument.map { it.id }
-
-        val usersDocuments = database.collection("users")
-            .whereIn(FieldPath.documentId(), followersIds)
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
-
-        val users = usersDocuments.toObjects(UserFireStoreEntity::class.java)
-        val usersMap = hashMapOf<String, UserFireStoreEntity>()
-        users.forEach { usersMap[it.id!!] = it }
+        val user = userDocument.toObject(UserFireStoreEntity::class.java) ?: return emptyList()
 
         if (lastMarker == null) {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
-                    .whereIn("authorId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("authorId", user.followersIds)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
-                    .whereIn("authorId", followersIds)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("authorId", user.followersIds)
                     .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .await()
             }
         } else {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
-                    .whereIn("authorId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("authorId", user.followersIds)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
-                    .whereIn("authorId", followersIds)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("authorId", user.followersIds)
                     .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
@@ -167,69 +151,81 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
+        val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
         }
-        posts.forEach {
+        events.forEach {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
         }
 
-        val res = mutableListOf<PostDataEntity>()
-        for (i in posts.indices) {
-            val authorId = posts[i].authorId!!
+        val res = mutableListOf<EventDataEntity>()
+        for (i in events.indices) {
             res.add(
-                PostDataEntity(
+                EventDataEntity(
                     id = currentPageIds[i],
-                    authorId = authorId,
-                    authorName = usersMap[authorId]!!.name!!,
-                    profilePictureUrl = usersMap[authorId]!!.profilePhotoURI,
-                    text = posts[i].text!!,
-                    likesCount = posts[i].likesCount!!,
-                    userType = when (usersMap[authorId]!!.userType) {
+                    authorId = events[i].authorId!!,
+                    authorName = events[i].authorName!!,
+                    profilePictureUrl = events[i].profilePictureUrl,
+                    text = events[i].text!!,
+                    likesCount = events[i].likesCount!!,
+                    userType = when (events[i].userType) {
                         "ATHLETE" -> UserType.ATHLETE
                         "ORGANIZATION" -> UserType.ORGANIZATION
                         else -> throw Exception()
                     },
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
-                    postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls,
+                    eventedDate = events[i].eventedDate!!,
+                    photosUrls = events[i].photosUrls,
                 )
             )
         }
 
-        return res
+        return res*/
+        return emptyList()
     }
 
-    override suspend fun getPagedUserFavouritePosts(
+    override suspend fun getPagedUserFavouriteEvents(
         userId: String,
         userType: UserType?,
         lastMarker: Long?,
         pageSize: Int
-    ): List<PostDataEntity> {
+    ): List<EventDataEntity> {
+        /*val usersFavsEventsIds = mutableListOf<String>()
+
         val currentPageDocuments: QuerySnapshot?
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
-        val currentPageAuthors = mutableListOf<UserFireStoreEntity>()
+
+        val userFavsEventsIdsDocuments = database.collection("users")
+            .document(userId)
+            .collection("favsEvents")
+            .get()
+            .await()
+
+        userFavsEventsIdsDocuments.forEach {
+            usersFavsEventsIds.add(it.id)
+        }
+
+        Log.d("abcdef", "usersFavsEventsIds $usersFavsEventsIds")
 
         if (lastMarker == null) {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
-                    .whereArrayContains("usersIdsFavs", userId)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("id", usersFavsEventsIds)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
-                    .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
+                    .addOnFailureListener { throw Exception(it) }
                     .await()
-                Log.d("abcdef", "111")
             } else {
-                currentPageDocuments = database.collection("posts")
-                    .whereArrayContains("usersIdsFavs", userId)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("id", usersFavsEventsIds)
                     .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .addOnFailureListener { throw Exception(it) }
@@ -237,19 +233,19 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         } else {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
-                    .whereArrayContains("usersIdsFavs", userId)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("id", usersFavsEventsIds)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
-                    .whereArrayContains("usersIdsFavs", userId)
+                currentPageDocuments = database.collection("events")
+                    .whereIn("id", usersFavsEventsIds)
                     .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("eventedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
@@ -258,52 +254,34 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         }
 
-        val posts = currentPageDocuments.toObjects(PostFireStoreEntity::class.java)
-        Log.d("abcdef", "222")
+        Log.d("abcdef", "events ${currentPageDocuments.documents}")
 
-        posts.forEach {
+        val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
+
+        events.forEach {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
-
-            val authorDocument = database.collection("users")
-                .document(it.authorId!!)
-                .get()
-                .addOnFailureListener {
-                    Log.d("abcdef", "$it")
-                }
-                .await()
-
-            Log.d("abcdef", "333")
-
-            val author =
-                authorDocument.toObject(UserFireStoreEntity::class.java) ?: throw Exception()
-
-            Log.d("abcdef", "444 $author")
-
-            currentPageAuthors.add(author)
         }
 
-        Log.d("abcdef", "555")
-
-        val res = mutableListOf<PostDataEntity>()
-        for (i in posts.indices) {
+        val res = mutableListOf<EventDataEntity>()
+        for (i in events.indices) {
             res.add(
-                PostDataEntity(
-                    id = posts[i].id,
-                    authorId = currentPageAuthors[i].id!!,
-                    authorName = currentPageAuthors[i].name!!,
-                    profilePictureUrl = currentPageAuthors[i].profilePhotoURI,
-                    text = posts[i].text!!,
-                    likesCount = posts[i].likesCount!!,
-                    userType = when (currentPageAuthors[i].userType) {
+                EventDataEntity(
+                    id = events[i].id,
+                    authorId = events[i].authorId!!,
+                    authorName = events[i].authorName!!,
+                    profilePictureUrl = events[i].profilePictureUrl,
+                    text = events[i].text!!,
+                    likesCount = events[i].likesCount!!,
+                    userType = when (events[i].userType) {
                         "ATHLETE" -> UserType.ATHLETE
                         "ORGANIZATION" -> UserType.ORGANIZATION
                         else -> throw Exception()
                     },
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
-                    postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls,
+                    eventedDate = events[i].eventedDate!!,
+                    photosUrls = events[i].photosUrls,
                 )
             )
         }
@@ -311,72 +289,80 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
         return res
     }
 
-    override suspend fun getPost(postId: String, userId: String): PostDataEntity? {
-        val userDocument = database.collection("users")
-            .document(userId)
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
-        val user = userDocument.toObject(UserFireStoreEntity::class.java)
-            ?: throw Exception("error user loading")
-
-        val postDocument = database.collection("posts")
-            .document(postId)
+    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity? {
+        val document = database.collection("events")
+            .document(eventId)
             .get()
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
             .await()
 
-        val post = postDocument.toObject(PostFireStoreEntity::class.java) ?: return null
+        val event = document.toObject(EventFirestoreEntity::class.java) ?: return null
 
-        val res = PostDataEntity(
-            id = post.id,
-            authorId = user.id!!,
-            authorName = user.name!!,
-            profilePictureUrl = user.profilePhotoURI,
-            text = post.text!!,
-            likesCount = post.likesCount!!,
-            userType = when (user.userType) {
+        val res = EventDataEntity(
+            id = document.id,
+            authorId = event.authorId!!,
+            authorName = event.authorName!!,
+            profilePictureUrl = event.profilePictureUrl,
+            text = event.text!!,
+            likesCount = event.likesCount!!,
+            userType = when (event.userType) {
                 "ATHLETE" -> UserType.ATHLETE
                 "ORGANIZATION" -> UserType.ORGANIZATION
                 else -> throw Exception()
             },
-            isLiked = post.usersIdsLiked.contains(userId),
-            isFavourite = post.usersIdsFavs.contains(userId),
-            postedDate = post.postedDate!!,
-            photosUrls = post.photosUrls,
+            isLiked = event.usersIdsLiked.contains(userId),
+            isFavourite = event.usersIdsFavs.contains(userId),
+            eventedDate = event.eventedDate!!,
+            photosUrls = event.photosUrls,
         )
 
-        return res
+        return res*/
+        return emptyList()
     }
 
-    override suspend fun createPost(postDataEntity: PostDataEntity) {
-        val postFireStoreEntity = hashMapOf(
-            "authorId" to postDataEntity.authorId,
-            "text" to postDataEntity.text,
-            "likesCount" to postDataEntity.likesCount,
+    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity? {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun createEvent(eventDataEntity: EventDataEntity) {
+        val eventFireStoreEntity = hashMapOf(
+            "name" to eventDataEntity.name,
+            "description" to eventDataEntity.description,
+            "organizerId" to eventDataEntity.organizerId,
+            "organizerName" to eventDataEntity.organizerName,
+            "userType" to eventDataEntity.userType,
+            "profilePictureUrl" to eventDataEntity.profilePictureUrl,
+            "dateFrom" to eventDataEntity.dateFrom,
+            "dateTo" to eventDataEntity.dateTo,
+            "position" to GeoPoint(
+                eventDataEntity.position.latitude,
+                eventDataEntity.position.longitude
+            ),
+            "price" to eventDataEntity.price,
+            "currency" to eventDataEntity.currency,
+            "categories" to eventDataEntity.categories,
+            "likesCount" to eventDataEntity.likesCount,
             "postedDate" to Calendar.getInstance().timeInMillis,
-            "photosUrls" to postDataEntity.photosUrls,
+            "photosUrls" to eventDataEntity.photosUrls,
             "usersIdsLiked" to listOf<String>(),
             "usersIdsFavs" to listOf<String>()
         )
 
         // TODO должна быть атомарной
 
-        val documentRef = database.collection("posts").document()
+        val documentRef = database.collection("events").document()
 
         documentRef
-            .set(postFireStoreEntity)
+            .set(eventFireStoreEntity)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
             .await()
 
-        database.collection("posts")
-            .add(postFireStoreEntity)
+        database.collection("events")
+            .add(eventFireStoreEntity)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -391,24 +377,34 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     }
 
-    override suspend fun updatePost(postDataEntity: PostDataEntity) {
-        val postFireStoreEntity = hashMapOf(
-            "text" to postDataEntity.text,
-            "photosUrls" to postDataEntity.photosUrls,
+    override suspend fun updateEvent(eventDataEntity: EventDataEntity) {
+        val eventFireStoreEntity = hashMapOf(
+            "description" to eventDataEntity.description,
+            "dateFrom" to eventDataEntity.dateFrom,
+            "dateTo" to eventDataEntity.dateTo,
+            "position" to GeoPoint(
+                eventDataEntity.position.latitude,
+                eventDataEntity.position.longitude
+            ),
+            "price" to eventDataEntity.price,
+            "currency" to eventDataEntity.currency,
+            "categories" to eventDataEntity.categories,
+            "likesCount" to eventDataEntity.likesCount,
+            "photosUrls" to eventDataEntity.photosUrls,
         )
 
-        database.collection("posts")
-            .document(postDataEntity.id!!)
-            .update(postFireStoreEntity)
+        database.collection("events")
+            .document(eventDataEntity.id!!)
+            .update(eventFireStoreEntity)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
             .await()
     }
 
-    override suspend fun deletePost(postId: String) {
-        database.collection("posts")
-            .document(postId)
+    override suspend fun deleteEvent(eventId: String) {
+        database.collection("events")
+            .document(eventId)
             .delete()
             .addOnFailureListener { e ->
                 throw Exception(e)
@@ -418,13 +414,12 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun setIsLiked(
         userId: String,
-        postDataEntity: PostDataEntity,
+        eventDataEntity: EventDataEntity,
         isLiked: Boolean
     ) {
-        Log.d("abcdef", "setIsLiked")
         if (isLiked) {
-            database.collection("posts")
-                .document(postDataEntity.id!!)
+            database.collection("events")
+                .document(eventDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
                         "likesCount" to FieldValue.increment(1L),
@@ -436,8 +431,8 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
                 }
                 .await()
         } else {
-            database.collection("posts")
-                .document(postDataEntity.id!!)
+            database.collection("events")
+                .document(eventDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
                         "likesCount" to FieldValue.increment(-1L),
@@ -453,12 +448,12 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
     override suspend fun setIsFavourite(
         userId: String,
-        postDataEntity: PostDataEntity,
+        eventDataEntity: EventDataEntity,
         isFavourite: Boolean
     ) {
         if (isFavourite) {
-            database.collection("posts")
-                .document(postDataEntity.id!!)
+            database.collection("events")
+                .document(eventDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
                         "usersIdsFavs" to FieldValue.arrayUnion(userId)
@@ -470,18 +465,19 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
             database.collection("users")
                 .document(userId)
-                .collection("favsPosts")
-                .document(postDataEntity.id)
+                .collection("favsEvents")
+                .document(eventDataEntity.id)
                 .set(hashMapOf<String, Any>())
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
         } else {
-            database.collection("posts")
-                .document(postDataEntity.id!!)
+            database.collection("events")
+                .document(eventDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
-                        "usersIdsFavs" to FieldValue.arrayRemove(userId)
+                        "likesCount" to FieldValue.increment(-1L),
+                        "usersIdsLiked" to FieldValue.arrayRemove(userId)
                     )
                 )
                 .addOnFailureListener { e ->
@@ -491,8 +487,8 @@ class FireStorePostsDataSource @Inject constructor() : PostsDataSource {
 
             database.collection("users")
                 .document(userId)
-                .collection("favsPosts")
-                .document(postDataEntity.id)
+                .collection("favsEvents")
+                .document(eventDataEntity.id)
                 .delete()
                 .addOnFailureListener { e ->
                     throw Exception(e)

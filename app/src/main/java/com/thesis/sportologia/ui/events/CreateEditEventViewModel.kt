@@ -5,11 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.events.EventsRepository
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
 import com.thesis.sportologia.ui.events.entities.toCreateEditItem
-import com.thesis.sportologia.ui.services.CreateEditServiceViewModel
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -20,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CreateEditEventViewModel @AssistedInject constructor(
-    @Assisted private val eventId: Long?,
+    @Assisted private val eventId: String?,
     private val eventsRepository: EventsRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -30,7 +29,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _eventHolder = ObservableHolder<Event?>(DataHolder.init())
+    private val _eventHolder = ObservableHolder<EventDataEntity?>(DataHolder.init())
     val eventHolder = _eventHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
@@ -56,7 +55,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
             return
         }
 
-        var savedEvent: Event? = null
+        var savedEvent: EventDataEntity? = null
         _eventHolder.value!!.onReady {
             savedEvent = it
         }
@@ -67,16 +66,16 @@ class CreateEditEventViewModel @AssistedInject constructor(
         val reformattedName = reformatText(event.name!!)
         val reformattedDescription = reformatText(event.description!!)
 
-        lateinit var newEvent: Event
+        lateinit var newEvent: EventDataEntity
         when (mode) {
             Mode.CREATE ->
-                newEvent = Event(
-                    id = -1, // не тут надо создавать!
+                newEvent = EventDataEntity(
+                    id = null, // не тут надо создавать!
                     name = reformattedName,
                     description = reformattedDescription,
                     organizerId = currentAccount.id,
                     organizerName = currentAccount.userName,
-                    isOrganizerAthlete = currentAccount.isAthlete,
+                    userType = currentAccount.userType,
                     profilePictureUrl = currentAccount.profilePictureUrl,
                     dateFrom = event.dateFrom!!,
                     dateTo = event.dateTo,
@@ -254,7 +253,7 @@ class CreateEditEventViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(eventId: Long?): CreateEditEventViewModel
+        fun create(eventId: String?): CreateEditEventViewModel
     }
 
 }

@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui.events
 
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -11,9 +10,8 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.events.EventsLocalChanges
 import com.thesis.sportologia.model.events.EventsRepository
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
@@ -67,7 +65,7 @@ abstract class ListEventsViewModel constructor(
         )
     }
 
-    abstract fun getDataFlow(): Flow<PagingData<Event>>
+    abstract fun getDataFlow(): Flow<PagingData<EventDataEntity>>
 
     override fun onEventDelete(eventListItem: EventListItem) {
         if (isInProgress(eventListItem.id)) return
@@ -141,7 +139,7 @@ abstract class ListEventsViewModel constructor(
 
     private suspend fun setLike(eventListItem: EventListItem) {
         val newFlagValue = !eventListItem.isLiked
-        eventsRepository.setIsLiked(userId, eventListItem.event, newFlagValue)
+        eventsRepository.setIsLiked(userId, eventListItem.eventDataEntity, newFlagValue)
         localChanges.isLikedFlags[eventListItem.id] = newFlagValue
         //localChanges.isTextFlags[eventListItem.id] = eventListItem.text + "asgagasagag"
         localChangesFlow.value = OnChange(localChanges)
@@ -149,7 +147,7 @@ abstract class ListEventsViewModel constructor(
 
     private suspend fun setFavoriteFlag(eventListItem: EventListItem) {
         val newFlagValue = !eventListItem.isFavourite
-        eventsRepository.setIsFavourite(userId, eventListItem.event, newFlagValue)
+        eventsRepository.setIsFavourite(userId, eventListItem.eventDataEntity, newFlagValue)
         localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }
@@ -159,7 +157,7 @@ abstract class ListEventsViewModel constructor(
         invalidateList()
     }
 
-    private fun setProgress(eventListItemId: Long, inProgress: Boolean) {
+    private fun setProgress(eventListItemId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(eventListItemId)
         } else {
@@ -168,7 +166,7 @@ abstract class ListEventsViewModel constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(eventListItemId: Long) =
+    private fun isInProgress(eventListItemId: String) =
         localChanges.idsInProgress.contains(eventListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
@@ -184,7 +182,7 @@ abstract class ListEventsViewModel constructor(
     }
 
     private fun merge(
-        events: PagingData<Event>,
+        events: PagingData<EventDataEntity>,
         localChanges: OnChange<EventsLocalChanges>
     ): PagingData<EventListItem> {
         return events

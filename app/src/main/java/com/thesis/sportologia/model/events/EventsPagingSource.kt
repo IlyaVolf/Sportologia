@@ -2,16 +2,16 @@ package com.thesis.sportologia.model.events
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 
-typealias EventsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Event>
+typealias EventsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<EventDataEntity>
 
 @Suppress("UnnecessaryVariable")
 class EventsPagingSource(
     private val loader: EventsPageLoader,
-) : PagingSource<Int, Event>() {
+) : PagingSource<Int, EventDataEntity>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Event> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EventDataEntity> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
         val pageIndex = params.key ?: 0
 
@@ -35,7 +35,7 @@ class EventsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Event>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, EventDataEntity>): Int? {
         // get the most recently accessed index in the users list:
         val anchorPosition = state.anchorPosition ?: return null
         // convert item index to page index:

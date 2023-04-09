@@ -43,7 +43,6 @@ fun parseDatePublication(context: Context, dateAndTime: Calendar): String {
         res.append("${context.getString(R.string.date_yesterday)} ${context.getString(R.string.date_at)} ")
             .append(parseDate(dateAndTime, "H:mm"))
     } else {
-        res.append(parseDate(dateAndTime, "H:mm"))
         if (isTheSameYear) {
             res.append(parseDate(dateAndTime, "d MMMM"))
         } else {

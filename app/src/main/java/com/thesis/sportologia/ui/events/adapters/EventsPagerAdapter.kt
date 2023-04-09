@@ -121,7 +121,7 @@ class EventsPagerAdapter(
         )
     }
 
-    private fun onEditButtonPressed(eventId: Long) {
+    private fun onEditButtonPressed(eventId: String) {
         val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditEventFragment(
             CreateEditEventFragment.EventId(eventId)
         )

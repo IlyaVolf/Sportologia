@@ -1,7 +1,7 @@
 package com.thesis.sportologia.ui.events.entities
 
 import android.location.Address
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
 import com.thesis.sportologia.utils.Position
 import java.util.*
@@ -35,7 +35,7 @@ data class EventCreateEditItem(
     }
 }
 
-fun Event.toCreateEditItem(): EventCreateEditItem {
+fun EventDataEntity.toCreateEditItem(): EventCreateEditItem {
     return EventCreateEditItem(
         name = name,
         description = description,

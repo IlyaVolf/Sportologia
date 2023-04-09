@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.thesis.sportologia.model.events.EventsRepository
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -22,7 +21,7 @@ class ListEventsViewModelFavourites @AssistedInject constructor(
     logger: Logger
 ) : ListEventsViewModel(filterParams, userId, eventsRepository, logger) {
 
-    override fun getDataFlow(): Flow<PagingData<Event>> {
+    override fun getDataFlow(): Flow<PagingData<EventDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
                 eventsRepository.getPagedUserFavouriteEvents(isUpcomingOnly)

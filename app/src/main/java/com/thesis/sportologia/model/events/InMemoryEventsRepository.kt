@@ -5,8 +5,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.Position
 import com.thesis.sportologia.utils.containsAnyCase
@@ -41,13 +42,13 @@ class InMemoryEventsRepository @Inject constructor(
         dateTo2.set(2023, 1, 28, 20, 0, 0)
     }
 
-    private val eventSample = Event(
-        id = 0L,
+    private val eventSample = EventDataEntity(
+        id = null,
         name = "Сходка лыжников в НГУ",
         description = "Я Игорю и я провожу лучшие занятия по лыжам",
         organizerId = "i_chiesov",
         organizerName = "Игорь Чиёсов",
-        isOrganizerAthlete = true,
+        userType = UserType.ATHLETE,
         profilePictureUrl = null,
         dateFrom = dateFrom.timeInMillis,
         dateTo = dateTo.timeInMillis,
@@ -67,13 +68,13 @@ class InMemoryEventsRepository @Inject constructor(
 
     private val events = mutableListOf(
         eventSample.copy(isFavourite = true),
-        Event(
-            id = 1L,
+        EventDataEntity(
+            id = null,
             name = "Мастер-класс",
             description = "Лучший в мире мастер-класс",
             organizerId = "stroitel",
             organizerName = "Тренажёрный зал Строитель",
-            isOrganizerAthlete = false,
+            userType = UserType.ORGANIZATION,
             profilePictureUrl = null,
             dateFrom = dateFrom2.timeInMillis,
             dateTo = dateTo2.timeInMillis,
@@ -92,35 +93,35 @@ class InMemoryEventsRepository @Inject constructor(
                 "https://avatars.mds.yandex.net/get-mpic/5217165/img_id5807486875283978845.jpeg/orig"
             ),
         ),
-        eventSample.copy(id = 2L),
-        eventSample.copy(id = 3L),
-        eventSample.copy(id = 4L),
-        eventSample.copy(id = 5L),
-        eventSample.copy(id = 6L),
-        eventSample.copy(id = 7L),
-        eventSample.copy(id = 8L),
-        eventSample.copy(id = 9L),
-        eventSample.copy(id = 10L),
-        eventSample.copy(id = 11L),
-        eventSample.copy(id = 12L),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
         eventSample.copy(
             organizerName = "Антон Игорев",
             organizerId = "best_mate",
-            id = 13L,
             description = "abcdefghiklmnopqrstvuxwyz"
         ),
-        eventSample.copy(id = 14L),
-        eventSample.copy(id = 15L),
-        eventSample.copy(id = 16L),
-        eventSample.copy(id = 17L),
-        eventSample.copy(id = 18L),
-        eventSample.copy(id = 19L),
-        eventSample.copy(id = 20L),
-        eventSample.copy(id = 21L),
-        eventSample.copy(id = 22L),
-        eventSample.copy(id = 23L),
-        eventSample.copy(id = 24L),
-        eventSample.copy(id = 25L),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
+        eventSample.copy(),
     )
 
     private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
@@ -131,7 +132,7 @@ class InMemoryEventsRepository @Inject constructor(
     } */
 
 
-    private suspend fun getUserEvents(pageIndex: Int, pageSize: Int, userId: String): List<Event> =
+    private suspend fun getUserEvents(pageIndex: Int, pageSize: Int, userId: String): List<EventDataEntity> =
         withContext(
             ioDispatcher
         ) {
@@ -146,7 +147,7 @@ class InMemoryEventsRepository @Inject constructor(
             // throw Exception("a")
 
             if (offset >= filteredEvents.size) {
-                return@withContext listOf<Event>()
+                return@withContext listOf<EventDataEntity>()
             } else if (offset + pageSize >= filteredEvents.size) {
                 return@withContext filteredEvents.subList(offset, filteredEvents.size)
             } else {
@@ -154,7 +155,7 @@ class InMemoryEventsRepository @Inject constructor(
             }
         }
 
-    override suspend fun getPagedUserEvents(userId: String): Flow<PagingData<Event>> {
+    override suspend fun getPagedUserEvents(userId: String): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
             getUserEvents(pageIndex, pageSize, userId)
         }
@@ -175,7 +176,7 @@ class InMemoryEventsRepository @Inject constructor(
     override suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
         isUpcomingOnly: Boolean
-    ): Flow<PagingData<Event>> {
+    ): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
             getUserSubscribedOnEvents(pageIndex, pageSize, userId, isUpcomingOnly)
         }
@@ -198,10 +199,10 @@ class InMemoryEventsRepository @Inject constructor(
         pageSize: Int,
         userId: String,
         isUpcomingOnly: Boolean
-    ): List<Event> = withContext(
+    ): List<EventDataEntity> = withContext(
         ioDispatcher
     ) {
-        val res = mutableListOf<Event>()
+        val res = mutableListOf<EventDataEntity>()
 
         delay(1000)
 
@@ -231,7 +232,7 @@ class InMemoryEventsRepository @Inject constructor(
         // TODO SORT BY DATE
 
         if (offset >= res.size) {
-            return@withContext listOf<Event>()
+            return@withContext listOf<EventDataEntity>()
         } else if (offset + pageSize >= res.size) {
             return@withContext res.subList(offset, res.size)
         } else {
@@ -239,7 +240,7 @@ class InMemoryEventsRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>> {
+    override suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
             getUserFavouriteEvents(pageIndex, pageSize, isUpcomingOnly)
         }
@@ -255,7 +256,7 @@ class InMemoryEventsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getEvent(eventId: Long): Event? = withContext(ioDispatcher) {
+    override suspend fun getEvent(eventId: String): EventDataEntity? = withContext(ioDispatcher) {
         delay(1000)
 
         return@withContext if (events.none { it.id == eventId }) null else events.filter { it.id == eventId }[0]
@@ -265,7 +266,7 @@ class InMemoryEventsRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         isUpcomingOnly: Boolean
-    ): List<Event> = withContext(ioDispatcher) {
+    ): List<EventDataEntity> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
 
@@ -290,7 +291,7 @@ class InMemoryEventsRepository @Inject constructor(
         //throw Exception("a")
 
         if (offset >= filteredEvents.size) {
-            return@withContext listOf<Event>()
+            return@withContext listOf<EventDataEntity>()
         } else if (offset + pageSize >= filteredEvents.size) {
             return@withContext filteredEvents.subList(offset, filteredEvents.size)
         } else {
@@ -299,7 +300,7 @@ class InMemoryEventsRepository @Inject constructor(
     }
 
     override suspend fun getPagedEvents(searchQuery: String, filter: FilterParamsEvents)
-            : Flow<PagingData<Event>> {
+            : Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { pageIndex, pageSize ->
             getEvents(pageIndex, pageSize, searchQuery, filter)
         }
@@ -320,7 +321,7 @@ class InMemoryEventsRepository @Inject constructor(
         pageSize: Int,
         searchQuery: String,
         filter: FilterParamsEvents
-    ): List<Event> =
+    ): List<EventDataEntity> =
         withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
@@ -336,7 +337,7 @@ class InMemoryEventsRepository @Inject constructor(
             //throw Exception("a")
 
             if (offset >= eventsFound.size) {
-                return@withContext listOf<Event>()
+                return@withContext listOf<EventDataEntity>()
             } else if (offset + pageSize >= eventsFound.size) {
                 return@withContext eventsFound.subList(offset, eventsFound.size)
             } else {
@@ -359,27 +360,27 @@ class InMemoryEventsRepository @Inject constructor(
         return res
     }*/
 
-    override suspend fun createEvent(event: Event) {
+    override suspend fun createEvent(event: EventDataEntity) {
         delay(1000)
         events.add(event)
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updateEvent(event: Event) {
+    override suspend fun updateEvent(event: EventDataEntity) {
         delay(1000)
 
         events[events.indexOfFirst { it.id == event.id }] = event
 
     }
 
-    override suspend fun deleteEvent(eventId: Long) {
+    override suspend fun deleteEvent(eventId: String) {
         delay(1000)
         events.removeIf { it.id == eventId }
         localChanges.remove(eventId)
     }
 
-    override suspend fun setIsLiked(userId: String, event: Event, isLiked: Boolean) {
+    override suspend fun setIsLiked(userId: String, event: EventDataEntity, isLiked: Boolean) {
         withContext(ioDispatcher) {
             delay(1000)
 
@@ -398,7 +399,7 @@ class InMemoryEventsRepository @Inject constructor(
 
     override suspend fun setIsFavourite(
         userId: String,
-        event: Event,
+        event: EventDataEntity,
         isFavourite: Boolean
     ) = withContext(ioDispatcher) {
         delay(1000)

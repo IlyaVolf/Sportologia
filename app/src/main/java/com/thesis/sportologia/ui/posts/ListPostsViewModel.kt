@@ -126,17 +126,13 @@ abstract class ListPostsViewModel constructor(
     private suspend fun setLike(postListItem: PostListItem) {
         try {
             val newFlagValue = !postListItem.isLiked
-            Log.d("abcdef", "before")
-            Log.d("abcdef", postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue).toString())
             postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue)
-            Log.d("abcdef", "after")
             localChanges.isLikedFlags[postListItem.id] = newFlagValue
             localChanges.likesCount[postListItem.id] =
                 (localChanges.likesCount[postListItem.id]
                     ?: postListItem.likesCount) + (if (newFlagValue) 1 else -1)
             localChangesFlow.value = OnChange(localChanges)
         } catch (e: Exception) {
-            Log.d("abcdef", "$e")
             showError(R.string.error_loading_title)
         }
     }

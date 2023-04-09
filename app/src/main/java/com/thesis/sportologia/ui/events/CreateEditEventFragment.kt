@@ -49,7 +49,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     private val args by navArgs<CreateEditEventFragmentArgs>()
 
-    private var eventId: Long? = null
+    private var eventId: String? = null
     private var isDataReceived = false
     private var currentEventCreateEditItem: EventCreateEditItem =
         EventCreateEditItem.getEmptyInstance()
@@ -176,7 +176,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         }
     }
 
-    private fun getEventIdArg(): Long? = args.eventId.eventId
+    private fun getEventIdArg(): String? = args.eventId.eventId
 
     private fun getCurrentData() {
         with(currentEventCreateEditItem) {
@@ -350,7 +350,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
 
     // TODO parcelable
     data class EventId(
-        val eventId: Long?
+        val eventId: String?
     ) : Serializable
 
     companion object {
