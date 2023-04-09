@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.events
 
+import android.util.Log
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -26,12 +27,12 @@ class InMemoryEventsRepository @Inject constructor(
     override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     override suspend fun getPagedEvents(
+        userId: String,
         searchQuery: String,
         filter: FilterParamsEvents
     ): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            // eventsDataSource.getPagedUserEvents(userId, lastTimestamp, pageSize)
-            emptyList()
+            eventsDataSource.getPagedEvents(userId, filter, lastTimestamp, pageSize)
         }
 
         return Pager(
@@ -46,7 +47,10 @@ class InMemoryEventsRepository @Inject constructor(
     }
 
     override suspend fun getPagedUserEvents(userId: String): Flow<PagingData<EventDataEntity>> {
+        Log.d("abcdef", "getPagedUserEvents")
+
         val loader: EventsPageLoader = { lastTimestamp, _, pageSize ->
+            Log.d("abcdef", "EventsPageLoader")
             eventsDataSource.getPagedUserEvents(userId, lastTimestamp, pageSize)
         }
 

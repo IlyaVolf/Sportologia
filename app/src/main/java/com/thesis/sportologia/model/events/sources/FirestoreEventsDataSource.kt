@@ -9,6 +9,7 @@ import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.toPosition
 import kotlinx.coroutines.tasks.await
+import java.lang.reflect.Field
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     в коем случае. Но пока техническо мозможно только такая реализация */
 
     private val database = FirebaseFirestore.getInstance()
-    override suspend fun getPagedUserEvents(
+    override suspend fun getPagedEvents(
         userId: String,
         filter: FilterParamsEvents,
         lastMarker: Long?,
@@ -132,7 +133,18 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             .get()
             .await()
 
-        a.forEach { database.collection("events").document(it.id).update(hashMapOf<String, Any>("id" to it.id)).await() }*/
+        a.forEach {
+            database.collection("events").document(it.id)
+                .update(
+                    hashMapOf<String, Any>(
+                        "eventedDate" to FieldValue.delete(),
+                        "postedDate" to Calendar.getInstance().timeInMillis
+                    )
+                ).await()
+        }*/
+
+        Log.d("abcdef", "lastMarker $lastMarker")
+
 
         if (lastMarker == null) {
             currentPageDocuments = database.collection("events")
@@ -141,6 +153,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .limit(pageSize.toLong())
                 .get()
                 .addOnFailureListener { e ->
+                    Log.d("abcdef", "$e")
                     throw Exception(e)
                 }
                 .await()
@@ -152,12 +165,14 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .startAfter(lastMarker)
                 .get()
                 .addOnFailureListener { e ->
+                    Log.d("abcdef", "$e")
                     throw Exception(e)
                 }
                 .await()
         }
 
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
+        Log.d("abcdef", "events $events")
 
         val userDocument = database.collection("users")
             .document(userId)
@@ -505,7 +520,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             "currency" to eventDataEntity.currency,
             "categories" to eventDataEntity.categories,
             "likesCount" to eventDataEntity.likesCount,
-            "eventedDate" to Calendar.getInstance().timeInMillis,
+            "postedDate" to Calendar.getInstance().timeInMillis,
             "photosUrls" to eventDataEntity.photosUrls,
             "usersIdsLiked" to listOf<String>(),
             "usersIdsFavs" to listOf<String>()

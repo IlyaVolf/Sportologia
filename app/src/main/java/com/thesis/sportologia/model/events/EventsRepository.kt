@@ -13,6 +13,7 @@ interface EventsRepository {
     val localChangesFlow: MutableStateFlow<OnChange<EventsLocalChanges>>
 
     suspend fun getPagedEvents(
+        userId: String,
         searchQuery: String,
         filter: FilterParamsEvents
     ): Flow<PagingData<EventDataEntity>>

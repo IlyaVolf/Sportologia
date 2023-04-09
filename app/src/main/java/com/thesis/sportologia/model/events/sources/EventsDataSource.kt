@@ -5,7 +5,7 @@ import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 
 interface EventsDataSource {
 
-    suspend fun getPagedUserEvents(
+    suspend fun getPagedEvents(
         userId: String,
         filter: FilterParamsEvents,
         lastMarker: Long?,
