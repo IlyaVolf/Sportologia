@@ -18,7 +18,10 @@ interface EventsRepository {
         filter: FilterParamsEvents
     ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedUserEvents(userId: String): Flow<PagingData<EventDataEntity>>
+    suspend fun getPagedUserEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
     suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
@@ -40,6 +43,10 @@ interface EventsRepository {
 
     suspend fun setIsLiked(userId: String, eventDataEntity: EventDataEntity, isLiked: Boolean)
 
-    suspend fun setIsFavourite(userId: String, eventDataEntity: EventDataEntity, isFavourite: Boolean)
+    suspend fun setIsFavourite(
+        userId: String,
+        eventDataEntity: EventDataEntity,
+        isFavourite: Boolean
+    )
 
 }

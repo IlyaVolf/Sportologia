@@ -28,7 +28,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     override suspend fun getPagedEvents(
         userId: String,
         filter: FilterParamsEvents,
-        lastMarker: Long?,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity> {
         val currentPageDocuments: QuerySnapshot?
@@ -121,7 +121,8 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
 
     override suspend fun getPagedUserEvents(
         userId: String,
-        lastMarker: Long?,
+        isUpcomingOnly: Boolean,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity> {
         val currentPageDocuments: QuerySnapshot?
@@ -129,27 +130,23 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
-        /*val a = database.collection("events")
-            .get()
-            .await()
+        /* val a = database.collection("events")
+             .get()
+             .await()
 
-        a.forEach {
-            database.collection("events").document(it.id)
-                .update(
-                    hashMapOf<String, Any>(
-                        "eventedDate" to FieldValue.delete(),
-                        "postedDate" to Calendar.getInstance().timeInMillis
-                    )
-                ).await()
-        }*/
-
-        Log.d("abcdef", "lastMarker $lastMarker")
-
+         a.forEach {
+             database.collection("events").document(it.id)
+                 .update(
+                     hashMapOf<String, Any>(
+                         "datePlusId" to "${it.get("dateFrom")}${it.id}"
+                     )
+                 ).await()
+         }*/
 
         if (lastMarker == null) {
             currentPageDocuments = database.collection("events")
                 .whereEqualTo("organizerId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
                 .limit(pageSize.toLong())
                 .get()
                 .addOnFailureListener { e ->
@@ -160,7 +157,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         } else {
             currentPageDocuments = database.collection("events")
                 .whereEqualTo("organizerId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
                 .get()
@@ -172,7 +169,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         }
 
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
-        Log.d("abcdef", "events $events")
 
         val userDocument = database.collection("users")
             .document(userId)
@@ -228,7 +224,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     override suspend fun getPagedUserSubscribedOnEvents(
         userId: String,
         isUpcomingOnly: Boolean,
-        lastMarker: Long?,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity> {
         val currentPageDocuments: QuerySnapshot?
@@ -258,14 +254,17 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         val usersMap = hashMapOf<String, UserFirestoreEntity>()
         users.forEach { usersMap[it.id!!] = it }
 
+        Log.d("abcdef", "aaaaaaaa")
+
         if (lastMarker == null) {
             if (!isUpcomingOnly) {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
                         throw Exception(e)
                     }
                     .await()
@@ -273,10 +272,12 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
                     .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
                         throw Exception(e)
                     }
                     .await()
@@ -285,11 +286,12 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             if (!isUpcomingOnly) {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
                     .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
                         throw Exception(e)
                     }
                     .await()
@@ -297,18 +299,22 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
                     .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
                     .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
                         throw Exception(e)
                     }
                     .await()
             }
         }
 
+        Log.d("abcdef", "events pre")
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
+        Log.d("abcdef", "events $events")
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -355,7 +361,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     override suspend fun getPagedUserFavouriteEvents(
         userId: String,
         isUpcomingOnly: Boolean,
-        lastMarker: Long?,
+        lastMarker: String?,
         pageSize: Int
     ): List<EventDataEntity> {
         val currentPageDocuments: QuerySnapshot?
@@ -367,7 +373,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             if (!isUpcomingOnly) {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
@@ -376,31 +382,33 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
                     .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
-                    .addOnFailureListener { throw Exception(it) }
+                    .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
             }
         } else {
             if (!isUpcomingOnly) {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
-                    .addOnFailureListener { throw Exception(it) }
+                    .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
             } else {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
                     .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
+                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
                     .get()
-                    .addOnFailureListener { throw Exception(it) }
+                    .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
             }
         }
@@ -539,7 +547,12 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             .await()
 
         documentRef
-            .update(hashMapOf<String, Any>("id" to documentRef.id))
+            .update(
+                hashMapOf<String, Any>(
+                    "id" to documentRef.id,
+                    "datePlusId" to "${eventDataEntity.dateFrom}${documentRef.id}"
+                )
+            )
             .addOnFailureListener { e ->
                 Log.d("abcdef", "$e")
                 throw Exception(e)
@@ -562,6 +575,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             "categories" to eventDataEntity.categories,
             "likesCount" to eventDataEntity.likesCount,
             "photosUrls" to eventDataEntity.photosUrls,
+            "datePlusId" to "${eventDataEntity.dateFrom}${eventDataEntity.id}"
         )
 
         database.collection("events")

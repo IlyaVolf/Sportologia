@@ -46,12 +46,15 @@ class InMemoryEventsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPagedUserEvents(userId: String): Flow<PagingData<EventDataEntity>> {
+    override suspend fun getPagedUserEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>> {
         Log.d("abcdef", "getPagedUserEvents")
 
         val loader: EventsPageLoader = { lastTimestamp, _, pageSize ->
             Log.d("abcdef", "EventsPageLoader")
-            eventsDataSource.getPagedUserEvents(userId, lastTimestamp, pageSize)
+            eventsDataSource.getPagedUserEvents(userId, isUpcomingOnly, lastTimestamp, pageSize)
         }
 
         return Pager(

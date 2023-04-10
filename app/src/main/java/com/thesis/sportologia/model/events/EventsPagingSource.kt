@@ -4,14 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.thesis.sportologia.model.events.entities.EventDataEntity
 
-typealias EventsPageLoader = suspend (lastTimestamp: Long?, pageIndex: Int, pageSize: Int) -> List<EventDataEntity>
+typealias EventsPageLoader = suspend (lastTimestamp: String?, pageIndex: Int, pageSize: Int) -> List<EventDataEntity>
 
 @Suppress("UnnecessaryVariable")
 class EventsPagingSource(
     private val loader: EventsPageLoader,
 ) : PagingSource<Int, EventDataEntity>() {
 
-    var lastTimestamp: Long? = null
+    var lastTimestamp: String? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, EventDataEntity> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
@@ -21,7 +21,7 @@ class EventsPagingSource(
             // loading the desired page of users
             val posts = loader.invoke(lastTimestamp, pageIndex, params.loadSize)
             // success! now we can return LoadResult.Page
-            lastTimestamp = posts.lastOrNull()?.postedDate
+            lastTimestamp = "${posts.lastOrNull()?.dateFrom}${posts.lastOrNull()?.id}"
 
             return LoadResult.Page(
                 data = posts,
