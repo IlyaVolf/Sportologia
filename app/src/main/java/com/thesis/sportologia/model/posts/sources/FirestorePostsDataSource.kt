@@ -1,13 +1,16 @@
 package com.thesis.sportologia.model.posts.sources
 
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.firebase.firestore.*
+import com.google.firebase.storage.FirebaseStorage
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.tasks.await
 import java.util.Calendar
+import java.util.UUID
 import javax.inject.Inject
 
 // TODO вообще нужно проверять внимательно на сущестсование документов с указанным айди. При тестировании!
@@ -22,6 +25,8 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     в коем случае. Но пока техническо мозможно только такая реализация */
 
     private val database = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance()
+
 
     override suspend fun getPagedUserPosts(
         userId: String,
@@ -343,6 +348,17 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun createPost(postDataEntity: PostDataEntity) {
+        /*val photosFirestoreUrls = postDataEntity.photosUrls.map {
+            val photosRef = storage.reference.child("images/${UUID.randomUUID()}")
+            photosRef.putFile(postDataEntity.photosUrls[0].toUri())
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
+            photosRef.downloadUrl
+        }*/
+
+
         val postFirestoreEntity = hashMapOf(
             "authorId" to postDataEntity.authorId,
             "text" to postDataEntity.text,
@@ -354,6 +370,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         )
 
         // TODO должна быть атомарной
+
 
         val documentRef = database.collection("posts").document()
 

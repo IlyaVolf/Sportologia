@@ -72,6 +72,7 @@ dependencies {
 
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation 'com.google.firebase:firebase-firestore-ktx:24.4.5'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.1.0'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'

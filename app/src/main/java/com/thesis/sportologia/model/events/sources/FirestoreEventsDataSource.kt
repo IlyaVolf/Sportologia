@@ -2,6 +2,7 @@ package com.thesis.sportologia.model.events.sources
 
 import android.util.Log
 import com.google.firebase.firestore.*
+import com.google.firebase.storage.FirebaseStorage
 import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.EventFirestoreEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
@@ -25,6 +26,8 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     в коем случае. Но пока техническо мозможно только такая реализация */
 
     private val database = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance()
+
     override suspend fun getPagedEvents(
         userId: String,
         filter: FilterParamsEvents,
