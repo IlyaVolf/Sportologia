@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.posts.sources
 
+import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.firestore.*
@@ -9,6 +10,7 @@ import com.thesis.sportologia.model.posts.entities.PostFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.tasks.await
+import java.net.URI
 import java.util.Calendar
 import java.util.UUID
 import javax.inject.Inject
@@ -348,23 +350,24 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun createPost(postDataEntity: PostDataEntity) {
-        /*val photosFirestoreUrls = postDataEntity.photosUrls.map {
+        val photosFirestore = mutableListOf<Uri>()
+        postDataEntity.photosUrls.forEach {
             val photosRef = storage.reference.child("images/${UUID.randomUUID()}")
-            photosRef.putFile(postDataEntity.photosUrls[0].toUri())
+            val downloadUrl = photosRef.putFile(it.toUri())
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
                 .await()
-            photosRef.downloadUrl
-        }*/
-
+                .storage.downloadUrl.await()
+            photosFirestore.add(downloadUrl)
+        }
 
         val postFirestoreEntity = hashMapOf(
             "authorId" to postDataEntity.authorId,
             "text" to postDataEntity.text,
             "likesCount" to postDataEntity.likesCount,
             "postedDate" to Calendar.getInstance().timeInMillis,
-            "photosUrls" to postDataEntity.photosUrls,
+            "photosUrls" to photosFirestore,
             "usersIdsLiked" to listOf<String>(),
             "usersIdsFavs" to listOf<String>()
         )
@@ -377,6 +380,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         documentRef
             .set(postFirestoreEntity)
             .addOnFailureListener { e ->
+                Log.d("abcdef", "$e")
                 throw Exception(e)
             }
             .await()
@@ -384,6 +388,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         documentRef
             .update(hashMapOf<String, Any>("id" to documentRef.id))
             .addOnFailureListener { e ->
+                Log.d("abcdef", "$e")
                 throw Exception(e)
             }
             .await()
@@ -391,9 +396,21 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun updatePost(postDataEntity: PostDataEntity) {
+        val photosFirestore = mutableListOf<Uri>()
+        postDataEntity.photosUrls.forEach {
+            val photosRef = storage.reference.child("images/posts/${UUID.randomUUID()}")
+            val downloadUrl = photosRef.putFile(it.toUri())
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
+                .storage.downloadUrl.await()
+            photosFirestore.add(downloadUrl)
+        }
+
         val postFirestoreEntity = hashMapOf(
             "text" to postDataEntity.text,
-            "photosUrls" to postDataEntity.photosUrls,
+            "photosUrls" to photosFirestore,
         )
 
         database.collection("posts")

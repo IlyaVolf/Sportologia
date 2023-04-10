@@ -1,6 +1,8 @@
 package com.thesis.sportologia.model.events.sources
 
+import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
 import com.thesis.sportologia.model.events.entities.EventDataEntity
@@ -11,7 +13,7 @@ import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.utils.toPosition
 import kotlinx.coroutines.tasks.await
 import java.lang.reflect.Field
-import java.util.Calendar
+import java.util.*
 import javax.inject.Inject
 
 // TODO вообще нужно проверять внимательно на сущестсование документов с указанным айди. При тестировании!
@@ -512,6 +514,18 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     }
 
     override suspend fun createEvent(eventDataEntity: EventDataEntity) {
+        val photosFirestore = mutableListOf<Uri>()
+        eventDataEntity.photosUrls.forEach {
+            val photosRef = storage.reference.child("images/events/${UUID.randomUUID()}")
+            val downloadUrl = photosRef.putFile(it.toUri())
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
+                .storage.downloadUrl.await()
+            photosFirestore.add(downloadUrl)
+        }
+
         val eventFirestoreEntity = hashMapOf(
             "name" to eventDataEntity.name,
             "description" to eventDataEntity.description,
@@ -528,7 +542,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             "categories" to eventDataEntity.categories,
             "likesCount" to eventDataEntity.likesCount,
             "postedDate" to Calendar.getInstance().timeInMillis,
-            "photosUrls" to eventDataEntity.photosUrls,
+            "photosUrls" to photosFirestore,
             "usersIdsLiked" to listOf<String>(),
             "usersIdsFavs" to listOf<String>()
         )
@@ -561,6 +575,18 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     }
 
     override suspend fun updateEvent(eventDataEntity: EventDataEntity) {
+        val photosFirestore = mutableListOf<Uri>()
+        eventDataEntity.photosUrls.forEach {
+            val photosRef = storage.reference.child("images/events/${UUID.randomUUID()}")
+            val downloadUrl = photosRef.putFile(it.toUri())
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
+                .storage.downloadUrl.await()
+            photosFirestore.add(downloadUrl)
+        }
+
         val eventFirestoreEntity = hashMapOf(
             "description" to eventDataEntity.description,
             "dateFrom" to eventDataEntity.dateFrom,
@@ -573,7 +599,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             "currency" to eventDataEntity.currency,
             "categories" to eventDataEntity.categories,
             "likesCount" to eventDataEntity.likesCount,
-            "photosUrls" to eventDataEntity.photosUrls,
+            "photosUrls" to photosFirestore,
             "datePlusId" to "${eventDataEntity.dateFrom}${eventDataEntity.id}"
         )
 
