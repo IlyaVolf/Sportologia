@@ -47,7 +47,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
 
         if (lastMarker == null) {
             currentPageDocuments = database.collection("events")
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
                 .limit(pageSize.toLong())
                 .get()
                 .addOnFailureListener { e ->
@@ -56,7 +56,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .await()
         } else {
             currentPageDocuments = database.collection("events")
-                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
                 .get()
@@ -254,7 +254,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         val usersMap = hashMapOf<String, UserFirestoreEntity>()
         users.forEach { usersMap[it.id!!] = it }
 
-        Log.d("abcdef", "aaaaaaaa")
+        Log.d("abcdef", "aaaaaaaa $lastMarker")
 
         if (lastMarker == null) {
             if (!isUpcomingOnly) {
@@ -271,8 +271,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             } else {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
-                    .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
                     .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
@@ -298,8 +297,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             } else {
                 currentPageDocuments = database.collection("events")
                     .whereIn("organizerId", followersIds)
-                    .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
                     .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
@@ -312,7 +310,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             }
         }
 
-        Log.d("abcdef", "events pre")
+        Log.d("abcdef", "events pre $lastMarker")
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
         Log.d("abcdef", "events $events")
 
@@ -381,8 +379,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             } else {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
-                    .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
                     .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .get()
@@ -402,8 +399,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             } else {
                 currentPageDocuments = database.collection("events")
                     .whereArrayContains("usersIdsFavs", userId)
-                    .whereGreaterThan("dateFrom", Calendar.getInstance().timeInMillis)
-                    .orderBy("dateFrom", Query.Direction.ASCENDING)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
                     .orderBy("datePlusId", Query.Direction.ASCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
