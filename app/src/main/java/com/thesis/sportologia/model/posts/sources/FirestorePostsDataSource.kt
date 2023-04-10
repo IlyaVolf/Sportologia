@@ -396,9 +396,11 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun updatePost(postDataEntity: PostDataEntity) {
-        val photosFirestore = mutableListOf<Uri>()
+        val photosFirestore = postDataEntity.photosUrls
+        /*val photosFirestore = mutableListOf<Uri>()
         postDataEntity.photosUrls.forEach {
             val photosRef = storage.reference.child("images/posts/${UUID.randomUUID()}")
+            val fileUri = it.toUri()
             val downloadUrl = photosRef.putFile(it.toUri())
                 .addOnFailureListener { e ->
                     throw Exception(e)
@@ -406,7 +408,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
                 .storage.downloadUrl.await()
             photosFirestore.add(downloadUrl)
-        }
+        }*/
 
         val postFirestoreEntity = hashMapOf(
             "text" to postDataEntity.text,

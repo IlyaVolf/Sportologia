@@ -575,7 +575,8 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
     }
 
     override suspend fun updateEvent(eventDataEntity: EventDataEntity) {
-        val photosFirestore = mutableListOf<Uri>()
+        val photosFirestore = eventDataEntity.photosUrls
+        /*val photosFirestore = mutableListOf<Uri>()
         eventDataEntity.photosUrls.forEach {
             val photosRef = storage.reference.child("images/events/${UUID.randomUUID()}")
             val downloadUrl = photosRef.putFile(it.toUri())
@@ -585,7 +586,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .await()
                 .storage.downloadUrl.await()
             photosFirestore.add(downloadUrl)
-        }
+        }*/
 
         val eventFirestoreEntity = hashMapOf(
             "description" to eventDataEntity.description,
