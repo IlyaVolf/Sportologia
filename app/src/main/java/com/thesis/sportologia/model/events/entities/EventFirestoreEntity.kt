@@ -4,8 +4,8 @@ import com.google.firebase.firestore.GeoPoint
 
 data class EventFirestoreEntity(
     var id: String? = null,
-    val name: String? = null,
-    val description: String? = null,
+    var name: String? = null,
+    var description: String? = null,
     var organizerId: String? = null,
     var userType: String? = null,
     var dateFrom: Long? = null,
@@ -13,8 +13,8 @@ data class EventFirestoreEntity(
     var postedDate: Long? = null,
     var position: GeoPoint? = null,
     var price: Float? = null,
-    val currency: String? = null,
-    var categories: Map<String, Boolean> = hashMapOf(),
+    var currency: String? = null,
+    var categories: Map<String, Boolean>? = null,
     var likesCount: Int? = null,
     var photosUrls: List<String> = mutableListOf(),
     var usersIdsLiked: List<String> = mutableListOf(),

@@ -11,28 +11,28 @@ interface ServicesRepository {
     val localChanges: ServicesLocalChanges
     val localChangesFlow: MutableStateFlow<OnChange<ServicesLocalChanges>>
 
-    suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>>
+    suspend fun getPagedUserServices(userId: String): Flow<PagingData<ServiceDataEntity>>
 
-    suspend fun getPagedUserFavouriteServices(userId: String, serviceType: ServiceType?): Flow<PagingData<Service>>
+    suspend fun getPagedUserFavouriteServices(userId: String, serviceType: ServiceType?): Flow<PagingData<ServiceDataEntity>>
 
-    suspend fun getPagedUserAcquiredServices(userId: String, serviceType: ServiceType?): Flow<PagingData<Service>>
+    suspend fun getPagedUserAcquiredServices(userId: String, serviceType: ServiceType?): Flow<PagingData<ServiceDataEntity>>
 
-    suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<Service>>
+    suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<ServiceDataEntity>>
 
-    suspend fun getService(serviceId: Long): Service?
+    suspend fun getService(serviceId: String): ServiceDataEntity?
 
-    suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed?
+    suspend fun getServiceDetailed(serviceId: String): ServiceDetailedDataEntity?
 
-    suspend fun createService(servicesDetailed: ServiceDetailed)
+    suspend fun createService(servicesDetailed: ServiceDetailedDataEntity)
 
-    suspend fun updateService(servicesDetailed: ServiceDetailed)
+    suspend fun updateService(servicesDetailed: ServiceDetailedDataEntity)
 
-    suspend fun deleteService(serviceId: Long)
+    suspend fun deleteService(serviceId: String)
 
-    suspend fun acquireService(serviceId: Long)
+    suspend fun acquireService(serviceId: String)
 
-    suspend fun setIsFavourite(userId: String, serviceId: Long, isFavourite: Boolean)
+    suspend fun setIsFavourite(userId: String, serviceId: String, isFavourite: Boolean)
 
-    suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise?
+    suspend fun getExercise(serviceId: String, exerciseId: String): Exercise?
 
 }

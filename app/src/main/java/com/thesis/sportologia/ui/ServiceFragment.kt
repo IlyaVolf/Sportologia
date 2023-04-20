@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -16,10 +15,8 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentServiceBinding
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.posts.entities.PostListItem
 import com.thesis.sportologia.ui.services.CreateEditServiceFragment
 import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
 import com.thesis.sportologia.ui.services.entities.ServiceDetailedViewItem
@@ -43,9 +40,9 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
 
     private lateinit var mode: Mode
     private lateinit var binding: FragmentServiceBinding
-    private var serviceId by Delegates.notNull<Long>()
+    private var serviceId by Delegates.notNull<String>()
 
-    private fun getServiceIdArg(): Long = args.serviceId
+    private fun getServiceIdArg(): String = args.serviceId
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -273,7 +270,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         val direction =
             ServiceFragmentDirections.actionServiceFragmentToExerciseFragment(
                 serviceId = serviceId,
-                exerciseId = exercise.id
+                exerciseId = exercise.id!!
             )
         findNavController().navigate(
             direction,

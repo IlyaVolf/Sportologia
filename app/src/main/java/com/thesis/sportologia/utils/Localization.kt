@@ -2,8 +2,6 @@ package com.thesis.sportologia.utils
 
 import android.content.Context
 import com.thesis.sportologia.R
-import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.model.users.entities.UserType
 

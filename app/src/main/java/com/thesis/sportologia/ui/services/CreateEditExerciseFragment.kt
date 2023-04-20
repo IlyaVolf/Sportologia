@@ -15,24 +15,18 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditExerciseBinding
-import com.thesis.sportologia.databinding.FragmentCreateEditServiceBinding
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
-import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
 import com.thesis.sportologia.ui.services.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.io.Serializable
 import javax.inject.Inject
 
 @AndroidEntryPoint

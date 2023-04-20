@@ -3,7 +3,6 @@ package com.thesis.sportologia.ui.services.adapters
 import androidx.fragment.app.Fragment
 import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceType
 
 class ServicesHeaderAdapterAcquired(

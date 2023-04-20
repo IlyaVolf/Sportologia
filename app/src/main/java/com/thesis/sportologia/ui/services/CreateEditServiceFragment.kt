@@ -38,7 +38,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
     private val args by navArgs<CreateEditServiceFragmentArgs>()
 
-    private var serviceId: Long? = null
+    private var serviceId: String? = null
     private var isDataReceived = false
     private var currentServiceCreateEditItem: ServiceCreateEditItem = ServiceCreateEditItem.getEmptyInstance()
     private val exercisesAdapter by lazy { ExercisesAdapter(onExercisePressed) }
@@ -137,7 +137,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_DELETED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exerciseId = data.getLong(CreateEditExerciseFragment.IS_DELETED)
+            val exerciseId = data.getString(CreateEditExerciseFragment.IS_DELETED)
             currentServiceCreateEditItem.exercises.removeIf { it.id == exerciseId }
             setExercises(currentServiceCreateEditItem.exercises)
             exercisesAdapter.notifyDataSetChanged()
@@ -205,7 +205,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         exercisesAdapter.setupItems(exercises)
     }
 
-    private fun getServiceIdArg(): Long? = args.serviceId.value
+    private fun getServiceIdArg(): String? = args.serviceId.value
 
     private fun onCancelButtonPressed() {
         createDialogCancel()
@@ -410,7 +410,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
     // TODO parcelable
     data class ServiceId(
-        val value: Long?
+        val value: String?
     ) : Serializable
 
     companion object {

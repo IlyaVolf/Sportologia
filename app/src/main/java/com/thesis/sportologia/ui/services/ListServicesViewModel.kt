@@ -1,6 +1,5 @@
 package com.thesis.sportologia.ui.services
 
-import android.util.Log
 import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,7 @@ import com.thesis.sportologia.R
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.ServicesLocalChanges
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseViewModel
@@ -67,7 +66,7 @@ abstract class ListServicesViewModel constructor(
         )
     }
 
-    abstract fun getDataFlow(): Flow<PagingData<Service>>
+    abstract fun getDataFlow(): Flow<PagingData<ServiceDataEntity>>
 
     override fun onToggleFavouriteFlag(serviceListItem: ServiceListItem) {
         if (isInProgress(serviceListItem.id)) return
@@ -115,12 +114,12 @@ abstract class ListServicesViewModel constructor(
 
     private suspend fun setFavoriteFlag(serviceListItem: ServiceListItem) {
         val newFlagValue = !serviceListItem.isFavourite
-        servicesRepository.setIsFavourite(userId, serviceListItem.service.id, newFlagValue)
+        servicesRepository.setIsFavourite(userId, serviceListItem.serviceDataEntity.id!!, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun setProgress(serviceListItemId: Long, inProgress: Boolean) {
+    private fun setProgress(serviceListItemId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(serviceListItemId)
         } else {
@@ -129,7 +128,7 @@ abstract class ListServicesViewModel constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(serviceListItemId: Long) =
+    private fun isInProgress(serviceListItemId: String) =
         localChanges.idsInProgress.contains(serviceListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
@@ -145,7 +144,7 @@ abstract class ListServicesViewModel constructor(
     }
 
     private fun merge(
-        services: PagingData<Service>,
+        services: PagingData<ServiceDataEntity>,
         localChanges: OnChange<ServicesLocalChanges>
     ): PagingData<ServiceListItem> {
         return services

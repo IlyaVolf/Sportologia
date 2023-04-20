@@ -1,31 +1,31 @@
 package com.thesis.sportologia.ui.services.entities
 
 import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
+import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.model.users.entities.UserType
 
 data class ServiceDetailedViewItem(
-    var serviceDetailed: ServiceDetailed,
+    var serviceDetailedDataEntity: ServiceDetailedDataEntity,
 ) {
-    val id: Long get() = serviceDetailed.id
-    val name: String get() = serviceDetailed.name
-    val generalDescription: String get() = serviceDetailed.generalDescription
-    val authorId: String get() = serviceDetailed.authorId
-    val authorName: String get() = serviceDetailed.authorName
-    val authorType: UserType get() = serviceDetailed.authorType
-    val price: Float get() = serviceDetailed.price
-    val serviceType: ServiceType get() = serviceDetailed.type
-    val currency: String get() = serviceDetailed.currency
-    val profilePictureUrl: String? get() = serviceDetailed.profilePictureUrl
-    val categories: Map<String, Boolean> get() = serviceDetailed.categories
-    val acquiredNumber: Int get() = serviceDetailed.acquiredNumber
-    val reviewsNumber: Int get() = serviceDetailed.reviewsNumber
-    val rating: Float? get() = serviceDetailed.rating
-    val isFavourite: Boolean get() = serviceDetailed.isFavourite
-    val isAcquired: Boolean get() = serviceDetailed.isAcquired
-    val generalPhotosUrls: List<String> get() = serviceDetailed.generalPhotosUrls
-    val detailedDescription: String get() = serviceDetailed.detailedDescription
-    val detailedPhotosUrls: List<String> get() = serviceDetailed.detailedPhotosUrls
-    val exercises: List<Exercise> get() = serviceDetailed.exercises
+    val id: String get() = serviceDetailedDataEntity.id!!
+    val name: String get() = serviceDetailedDataEntity.name
+    val generalDescription: String get() = serviceDetailedDataEntity.generalDescription
+    val authorId: String get() = serviceDetailedDataEntity.authorId
+    val authorName: String get() = serviceDetailedDataEntity.authorName
+    val authorType: UserType get() = serviceDetailedDataEntity.authorType
+    val price: Float get() = serviceDetailedDataEntity.price
+    val serviceType: ServiceType get() = serviceDetailedDataEntity.type
+    val currency: String get() = serviceDetailedDataEntity.currency
+    val profilePictureUrl: String? get() = serviceDetailedDataEntity.profilePictureUrl
+    val categories: Map<String, Boolean> get() = serviceDetailedDataEntity.categories
+    val acquiredNumber: Int get() = serviceDetailedDataEntity.acquiredNumber
+    val reviewsNumber: Int get() = serviceDetailedDataEntity.reviewsNumber
+    val rating: Float? get() = serviceDetailedDataEntity.rating
+    val isFavourite: Boolean get() = serviceDetailedDataEntity.isFavourite
+    val isAcquired: Boolean get() = serviceDetailedDataEntity.isAcquired
+    val generalPhotosUrls: List<String> get() = serviceDetailedDataEntity.generalPhotosUrls
+    val detailedDescription: String get() = serviceDetailedDataEntity.detailedDescription
+    val detailedPhotosUrls: List<String> get() = serviceDetailedDataEntity.detailedPhotosUrls
+    val exercises: List<Exercise> get() = serviceDetailedDataEntity.exercises
 }

@@ -2,8 +2,8 @@ package com.thesis.sportologia.model.services.entities
 
 import com.thesis.sportologia.model.users.entities.UserType
 
-data class ServiceDetailed(
-    val id: Long,
+data class ServiceDetailedDataEntity(
+    val id: String?,
     val name: String,
     val type: ServiceType,
     var generalDescription: String,
@@ -24,9 +24,10 @@ data class ServiceDetailed(
     var detailedPhotosUrls: List<String>,
     var exercises: List<Exercise>,
     var dateCreatedMillis: Long,
+    var postedDate: Long
 ) {
-    fun toGeneral(): Service {
-        return Service(
+    fun toGeneral(): ServiceDataEntity {
+        return ServiceDataEntity(
             id,
             name,
             type,
@@ -43,7 +44,8 @@ data class ServiceDetailed(
             categories,
             isFavourite,
             isAcquired,
-            generalPhotosUrls
+            generalPhotosUrls,
+            postedDate
         )
     }
 

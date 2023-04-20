@@ -5,7 +5,7 @@ import com.thesis.sportologia.model.services.entities.Exercise
 data class ExerciseViewItem(
     var exercise: Exercise,
 ) {
-    val id: Long get() = exercise.id
+    val id: String get() = exercise.id!!
     val name: String get() = exercise.name
     val description: String get() = exercise.description
     val setsNumber: Int get() = exercise.setsNumber

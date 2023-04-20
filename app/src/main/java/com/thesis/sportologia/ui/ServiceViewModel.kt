@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class ServiceViewModel @AssistedInject constructor(
-    @Assisted private val serviceId: Long,
+    @Assisted private val serviceId: String,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -94,7 +94,7 @@ class ServiceViewModel @AssistedInject constructor(
                 _serviceHolder.value?.onReady { service ->
                     _serviceHolder.value = DataHolder.READY(
                         service.copy(
-                            serviceDetailed = service.serviceDetailed.copy(
+                            serviceDetailedDataEntity = service.serviceDetailedDataEntity.copy(
                                 isAcquired = localChanges.value.isAcquiredFlag[serviceId]
                                     ?: service.isAcquired
                             )
@@ -105,7 +105,7 @@ class ServiceViewModel @AssistedInject constructor(
                 _serviceHolder.value?.onReady { service ->
                     _serviceHolder.value = DataHolder.READY(
                         service.copy(
-                            serviceDetailed = service.serviceDetailed.copy(
+                            serviceDetailedDataEntity = service.serviceDetailedDataEntity.copy(
                                 isFavourite = localChanges.value.isFavouriteFlags[serviceId]
                                     ?: service.isFavourite
                             )
@@ -116,7 +116,7 @@ class ServiceViewModel @AssistedInject constructor(
         }
     }
 
-    private fun setProgress(serviceId: Long, inProgress: Boolean) {
+    private fun setProgress(serviceId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(serviceId)
         } else {
@@ -125,18 +125,18 @@ class ServiceViewModel @AssistedInject constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun setAcquiredFlag(serviceId: Long, isAcquired: Boolean) {
+    private fun setAcquiredFlag(serviceId: String, isAcquired: Boolean) {
         localChanges.isAcquiredFlag[serviceId] = isAcquired
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun setFavouriteFlag(serviceId: Long, isFavourite: Boolean) {
+    private fun setFavouriteFlag(serviceId: String, isFavourite: Boolean) {
         localChanges.isFavouriteFlags[serviceId] = isFavourite
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(serviceListItemId: Long) =
-        localChanges.idsInProgress.contains(serviceListItemId)
+    private fun isInProgress(serviceId: String) =
+        localChanges.idsInProgress.contains(serviceId)
 
 
     fun acquireService() {
@@ -190,7 +190,7 @@ class ServiceViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(serviceId: Long): ServiceViewModel
+        fun create(serviceId: String): ServiceViewModel
     }
 
 }

@@ -1,31 +1,6 @@
 package com.thesis.sportologia.ui._obsolete
 
 
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.R
-import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.ui.base.BaseViewModel
-import com.thesis.sportologia.ui.posts.CreateEditPostViewModel
-import com.thesis.sportologia.ui.posts.ListPostsViewModel
-import com.thesis.sportologia.ui.posts.entities.PostListItem
-import com.thesis.sportologia.utils.*
-import com.thesis.sportologia.utils.logger.Logger
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import kotlin.properties.Delegates
-
 /** class ServiceNotAcquiredViewModel @AssistedInject constructor(
     @Assisted private val serviceId: Long,
     private val servicesRepository: ServicesRepository,

@@ -16,8 +16,8 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
 
 class ExerciseViewModel @AssistedInject constructor(
-    @Assisted("serviceId") private val serviceId: Long,
-    @Assisted("exerciseId") private val exerciseId: Long,
+    @Assisted("serviceId") private val serviceId: String,
+    @Assisted("exerciseId") private val exerciseId: String,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -49,8 +49,8 @@ class ExerciseViewModel @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
         fun create(
-            @Assisted("serviceId") serviceId: Long,
-            @Assisted("exerciseId") exerciseId: Long
+            @Assisted("serviceId") serviceId: String,
+            @Assisted("exerciseId") exerciseId: String
         ): ExerciseViewModel
     }
 

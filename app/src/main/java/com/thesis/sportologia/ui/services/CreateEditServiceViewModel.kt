@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
+import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.services.entities.ServiceCreateEditItem
@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 class CreateEditServiceViewModel @AssistedInject constructor(
-    @Assisted private val serviceId: Long?,
+    @Assisted private val serviceId: String?,
     private val servicesRepository: ServicesRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -32,7 +32,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _serviceHolder = ObservableHolder<ServiceDetailed?>(DataHolder.init())
+    private val _serviceHolder = ObservableHolder<ServiceDetailedDataEntity?>(DataHolder.init())
     val serviceHolder = _serviceHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
@@ -59,7 +59,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
         }
 
         // check whether text has left the same
-        var savedService: ServiceDetailed? = null
+        var savedService: ServiceDetailedDataEntity? = null
         _serviceHolder.value!!.onReady {
             savedService = it
         }
@@ -71,11 +71,11 @@ class CreateEditServiceViewModel @AssistedInject constructor(
         val reformattedGeneralDescription = reformatText(service.generalDescription!!)
         val reformattedDetailedDescription = reformatText(service.detailedDescription!!)
 
-        lateinit var newService: ServiceDetailed
+        lateinit var newService: ServiceDetailedDataEntity
         when (mode) {
             Mode.CREATE ->
-                newService = ServiceDetailed(
-                    id = -1, // не тут надо создавать!
+                newService = ServiceDetailedDataEntity(
+                    id = null, // не тут надо создавать!
                     name = reformattedName,
                     type = service.type!!,
                     generalDescription = reformattedGeneralDescription,
@@ -95,7 +95,8 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     detailedDescription = reformattedDetailedDescription,
                     detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
                     exercises = service.exercises,
-                    dateCreatedMillis = Calendar.getInstance().timeInMillis
+                    dateCreatedMillis = Calendar.getInstance().timeInMillis,
+                    postedDate = Calendar.getInstance().timeInMillis,
                 )
             Mode.EDIT ->
                 _serviceHolder.value!!.onReady {
@@ -256,7 +257,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(serviceId: Long?): CreateEditServiceViewModel
+        fun create(serviceId: String?): CreateEditServiceViewModel
     }
 
 }

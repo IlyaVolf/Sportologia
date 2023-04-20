@@ -32,11 +32,11 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
     private val args by navArgs<ExerciseFragmentArgs>()
 
     private lateinit var binding: FragmentExerciseBinding
-    private var serviceId by Delegates.notNull<Long>()
-    private var exerciseId by Delegates.notNull<Long>()
+    private lateinit var serviceId: String
+    private lateinit var exerciseId: String
 
-    private fun getServiceIdArg(): Long = args.serviceId
-    private fun getExerciseIdArg(): Long = args.exerciseId
+    private fun getServiceIdArg(): String = args.serviceId
+    private fun getExerciseIdArg(): String = args.exerciseId
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

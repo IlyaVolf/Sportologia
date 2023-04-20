@@ -11,7 +11,7 @@
         tools:layout="@layout/fragment_service">
         <argument
             android:name="serviceId"
-            app:argType="long" />
+            app:argType="string" />
         <action
             android:id="@+id/action_serviceFragment_to_profile_nested"
             app:destination="@id/profile_nested">
@@ -32,9 +32,9 @@
         tools:layout="@layout/fragment_exercise" >
         <argument
             android:name="exerciseId"
-            app:argType="long" />
+            app:argType="string" />
         <argument
             android:name="serviceId"
-            app:argType="long" />
+            app:argType="string" />
     </fragment>
 </navigation>

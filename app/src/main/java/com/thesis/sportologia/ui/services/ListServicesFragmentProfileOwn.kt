@@ -32,13 +32,13 @@ class ListServicesFragmentProfileOwn : ListServicesFragment() {
             bundleOf(ProfileFragment.USER_ID to userId)
         )
     }
-    override val onStatsBlockPressedAction: (Long) -> Unit = { serviceId ->
+    override val onStatsBlockPressedAction: (String) -> Unit = { serviceId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_STATS_REQUEST_CODE,
             bundleOf(ProfileFragment.SERVICE_ID to serviceId)
         )
     }
-    override val onInfoBlockPressedAction: (Long) -> Unit = { serviceId ->
+    override val onInfoBlockPressedAction: (String) -> Unit = { serviceId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_SERVICE_REQUEST_CODE,
             bundleOf(ProfileFragment.SERVICE_ID to serviceId)

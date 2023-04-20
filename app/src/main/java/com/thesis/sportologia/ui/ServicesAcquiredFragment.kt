@@ -81,10 +81,10 @@ class ServicesAcquiredFragment : Fragment() {
             GO_TO_SERVICE_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val serviceId = data.getLong(SERVICE_ID)
+            val serviceId = data.getString(SERVICE_ID)
             val direction =
                 ServicesAcquiredFragmentDirections.actionServicesAcquiredFragmentToService(
-                    serviceId
+                    serviceId!!
                 )
             findNavController().navigate(
                 direction,

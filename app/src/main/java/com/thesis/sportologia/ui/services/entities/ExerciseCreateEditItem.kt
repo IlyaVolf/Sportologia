@@ -3,7 +3,7 @@ package com.thesis.sportologia.ui.services.entities
 import com.thesis.sportologia.model.services.entities.Exercise
 
 data class ExerciseCreateEditItem(
-    var id: Long?,
+    var id: String?,
     var name: String?,
     var description: String?,
     var setsNumber: String?,
@@ -27,7 +27,7 @@ data class ExerciseCreateEditItem(
 
     fun toExercise() : Exercise {
         return Exercise(
-            id = id!!,
+            id = id,
             name = name!!,
             description = description!!,
             setsNumber = setsNumber!!.toInt(),

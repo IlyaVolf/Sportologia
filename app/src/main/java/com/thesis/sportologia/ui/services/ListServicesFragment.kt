@@ -37,8 +37,8 @@ abstract class ListServicesFragment : Fragment() {
     abstract val viewModel: ListServicesViewModel
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onAuthorBlockPressedAction: (String) -> Unit
-    abstract val onStatsBlockPressedAction: (Long) -> Unit
-    abstract val onInfoBlockPressedAction: (Long) -> Unit
+    abstract val onStatsBlockPressedAction: (String) -> Unit
+    abstract val onInfoBlockPressedAction: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var filterParams: FilterParamsServices

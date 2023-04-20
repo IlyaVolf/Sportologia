@@ -22,8 +22,8 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
 class ServicesPagerAdapter(
     val fragment: Fragment,
     private val onAuthorBlockPressedAction: (String) -> Unit,
-    private val onStatsBlockPressedAction: (Long) -> Unit,
-    private val onInfoBlockPressedAction: (Long) -> Unit,
+    private val onStatsBlockPressedAction: (String) -> Unit,
+    private val onInfoBlockPressedAction: (String) -> Unit,
     private val listener: MoreButtonListener,
 ) : PagingDataAdapter<ServiceListItem, ServicesPagerAdapter.Holder>(ServicesDiffCallback()) {
 

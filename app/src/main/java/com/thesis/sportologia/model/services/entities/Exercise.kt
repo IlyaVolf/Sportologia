@@ -1,7 +1,7 @@
 package com.thesis.sportologia.model.services.entities
 
 data class Exercise(
-    var id: Long,
+    var id: String?,
     var name: String,
     var description: String,
     var setsNumber: Int,

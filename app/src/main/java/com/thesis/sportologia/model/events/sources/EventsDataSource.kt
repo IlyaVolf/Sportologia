@@ -7,6 +7,7 @@ interface EventsDataSource {
 
     suspend fun getPagedEvents(
         userId: String,
+        searchQuery: String,
         filter: FilterParamsEvents,
         lastMarker: String?,
         pageSize: Int

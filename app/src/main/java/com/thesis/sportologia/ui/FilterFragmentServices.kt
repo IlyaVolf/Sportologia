@@ -16,10 +16,8 @@ import com.thesis.sportologia.ui.SearchFragment.Companion.FILTER_PARAMETERS
 import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
-import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.formatFloat
 import dagger.hilt.android.AndroidEntryPoint

@@ -8,14 +8,10 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
-import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceType
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.services.CreateEditServiceFragment
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
 

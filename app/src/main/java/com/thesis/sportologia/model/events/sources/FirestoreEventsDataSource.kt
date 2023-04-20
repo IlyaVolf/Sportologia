@@ -32,6 +32,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
 
     override suspend fun getPagedEvents(
         userId: String,
+        searchQuery: String,
         filter: FilterParamsEvents,
         lastMarker: String?,
         pageSize: Int
@@ -51,37 +52,73 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         }
 
         if (lastMarker == null) {
-            currentPageDocuments = database.collection("events")
-                .orderBy("datePlusId", Query.Direction.ASCENDING)
-                .limit(pageSize.toLong())
-                .get()
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
-                .await()
+            if (searchQuery == "") {
+                currentPageDocuments = database.collection("events")
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("events")
+                   // .whereGreaterThanOrEqualTo("name", searchQuery)
+                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
+                    .orderBy("name", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            }
         } else {
-            currentPageDocuments = database.collection("events")
-                .orderBy("datePlusId", Query.Direction.ASCENDING)
-                .limit(pageSize.toLong())
-                .startAfter(lastMarker)
-                .get()
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
-                .await()
+            if (searchQuery == "") {
+                currentPageDocuments = database.collection("events")
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection("events")
+                   //
+                    // \.whereGreaterThanOrEqualTo("name", searchQuery)
+                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
+                    .orderBy("name", Query.Direction.ASCENDING)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            }
         }
 
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
 
-        val userDocument = database.collection("users")
-            .document(userId)
+        val usersLists = events.map { it.organizerId }
+
+        val usersDocuments = database.collection("users")
+            .whereIn("id", usersLists)
             .get()
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
             .await()
-        val user = userDocument.toObject(UserFirestoreEntity::class.java)
-            ?: throw Exception("error user loading")
+
+        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -98,20 +135,20 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     id = currentPageIds[i],
                     name = events[i].name!!,
                     description = events[i].description!!,
-                    organizerId = user.id!!,
-                    organizerName = user.name!!,
-                    userType = when (user.userType) {
+                    organizerId = events[i].organizerId!!,
+                    organizerName = users.first { it.id == events[i].organizerId }.name!!,
+                    userType = when (users.first { it.id == events[i].organizerId }.userType) {
                         "ATHLETE" -> UserType.ATHLETE
                         "ORGANIZATION" -> UserType.ORGANIZATION
                         else -> throw Exception()
                     },
-                    profilePictureUrl = user.profilePhotoURI,
+                    profilePictureUrl = users.first { it.id == events[i].organizerId }.profilePhotoURI,
                     dateFrom = events[i].dateFrom!!,
                     dateTo = events[i].dateTo,
                     position = events[i].position.toPosition()!!,
                     price = events[i].price!!,
                     currency = events[i].currency!!,
-                    categories = events[i].categories,
+                    categories = events[i].categories!!,
                     likesCount = events[i].likesCount!!,
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
@@ -213,7 +250,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     position = events[i].position.toPosition()!!,
                     price = events[i].price!!,
                     currency = events[i].currency!!,
-                    categories = events[i].categories,
+                    categories = events[i].categories!!,
                     likesCount = events[i].likesCount!!,
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
@@ -348,7 +385,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     position = events[i].position.toPosition()!!,
                     price = events[i].price!!,
                     currency = events[i].currency!!,
-                    categories = events[i].categories,
+                    categories = events[i].categories!!,
                     likesCount = events[i].likesCount!!,
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
@@ -451,7 +488,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     position = events[i].position.toPosition()!!,
                     price = events[i].price!!,
                     currency = events[i].currency!!,
-                    categories = events[i].categories,
+                    categories = events[i].categories!!,
                     likesCount = events[i].likesCount!!,
                     isLiked = currentPageLikes[i],
                     isFavourite = currentPageFavs[i],
@@ -502,7 +539,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             position = event.position.toPosition()!!,
             price = event.price!!,
             currency = event.currency!!,
-            categories = event.categories,
+            categories = event.categories!!,
             likesCount = event.likesCount!!,
             isLiked = event.usersIdsLiked.contains(userId),
             isFavourite = event.usersIdsFavs.contains(userId),

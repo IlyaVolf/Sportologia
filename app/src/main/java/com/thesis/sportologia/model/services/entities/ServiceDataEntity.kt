@@ -2,8 +2,8 @@ package com.thesis.sportologia.model.services.entities
 
 import com.thesis.sportologia.model.users.entities.UserType
 
-data class Service(
-    val id: Long,
+data class ServiceDataEntity(
+    val id: String?,
     val name: String,
     val type: ServiceType,
     var generalDescription: String,
@@ -20,6 +20,7 @@ data class Service(
     var isFavourite: Boolean,
     var isAcquired: Boolean,
     var generalPhotosUrls: List<String>,
+    var postedDate: Long
 ) {
     companion object {
         const val NULL = -2L

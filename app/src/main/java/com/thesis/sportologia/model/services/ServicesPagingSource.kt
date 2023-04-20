@@ -2,22 +2,26 @@ package com.thesis.sportologia.model.services
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
 
-typealias ServicesPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<Service>
+typealias ServicesPageLoader = suspend (lastTimestamp: Long?, pageIndex: Int, pageSize: Int) -> List<ServiceDataEntity>
 
 @Suppress("UnnecessaryVariable")
 class ServicesPagingSource(
     private val loader: ServicesPageLoader,
-) : PagingSource<Int, Service>() {
+) : PagingSource<Int, ServiceDataEntity>() {
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Service> {
+    var lastTimestamp: Long? = null
+
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ServiceDataEntity> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
         val pageIndex = params.key ?: 0
 
         return try {
             // loading the desired page of users
-            val posts = loader.invoke(pageIndex, params.loadSize)
+            val posts = loader.invoke(lastTimestamp, pageIndex, params.loadSize)
+
+            lastTimestamp = posts.lastOrNull()?.postedDate
             // success! now we can return LoadResult.Page
             return LoadResult.Page(
                 data = posts,
@@ -35,7 +39,7 @@ class ServicesPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Service>): Int? {
+    override fun getRefreshKey(state: PagingState<Int, ServiceDataEntity>): Int? {
         // get the most recently accessed index in the users list:
         val anchorPosition = state.anchorPosition ?: return null
         // convert item index to page index:

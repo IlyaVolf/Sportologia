@@ -1,7 +1,7 @@
 package com.thesis.sportologia.ui.services.entities
 
 import com.thesis.sportologia.model.services.entities.Exercise
-import com.thesis.sportologia.model.services.entities.ServiceDetailed
+import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 
 // TODO parcelable!
@@ -35,7 +35,7 @@ data class ServiceCreateEditItem(
     }
 }
 
-fun ServiceDetailed.toCreateEditItem(): ServiceCreateEditItem {
+fun ServiceDetailedDataEntity.toCreateEditItem(): ServiceCreateEditItem {
     return ServiceCreateEditItem(
         name = name,
         generalDescription = generalDescription,

@@ -29,8 +29,8 @@ class InMemoryServicesRepository @Inject constructor(
 
     /////////////////////////////////////////////////////////////////////////////////
 
-    private val serviceSample = ServiceDetailed(
-        id = 0L,
+    private val serviceSample = ServiceDetailedDataEntity(
+        id = "1",
         name = "Программа быстрого похудения",
         type = ServiceType.TRAINING_PROGRAM,
         generalDescription = "Результат уже через 5 недель",
@@ -55,11 +55,12 @@ class InMemoryServicesRepository @Inject constructor(
         detailedDescription = "Тренер Наталья. Для связи используйте WhatsApp",
         detailedPhotosUrls = listOf(),
         exercises = mutableListOf(),
-        dateCreatedMillis = Calendar.getInstance().timeInMillis
+        dateCreatedMillis = Calendar.getInstance().timeInMillis,
+        postedDate = Calendar.getInstance().timeInMillis,
     )
 
-    private val serviceSample2 = ServiceDetailed(
-        id = 1L,
+    private val serviceSample2 = ServiceDetailedDataEntity(
+        id = "2",
         name = "Набор мышечной массы гантялями",
         type = ServiceType.TRAINING_PROGRAM,
         generalDescription = "Нет денег на зал, но есть гантели дома? - не беда.",
@@ -85,7 +86,7 @@ class InMemoryServicesRepository @Inject constructor(
         detailedPhotosUrls = listOf(),
         exercises = mutableListOf(
             Exercise(
-                0L,
+                "1",
                 "Отжимания",
                 "Грудью касаемся пола",
                 3,
@@ -104,7 +105,7 @@ class InMemoryServicesRepository @Inject constructor(
                 listOf("https://roliki-magazin.ru/wp-content/uploads/8/a/3/8a3c052b55651b2419bada36d4038ad7.jpeg"),
             ),
             Exercise(
-                1L,
+                "2",
                 "Подтягивания",
                 "До подбородка",
                 2,
@@ -123,41 +124,22 @@ class InMemoryServicesRepository @Inject constructor(
                 listOf(),
             )
         ),
-        dateCreatedMillis = Calendar.getInstance().timeInMillis
+        dateCreatedMillis = Calendar.getInstance().timeInMillis,
+        postedDate = Calendar.getInstance().timeInMillis
     )
 
     private val servicesDetailed = mutableListOf(
         serviceSample,
         serviceSample2,
-        serviceSample.copy(id = 2L, isFavourite = true, isAcquired = false),
-        serviceSample.copy(id = 3L),
-        serviceSample.copy(id = 4L),
-        serviceSample.copy(id = 5L),
-        serviceSample.copy(id = 6L),
-        serviceSample.copy(id = 7L),
-        serviceSample.copy(id = 8L),
-        serviceSample.copy(id = 9L),
-        serviceSample.copy(id = 10L),
-        serviceSample.copy(id = 11L),
-        serviceSample.copy(id = 12L),
-        serviceSample.copy(id = 13L),
-        serviceSample.copy(id = 14L),
-        serviceSample.copy(id = 15L),
-        serviceSample.copy(id = 16L),
-        serviceSample.copy(id = 17L),
-        serviceSample.copy(id = 18L),
-        serviceSample.copy(id = 19L),
-        serviceSample.copy(id = 20L),
-        serviceSample.copy(id = 21L),
-        serviceSample.copy(id = 22L),
-        serviceSample.copy(id = 23L),
-        serviceSample.copy(id = 24L),
-        serviceSample.copy(id = 25L),
+        serviceSample.copy(id = "3", isFavourite = true, isAcquired = false),
+        serviceSample.copy(id = "4"),
+        serviceSample.copy(id = "5"),
+        serviceSample.copy(id = "6"),
     )
 
     //private val services = servicesDetailed.map { it.toGeneral() }.toMutableList()
 
-    private fun List<ServiceDetailed>.toServices(): List<Service> {
+    private fun List<ServiceDetailedDataEntity>.toServices(): List<ServiceDataEntity> {
         return this.map { it.copy().toGeneral().copy() }
     }
 
@@ -173,7 +155,7 @@ class InMemoryServicesRepository @Inject constructor(
         pageIndex: Int,
         pageSize: Int,
         userId: String
-    ): List<Service> = withContext(ioDispatcher) {
+    ): List<ServiceDataEntity> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
 
@@ -184,7 +166,7 @@ class InMemoryServicesRepository @Inject constructor(
         // throw Exception("a")
 
         if (offset >= filteredServices.size) {
-            return@withContext listOf<Service>()
+            return@withContext listOf<ServiceDataEntity>()
         } else if (offset + pageSize >= filteredServices.size) {
             return@withContext filteredServices.subList(offset, filteredServices.size)
         } else {
@@ -192,8 +174,8 @@ class InMemoryServicesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getPagedUserServices(userId: String): Flow<PagingData<Service>> {
-        val loader: ServicesPageLoader = { pageIndex, pageSize ->
+    override suspend fun getPagedUserServices(userId: String): Flow<PagingData<ServiceDataEntity>> {
+        val loader: ServicesPageLoader = { lastTimeStamp, pageIndex, pageSize ->
             getUserServices(pageIndex, pageSize, userId)
         }
 
@@ -215,10 +197,10 @@ class InMemoryServicesRepository @Inject constructor(
         pageSize: Int,
         userId: String,
         isUpcomingOnly: Boolean
-    ): List<Service> = withContext(
+    ): List<ServiceDataEntity> = withContext(
         ioDispatcher
     ) {
-        val res = mutableListOf<Service>()
+        val res = mutableListOf<ServiceDataEntity>()
 
         delay(1000)
 
@@ -238,7 +220,7 @@ class InMemoryServicesRepository @Inject constructor(
         // TODO SORT BY DATE
 
         if (offset >= res.size) {
-            return@withContext listOf<Service>()
+            return@withContext listOf<ServiceDataEntity>()
         } else if (offset + pageSize >= res.size) {
             return@withContext res.subList(offset, res.size)
         } else {
@@ -249,8 +231,8 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun getPagedUserFavouriteServices(
         userId: String,
         serviceType: ServiceType?
-    ): Flow<PagingData<Service>> {
-        val loader: ServicesPageLoader = { pageIndex, pageSize ->
+    ): Flow<PagingData<ServiceDataEntity>> {
+        val loader: ServicesPageLoader = { lastTimeStamp, pageIndex, pageSize ->
             getUserFavouriteServices(pageIndex, pageSize, userId, serviceType)
         }
 
@@ -268,8 +250,8 @@ class InMemoryServicesRepository @Inject constructor(
     override suspend fun getPagedUserAcquiredServices(
         userId: String,
         serviceType: ServiceType?
-    ): Flow<PagingData<Service>> {
-        val loader: ServicesPageLoader = { pageIndex, pageSize ->
+    ): Flow<PagingData<ServiceDataEntity>> {
+        val loader: ServicesPageLoader = { lastTimeStamp, pageIndex, pageSize ->
             getUserAcquiredServices(pageIndex, pageSize, userId, serviceType)
         }
 
@@ -284,7 +266,7 @@ class InMemoryServicesRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getService(serviceId: Long): Service? = withContext(ioDispatcher) {
+    override suspend fun getService(serviceId: String): ServiceDataEntity? = withContext(ioDispatcher) {
         delay(1000)
 
         //throw Exception("abc")
@@ -296,7 +278,7 @@ class InMemoryServicesRepository @Inject constructor(
         }
     }
 
-    override suspend fun getExercise(serviceId: Long, exerciseId: Long): Exercise? =
+    override suspend fun getExercise(serviceId: String, exerciseId: String): Exercise? =
         withContext(ioDispatcher) {
             delay(1000)
 
@@ -313,7 +295,7 @@ class InMemoryServicesRepository @Inject constructor(
             }
         }
 
-    override suspend fun getServiceDetailed(serviceId: Long): ServiceDetailed? =
+    override suspend fun getServiceDetailed(serviceId: String): ServiceDetailedDataEntity? =
         withContext(ioDispatcher) {
             delay(1000)
 
@@ -331,7 +313,7 @@ class InMemoryServicesRepository @Inject constructor(
         pageSize: Int,
         userId: String,
         serviceType: ServiceType?
-    ): List<Service> = withContext(ioDispatcher) {
+    ): List<ServiceDataEntity> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
 
@@ -345,7 +327,7 @@ class InMemoryServicesRepository @Inject constructor(
         //throw Exception("a")
 
         if (offset >= filteredServices.size) {
-            return@withContext listOf<Service>()
+            return@withContext listOf<ServiceDataEntity>()
         } else if (offset + pageSize >= filteredServices.size) {
             return@withContext filteredServices.subList(offset, filteredServices.size)
         } else {
@@ -358,7 +340,7 @@ class InMemoryServicesRepository @Inject constructor(
         pageSize: Int,
         userId: String,
         serviceType: ServiceType?
-    ): List<Service> = withContext(ioDispatcher) {
+    ): List<ServiceDataEntity> = withContext(ioDispatcher) {
         delay(1000)
         val offset = pageIndex * pageSize
 
@@ -371,7 +353,7 @@ class InMemoryServicesRepository @Inject constructor(
         //throw Exception("a")
 
         if (offset >= filteredServices.size) {
-            return@withContext listOf<Service>()
+            return@withContext listOf<ServiceDataEntity>()
         } else if (offset + pageSize >= filteredServices.size) {
             return@withContext filteredServices.subList(offset, filteredServices.size)
         } else {
@@ -380,8 +362,8 @@ class InMemoryServicesRepository @Inject constructor(
     }
 
     override suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices)
-            : Flow<PagingData<Service>> {
-        val loader: ServicesPageLoader = { pageIndex, pageSize ->
+            : Flow<PagingData<ServiceDataEntity>> {
+        val loader: ServicesPageLoader = { lastTimeStamp, pageIndex, pageSize ->
             getServices(pageIndex, pageSize, searchQuery, filter)
         }
 
@@ -401,7 +383,7 @@ class InMemoryServicesRepository @Inject constructor(
         pageSize: Int,
         searchQuery: String,
         filter: FilterParamsServices
-    ): List<Service> =
+    ): List<ServiceDataEntity> =
         withContext(ioDispatcher) {
             delay(1000)
             val offset = pageIndex * pageSize
@@ -417,7 +399,7 @@ class InMemoryServicesRepository @Inject constructor(
             //throw Exception("a")
 
             if (offset >= servicesFound.size) {
-                return@withContext listOf<Service>()
+                return@withContext listOf<ServiceDataEntity>()
             } else if (offset + pageSize >= servicesFound.size) {
                 return@withContext servicesFound.subList(offset, servicesFound.size)
             } else {
@@ -440,34 +422,34 @@ class InMemoryServicesRepository @Inject constructor(
         return res
     }*/
 
-    override suspend fun createService(serviceDetailed: ServiceDetailed) {
+    override suspend fun createService(serviceDetailedDataEntity: ServiceDetailedDataEntity) {
         delay(1000)
-        servicesDetailed.add(serviceDetailed)
+        servicesDetailed.add(serviceDetailedDataEntity)
 
         //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
     }
 
-    override suspend fun updateService(serviceDetailed: ServiceDetailed) {
+    override suspend fun updateService(serviceDetailedDataEntity: ServiceDetailedDataEntity) {
         delay(1000)
 
-        servicesDetailed[servicesDetailed.indexOfFirst { it.id == serviceDetailed.id }] =
-            serviceDetailed
+        servicesDetailed[servicesDetailed.indexOfFirst { it.id == serviceDetailedDataEntity.id }] =
+            serviceDetailedDataEntity
     }
 
-    override suspend fun deleteService(serviceId: Long) {
+    override suspend fun deleteService(serviceId: String) {
         delay(1000)
         servicesDetailed.removeIf { it.id == serviceId }
         localChanges.remove(serviceId)
     }
 
-    override suspend fun acquireService(serviceId: Long) {
+    override suspend fun acquireService(serviceId: String) {
         delay(1000)
         servicesDetailed.find { it.id == serviceId }?.isAcquired = true
     }
 
     override suspend fun setIsFavourite(
         userId: String,
-        serviceId: Long,
+        serviceId: String,
         isFavourite: Boolean
     ) = withContext(ioDispatcher) {
         delay(1000)

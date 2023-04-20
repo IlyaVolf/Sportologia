@@ -37,7 +37,7 @@ class InMemoryUsersRepository @Inject constructor(
             null,
             "i_volf",
             "Илья Вольф",
-            "-----",
+            "Студент НГУ\nЛюблю лыжи, коньки, бег, велозаезды, фитнес и конфеты",
             "https://i.imgur.com/tGbaZCY.jpg",
             2,
             1,
@@ -52,19 +52,19 @@ class InMemoryUsersRepository @Inject constructor(
             listOf(
                 Photo(
                     0,
-                    "https://kartinkin.net/pics/uploads/posts/2022-07/1658445549_58-kartinkin-net-p-shveitsarskie-alpi-priroda-krasivo-foto-63.jpg"
+                    "https://www.нотариат.рф/media/news/42/a4/42a4b9678f9443ff8cde96d59ae8d5ac.jpeg"
                 ),
                 Photo(
                     1,
-                    "https://mykaleidoscope.ru/x/uploads/posts/2022-10/1666403296_34-mykaleidoscope-ru-p-alpi-tsugshpittse-pinterest-40.jpg"
+                    "https://cdn.vashgorod.ru/r/1200x1200/img/90/ce/90ce47d83cdc047776e3e65ca9d4c171.jpg"
                 ),
                 Photo(
                     2,
-                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                    "https://i.ytimg.com/vi/8x0LCuLTnQQ/maxresdefault.jpg"
                 ),
                 Photo(
                     3,
-                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                    "https://cdn.vashgorod.ru/r/1200x1200/img/01/a4/01a4176fc724b441208c038af2c3317a.jpg"
                 ),
             )
         ),
@@ -93,7 +93,7 @@ class InMemoryUsersRepository @Inject constructor(
             "nikita",
             "Никита Романов",
             "-----",
-            "https://i.imgur.com/tGbaZCY.jpg",
+            "https://catherineasquithgallery.com/uploads/posts/2021-03/1614558381_33-p-chelovechki-na-belom-fone-35.jpg",
             21,
             5,
             hashMapOf(
@@ -110,7 +110,7 @@ class InMemoryUsersRepository @Inject constructor(
             Position(55.072076, 82.965199),
             "stroitel",
             "Тренажёрный зал Строитель",
-            "=====",
+            "Построй тело своей мечты! Ежеднево с 8:00 до 22:00",
             null,
             2993,
             302,

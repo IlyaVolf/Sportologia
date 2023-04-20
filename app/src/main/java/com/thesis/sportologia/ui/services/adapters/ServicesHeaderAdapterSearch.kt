@@ -4,10 +4,8 @@ import androidx.fragment.app.Fragment
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.utils.*
-import java.util.*
 
 class ServicesHeaderAdapterSearch(
     fragment: Fragment,

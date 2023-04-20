@@ -32,7 +32,7 @@ class InMemoryEventsRepository @Inject constructor(
         filter: FilterParamsEvents
     ): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            eventsDataSource.getPagedEvents(userId, filter, lastTimestamp, pageSize)
+            eventsDataSource.getPagedEvents(userId, searchQuery, filter, lastTimestamp, pageSize)
         }
 
         return Pager(

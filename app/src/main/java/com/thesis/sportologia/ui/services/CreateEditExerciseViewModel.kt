@@ -53,7 +53,7 @@ class CreateEditExerciseViewModel @AssistedInject constructor(
         when (mode) {
             Mode.CREATE ->
                 newExercise = ExerciseCreateEditItem(
-                    id = -1, // не тут надо создавать!
+                    id = null, // не тут надо создавать!
                     name = reformattedName,
                     description = reformattedDescription,
                     repsNumber = exercise.repsNumber!!,
