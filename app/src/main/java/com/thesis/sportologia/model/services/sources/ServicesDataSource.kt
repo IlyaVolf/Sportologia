@@ -35,8 +35,8 @@ interface ServicesDataSource {
 
     suspend fun deleteService(serviceId: String)
 
-    suspend fun setIsLiked(userId: String, serviceDataEntity: ServiceDetailedDataEntity, isLiked: Boolean)
-
     suspend fun setIsFavourite(userId: String, serviceDataEntity: ServiceDetailedDataEntity, isFavourite: Boolean)
+
+    suspend fun setIsAcquired(userId: String, serviceDataEntity: ServiceDetailedDataEntity, isAcquired: Boolean)
 
 }

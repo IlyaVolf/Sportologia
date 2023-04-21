@@ -267,6 +267,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
     }
 
     private val onExercisePressed: (Exercise) -> Unit = { exercise ->
+       // TODO надо передавать сам service, в котором уже есть exercises
         val direction =
             ServiceFragmentDirections.actionServiceFragmentToExerciseFragment(
                 serviceId = serviceId,

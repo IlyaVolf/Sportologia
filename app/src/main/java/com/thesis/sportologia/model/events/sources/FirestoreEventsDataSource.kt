@@ -64,7 +64,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     .await()
             } else {
                 currentPageDocuments = database.collection("events")
-                   // .whereGreaterThanOrEqualTo("name", searchQuery)
+                    // .whereGreaterThanOrEqualTo("name", searchQuery)
                     .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
                     .orderBy("name", Query.Direction.ASCENDING)
                     .orderBy("datePlusId", Query.Direction.ASCENDING)
@@ -90,7 +90,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                     .await()
             } else {
                 currentPageDocuments = database.collection("events")
-                   //
                     // \.whereGreaterThanOrEqualTo("name", searchQuery)
                     .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
                     .orderBy("name", Query.Direction.ASCENDING)
