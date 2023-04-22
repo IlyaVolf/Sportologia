@@ -23,7 +23,7 @@
             app:destination="@id/service" >
             <argument
                 android:name="serviceId"
-                app:argType="long" />
+                app:argType="string" />
         </action>
     </fragment>
     <include app:graph="@navigation/profile_nested" />

@@ -44,65 +44,58 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
 
         val query = database.collection("events")
 
+        /*database.collection("events").get().addOnSuccessListener { snap ->
+            snap.documents.forEach { doc ->
+                database.collection("events").document(doc.id).update("tokens", FieldValue.delete())
+            }
+        }
+
+        database.collection("events").get().addOnSuccessListener { snap ->
+            snap.documents.forEach { doc ->
+                database.collection("events").document(doc.id).update(
+                    hashMapOf<String, Any>(
+                        "tokens" to doc.get("name").toString().split(" ").filter { it.isNotBlank() }
+                            .map {
+                                it.lowercase(
+                                    Locale.getDefault()
+                                )
+                            } + "")
+                )
+            }
+        }
+
         if (filter.dateFrom != null) {
             query.whereGreaterThan("dateFrom", filter.dateFrom!!)
         }
         if (filter.dateTo != null) {
             query.whereLessThan("dateTo", filter.dateTo!!)
-        }
+        }*/
+
+        val searchQueryTokens = searchQuery.split(" ").filter { it.isNotBlank() }.map {
+            it.lowercase(
+                Locale.getDefault()
+            )
+        }.ifEmpty { listOf("") }
 
         if (lastMarker == null) {
-            if (searchQuery == "") {
-                currentPageDocuments = database.collection("events")
-                    .orderBy("datePlusId", Query.Direction.ASCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            } else {
-                currentPageDocuments = database.collection("events")
-                    // .whereGreaterThanOrEqualTo("name", searchQuery)
-                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
-                    .orderBy("name", Query.Direction.ASCENDING)
-                    .orderBy("datePlusId", Query.Direction.ASCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            }
+            currentPageDocuments = database.collection("events")
+                .whereArrayContainsAny("tokens", searchQueryTokens)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
         } else {
-            if (searchQuery == "") {
-                currentPageDocuments = database.collection("events")
-                    .orderBy("datePlusId", Query.Direction.ASCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            } else {
-                currentPageDocuments = database.collection("events")
-                    // \.whereGreaterThanOrEqualTo("name", searchQuery)
-                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
-                    .orderBy("name", Query.Direction.ASCENDING)
-                    .orderBy("datePlusId", Query.Direction.ASCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            }
+            currentPageDocuments = database.collection("events")
+                .whereArrayContainsAny("tokens", searchQueryTokens)
+                .orderBy("datePlusId", Query.Direction.ASCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
         }
 
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
@@ -190,10 +183,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .orderBy("datePlusId", Query.Direction.ASCENDING)
                 .limit(pageSize.toLong())
                 .get()
-                .addOnFailureListener { e ->
-                    Log.d("abcdef", "$e")
-                    throw Exception(e)
-                }
                 .await()
         } else {
             currentPageDocuments = database.collection("events")
@@ -202,11 +191,11 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
                 .get()
-                .addOnFailureListener { e ->
-                    Log.d("abcdef", "$e")
-                    throw Exception(e)
-                }
                 .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
         }
 
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
@@ -351,9 +340,11 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             }
         }
 
-        Log.d("abcdef", "events pre $lastMarker")
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
-        Log.d("abcdef", "events $events")
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
@@ -450,6 +441,10 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             }
         }
 
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val events = currentPageDocuments.toObjects(EventFirestoreEntity::class.java)
 
         events.forEach {
@@ -500,7 +495,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         return res
     }
 
-    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity? {
+    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity {
         val eventDocument = database.collection("events")
             .document(eventId)
             .get()
@@ -509,7 +504,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             }
             .await()
 
-        val event = eventDocument.toObject(EventFirestoreEntity::class.java) ?: return null
+        val event = eventDocument.toObject(EventFirestoreEntity::class.java) ?: throw Exception()
 
         val userDocument = database.collection("users")
             .document(event.organizerId!!)
@@ -597,9 +592,15 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
 
         documentRef
             .update(
-                hashMapOf<String, Any>(
+                hashMapOf(
                     "id" to documentRef.id,
-                    "datePlusId" to "${eventDataEntity.dateFrom}${documentRef.id}"
+                    "datePlusId" to "${eventDataEntity.dateFrom}${documentRef.id}",
+                    "tokens" to eventDataEntity.name.split(" ").filter { it.isNotBlank() }
+                        .map {
+                            it.lowercase(
+                                Locale.getDefault()
+                            )
+                        } + ""
                 )
             )
             .addOnFailureListener { e ->
@@ -637,16 +638,18 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
             "categories" to eventDataEntity.categories,
             "likesCount" to eventDataEntity.likesCount,
             "photosUrls" to photosFirestore,
-            "datePlusId" to "${eventDataEntity.dateFrom}${eventDataEntity.id}"
+            "datePlusId" to "${eventDataEntity.dateFrom}${eventDataEntity.id}",
+            "tokens" to eventDataEntity.name.split(" ").filter { it.isNotBlank() }
+                .map {
+                    it.lowercase(
+                        Locale.getDefault()
+                    )
+                } + ""
         )
 
         database.collection("events")
             .document(eventDataEntity.id!!)
             .update(eventFirestoreEntity)
-            .addOnFailureListener { e ->
-                Log.d("abcdef", "$e")
-                throw Exception(e)
-            }
             .await()
     }
 
@@ -654,9 +657,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         database.collection("events")
             .document(eventId)
             .delete()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
             .await()
     }
 
@@ -674,9 +674,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                         "usersIdsLiked" to FieldValue.arrayUnion(userId)
                     )
                 )
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
                 .await()
         } else {
             database.collection("events")
@@ -687,9 +684,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                         "usersIdsLiked" to FieldValue.arrayRemove(userId)
                     )
                 )
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
                 .await()
         }
     }
@@ -707,9 +701,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                         "usersIdsFavs" to FieldValue.arrayUnion(userId)
                     )
                 )
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
         } else {
             database.collection("events")
                 .document(eventDataEntity.id!!)
@@ -718,9 +709,6 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                         "usersIdsFavs" to FieldValue.arrayRemove(userId)
                     )
                 )
-                .addOnFailureListener { e ->
-                    throw Exception(e)
-                }
                 .await()
         }
     }

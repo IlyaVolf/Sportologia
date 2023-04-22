@@ -34,7 +34,7 @@ interface EventsDataSource {
         pageSize: Int
     ): List<EventDataEntity>
 
-    suspend fun getEvent(eventId: String, userId: String): EventDataEntity?
+    suspend fun getEvent(eventId: String, userId: String): EventDataEntity
 
     suspend fun createEvent(eventDataEntity: EventDataEntity)
 

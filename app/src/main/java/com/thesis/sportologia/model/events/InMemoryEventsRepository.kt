@@ -32,7 +32,18 @@ class InMemoryEventsRepository @Inject constructor(
         filter: FilterParamsEvents
     ): Flow<PagingData<EventDataEntity>> {
         val loader: EventsPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            eventsDataSource.getPagedEvents(userId, searchQuery, filter, lastTimestamp, pageSize)
+            try {
+                eventsDataSource.getPagedEvents(
+                    userId,
+                    searchQuery,
+                    filter,
+                    lastTimestamp,
+                    pageSize
+                )
+            } catch (e: Exception) {
+                Log.d("abcdef", e.toString())
+                throw Exception()
+            }
         }
 
         return Pager(
@@ -50,10 +61,7 @@ class InMemoryEventsRepository @Inject constructor(
         userId: String,
         isUpcomingOnly: Boolean
     ): Flow<PagingData<EventDataEntity>> {
-        Log.d("abcdef", "getPagedUserEvents")
-
         val loader: EventsPageLoader = { lastTimestamp, _, pageSize ->
-            Log.d("abcdef", "EventsPageLoader")
             eventsDataSource.getPagedUserEvents(userId, isUpcomingOnly, lastTimestamp, pageSize)
         }
 
@@ -117,7 +125,7 @@ class InMemoryEventsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity? {
+    override suspend fun getEvent(eventId: String, userId: String): EventDataEntity {
         return eventsDataSource.getEvent(eventId, userId)
     }
 

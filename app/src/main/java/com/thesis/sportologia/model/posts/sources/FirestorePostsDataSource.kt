@@ -57,6 +57,10 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 .await()
         }
 
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
         val userDocument = database.collection("users")
@@ -174,6 +178,10 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         }
 
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
@@ -262,6 +270,10 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             }
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
         }
 
         val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)

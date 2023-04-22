@@ -83,6 +83,10 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             }
         }
 
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
 
         val usersLists = services.map { it.authorId }
@@ -163,6 +167,10 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .startAfter(lastMarker)
                 .get()
                 .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
         }
 
         val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
@@ -246,6 +254,10 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .await()
         }
 
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
         val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
 
         services.forEach {
@@ -322,6 +334,10 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .startAfter(lastMarker)
                 .get()
                 .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
         }
 
         val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)

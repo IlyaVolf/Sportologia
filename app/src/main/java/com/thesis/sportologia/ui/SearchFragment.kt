@@ -156,7 +156,7 @@ class SearchFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 currentSearchTab = searchTabs[tab?.position ?: 0]
-             }
+            }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
@@ -221,11 +221,9 @@ class SearchFragment : Fragment() {
             GO_TO_SERVICE_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val serviceId = data.getLong(SERVICE_ID)
+            val serviceId = data.getString(SERVICE_ID)
             val direction =
-                SearchFragmentDirections.actionSearchFragmentToService(
-                    serviceId
-                )
+                SearchFragmentDirections.actionSearchFragmentToService(serviceId!!)
             findNavController().navigate(
                 direction,
                 navOptions {
