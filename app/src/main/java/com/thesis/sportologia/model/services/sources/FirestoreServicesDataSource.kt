@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
-import com.thesis.sportologia.model.services.entities.ServiceDataEntity
 import com.thesis.sportologia.model.services.entities.*
 import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
@@ -33,73 +32,110 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
         lastMarker: Long?,
         pageSize: Int
     ): List<ServiceDataEntity> {
-        /*val currentPageDocuments: QuerySnapshot?
+        val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
-        val currentPageLikes = mutableListOf<Boolean>()
+        val currentPageAcquired = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
         if (lastMarker == null) {
-            currentPageDocuments = database.collection(SERVICES_PATH)
-                .whereEqualTo("authorId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
-                .limit(pageSize.toLong())
-                .get()
-                .await()
+            if (searchQuery == "") {
+                currentPageDocuments = database.collection(SERVICES_PATH)
+                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            } else {
+                currentPageDocuments = database.collection(SERVICES_PATH)
+                    // .whereGreaterThanOrEqualTo("name", searchQuery)
+                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
+                    .orderBy("name", Query.Direction.ASCENDING)
+                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            }
         } else {
-            currentPageDocuments = database.collection(SERVICES_PATH)
-                .whereEqualTo("authorId", userId)
-                .orderBy("postedDate", Query.Direction.DESCENDING)
-                .limit(pageSize.toLong())
-                .startAfter(lastMarker)
-                .get()
-                .await()
+            if (searchQuery == "") {
+                currentPageDocuments = database.collection(SERVICES_PATH)
+                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection(SERVICES_PATH)
+                    // \.whereGreaterThanOrEqualTo("name", searchQuery)
+                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
+                    .orderBy("name", Query.Direction.ASCENDING)
+                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        Log.d("abcdef", "$e")
+                        throw Exception(e)
+                    }
+                    .await()
+            }
         }
 
-        val posts = currentPageDocuments.toObjects(ServiceFirestoreEntity::class.java)
+        val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
 
-        val userDocument = database.collection("users")
-            .document(userId)
+        val usersLists = services.map { it.authorId }
+
+        val usersDocuments = database.collection(USERS_PATH)
+            .whereIn("id", usersLists)
             .get()
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
             .await()
-        val user = userDocument.toObject(UserFirestoreEntity::class.java)
-            ?: throw Exception("error user loading")
+
+        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
 
         currentPageDocuments.forEach {
             currentPageIds.add(it.id)
         }
-        posts.forEach {
-            currentPageLikes.add(it.usersIdsLiked.contains(userId))
+        services.forEach {
+            currentPageAcquired.add(it.usersIdsAcquired.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
         }
 
         val res = mutableListOf<ServiceDataEntity>()
-        for (i in posts.indices) {
+        for (i in services.indices) {
             res.add(
                 ServiceDataEntity(
-                    id = currentPageIds[i],
-                    authorId = user.id!!,
-                    authorName = user.name!!,
-                    profilePictureUrl = user.profilePhotoURI,
-                    text = posts[i].text!!,
-                    likesCount = posts[i].likesCount!!,
-                    userType = when (user.userType) {
+                    type = services[i].type!!,
+                    id = services[i].id,
+                    name = services[i].name!!,
+                    generalDescription = services[i].generalDescription!!,
+                    generalPhotosUrls = services[i].generalPhotosUrls,
+                    authorId = services[i].authorId!!,
+                    authorName = users.first { it.id == services[i].authorId }.name!!,
+                    authorType = when (users.first { it.id == services[i].authorId }.userType) {
                         "ATHLETE" -> UserType.ATHLETE
                         "ORGANIZATION" -> UserType.ORGANIZATION
-                        else -> throw Exception()
+                        else -> throw Exception("backend data consistency exception")
                     },
-                    isLiked = currentPageLikes[i],
-                    isFavourite = currentPageFavs[i],
-                    postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls,
+                    profilePictureUrl = users.first { it.id == services[i].authorId }.profilePhotoURI,
+                    price = services[i].price!!,
+                    currency = services[i].currency!!,
+                    categories = services[i].categories!!,
+                    rating = services[i].rating,
+                    acquiredNumber = services[i].acquiredNumber!!,
+                    reviewsNumber = services[i].reviewsNumber!!,
+                    isFavourite = services[i].usersIdsFavs.contains(userId),
+                    isAcquired = services[i].usersIdsAcquired.contains(userId),
+                    dateCreatedMillis = services[i].dateCreatedMillis!!
                 )
             )
         }
 
-        return res*/
-        return emptyList()
+        return res
     }
 
     override suspend fun getPagedUserServices(
@@ -578,11 +614,17 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             .update(serviceFirestoreEntity)
             .await()
 
+        val batch = database.batch()
         database.collection(SERVICES_PATH)
             .document(serviceDataEntity.id)
             .collection(EXERCISES_PATH)
-            .document()
-            .delete()
+            .get()
+            .addOnSuccessListener {
+                for (document in it.documents) {
+                    batch.delete(document.reference)
+                }
+                batch.commit()
+            }
             .await()
 
         serviceDataEntity.exerciseDataEntities.forEach { exercise ->
@@ -667,6 +709,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
+                        "acquiredNumber" to FieldValue.increment(1L),
                         "usersIdsAcquired" to FieldValue.arrayUnion(userId)
                     )
                 )
@@ -678,6 +721,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
+                        "acquiredNumber" to FieldValue.increment(-1L),
                         "usersIdsAcquired" to FieldValue.arrayRemove(userId)
                     )
                 )

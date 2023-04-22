@@ -29,13 +29,18 @@ class InMemoryServicesRepository @Inject constructor(
         filter: FilterParamsServices
     ): Flow<PagingData<ServiceDataEntity>> {
         val loader: ServicesPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            servicesDataSource.getPagedServices(
-                userId,
-                searchQuery,
-                filter,
-                lastTimestamp,
-                pageSize
-            )
+            try {
+                servicesDataSource.getPagedServices(
+                    userId,
+                    searchQuery,
+                    filter,
+                    lastTimestamp,
+                    pageSize
+                )
+            } catch (e: Exception) {
+                Log.d("abcdef", e.toString())
+                throw Exception()
+            }
         }
 
         return Pager(
@@ -70,17 +75,12 @@ class InMemoryServicesRepository @Inject constructor(
         serviceType: ServiceType?
     ): Flow<PagingData<ServiceDataEntity>> {
         val loader: ServicesPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            try {
-                servicesDataSource.getPagedUserFavouriteServices(
-                    userId,
-                    serviceType,
-                    lastTimestamp,
-                    pageSize
-                )
-            } catch (e: Exception) {
-                Log.d("abcdef", e.toString())
-                throw Exception()
-            }
+            servicesDataSource.getPagedUserFavouriteServices(
+                userId,
+                serviceType,
+                lastTimestamp,
+                pageSize
+            )
         }
 
         return Pager(
@@ -99,17 +99,12 @@ class InMemoryServicesRepository @Inject constructor(
         serviceType: ServiceType?
     ): Flow<PagingData<ServiceDataEntity>> {
         val loader: ServicesPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            try {
-                servicesDataSource.getPagedUserAcquiredServices(
-                    userId,
-                    serviceType,
-                    lastTimestamp,
-                    pageSize
-                )
-            } catch (e: Exception) {
-                Log.d("abcdef", e.toString())
-                throw Exception()
-            }
+            servicesDataSource.getPagedUserAcquiredServices(
+                userId,
+                serviceType,
+                lastTimestamp,
+                pageSize
+            )
         }
 
         return Pager(
