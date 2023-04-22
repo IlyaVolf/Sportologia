@@ -2,10 +2,11 @@ package com.thesis.sportologia.model.services.sources
 
 import android.net.Uri
 import android.util.Log
-import androidx.core.net.toUri
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
-import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
+import com.thesis.sportologia.model.services.entities.*
+import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.tasks.await
 import java.util.*
@@ -25,60 +26,472 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
     private val database = FirebaseFirestore.getInstance()
     private val storage = FirebaseStorage.getInstance()
 
+    override suspend fun getPagedServices(
+        userId: String,
+        searchQuery: String,
+        filter: FilterParamsServices,
+        lastMarker: Long?,
+        pageSize: Int
+    ): List<ServiceDataEntity> {
+        /*val currentPageDocuments: QuerySnapshot?
+        val currentPageIds = mutableListOf<String>()
+        val currentPageLikes = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
+
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereEqualTo("authorId", userId)
+                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereEqualTo("authorId", userId)
+                .orderBy("postedDate", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        val posts = currentPageDocuments.toObjects(ServiceFirestoreEntity::class.java)
+
+        val userDocument = database.collection("users")
+            .document(userId)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
+            ?: throw Exception("error user loading")
+
+        currentPageDocuments.forEach {
+            currentPageIds.add(it.id)
+        }
+        posts.forEach {
+            currentPageLikes.add(it.usersIdsLiked.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+        }
+
+        val res = mutableListOf<ServiceDataEntity>()
+        for (i in posts.indices) {
+            res.add(
+                ServiceDataEntity(
+                    id = currentPageIds[i],
+                    authorId = user.id!!,
+                    authorName = user.name!!,
+                    profilePictureUrl = user.profilePhotoURI,
+                    text = posts[i].text!!,
+                    likesCount = posts[i].likesCount!!,
+                    userType = when (user.userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception()
+                    },
+                    isLiked = currentPageLikes[i],
+                    isFavourite = currentPageFavs[i],
+                    postedDate = posts[i].postedDate!!,
+                    photosUrls = posts[i].photosUrls,
+                )
+            )
+        }
+
+        return res*/
+        return emptyList()
+    }
+
     override suspend fun getPagedUserServices(
         userId: String,
         lastMarker: Long?,
         pageSize: Int
-    ): List<ServiceDetailedDataEntity> {
-        TODO("Not yet implemented")
-    }
+    ): List<ServiceDataEntity> {
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageIds = mutableListOf<String>()
+        val currentPageAcquired = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
 
-    override suspend fun getPagedUserSubscribedOnServices(
-        userId: String,
-        userType: UserType?,
-        lastMarker: Long?,
-        pageSize: Int
-    ): List<ServiceDetailedDataEntity> {
-        TODO("Not yet implemented")
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereEqualTo("authorId", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereEqualTo("authorId", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
+
+        val userDocument = database.collection(USERS_PATH)
+            .document(userId)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
+            ?: throw Exception("error user loading")
+
+        currentPageDocuments.forEach {
+            currentPageIds.add(it.id)
+        }
+        services.forEach {
+            currentPageAcquired.add(it.usersIdsAcquired.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+        }
+
+        val res = mutableListOf<ServiceDataEntity>()
+        for (i in services.indices) {
+            res.add(
+                ServiceDataEntity(
+                    type = services[i].type!!,
+                    id = services[i].id,
+                    name = services[i].name!!,
+                    generalDescription = services[i].generalDescription!!,
+                    generalPhotosUrls = services[i].generalPhotosUrls,
+                    authorId = user.id!!,
+                    authorName = user.name!!,
+                    authorType = when (user.userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception("backend data consistency exception")
+                    },
+                    profilePictureUrl = user.profilePhotoURI,
+                    price = services[i].price!!,
+                    currency = services[i].currency!!,
+                    categories = services[i].categories!!,
+                    rating = services[i].rating,
+                    acquiredNumber = services[i].acquiredNumber!!,
+                    reviewsNumber = services[i].reviewsNumber!!,
+                    isFavourite = services[i].usersIdsFavs.contains(userId),
+                    isAcquired = services[i].usersIdsAcquired.contains(userId),
+                    dateCreatedMillis = services[i].dateCreatedMillis!!
+                )
+            )
+        }
+
+        return res
     }
 
     override suspend fun getPagedUserFavouriteServices(
         userId: String,
-        userType: UserType?,
+        serviceType: ServiceType?,
         lastMarker: Long?,
         pageSize: Int
-    ): List<ServiceDetailedDataEntity> {
-        TODO("Not yet implemented")
+    ): List<ServiceDataEntity> {
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageAcquired = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
+        val currentPageAuthors = mutableListOf<UserFirestoreEntity>()
+
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContains("usersIdsFavs", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContains("usersIdsFavs", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
+
+        services.forEach {
+            currentPageAcquired.add(it.usersIdsAcquired.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+
+            val authorDocument = database.collection(USERS_PATH)
+                .document(it.authorId!!)
+                .get()
+                .await()
+
+            val author =
+                authorDocument.toObject(UserFirestoreEntity::class.java) ?: throw Exception()
+
+            currentPageAuthors.add(author)
+        }
+
+        val res = mutableListOf<ServiceDataEntity>()
+        for (i in services.indices) {
+            res.add(
+                ServiceDataEntity(
+                    type = services[i].type!!,
+                    id = services[i].id,
+                    name = services[i].name!!,
+                    generalDescription = services[i].generalDescription!!,
+                    generalPhotosUrls = services[i].generalPhotosUrls,
+                    authorId = currentPageAuthors[i].id!!,
+                    authorName = currentPageAuthors[i].name!!,
+                    authorType = when (currentPageAuthors[i].userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception("backend data consistency exception")
+                    },
+                    profilePictureUrl = currentPageAuthors[i].profilePhotoURI,
+                    price = services[i].price!!,
+                    currency = services[i].currency!!,
+                    categories = services[i].categories!!,
+                    rating = services[i].rating,
+                    acquiredNumber = services[i].acquiredNumber!!,
+                    reviewsNumber = services[i].reviewsNumber!!,
+                    isFavourite = services[i].usersIdsFavs.contains(userId),
+                    isAcquired = services[i].usersIdsAcquired.contains(userId),
+                    dateCreatedMillis = services[i].dateCreatedMillis!!
+                )
+            )
+        }
+
+        return res
     }
 
-    override suspend fun getService(serviceId: String, userId: String): ServiceDetailedDataEntity? {
-        TODO("Not yet implemented")
+    override suspend fun getPagedUserAcquiredServices(
+        userId: String,
+        serviceType: ServiceType?,
+        lastMarker: Long?,
+        pageSize: Int
+    ): List<ServiceDataEntity> {
+        val currentPageDocuments: QuerySnapshot?
+        val currentPageAcquired = mutableListOf<Boolean>()
+        val currentPageFavs = mutableListOf<Boolean>()
+        val currentPageAuthors = mutableListOf<UserFirestoreEntity>()
+
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContains("usersIdsAcquired", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContains("usersIdsAcquired", userId)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        val services = currentPageDocuments.toObjects(ServiceDetailedFirestoreEntity::class.java)
+
+        services.forEach {
+            currentPageAcquired.add(it.usersIdsAcquired.contains(userId))
+            currentPageFavs.add(it.usersIdsFavs.contains(userId))
+
+            val authorDocument = database.collection(USERS_PATH)
+                .document(it.authorId!!)
+                .get()
+                .await()
+
+            val author =
+                authorDocument.toObject(UserFirestoreEntity::class.java) ?: throw Exception()
+
+            currentPageAuthors.add(author)
+        }
+
+        val res = mutableListOf<ServiceDataEntity>()
+        for (i in services.indices) {
+            res.add(
+                ServiceDataEntity(
+                    type = services[i].type!!,
+                    id = services[i].id,
+                    name = services[i].name!!,
+                    generalDescription = services[i].generalDescription!!,
+                    generalPhotosUrls = services[i].generalPhotosUrls,
+                    authorId = currentPageAuthors[i].id!!,
+                    authorName = currentPageAuthors[i].name!!,
+                    authorType = when (currentPageAuthors[i].userType) {
+                        "ATHLETE" -> UserType.ATHLETE
+                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        else -> throw Exception("backend data consistency exception")
+                    },
+                    profilePictureUrl = currentPageAuthors[i].profilePhotoURI,
+                    price = services[i].price!!,
+                    currency = services[i].currency!!,
+                    categories = services[i].categories!!,
+                    rating = services[i].rating,
+                    acquiredNumber = services[i].acquiredNumber!!,
+                    reviewsNumber = services[i].reviewsNumber!!,
+                    isFavourite = services[i].usersIdsFavs.contains(userId),
+                    isAcquired = services[i].usersIdsAcquired.contains(userId),
+                    dateCreatedMillis = services[i].dateCreatedMillis!!
+                )
+            )
+        }
+
+        return res
+    }
+
+    override suspend fun getService(
+        serviceId: String,
+        userId: String
+    ): ServiceDataEntity {
+        val serviceDocument = database.collection(SERVICES_PATH)
+            .document(serviceId)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+
+        val service =
+            serviceDocument.toObject(ServiceDetailedFirestoreEntity::class.java)
+                ?: throw Exception()
+
+        val userDocument = database.collection(USERS_PATH)
+            .document(service.authorId!!)
+            .get()
+            .addOnFailureListener {
+                throw Exception("user not found")
+            }
+            .await()
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
+            ?: throw Exception("error user loading")
+
+        val res = ServiceDataEntity(
+            type = service.type!!,
+            id = service.id,
+            name = service.name!!,
+            generalDescription = service.generalDescription!!,
+            generalPhotosUrls = service.generalPhotosUrls,
+            authorId = user.id!!,
+            authorName = user.name!!,
+            authorType = when (user.userType) {
+                "ATHLETE" -> UserType.ATHLETE
+                "ORGANIZATION" -> UserType.ORGANIZATION
+                else -> throw Exception("backend data consistency exception")
+            },
+            profilePictureUrl = user.profilePhotoURI,
+            price = service.price!!,
+            currency = service.currency!!,
+            categories = service.categories!!,
+            rating = service.rating,
+            acquiredNumber = service.acquiredNumber!!,
+            reviewsNumber = service.reviewsNumber!!,
+            isFavourite = service.usersIdsFavs.contains(userId),
+            isAcquired = service.usersIdsAcquired.contains(userId),
+            dateCreatedMillis = service.dateCreatedMillis!!
+        )
+
+        return res
+    }
+
+    override suspend fun getServiceDetailed(
+        serviceId: String,
+        userId: String
+    ): ServiceDetailedDataEntity {
+        val serviceDocument = database.collection(SERVICES_PATH)
+            .document(serviceId)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+
+        val service =
+            serviceDocument.toObject(ServiceDetailedFirestoreEntity::class.java)
+                ?: throw Exception()
+
+        val userDocument = database.collection(USERS_PATH)
+            .document(service.authorId!!)
+            .get()
+            .addOnFailureListener {
+                throw Exception("user not found")
+            }
+            .await()
+        val user = userDocument.toObject(UserFirestoreEntity::class.java)
+            ?: throw Exception("error user loading")
+
+        val exercisesDocument = database
+            .collection(SERVICES_PATH)
+            .document(serviceId)
+            .collection(EXERCISES_PATH)
+            .get()
+            .await()
+
+        val exercises = exercisesDocument.toObjects(ExerciseFirestoreEntity::class.java).map {  exercise ->
+            ExerciseDataEntity(
+                id = exercise.id,
+                name = exercise.name!!,
+                description = exercise.description!!,
+                setsNumber = exercise.setsNumber!!,
+                repsNumber = exercise.repsNumber!!,
+                regularity = exercise.regularity!!,
+                photosUris = exercise.photosUris
+            )
+        }
+
+        val res = ServiceDetailedDataEntity(
+            type = service.type!!,
+            id = service.id,
+            name = service.name!!,
+            generalDescription = service.generalDescription!!,
+            generalPhotosUrls = service.generalPhotosUrls,
+            detailedDescription = service.detailedDescription!!,
+            detailedPhotosUrls = service.detailedPhotosUrls,
+            authorId = user.id!!,
+            authorName = user.name!!,
+            authorType = when (user.userType) {
+                "ATHLETE" -> UserType.ATHLETE
+                "ORGANIZATION" -> UserType.ORGANIZATION
+                else -> throw Exception("backend data consistency exception")
+            },
+            profilePictureUrl = user.profilePhotoURI,
+            price = service.price!!,
+            currency = service.currency!!,
+            categories = service.categories!!,
+            exerciseDataEntities = exercises,
+            rating = service.rating,
+            acquiredNumber = service.acquiredNumber!!,
+            reviewsNumber = service.reviewsNumber!!,
+            isFavourite = service.usersIdsFavs.contains(userId),
+            isAcquired = service.usersIdsAcquired.contains(userId),
+            dateCreatedMillis = service.dateCreatedMillis!!
+        )
+
+        return res
     }
 
     override suspend fun createService(serviceDataEntity: ServiceDetailedDataEntity) {
         val generalPhotosFirestore = mutableListOf<Uri>()
-        serviceDataEntity.generalPhotosUrls.forEach {
+        /*serviceDataEntity.generalPhotosUrls.forEach {
             val photosRef = storage.reference.child("images/services/${UUID.randomUUID()}")
-            val downloadUrl = photosRef.putFile(it.toUri())
+            val downloadUrl = photosRef.putFile(Uri.parse(it))
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
                 .await()
                 .storage.downloadUrl.await()
             generalPhotosFirestore.add(downloadUrl)
-        }
+        }*/
 
         val detailedPhotosFirestore = mutableListOf<Uri>()
-        serviceDataEntity.generalPhotosUrls.forEach {
+        /*serviceDataEntity.generalPhotosUrls.forEach {
             val photosRef = storage.reference.child("images/services/${UUID.randomUUID()}")
-            val downloadUrl = photosRef.putFile(it.toUri())
+            val downloadUrl = photosRef.putFile(Uri.parse(it))
                 .addOnFailureListener { e ->
                     throw Exception(e)
                 }
                 .await()
                 .storage.downloadUrl.await()
             detailedPhotosFirestore.add(downloadUrl)
-        }
+        }*/
 
         val serviceFirestoreEntity = hashMapOf(
             "type" to serviceDataEntity.type,
@@ -86,23 +499,22 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             "authorId" to serviceDataEntity.authorId,
             "rating" to null,
             "reviewsNumber" to 0,
+            "acquiredNumber" to 0,
             "generalDescription" to serviceDataEntity.generalDescription,
             "generalPhotosUrls" to serviceDataEntity.generalPhotosUrls,
             "detailedDescription" to serviceDataEntity.detailedDescription,
             "detailedPhotosUrls" to serviceDataEntity.detailedPhotosUrls,
             "price" to serviceDataEntity.price,
-            "acquiredNumber" to serviceDataEntity.acquiredNumber,
             "categories" to serviceDataEntity.categories,
             "currency" to serviceDataEntity.currency,
             "dateCreatedMillis" to Calendar.getInstance().timeInMillis,
-            "exercises" to serviceDataEntity.exercises,
             "usersIdsAcquired" to listOf<String>(),
             "usersIdsFavs" to listOf<String>()
         )
 
         // TODO должна быть атомарной
 
-        val documentRef = database.collection(PATH).document()
+        val documentRef = database.collection(SERVICES_PATH).document()
 
         documentRef
             .set(serviceFirestoreEntity)
@@ -115,9 +527,40 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 )
             )
             .await()
+
+        serviceDataEntity.exerciseDataEntities.forEach { exercise ->
+            val documentExerciseRef = database
+                .collection(SERVICES_PATH)
+                .document(documentRef.id)
+                .collection(EXERCISES_PATH)
+                .document()
+
+            val exerciseFirestoreEntity = hashMapOf(
+                "name" to exercise.name,
+                "repsNumber" to exercise.repsNumber,
+                "setsNumber" to exercise.setsNumber,
+                "description" to exercise.description,
+                "regularity" to exercise.regularity,
+                "photosUris" to exercise.photosUris
+            )
+
+            documentExerciseRef
+                .set(exerciseFirestoreEntity)
+                .await()
+
+            documentExerciseRef
+                .update(
+                    hashMapOf<String, Any>(
+                        "id" to documentExerciseRef.id,
+                    )
+                )
+                .await()
+        }
     }
 
     override suspend fun updateService(serviceDataEntity: ServiceDetailedDataEntity) {
+        if (serviceDataEntity.id == null) throw Exception("null id")
+
         val serviceFirestoreEntity = hashMapOf(
             "name" to serviceDataEntity.name,
             "generalDescription" to serviceDataEntity.generalDescription,
@@ -127,17 +570,53 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             "price" to serviceDataEntity.price,
             "categories" to serviceDataEntity.categories,
             "currency" to serviceDataEntity.currency,
-            "exercises" to serviceDataEntity.exercises,
+            "exercises" to serviceDataEntity.exerciseDataEntities,
         )
 
-        database.collection(PATH)
-            .document(serviceDataEntity.id!!)
+        database.collection(SERVICES_PATH)
+            .document(serviceDataEntity.id)
             .update(serviceFirestoreEntity)
             .await()
+
+        database.collection(SERVICES_PATH)
+            .document(serviceDataEntity.id)
+            .collection(EXERCISES_PATH)
+            .document()
+            .delete()
+            .await()
+
+        serviceDataEntity.exerciseDataEntities.forEach { exercise ->
+            val documentRef = database
+                .collection(SERVICES_PATH)
+                .document(serviceDataEntity.id)
+                .collection(EXERCISES_PATH)
+                .document()
+
+            val exerciseFirestoreEntity = hashMapOf(
+                "name" to exercise.name,
+                "repsNumber" to exercise.repsNumber,
+                "setsNumber" to exercise.setsNumber,
+                "description" to exercise.description,
+                "regularity" to exercise.regularity,
+                "photosUris" to exercise.photosUris
+            )
+
+            documentRef
+                .set(exerciseFirestoreEntity)
+                .await()
+
+            documentRef
+                .update(
+                    hashMapOf<String, Any>(
+                        "id" to documentRef.id,
+                    )
+                )
+                .await()
+        }
     }
 
     override suspend fun deleteService(serviceId: String) {
-        database.collection(PATH)
+        database.collection(SERVICES_PATH)
             .document(serviceId)
             .delete()
             .addOnFailureListener { e ->
@@ -148,12 +627,13 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
     override suspend fun setIsFavourite(
         userId: String,
-        serviceDataEntity: ServiceDetailedDataEntity,
+        serviceId: String,
         isFavourite: Boolean
     ) {
+        Log.d("abcdef", "isFavourite $isFavourite")
         if (isFavourite) {
-            database.collection(PATH)
-                .document(serviceDataEntity.id!!)
+            database.collection(SERVICES_PATH)
+                .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
                         "usersIdsFavs" to FieldValue.arrayUnion(userId)
@@ -163,8 +643,8 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                     throw Exception(e)
                 }
         } else {
-            database.collection(PATH)
-                .document(serviceDataEntity.id!!)
+            database.collection(SERVICES_PATH)
+                .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
                         "usersIdsFavs" to FieldValue.arrayRemove(userId)
@@ -179,12 +659,12 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
     override suspend fun setIsAcquired(
         userId: String,
-        serviceDataEntity: ServiceDetailedDataEntity,
+        serviceId: String,
         isAcquired: Boolean
     ) {
         if (isAcquired) {
-            database.collection(PATH)
-                .document(serviceDataEntity.id!!)
+            database.collection(SERVICES_PATH)
+                .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
                         "usersIdsAcquired" to FieldValue.arrayUnion(userId)
@@ -194,8 +674,8 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                     throw Exception(e)
                 }
         } else {
-            database.collection(PATH)
-                .document(serviceDataEntity.id!!)
+            database.collection(SERVICES_PATH)
+                .document(serviceId)
                 .update(
                     hashMapOf<String, Any>(
                         "usersIdsAcquired" to FieldValue.arrayRemove(userId)
@@ -209,7 +689,9 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
     }
 
     companion object {
-        const val PATH = "services"
+        const val SERVICES_PATH = "services"
+        const val EXERCISES_PATH = "exercises"
+        const val USERS_PATH = "users"
     }
 
 }

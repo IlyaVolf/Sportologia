@@ -1,6 +1,6 @@
 package com.thesis.sportologia.ui.services.entities
 
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 
@@ -15,7 +15,7 @@ data class ServiceCreateEditItem(
     var generalPhotosUrls: List<String>?,
     var detailedDescription: String?,
     var detailedPhotosUrls: List<String>?,
-    var exercises: MutableList<Exercise>,
+    var exercises: MutableList<ExerciseDataEntity>,
 ) : java.io.Serializable {
     companion object {
         fun getEmptyInstance(): ServiceCreateEditItem {
@@ -46,6 +46,6 @@ fun ServiceDetailedDataEntity.toCreateEditItem(): ServiceCreateEditItem {
         generalPhotosUrls = generalPhotosUrls,
         detailedDescription = detailedDescription,
         detailedPhotosUrls = detailedPhotosUrls,
-        exercises = exercises.toMutableList()
+        exercises = exerciseDataEntities.toMutableList()
     )
 }

@@ -1,6 +1,6 @@
 package com.thesis.sportologia.model.services.entities
 
-data class Exercise(
+data class ExerciseDataEntity(
     var id: String?,
     var name: String,
     var description: String,

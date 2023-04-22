@@ -22,9 +22,8 @@ data class ServiceDetailedDataEntity(
     var generalPhotosUrls: List<String>,
     var detailedDescription: String,
     var detailedPhotosUrls: List<String>,
-    var exercises: List<Exercise>,
+    var exerciseDataEntities: List<ExerciseDataEntity>,
     var dateCreatedMillis: Long,
-    var postedDate: Long
 ) {
     fun toGeneral(): ServiceDataEntity {
         return ServiceDataEntity(
@@ -45,7 +44,7 @@ data class ServiceDetailedDataEntity(
             isFavourite,
             isAcquired,
             generalPhotosUrls,
-            postedDate
+            dateCreatedMillis
         )
     }
 

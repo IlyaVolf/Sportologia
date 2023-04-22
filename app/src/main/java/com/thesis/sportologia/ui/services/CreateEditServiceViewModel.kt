@@ -94,9 +94,8 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                     generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                     detailedDescription = reformattedDetailedDescription,
                     detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                    exercises = service.exercises,
+                    exerciseDataEntities = service.exercises,
                     dateCreatedMillis = Calendar.getInstance().timeInMillis,
-                    postedDate = Calendar.getInstance().timeInMillis,
                 )
             Mode.EDIT ->
                 _serviceHolder.value!!.onReady {
@@ -111,7 +110,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                             generalPhotosUrls = service.generalPhotosUrls ?: listOf(),
                             detailedDescription = reformattedDetailedDescription,
                             detailedPhotosUrls = service.detailedPhotosUrls ?: listOf(),
-                            exercises = service.exercises,
+                            exerciseDataEntities = service.exercises,
                         )
                 }
         }
@@ -154,7 +153,7 @@ class CreateEditServiceViewModel @AssistedInject constructor(
                 withContext(Dispatchers.Main) {
                     _serviceHolder.value = DataHolder.loading()
                 }
-                val service = servicesRepository.getServiceDetailed(serviceId!!)
+                val service = servicesRepository.getServiceDetailed(serviceId!!, CurrentAccount().id)
                 withContext(Dispatchers.Main) {
                     _serviceHolder.value = DataHolder.ready(service)
                 }

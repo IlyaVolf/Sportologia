@@ -20,7 +20,7 @@ data class ServiceDataEntity(
     var isFavourite: Boolean,
     var isAcquired: Boolean,
     var generalPhotosUrls: List<String>,
-    var postedDate: Long
+    var dateCreatedMillis: Long
 ) {
     companion object {
         const val NULL = -2L

@@ -1,6 +1,6 @@
 package com.thesis.sportologia.ui.services.entities
 
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.model.users.entities.UserType
@@ -27,5 +27,5 @@ data class ServiceDetailedViewItem(
     val generalPhotosUrls: List<String> get() = serviceDetailedDataEntity.generalPhotosUrls
     val detailedDescription: String get() = serviceDetailedDataEntity.detailedDescription
     val detailedPhotosUrls: List<String> get() = serviceDetailedDataEntity.detailedPhotosUrls
-    val exercises: List<Exercise> get() = serviceDetailedDataEntity.exercises
+    val exercises: List<ExerciseDataEntity> get() = serviceDetailedDataEntity.exerciseDataEntities
 }

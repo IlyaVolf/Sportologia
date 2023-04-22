@@ -3,17 +3,17 @@ package com.thesis.sportologia.ui.services.adapters
 import androidx.core.view.isVisible
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemExerciseBinding
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.ui.base.BaseViewHolder
 import com.thesis.sportologia.utils.Regularity
 import com.thesis.sportologia.utils.concatMap
 
 class ExercisesViewHolder(
     private val binding: ItemExerciseBinding,
-    private val onItemClick: (Exercise) -> Unit,
-) : BaseViewHolder<Exercise>(binding) {
+    private val onItemClick: (ExerciseDataEntity) -> Unit,
+) : BaseViewHolder<ExerciseDataEntity>(binding) {
 
-    override fun bindItem(item: Exercise) {
+    override fun bindItem(item: ExerciseDataEntity) {
 
         binding.root.setOnClickListener {
             onItemClick(item)
@@ -25,7 +25,7 @@ class ExercisesViewHolder(
         binding.exercisePropertiesBlock.text = parseProperties(item)
     }
 
-    private fun parseProperties(item: Exercise): String {
+    private fun parseProperties(item: ExerciseDataEntity): String {
         val res = StringBuilder("")
 
         res.append(item.setsNumber).append(" ").append(getString(R.string.exercise_of_sets))

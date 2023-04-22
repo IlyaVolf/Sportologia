@@ -14,7 +14,7 @@ import androidx.navigation.navOptions
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditServiceBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.adapters.ExercisesAdapter
@@ -112,7 +112,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_CREATED) as Exercise?
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_CREATED) as ExerciseDataEntity?
                 ?: return@setFragmentResultListener
             currentServiceCreateEditItem.exercises.add(exercise)
             setExercises(currentServiceCreateEditItem.exercises)
@@ -124,7 +124,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             CreateEditExerciseFragment.IS_EDITED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_EDITED) as Exercise?
+            val exercise = data.getSerializable(CreateEditExerciseFragment.IS_EDITED) as ExerciseDataEntity?
                 ?: return@setFragmentResultListener
             currentServiceCreateEditItem.exercises[currentServiceCreateEditItem.exercises.indexOfFirst { it.id == exercise.id }] =
                 exercise
@@ -197,7 +197,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         setExercises(currentServiceCreateEditItem.exercises)
     }
 
-    private fun setExercises(exercises: List<Exercise>) {
+    private fun setExercises(exercises: List<ExerciseDataEntity>) {
         binding.exercisesList.isVisible = exercises.isNotEmpty()
         binding.itemAddExerciseSplitter.isVisible = exercises.isNotEmpty()
 
@@ -228,7 +228,7 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             })
     }
 
-    private val onExercisePressed: (Exercise) -> Unit = { exercise ->
+    private val onExercisePressed: (ExerciseDataEntity) -> Unit = { exercise ->
         getCurrentData()
         val direction =
             CreateEditServiceFragmentDirections.actionCreateEditServiceFragmentToCreateEditExerciseFragment(

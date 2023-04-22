@@ -3,15 +3,15 @@ package com.thesis.sportologia.ui.services.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.thesis.sportologia.databinding.ItemExerciseBinding
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.ui.base.BaseAdapter
 import com.thesis.sportologia.ui.base.BaseViewHolder
 
 class ExercisesAdapter(
-    private val onItemClick: (Exercise) -> Unit
-) : BaseAdapter<BaseViewHolder<Exercise>, Exercise>() {
+    private val onItemClick: (ExerciseDataEntity) -> Unit
+) : BaseAdapter<BaseViewHolder<ExerciseDataEntity>, ExerciseDataEntity>() {
 
-    override fun takeViewHolder(parent: ViewGroup): BaseViewHolder<Exercise> =
+    override fun takeViewHolder(parent: ViewGroup): BaseViewHolder<ExerciseDataEntity> =
         ExercisesViewHolder(
             binding = ItemExerciseBinding.inflate(
                 LayoutInflater.from(parent.context),
@@ -21,6 +21,6 @@ class ExercisesAdapter(
             onItemClick
         )
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Exercise> =
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<ExerciseDataEntity> =
         takeViewHolder(parent)
 }

@@ -11,17 +11,19 @@ interface ServicesRepository {
     val localChanges: ServicesLocalChanges
     val localChangesFlow: MutableStateFlow<OnChange<ServicesLocalChanges>>
 
+    suspend fun getPagedServices(userId: String, searchQuery: String, filter: FilterParamsServices): Flow<PagingData<ServiceDataEntity>>
+
     suspend fun getPagedUserServices(userId: String): Flow<PagingData<ServiceDataEntity>>
 
     suspend fun getPagedUserFavouriteServices(userId: String, serviceType: ServiceType?): Flow<PagingData<ServiceDataEntity>>
 
     suspend fun getPagedUserAcquiredServices(userId: String, serviceType: ServiceType?): Flow<PagingData<ServiceDataEntity>>
 
-    suspend fun getPagedServices(searchQuery: String, filter: FilterParamsServices): Flow<PagingData<ServiceDataEntity>>
+    suspend fun getService(serviceId: String, userId: String): ServiceDataEntity
 
-    suspend fun getService(serviceId: String): ServiceDataEntity?
+    suspend fun getServiceDetailed(serviceId: String, userId: String): ServiceDetailedDataEntity
 
-    suspend fun getServiceDetailed(serviceId: String): ServiceDetailedDataEntity?
+    suspend fun getExercise(serviceId: String, exerciseId: String, userId: String): ExerciseDataEntity?
 
     suspend fun createService(servicesDetailed: ServiceDetailedDataEntity)
 
@@ -29,10 +31,8 @@ interface ServicesRepository {
 
     suspend fun deleteService(serviceId: String)
 
-    suspend fun acquireService(serviceId: String)
+    suspend fun acquireService(userId: String, serviceId: String)
 
     suspend fun setIsFavourite(userId: String, serviceId: String, isFavourite: Boolean)
-
-    suspend fun getExercise(serviceId: String, exerciseId: String): Exercise?
 
 }

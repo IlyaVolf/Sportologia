@@ -21,7 +21,7 @@ class ServicesPagingSource(
             // loading the desired page of users
             val posts = loader.invoke(lastTimestamp, pageIndex, params.loadSize)
 
-            lastTimestamp = posts.lastOrNull()?.postedDate
+            lastTimestamp = posts.lastOrNull()?.dateCreatedMillis
             // success! now we can return LoadResult.Page
             return LoadResult.Page(
                 data = posts,

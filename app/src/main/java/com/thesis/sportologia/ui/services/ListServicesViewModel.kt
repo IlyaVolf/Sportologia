@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
 import com.thesis.sportologia.R
+import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.services.ServicesLocalChanges
 import com.thesis.sportologia.model.services.ServicesRepository
@@ -74,7 +75,9 @@ abstract class ListServicesViewModel constructor(
         viewModelScope.launch {
             try {
                 setProgress(serviceListItem.id, true)
-                setFavoriteFlag(serviceListItem)
+                withContext(Dispatchers.IO) {
+                    setFavoriteFlag(serviceListItem)
+                }
             } catch (e: Exception) {
                 showError(R.string.error_loading_title)
             } finally {

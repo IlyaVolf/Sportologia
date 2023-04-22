@@ -33,7 +33,7 @@ class ExerciseViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 _exerciseHolder.value = DataHolder.loading()
-                val exercise = servicesRepository.getExercise(serviceId, exerciseId)
+                val exercise = servicesRepository.getExercise(serviceId, exerciseId, CurrentAccount().id)
                 if (exercise != null) {
                     _exerciseHolder.value =
                         DataHolder.ready(ExerciseViewItem(exercise.copy()))

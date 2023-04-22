@@ -1,6 +1,6 @@
 package com.thesis.sportologia.ui.services.entities
 
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 
 data class ExerciseCreateEditItem(
     var id: String?,
@@ -25,8 +25,8 @@ data class ExerciseCreateEditItem(
         }
     }
 
-    fun toExercise() : Exercise {
-        return Exercise(
+    fun toExercise() : ExerciseDataEntity {
+        return ExerciseDataEntity(
             id = id,
             name = name!!,
             description = description!!,
@@ -38,11 +38,11 @@ data class ExerciseCreateEditItem(
     }
 }
 
-fun List<ExerciseCreateEditItem>.toExercise(): List<Exercise> {
+fun List<ExerciseCreateEditItem>.toExercise(): List<ExerciseDataEntity> {
     return this.map { it.toExercise() }
 }
 
-fun Exercise.toCreateEditItem(): ExerciseCreateEditItem {
+fun ExerciseDataEntity.toCreateEditItem(): ExerciseCreateEditItem {
     return ExerciseCreateEditItem(
         id = id,
         name = name,

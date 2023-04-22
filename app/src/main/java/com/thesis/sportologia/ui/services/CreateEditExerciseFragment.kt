@@ -20,7 +20,7 @@ import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditExerciseBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.entities.ExerciseCreateEditItem
 import com.thesis.sportologia.ui.services.entities.toCreateEditItem
@@ -160,7 +160,7 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         }
     }
 
-    private fun getExerciseArg(): Exercise? = args.exercise
+    private fun getExerciseArg(): ExerciseDataEntity? = args.exercise
 
     private fun onCancelButtonPressed() {
         createDialogCancel()

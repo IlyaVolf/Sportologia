@@ -1,15 +1,15 @@
 package com.thesis.sportologia.ui.services.entities
 
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 
 data class ExerciseViewItem(
-    var exercise: Exercise,
+    var exerciseDataEntity: ExerciseDataEntity,
 ) {
-    val id: String get() = exercise.id!!
-    val name: String get() = exercise.name
-    val description: String get() = exercise.description
-    val setsNumber: Int get() = exercise.setsNumber
-    val repsNumber: Int get() = exercise.repsNumber
-    val regularity: Map<String, Boolean> get() = exercise.regularity
-    val photosUris: List<String> get() = exercise.photosUris
+    val id: String get() = exerciseDataEntity.id!!
+    val name: String get() = exerciseDataEntity.name
+    val description: String get() = exerciseDataEntity.description
+    val setsNumber: Int get() = exerciseDataEntity.setsNumber
+    val repsNumber: Int get() = exerciseDataEntity.repsNumber
+    val regularity: Map<String, Boolean> get() = exerciseDataEntity.regularity
+    val photosUris: List<String> get() = exerciseDataEntity.photosUris
 }

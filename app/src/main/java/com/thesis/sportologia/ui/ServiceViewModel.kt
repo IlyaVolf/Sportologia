@@ -51,19 +51,15 @@ class ServiceViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 _serviceHolder.value = DataHolder.loading()
-                val serviceDetailed = servicesRepository.getServiceDetailed(serviceId)
-                if (serviceDetailed != null) {
-                    _serviceHolder.value =
-                        DataHolder.ready(ServiceDetailedViewItem(serviceDetailed.copy()))
-                } else {
-                    _serviceHolder.value = DataHolder.error(Exception("no such service"))
-                }
+                val serviceDetailed = servicesRepository.getServiceDetailed(serviceId, CurrentAccount().id)
+                _serviceHolder.value =
+                    DataHolder.ready(ServiceDetailedViewItem(serviceDetailed.copy()))
             } catch (e: Exception) {
                 _serviceHolder.value = DataHolder.error(e)
             }
         }
     }
-    
+
     fun deleteService() {
         if (_serviceHolder.value?.isNotReady == true) {
             return
@@ -74,7 +70,7 @@ class ServiceViewModel @AssistedInject constructor(
                 withContext(Dispatchers.Main) {
                     _deleteHolder.value = DataHolder.loading()
                 }
-                    servicesRepository.deleteService(serviceId)
+                servicesRepository.deleteService(serviceId)
                 withContext(Dispatchers.Main) {
                     _deleteHolder.value = DataHolder.ready(Unit)
                     goBack()
@@ -145,7 +141,9 @@ class ServiceViewModel @AssistedInject constructor(
         viewModelScope.launch {
             try {
                 setProgress(serviceId, true)
-                servicesRepository.acquireService(serviceId)
+                withContext(Dispatchers.IO) {
+                    servicesRepository.acquireService(CurrentAccount().id, serviceId)
+                }
                 _toastMessageEvent.publishEvent(ResponseType.ACQUIRED_SUCCESSFULLY)
                 setAcquiredFlag(serviceId, true)
             } catch (e: Exception) {

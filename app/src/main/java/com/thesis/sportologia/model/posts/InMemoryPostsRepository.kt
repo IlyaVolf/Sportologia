@@ -82,7 +82,7 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPost(postId: String, userId: String): PostDataEntity? {
+    override suspend fun getPost(postId: String, userId: String): PostDataEntity {
         return postsDataSource.getPost(postId, userId)
     }
 

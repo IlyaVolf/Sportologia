@@ -307,7 +307,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         return res
     }
 
-    override suspend fun getPost(postId: String, userId: String): PostDataEntity? {
+    override suspend fun getPost(postId: String, userId: String): PostDataEntity {
         val postDocument = database.collection("posts")
             .document(postId)
             .get()
@@ -316,7 +316,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             }
             .await()
 
-        val post = postDocument.toObject(PostFirestoreEntity::class.java) ?: return null
+        val post = postDocument.toObject(PostFirestoreEntity::class.java) ?: throw Exception()
 
         val userDocument = database.collection("users")
             .document(post.authorId!!)

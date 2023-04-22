@@ -14,7 +14,7 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentServiceBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.services.entities.Exercise
+import com.thesis.sportologia.model.services.entities.ExerciseDataEntity
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.services.CreateEditServiceFragment
@@ -266,7 +266,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         }
     }
 
-    private val onExercisePressed: (Exercise) -> Unit = { exercise ->
+    private val onExercisePressed: (ExerciseDataEntity) -> Unit = { exercise ->
        // TODO надо передавать сам service, в котором уже есть exercises
         val direction =
             ServiceFragmentDirections.actionServiceFragmentToExerciseFragment(
@@ -456,7 +456,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         }
     }
 
-    private fun setExercises(exercises: List<Exercise>) {
+    private fun setExercises(exercises: List<ExerciseDataEntity>) {
         if (exercises.isEmpty()) {
             binding.exercisesListEmpty.visibility = VISIBLE
             binding.exercisesList.visibility = GONE
