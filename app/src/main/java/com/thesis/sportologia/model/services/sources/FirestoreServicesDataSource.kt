@@ -37,50 +37,41 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
         val currentPageAcquired = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
+        /*database.collection(SERVICES_PATH).get().addOnSuccessListener { snap ->
+            snap.documents.forEach { doc ->
+                database.collection(SERVICES_PATH).document(doc.id).update(
+                    hashMapOf<String, Any>(
+                        "tokens" to doc.get("name").toString().split(" ").filter { it.isNotBlank() }
+                            .map {
+                                it.lowercase(
+                                    Locale.getDefault()
+                                )
+                            } + "")
+                )
+            }
+        }*/
+
+        val searchQueryTokens = searchQuery.split(" ").filter { it.isNotBlank() }.map {
+            it.lowercase(
+                Locale.getDefault()
+            )
+        }.ifEmpty { listOf("") }
+
         if (lastMarker == null) {
-            if (searchQuery == "") {
-                currentPageDocuments = database.collection(SERVICES_PATH)
-                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .await()
-            } else {
-                currentPageDocuments = database.collection(SERVICES_PATH)
-                    // .whereGreaterThanOrEqualTo("name", searchQuery)
-                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
-                    .orderBy("name", Query.Direction.ASCENDING)
-                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .await()
-            }
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContainsAny("tokens", searchQueryTokens)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
         } else {
-            if (searchQuery == "") {
-                currentPageDocuments = database.collection(SERVICES_PATH)
-                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            } else {
-                currentPageDocuments = database.collection(SERVICES_PATH)
-                    // \.whereGreaterThanOrEqualTo("name", searchQuery)
-                    .whereLessThanOrEqualTo("name", searchQuery + "\uf8ff")
-                    .orderBy("name", Query.Direction.ASCENDING)
-                    .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .addOnFailureListener { e ->
-                        Log.d("abcdef", "$e")
-                        throw Exception(e)
-                    }
-                    .await()
-            }
+            currentPageDocuments = database.collection(SERVICES_PATH)
+                .whereArrayContainsAny("tokens", searchQueryTokens)
+                .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
         }
 
         if (currentPageDocuments.isEmpty) {
@@ -477,17 +468,18 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             .get()
             .await()
 
-        val exercises = exercisesDocument.toObjects(ExerciseFirestoreEntity::class.java).map {  exercise ->
-            ExerciseDataEntity(
-                id = exercise.id,
-                name = exercise.name!!,
-                description = exercise.description!!,
-                setsNumber = exercise.setsNumber!!,
-                repsNumber = exercise.repsNumber!!,
-                regularity = exercise.regularity!!,
-                photosUris = exercise.photosUris
-            )
-        }
+        val exercises =
+            exercisesDocument.toObjects(ExerciseFirestoreEntity::class.java).map { exercise ->
+                ExerciseDataEntity(
+                    id = exercise.id,
+                    name = exercise.name!!,
+                    description = exercise.description!!,
+                    setsNumber = exercise.setsNumber!!,
+                    repsNumber = exercise.repsNumber!!,
+                    regularity = exercise.regularity!!,
+                    photosUris = exercise.photosUris
+                )
+            }
 
         val res = ServiceDetailedDataEntity(
             type = service.type!!,
@@ -604,6 +596,12 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .update(
                     hashMapOf<String, Any>(
                         "id" to documentExerciseRef.id,
+                        "tokens" to serviceDataEntity.name.split(" ").filter { it.isNotBlank() }
+                            .map {
+                                it.lowercase(
+                                    Locale.getDefault()
+                                )
+                            } + ""
                     )
                 )
                 .await()
@@ -623,6 +621,12 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             "categories" to serviceDataEntity.categories,
             "currency" to serviceDataEntity.currency,
             "exercises" to serviceDataEntity.exerciseDataEntities,
+            "tokens" to serviceDataEntity.name.split(" ").filter { it.isNotBlank() }
+                .map {
+                    it.lowercase(
+                        Locale.getDefault()
+                    )
+                } + ""
         )
 
         database.collection(SERVICES_PATH)

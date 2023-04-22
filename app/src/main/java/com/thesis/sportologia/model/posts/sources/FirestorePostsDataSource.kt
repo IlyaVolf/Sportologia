@@ -41,14 +41,14 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         val currentPageFavs = mutableListOf<Boolean>()
 
         if (lastMarker == null) {
-            currentPageDocuments = database.collection("posts")
+            currentPageDocuments = database.collection(POSTS_PATH)
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .get()
                 .await()
         } else {
-            currentPageDocuments = database.collection("posts")
+            currentPageDocuments = database.collection(POSTS_PATH)
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
@@ -63,7 +63,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
-        val userDocument = database.collection("users")
+        val userDocument = database.collection(USERS_PATH)
             .document(userId)
             .get()
             .addOnFailureListener { e ->
@@ -118,7 +118,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         val currentPageLikes = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
-        val followersIdsDocument = database.collection("users")
+        val followersIdsDocument = database.collection(USERS_PATH)
             .document(userId)
             .collection("followersIds")
             .get()
@@ -128,7 +128,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val followersIds = followersIdsDocument.map { it.id }
 
-        val usersDocuments = database.collection("users")
+        val usersDocuments = database.collection(USERS_PATH)
             .whereIn(FieldPath.documentId(), followersIds)
             .get()
             .addOnFailureListener { e ->
@@ -142,14 +142,14 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         if (lastMarker == null) {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereIn("authorId", followersIds)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .get()
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereIn("authorId", followersIds)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -159,7 +159,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         } else {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereIn("authorId", followersIds)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
@@ -167,7 +167,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .get()
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereIn("authorId", followersIds)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -232,7 +232,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         if (lastMarker == null) {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereArrayContains("usersIdsFavs", userId)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
@@ -240,7 +240,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereArrayContains("usersIdsFavs", userId)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -251,7 +251,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             }
         } else {
             if (userType == null) {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereArrayContains("usersIdsFavs", userId)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
@@ -260,7 +260,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             } else {
-                currentPageDocuments = database.collection("posts")
+                currentPageDocuments = database.collection(POSTS_PATH)
                     .whereArrayContains("usersIdsFavs", userId)
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
@@ -282,7 +282,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             currentPageLikes.add(it.usersIdsLiked.contains(userId))
             currentPageFavs.add(it.usersIdsFavs.contains(userId))
 
-            val authorDocument = database.collection("users")
+            val authorDocument = database.collection(USERS_PATH)
                 .document(it.authorId!!)
                 .get()
                 .await()
@@ -320,7 +320,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun getPost(postId: String, userId: String): PostDataEntity {
-        val postDocument = database.collection("posts")
+        val postDocument = database.collection(POSTS_PATH)
             .document(postId)
             .get()
             .addOnFailureListener { e ->
@@ -330,7 +330,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val post = postDocument.toObject(PostFirestoreEntity::class.java) ?: throw Exception()
 
-        val userDocument = database.collection("users")
+        val userDocument = database.collection(USERS_PATH)
             .document(post.authorId!!)
             .get()
             .addOnFailureListener { e ->
@@ -387,7 +387,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         // TODO должна быть атомарной
 
 
-        val documentRef = database.collection("posts").document()
+        val documentRef = database.collection(POSTS_PATH).document()
 
         documentRef
             .set(postFirestoreEntity)
@@ -427,7 +427,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             "photosUrls" to photosFirestore,
         )
 
-        database.collection("posts")
+        database.collection(POSTS_PATH)
             .document(postDataEntity.id!!)
             .update(postFirestoreEntity)
             .addOnFailureListener { e ->
@@ -437,7 +437,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     }
 
     override suspend fun deletePost(postId: String) {
-        database.collection("posts")
+        database.collection(POSTS_PATH)
             .document(postId)
             .delete()
             .addOnFailureListener { e ->
@@ -452,7 +452,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         isLiked: Boolean
     ) {
         if (isLiked) {
-            database.collection("posts")
+            database.collection(POSTS_PATH)
                 .document(postDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
@@ -465,7 +465,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 }
                 .await()
         } else {
-            database.collection("posts")
+            database.collection(POSTS_PATH)
                 .document(postDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
@@ -486,7 +486,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         isFavourite: Boolean
     ) {
         if (isFavourite) {
-            database.collection("posts")
+            database.collection(POSTS_PATH)
                 .document(postDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
@@ -497,7 +497,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     throw Exception(e)
                 }
         } else {
-            database.collection("posts")
+            database.collection(POSTS_PATH)
                 .document(postDataEntity.id!!)
                 .update(
                     hashMapOf<String, Any>(
@@ -509,5 +509,10 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 }
                 .await()
         }
+    }
+
+    companion object {
+        const val POSTS_PATH = "posts"
+        const val USERS_PATH = "users"
     }
 }
