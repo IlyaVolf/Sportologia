@@ -327,10 +327,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButton.setButtonPressed(userItem.isSubscribed)
     }
 
-    private fun renderPhotosBlock(photosCount: Int, photosSnippets: List<Photo>) {
+    private fun renderPhotosBlock(photosCount: Int, photosSnippets: List<String>) {
         binding.photosBlock.photoLabelAndCount.text =
             getString(R.string.photos) + " (" + photosCount + ")"
-        binding.photosBlock.photosRow.setPhotos(photosSnippets.map { it.photoUrl })
+        binding.photosBlock.photosRow.setPhotos(photosSnippets)
     }
 
     private fun renderUserDetails(userItem: UserListItem) {

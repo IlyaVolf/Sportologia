@@ -17,5 +17,5 @@ abstract class UserListItem(
     val categories: Map<String, Boolean> get() = user.categories
     val isSubscribed: Boolean get() = user.isSubscribed
     val photosCount: Int get() = user.photosCount
-    val photosSnippets: List<Photo> get() = user.photosSnippets
+    val photosSnippets: List<String> get() = user.photosSnippets
 }

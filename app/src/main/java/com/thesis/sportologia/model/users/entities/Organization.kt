@@ -13,7 +13,6 @@ data class Organization(
     override var followingsCount: Int,
     override var categories: Map<String, Boolean>,
     override var isSubscribed: Boolean,
-    override var innerRating: Int,
     override var photosCount: Int,
-    override var photosSnippets: List<Photo>,
+    override var photosSnippets: List<String>,
 ) : User()

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.thesis.sportologia.ui.SignInFragment">
 
     <ImageView
@@ -48,6 +47,7 @@
                 android:layout_height="1dp" />
 
             <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/fsi_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="40dp"
@@ -81,6 +81,7 @@
                 android:layout_height="1dp" />
 
             <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/fsi_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="40dp"
@@ -112,6 +113,7 @@
             android:layout_height="46dp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fsi_signin_button"
             style="@style/ButtonStyleBasic"
             android:layout_width="match_parent"
             android:layout_height="52dp"
@@ -124,6 +126,7 @@
             android:layout_height="10dp" />
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fsi_signup_button"
             style="@style/ButtonStyleBasic"
             android:layout_width="match_parent"
             android:layout_height="52dp"

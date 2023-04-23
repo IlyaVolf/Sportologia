@@ -18,6 +18,9 @@
     <string name="error_loading">Ошибка при загрузке</string>
     <string name="error_acquiring">Ошибка при приобретении</string>
     <string name="error_date">Указана неверная дата</string>
+    <string name="error_invalid_email_or_password">Указан неправильный email или пароль</string>
+    <string name="error_account_with_this_email_exists">Аккаунт с указанным email уже существует</string>
+    <string name="error_account_with_this_nickname_exists">Аккаунт с указанным никнеймом уже существует</string>
     <string name="error_set_favorite">Не удалось добавить в избранное</string>
 
     <!-- Actions -->

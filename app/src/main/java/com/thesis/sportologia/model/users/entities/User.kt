@@ -15,9 +15,8 @@ abstract class User {
     abstract var position: Position?
     abstract var categories: Map<String, Boolean>
     abstract var isSubscribed: Boolean
-    abstract var innerRating: Int // 0..100
     abstract var photosCount: Int
-    abstract var photosSnippets: List<Photo>
+    abstract var photosSnippets: List<String>
 
     fun toUserSnippet(): UserSnippet {
         return UserSnippet(

@@ -8,12 +8,19 @@ import com.thesis.sportologia.model.posts.InMemoryPostsRepository
 import com.thesis.sportologia.model.posts.PostsRepository
 import com.thesis.sportologia.model.services.InMemoryServicesRepository
 import com.thesis.sportologia.model.services.ServicesRepository
+import com.thesis.sportologia.model.users.AuthTokenImpRepository
+import com.thesis.sportologia.model.users.AuthTokenRepository
 import com.thesis.sportologia.model.users.InMemoryUsersRepository
 import com.thesis.sportologia.model.users.UsersRepository
+import com.thesis.sportologia.utils.flows.DefaultLazyFlowSubjectFactory
+import com.thesis.sportologia.utils.flows.LazyFlowSubjectFactory
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.Dispatchers
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,6 +52,9 @@ abstract class RepositoriesModule {
         inMemoryPhotosRepository: InMemoryPhotosRepository
     ): PhotosRepository
 
-
+    @Binds
+    abstract fun bindAuthTokenRepository(
+        authTokenImpRepository: AuthTokenImpRepository
+    ): AuthTokenRepository
 
 }

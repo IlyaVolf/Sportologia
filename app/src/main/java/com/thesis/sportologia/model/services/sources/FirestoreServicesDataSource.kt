@@ -37,7 +37,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
         val currentPageAcquired = mutableListOf<Boolean>()
         val currentPageFavs = mutableListOf<Boolean>()
 
-        /*database.collection(SERVICES_PATH).get().addOnSuccessListener { snap ->
+        /*database.collection(SERVICES_PATH).get(Source.SERVER).addOnSuccessListener { snap ->
             snap.documents.forEach { doc ->
                 database.collection(SERVICES_PATH).document(doc.id).update(
                     hashMapOf<String, Any>(
@@ -62,7 +62,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .whereArrayContainsAny("tokens", searchQueryTokens)
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .get()
+                .get(Source.SERVER)
                 .await()
         } else {
             currentPageDocuments = database.collection(SERVICES_PATH)
@@ -70,7 +70,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
-                .get()
+                .get(Source.SERVER)
                 .await()
         }
 
@@ -84,7 +84,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
         val usersDocuments = database.collection(USERS_PATH)
             .whereIn("id", usersLists)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -112,8 +112,8 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                     authorId = services[i].authorId!!,
                     authorName = users.first { it.id == services[i].authorId }.name!!,
                     authorType = when (users.first { it.id == services[i].authorId }.userType) {
-                        "ATHLETE" -> UserType.ATHLETE
-                        "ORGANIZATION" -> UserType.ORGANIZATION
+                        UserType.ATHLETE.name -> UserType.ATHLETE
+                        UserType.ORGANIZATION.name  -> UserType.ORGANIZATION
                         else -> throw Exception("backend data consistency exception")
                     },
                     profilePictureUrl = users.first { it.id == services[i].authorId }.profilePhotoURI,
@@ -148,7 +148,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .whereEqualTo("authorId", userId)
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .get()
+                .get(Source.SERVER)
                 .await()
         } else {
             currentPageDocuments = database.collection(SERVICES_PATH)
@@ -156,7 +156,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
-                .get()
+                .get(Source.SERVER)
                 .await()
         }
 
@@ -168,7 +168,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
         val userDocument = database.collection(USERS_PATH)
             .document(userId)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -233,7 +233,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .whereArrayContains("usersIdsFavs", userId)
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .get()
+                .get(Source.SERVER)
                 .await()
         } else {
             currentPageDocuments = database.collection(SERVICES_PATH)
@@ -241,7 +241,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
-                .get()
+                .get(Source.SERVER)
                 .await()
         }
 
@@ -257,7 +257,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
             val authorDocument = database.collection(USERS_PATH)
                 .document(it.authorId!!)
-                .get()
+                .get(Source.SERVER)
                 .await()
 
             val author =
@@ -315,7 +315,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .whereArrayContains("usersIdsAcquired", userId)
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .get()
+                .get(Source.SERVER)
                 .await()
         } else {
             currentPageDocuments = database.collection(SERVICES_PATH)
@@ -323,7 +323,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
                 .orderBy("dateCreatedMillis", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
-                .get()
+                .get(Source.SERVER)
                 .await()
         }
 
@@ -339,7 +339,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
             val authorDocument = database.collection(USERS_PATH)
                 .document(it.authorId!!)
-                .get()
+                .get(Source.SERVER)
                 .await()
 
             val author =
@@ -387,7 +387,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
     ): ServiceDataEntity {
         val serviceDocument = database.collection(SERVICES_PATH)
             .document(serviceId)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -399,7 +399,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
         val userDocument = database.collection(USERS_PATH)
             .document(service.authorId!!)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener {
                 throw Exception("user not found")
             }
@@ -441,7 +441,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
     ): ServiceDetailedDataEntity {
         val serviceDocument = database.collection(SERVICES_PATH)
             .document(serviceId)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -453,7 +453,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
 
         val userDocument = database.collection(USERS_PATH)
             .document(service.authorId!!)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener {
                 throw Exception("user not found")
             }
@@ -465,7 +465,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
             .collection(SERVICES_PATH)
             .document(serviceId)
             .collection(EXERCISES_PATH)
-            .get()
+            .get(Source.SERVER)
             .await()
 
         val exercises =
@@ -638,7 +638,7 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
         database.collection(SERVICES_PATH)
             .document(serviceDataEntity.id)
             .collection(EXERCISES_PATH)
-            .get()
+            .get(Source.SERVER)
             .addOnSuccessListener {
                 for (document in it.documents) {
                     batch.delete(document.reference)

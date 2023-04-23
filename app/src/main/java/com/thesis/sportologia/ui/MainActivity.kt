@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         Locale.setDefault(locale)
 
         val navController = getRootNavController()
-        prepareRootNavController(navController)
+        prepareRootNavController(isSignedIn(), navController)
         onNavControllerActivated(navController)
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
@@ -119,9 +119,15 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean =
         (navController?.navigateUp() ?: false) || super.onSupportNavigateUp()
 
-    private fun prepareRootNavController(navController: NavController) {
+    private fun prepareRootNavController(isSignedIn: Boolean, navController: NavController) {
         val graph = navController.navInflater.inflate(getMainNavigationGraphId())
-        graph.setStartDestination(getTabsDestination())
+        graph.setStartDestination(
+            if (isSignedIn) {
+                getTabsDestination()
+            } else {
+                getSignInDestination()
+            }
+        )
         navController.graph = graph
     }
 

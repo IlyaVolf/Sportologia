@@ -45,7 +45,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 .whereEqualTo("authorId", userId)
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
-                .get()
+                .get(Source.SERVER)
                 .await()
         } else {
             currentPageDocuments = database.collection(POSTS_PATH)
@@ -53,7 +53,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 .orderBy("postedDate", Query.Direction.DESCENDING)
                 .limit(pageSize.toLong())
                 .startAfter(lastMarker)
-                .get()
+                .get(Source.SERVER)
                 .await()
         }
 
@@ -65,7 +65,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val userDocument = database.collection(USERS_PATH)
             .document(userId)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -113,110 +113,116 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         lastMarker: Long?,
         pageSize: Int
     ): List<PostDataEntity> {
-        val currentPageDocuments: QuerySnapshot?
-        val currentPageIds = mutableListOf<String>()
-        val currentPageLikes = mutableListOf<Boolean>()
-        val currentPageFavs = mutableListOf<Boolean>()
+        try {
+            val currentPageDocuments: QuerySnapshot?
+            val currentPageIds = mutableListOf<String>()
+            val currentPageLikes = mutableListOf<Boolean>()
+            val currentPageFavs = mutableListOf<Boolean>()
 
-        val followersIdsDocument = database.collection(USERS_PATH)
-            .document(userId)
-            .collection("followersIds")
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }.await()
+            val followersIdsDocument = database.collection(USERS_PATH)
+                .document(userId)
+                .collection("followersIds")
+                .get(Source.SERVER)
+                .await()
 
-        val followersIds = followersIdsDocument.map { it.id }
+            val followersIds = followersIdsDocument.map { it.id }
 
-        val usersDocuments = database.collection(USERS_PATH)
-            .whereIn(FieldPath.documentId(), followersIds)
-            .get()
-            .addOnFailureListener { e ->
-                throw Exception(e)
-            }
-            .await()
+            val usersDocuments = database.collection(USERS_PATH)
+                .whereIn(FieldPath.documentId(), followersIds)
+                .get(Source.SERVER)
+                .addOnFailureListener { e ->
+                    throw Exception(e)
+                }
+                .await()
 
-        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
-        val usersMap = hashMapOf<String, UserFirestoreEntity>()
-        users.forEach { usersMap[it.id!!] = it }
+            val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
+            val usersMap = hashMapOf<String, UserFirestoreEntity>()
+            users.forEach { usersMap[it.id!!] = it }
 
-        if (lastMarker == null) {
-            if (userType == null) {
-                currentPageDocuments = database.collection(POSTS_PATH)
-                    .whereIn("authorId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .await()
+            if (lastMarker == null) {
+                if (userType == null) {
+                    currentPageDocuments = database.collection(POSTS_PATH)
+                        .whereIn("authorId", followersIds)
+                        .orderBy("postedDate", Query.Direction.DESCENDING)
+                        .limit(pageSize.toLong())
+                        .get(Source.SERVER)
+                        .await()
+                } else {
+                    currentPageDocuments = database.collection(POSTS_PATH)
+                        .whereIn("authorId", followersIds)
+                        .whereEqualTo("userType", userType)
+                        .orderBy("postedDate", Query.Direction.DESCENDING)
+                        .limit(pageSize.toLong())
+                        .get(Source.SERVER)
+                        .await()
+                }
             } else {
-                currentPageDocuments = database.collection(POSTS_PATH)
-                    .whereIn("authorId", followersIds)
-                    .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .get()
-                    .await()
+                if (userType == null) {
+                    currentPageDocuments = database.collection(POSTS_PATH)
+                        .whereIn("authorId", followersIds)
+                        .orderBy("postedDate", Query.Direction.DESCENDING)
+                        .limit(pageSize.toLong())
+                        .startAfter(lastMarker)
+                        .get(Source.SERVER)
+                        .await()
+                } else {
+                    currentPageDocuments = database.collection(POSTS_PATH)
+                        .whereIn("authorId", followersIds)
+                        .whereEqualTo("userType", userType)
+                        .orderBy("postedDate", Query.Direction.DESCENDING)
+                        .limit(pageSize.toLong())
+                        .startAfter(lastMarker)
+                        .get(Source.SERVER)
+                        .await()
+                }
             }
-        } else {
-            if (userType == null) {
-                currentPageDocuments = database.collection(POSTS_PATH)
-                    .whereIn("authorId", followersIds)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .await()
-            } else {
-                currentPageDocuments = database.collection(POSTS_PATH)
-                    .whereIn("authorId", followersIds)
-                    .whereEqualTo("userType", userType)
-                    .orderBy("postedDate", Query.Direction.DESCENDING)
-                    .limit(pageSize.toLong())
-                    .startAfter(lastMarker)
-                    .get()
-                    .await()
+
+            if (currentPageDocuments.isEmpty) {
+                return emptyList()
             }
-        }
 
-        if (currentPageDocuments.isEmpty) {
-            return emptyList()
-        }
+            val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
-        val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
+            currentPageDocuments.forEach {
+                currentPageIds.add(it.id)
+            }
+            posts.forEach {
+                currentPageLikes.add(it.usersIdsLiked.contains(userId))
+                currentPageFavs.add(it.usersIdsFavs.contains(userId))
+            }
 
-        currentPageDocuments.forEach {
-            currentPageIds.add(it.id)
-        }
-        posts.forEach {
-            currentPageLikes.add(it.usersIdsLiked.contains(userId))
-            currentPageFavs.add(it.usersIdsFavs.contains(userId))
-        }
-
-        val res = mutableListOf<PostDataEntity>()
-        for (i in posts.indices) {
-            val authorId = posts[i].authorId!!
-            res.add(
-                PostDataEntity(
-                    id = currentPageIds[i],
-                    authorId = authorId,
-                    authorName = usersMap[authorId]!!.name!!,
-                    profilePictureUrl = usersMap[authorId]!!.profilePhotoURI,
-                    text = posts[i].text!!,
-                    likesCount = posts[i].likesCount!!,
-                    userType = when (usersMap[authorId]!!.userType) {
-                        "ATHLETE" -> UserType.ATHLETE
-                        "ORGANIZATION" -> UserType.ORGANIZATION
-                        else -> throw Exception()
-                    },
-                    isLiked = currentPageLikes[i],
-                    isFavourite = currentPageFavs[i],
-                    postedDate = posts[i].postedDate!!,
-                    photosUrls = posts[i].photosUrls,
+            val res = mutableListOf<PostDataEntity>()
+            for (i in posts.indices) {
+                val authorId = posts[i].authorId!!
+                res.add(
+                    PostDataEntity(
+                        id = currentPageIds[i],
+                        authorId = authorId,
+                        authorName = usersMap[authorId]!!.name!!,
+                        profilePictureUrl = usersMap[authorId]!!.profilePhotoURI,
+                        text = posts[i].text!!,
+                        likesCount = posts[i].likesCount!!,
+                        userType = when (usersMap[authorId]!!.userType) {
+                            "ATHLETE" -> UserType.ATHLETE
+                            "ORGANIZATION" -> UserType.ORGANIZATION
+                            else -> throw Exception()
+                        },
+                        isLiked = currentPageLikes[i],
+                        isFavourite = currentPageFavs[i],
+                        postedDate = posts[i].postedDate!!,
+                        photosUrls = posts[i].photosUrls,
+                    )
                 )
-            )
-        }
+            }
 
-        return res
+            return res
+        } catch (e: FirebaseFirestoreException) {
+            if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) {
+                throw Exception("Offline")
+            } else {
+                throw e
+            }
+        }
     }
 
     override suspend fun getPagedUserFavouritePosts(
@@ -236,7 +242,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .whereArrayContains("usersIdsFavs", userId)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
-                    .get()
+                    .get(Source.SERVER)
                     .addOnFailureListener { Log.d("abcdef", "$it"); throw Exception(it) }
                     .await()
             } else {
@@ -245,7 +251,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .whereEqualTo("userType", userType)
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
-                    .get()
+                    .get(Source.SERVER)
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             }
@@ -256,7 +262,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
-                    .get()
+                    .get(Source.SERVER)
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             } else {
@@ -266,7 +272,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                     .orderBy("postedDate", Query.Direction.DESCENDING)
                     .limit(pageSize.toLong())
                     .startAfter(lastMarker)
-                    .get()
+                    .get(Source.SERVER)
                     .addOnFailureListener { throw Exception(it) }
                     .await()
             }
@@ -284,7 +290,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
             val authorDocument = database.collection(USERS_PATH)
                 .document(it.authorId!!)
-                .get()
+                .get(Source.SERVER)
                 .await()
 
             val author =
@@ -322,7 +328,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
     override suspend fun getPost(postId: String, userId: String): PostDataEntity {
         val postDocument = database.collection(POSTS_PATH)
             .document(postId)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
@@ -332,7 +338,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
         val userDocument = database.collection(USERS_PATH)
             .document(post.authorId!!)
-            .get()
+            .get(Source.SERVER)
             .addOnFailureListener { e ->
                 throw Exception(e)
             }
