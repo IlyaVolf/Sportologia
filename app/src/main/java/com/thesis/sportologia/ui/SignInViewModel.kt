@@ -34,6 +34,7 @@ class SignInViewModel @Inject constructor(
         showProgress()
         try {
             val token = usersRepository.signIn(email, password)
+           // TODO в другом месте
             authTokenRepository.setToken(token)
             launchTabsScreen()
         } catch (e: Exception) {

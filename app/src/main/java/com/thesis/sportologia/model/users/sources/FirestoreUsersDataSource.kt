@@ -1,20 +1,16 @@
 package com.thesis.sportologia.model.users.sources
 
-import com.google.firebase.firestore.FieldPath
-import com.google.firebase.firestore.FirebaseFirestore
-import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.ServiceDataEntity
-import com.thesis.sportologia.model.services.entities.ServiceDetailedDataEntity
-import com.thesis.sportologia.model.services.entities.ServiceType
+import com.google.firebase.firestore.*
+import com.thesis.sportologia.model.posts.sources.FirestorePostsDataSource
 import com.thesis.sportologia.model.settings.sources.SettingsDataSource
 import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.model.users.exceptions.UserWithEmailAlreadyExists
 import com.thesis.sportologia.model.users.exceptions.UserWithIdAlreadyExists
 import com.thesis.sportologia.model.users.exceptions.WrongEmailOrPasswordException
 import com.thesis.sportologia.utils.AuthException
-import com.thesis.sportologia.utils.Position
 import com.thesis.sportologia.utils.toPosition
 import kotlinx.coroutines.tasks.await
+import java.util.*
 import javax.inject.Inject
 
 class FirestoreUsersDataSource @Inject constructor(
@@ -25,11 +21,11 @@ class FirestoreUsersDataSource @Inject constructor(
 
     override suspend fun getAccount(): AccountDataEntity {
         val token = settings.getToken() ?: throw AuthException()
-        val record = getRecordByToken(token)
-        return record.account
+
+        return getAccountByToken(token)
     }
 
-    private suspend fun getRecordByToken(token: String): Record {
+    private suspend fun getAccountByToken(token: String): AccountDataEntity {
         val tokenDocument = database.collection(TOKENS_PATH)
             .whereEqualTo(FieldPath.documentId(), token)
             .get()
@@ -40,11 +36,7 @@ class FirestoreUsersDataSource @Inject constructor(
 
         val userId = tokenDocument.get("userId").toString()
 
-        val account = getCurrentAccount(userId)
-
-        return Record(
-            account = account,
-        )
+        return getCurrentAccount(userId)
     }
 
     private suspend fun getCurrentAccount(userId: String): AccountDataEntity {
@@ -87,9 +79,9 @@ class FirestoreUsersDataSource @Inject constructor(
         return documentRef.id
     }
 
-    override suspend fun signUp(signUpDataEntity: SignUpDataEntity) {
+    override suspend fun signUp(userCreateEditDataEntity: UserCreateEditDataEntity) {
         if (!database.collection(ACCOUNTS_PATH)
-                .whereEqualTo("email", signUpDataEntity.email)
+                .whereEqualTo("email", userCreateEditDataEntity.email)
                 .get()
                 .await()
                 .isEmpty
@@ -97,7 +89,7 @@ class FirestoreUsersDataSource @Inject constructor(
             throw UserWithEmailAlreadyExists()
         }
         if (!database.collection(ACCOUNTS_PATH)
-                .whereEqualTo("id", signUpDataEntity.userId)
+                .whereEqualTo("id", userCreateEditDataEntity.userId)
                 .get()
                 .await()
                 .isEmpty
@@ -110,11 +102,49 @@ class FirestoreUsersDataSource @Inject constructor(
             transaction
                 .set(
                     database.collection(ACCOUNTS_PATH)
-                        .document(signUpDataEntity.userId),
+                        .document(userCreateEditDataEntity.userId),
                     hashMapOf<String, Any>(
-                        "email" to signUpDataEntity.email,
-                        "password" to signUpDataEntity.password,
+                        "email" to userCreateEditDataEntity.email,
+                        "password" to userCreateEditDataEntity.password,
                     )
+                )
+
+            val userFirestoreEntity = when (userCreateEditDataEntity.userType) {
+                UserType.ATHLETE -> {
+                    hashMapOf(
+                        "id" to userCreateEditDataEntity.userId,
+                        "name" to userCreateEditDataEntity.name,
+                        "description" to userCreateEditDataEntity.description,
+                        "userType" to userCreateEditDataEntity.userType,
+                        "gender" to userCreateEditDataEntity.gender!!,
+                        "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
+                        "position" to userCreateEditDataEntity.position?.toGeoPoint(),
+                        "categories" to userCreateEditDataEntity.categories,
+                        "photosCount" to 0,
+                        "followersCount" to 0,
+                        "followingsCount" to 0,
+                    )
+                }
+                UserType.ORGANIZATION -> {
+                    hashMapOf(
+                        "id" to userCreateEditDataEntity.userId,
+                        "name" to userCreateEditDataEntity.name,
+                        "description" to userCreateEditDataEntity.description,
+                        "userType" to userCreateEditDataEntity.userType,
+                        "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
+                        "position" to userCreateEditDataEntity.position?.toGeoPoint(),
+                        "categories" to userCreateEditDataEntity.categories,
+                        "photosCount" to 0,
+                        "followersCount" to 0,
+                        "followingsCount" to 0,
+                    )
+                }
+            }
+
+            transaction
+                .set(
+                    database.collection(USERS_PATH).document(userCreateEditDataEntity.userId),
+                    userFirestoreEntity
                 )
 
             null
@@ -213,13 +243,324 @@ class FirestoreUsersDataSource @Inject constructor(
         return res
     }
 
+    override suspend fun updateUser(userCreateEditDataEntity: UserCreateEditDataEntity) {
+        val userFirestoreEntity = when (userCreateEditDataEntity.userType) {
+            UserType.ATHLETE -> {
+                hashMapOf(
+                    "name" to userCreateEditDataEntity.name,
+                    "description" to userCreateEditDataEntity.description,
+                    "userType" to userCreateEditDataEntity.userType,
+                    "gender" to userCreateEditDataEntity.gender!!,
+                    "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
+                    "position" to userCreateEditDataEntity.position?.toGeoPoint(),
+                    "categories" to userCreateEditDataEntity.categories,
+                )
+            }
+            UserType.ORGANIZATION -> {
+                hashMapOf(
+                    "name" to userCreateEditDataEntity.name,
+                    "description" to userCreateEditDataEntity.description,
+                    "userType" to userCreateEditDataEntity.userType,
+                    "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
+                    "position" to userCreateEditDataEntity.position?.toGeoPoint(),
+                    "categories" to userCreateEditDataEntity.categories,
+                )
+            }
+        }
+
+        database.collection(USERS_PATH)
+            .document(userCreateEditDataEntity.userId)
+            .update(userFirestoreEntity)
+            .await()
+    }
+
+    override suspend fun deleteUser(userId: String) {
+        database.runTransaction { transaction ->
+
+            transaction.delete(
+                database.collection(USERS_PATH)
+                    .document(userId)
+            )
+
+            transaction.delete(
+                database.collection(ACCOUNTS_PATH)
+                    .document(userId)
+            )
+
+            null
+        }.await()
+    }
+
+    override suspend fun setIsSubscribed(
+        followerId: String,
+        followingId: String,
+        isLiked: Boolean
+    ) {
+        database.runTransaction { transaction ->
+
+            transaction.set(
+                database.collection(USERS_PATH)
+                    .document(followerId).collection(FOLLOWINGS_IDS_PATH).document(followingId),
+                hashMapOf<String, Any>()
+            )
+
+            transaction.set(
+                database.collection(USERS_PATH)
+                    .document(followingId).collection(FOLLOWERS_IDS_PATH).document(followerId),
+                hashMapOf<String, Any>()
+            )
+
+            if (isLiked) {
+                transaction.update(
+                    database.collection(USERS_PATH)
+                        .document(followerId),
+                    hashMapOf<String, Any>(
+                        "followingsCount" to FieldValue.increment(1L),
+                    )
+                )
+
+                transaction.update(
+                    database.collection(USERS_PATH)
+                        .document(followingId),
+                    hashMapOf<String, Any>(
+                        "followersCount" to FieldValue.increment(1L),
+                    )
+                )
+            } else {
+                transaction.update(
+                    database.collection(USERS_PATH)
+                        .document(followerId),
+                    hashMapOf<String, Any>(
+                        "followingsCount" to FieldValue.increment(-1L),
+                    )
+                )
+
+                transaction.update(
+                    database.collection(USERS_PATH)
+                        .document(followingId),
+                    hashMapOf<String, Any>(
+                        "followersCount" to FieldValue.increment(-1L),
+                    )
+                )
+            }
+
+            null
+        }.await()
+    }
+
+    override suspend fun getPagedUsers(
+        searchQuery: String,
+        filter: FilterParamsUsers,
+        lastMarker: String?,
+        pageSize: Int
+    ): List<UserSnippet> {
+
+        /*database.collection(USERS_PATH).get().addOnSuccessListener { snap ->
+            snap.documents.forEach { doc ->
+                database.collection(USERS_PATH).document(doc.id)
+                    .update("tokens", FieldValue.delete())
+            }
+        }
+
+        database.collection(USERS_PATH).get().addOnSuccessListener { snap ->
+            snap.documents.forEach { doc ->
+                database.collection(USERS_PATH).document(doc.id).update(
+                    hashMapOf<String, Any>(
+                        "tokens" to doc.get("name").toString().split(" ").filter { it.isNotBlank() }
+                            .map {
+                                it.lowercase(
+                                    Locale.getDefault()
+                                )
+                            } + "")
+                )
+            }
+        }*/
+
+        val searchQueryTokens = searchQuery.split(" ").filter { it.isNotBlank() }.map {
+            it.lowercase(
+                Locale.getDefault()
+            )
+        }.ifEmpty { listOf("") }
+
+
+        val currentPageDocuments: QuerySnapshot?
+
+        if (lastMarker == null) {
+            currentPageDocuments =
+            if (filter.usersType == FilterParamsUsers.UsersType.ALL) {
+                database.collection(USERS_PATH)
+                    .whereArrayContainsAny("tokens", searchQueryTokens)
+                        .orderBy("id")
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { e ->
+                        throw Exception(e)
+                    }
+                    .await()
+            } else {
+                database.collection(USERS_PATH)
+                    .whereArrayContainsAny("tokens", searchQueryTokens)
+                    .whereEqualTo("userType", filter.usersType)
+                    .orderBy("id")
+                    .limit(pageSize.toLong())
+                    .get()
+                    .addOnFailureListener { e ->
+                        throw Exception(e)
+                    }
+                    .await()
+            }
+        } else {
+            if (filter.usersType == FilterParamsUsers.UsersType.ALL) {
+                currentPageDocuments = database.collection(USERS_PATH)
+                    .whereArrayContainsAny("tokens", searchQueryTokens)
+                    .orderBy("id")
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        throw Exception(e)
+                    }
+                    .await()
+            } else {
+                currentPageDocuments = database.collection(USERS_PATH)
+                    .whereArrayContainsAny("tokens", searchQueryTokens)
+                    .whereEqualTo("userType", filter.usersType)
+                    .orderBy("id")
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .addOnFailureListener { e ->
+                        throw Exception(e)
+                    }
+                    .await()
+            }
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
+        val users = currentPageDocuments.toObjects(UserFirestoreEntity::class.java)
+
+        val res = users.map { user ->
+            UserSnippet(
+                id = user.id!!,
+                name = user.name!!,
+                profilePhotoURI = user.profilePhotoURI,
+                position = user.position.toPosition(),
+                categories = user.categories!!
+            )
+        }
+
+        return res
+    }
+
+    override suspend fun getPagedFollowers(
+        userId: String,
+        lastMarker: String?,
+        pageSize: Int
+    ): List<UserSnippet> {
+        val currentPageDocuments: QuerySnapshot?
+
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(USERS_PATH)
+                .document(userId)
+                .collection(FOLLOWERS_IDS_PATH)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(USERS_PATH)
+                .document(userId)
+                .collection(FOLLOWERS_IDS_PATH)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
+        val followersIds = currentPageDocuments.map { it.id }
+
+        val usersDocuments = database.collection(FirestorePostsDataSource.USERS_PATH)
+            .whereIn(FieldPath.documentId(), followersIds)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
+
+        val res = users.map { user ->
+            UserSnippet(
+                id = user.id!!,
+                name = user.name!!,
+                profilePhotoURI = user.profilePhotoURI,
+                position = user.position.toPosition(),
+                categories = user.categories!!
+            )
+        }
+
+        return res
+    }
+
+    override suspend fun getPagedFollowings(
+        userId: String,
+        lastMarker: String?,
+        pageSize: Int
+    ): List<UserSnippet> {
+        val currentPageDocuments: QuerySnapshot?
+
+        if (lastMarker == null) {
+            currentPageDocuments = database.collection(USERS_PATH)
+                .document(userId)
+                .collection(FOLLOWINGS_IDS_PATH)
+                .limit(pageSize.toLong())
+                .get()
+                .await()
+        } else {
+            currentPageDocuments = database.collection(USERS_PATH)
+                .document(userId)
+                .collection(FOLLOWINGS_IDS_PATH)
+                .limit(pageSize.toLong())
+                .startAfter(lastMarker)
+                .get()
+                .await()
+        }
+
+        if (currentPageDocuments.isEmpty) {
+            return emptyList()
+        }
+
+        val followersIds = currentPageDocuments.map { it.id }
+
+        val usersDocuments = database.collection(FirestorePostsDataSource.USERS_PATH)
+            .whereIn(FieldPath.documentId(), followersIds)
+            .get()
+            .addOnFailureListener { e ->
+                throw Exception(e)
+            }
+            .await()
+        val users = usersDocuments.toObjects(UserFirestoreEntity::class.java)
+
+        val res = users.map { user ->
+            UserSnippet(
+                id = user.id!!,
+                name = user.name!!,
+                profilePhotoURI = user.profilePhotoURI,
+                position = user.position.toPosition(),
+                categories = user.categories!!
+            )
+        }
+
+        return res
+    }
+
     private data class PhotosFirestoreDataEntity(
         var photos: List<String> = emptyList()
-    )
-
-    private class Record(
-        var account: AccountDataEntity,
-        var token: String? = null,
     )
 
     companion object {
@@ -227,8 +568,8 @@ class FirestoreUsersDataSource @Inject constructor(
         const val ACCOUNTS_PATH = "accounts"
         const val USERS_PATH = "users"
         const val TOKENS_PATH = "tokens"
-        const val FOLLOWERS_PATH = "followers"
         const val PHOTOS_PATH = "photos"
+        const val FOLLOWERS_IDS_PATH = "followersIds"
         const val FOLLOWINGS_IDS_PATH = "followingsIds"
     }
 

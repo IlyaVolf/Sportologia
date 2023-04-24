@@ -11,9 +11,9 @@ interface UsersRepository {
 
     fun reload()
 
-    suspend fun getUser(userId: String): User?
+    suspend fun getUser(currentUserId: String, userId: String): User
 
-    suspend fun setIsSubscribe(followerId: String, followingId: String, isSubscribed: Boolean)
+    suspend fun setIsSubscribed(followerId: String, followingId: String, isSubscribed: Boolean)
 
     suspend fun getPagedFollowers(userId: String): Flow<PagingData<UserSnippet>>
 
@@ -21,12 +21,8 @@ interface UsersRepository {
 
     suspend fun getPagedUsers(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
 
-    suspend fun getPagedAthletes(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
-
-    suspend fun getPagedOrganizations(searchQuery: String, filter: FilterParamsUsers): Flow<PagingData<UserSnippet>>
-
     suspend fun signIn(email: String, password: String): String
 
-    suspend fun signUp(signUpDataEntity: SignUpDataEntity)
+    suspend fun signUp(signUpDataEntity: UserCreateEditDataEntity)
 
 }

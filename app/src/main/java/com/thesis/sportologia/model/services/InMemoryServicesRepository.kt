@@ -29,18 +29,13 @@ class InMemoryServicesRepository @Inject constructor(
         filter: FilterParamsServices
     ): Flow<PagingData<ServiceDataEntity>> {
         val loader: ServicesPageLoader = { lastTimestamp, pageIndex, pageSize ->
-            try {
-                servicesDataSource.getPagedServices(
-                    userId,
-                    searchQuery,
-                    filter,
-                    lastTimestamp,
-                    pageSize
-                )
-            } catch (e: Exception) {
-                Log.d("abcdef", e.toString())
-                throw Exception()
-            }
+            servicesDataSource.getPagedServices(
+                userId,
+                searchQuery,
+                filter,
+                lastTimestamp,
+                pageSize
+            )
         }
 
         return Pager(

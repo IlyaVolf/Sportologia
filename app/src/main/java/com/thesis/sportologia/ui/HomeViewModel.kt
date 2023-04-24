@@ -35,14 +35,9 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun getUser() {
         try {
-            val user = usersRepository.getUser(userId)
+            val user = usersRepository.getUser(CurrentAccount().id, userId)
             withContext(Dispatchers.Main) {
-                if (user != null) {
-                    _avatarHolder.value =
-                        DataHolder.ready(user.profilePhotoURI)
-                } else {
-                    _avatarHolder.value = DataHolder.error(Exception("no such user"))
-                }
+                _avatarHolder.value = DataHolder.ready(user.profilePhotoURI)
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {

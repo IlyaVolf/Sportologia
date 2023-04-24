@@ -5,16 +5,13 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
-import com.thesis.sportologia.model.photos.entities.Photo
 import com.thesis.sportologia.model.settings.sources.SettingsDataSource
 import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.model.users.sources.UsersDataSource
-import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.flows.LazyFlowSubjectFactory
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -114,7 +111,7 @@ class InMemoryUsersRepository @Inject constructor(
             true,
             1,
             listOf(
-                    "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
+                "https://img2.goodfon.com/original/2048x1365/d/39/gory-alpy-italiya-dolina-les.jpg"
             )
         ),
         Organization(
@@ -137,50 +134,34 @@ class InMemoryUsersRepository @Inject constructor(
 
         )
 
-    override suspend
-    fun getUser(userId: String): User? {
-        delay(1000)
+    override suspend fun getUser(currentUserId: String, userId: String): User {
+        val res: User
+        try {
+            res = usersDataSource.getUser(currentUserId, userId)
+        } catch (e: Exception) {
+            Log.d("abcdef", e.toString())
+            throw Exception(e)
+        }
 
-        // throw Exception()
-
-        return if (users.none { it.id == userId }) return null else users.filter { it.id == userId }[0]
+        return res
     }
 
-    override suspend
-    fun setIsSubscribe(
+    override suspend fun setIsSubscribed(
         followerId: String,
         followingId: String,
         isSubscribed: Boolean
     ) {
-        delay(1000)
-
-        //throw Exception()
-
-        Log.d("BUGFIX", "$followerId $followingId ${users.filter { it.id == followingId }}")
-
-        val follower = users.filter { it.id == followerId }
-        val following = users.filter { it.id == followingId }
-        if (isSubscribed) {
-            follower.forEach { it.followingsCount++ }
-            following.forEach { it.followersCount++ }
-        } else {
-            follower.forEach { it.followingsCount-- }
-            following.forEach { it.followersCount-- }
-        }
-        following.forEach { it.isSubscribed = isSubscribed }
-
-        if (isSubscribed) {
-            followingsId.add(followingId)
-        } else {
-            followingsId.remove(followingId)
-        }
-
+        usersDataSource.setIsSubscribed(followerId, followingId, isSubscribed)
     }
 
-    override suspend
-    fun getPagedFollowers(userId: String): Flow<PagingData<UserSnippet>> {
-        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getFollowers(pageIndex, pageSize, userId)
+    override suspend fun getPagedFollowers(userId: String): Flow<PagingData<UserSnippet>> {
+        val loader: UserSnippetsPageLoader = { lastUser, pageIndex, pageSize ->
+            try {
+                usersDataSource.getPagedFollowers(userId, lastUser, pageSize)
+            } catch (e: Exception) {
+                Log.d("abcdef", "$e")
+            }
+            usersDataSource.getPagedFollowers(userId, lastUser, pageSize)
         }
 
         return Pager(
@@ -194,34 +175,14 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    private suspend
-    fun getFollowers(
-        pageIndex: Int,
-        pageSize: Int,
-        userId: String
-    ): List<UserSnippet> = withContext(ioDispatcher) {
-        delay(1000)
-
-        val offset = pageIndex * pageSize
-
-        val followers = mutableListOf<UserSnippet>()
-        followersId.forEach { followerId ->
-            users.filter { it.id == followerId }.map { it.toUserSnippet() }
-                .forEach { followers.add(it) }
-        }
-        if (offset >= followers.size) {
-            return@withContext listOf<UserSnippet>()
-        } else if (offset + pageSize >= followers.size) {
-            return@withContext followers.subList(offset, followers.size)
-        } else {
-            return@withContext followers.subList(offset, offset + pageSize)
-        }
-    }
-
-    override suspend
-    fun getPagedFollowings(userId: String): Flow<PagingData<UserSnippet>> {
-        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getFollowings(pageIndex, pageSize, userId)
+    override suspend fun getPagedFollowings(userId: String): Flow<PagingData<UserSnippet>> {
+        val loader: UserSnippetsPageLoader = { lastUser, pageIndex, pageSize ->
+            try {
+                usersDataSource.getPagedFollowings(userId, lastUser, pageSize)
+            } catch (e: Exception) {
+                Log.d("abcdef", "$e")
+            }
+            usersDataSource.getPagedFollowings(userId, lastUser, pageSize)
         }
 
         return Pager(
@@ -235,77 +196,17 @@ class InMemoryUsersRepository @Inject constructor(
         ).flow
     }
 
-    private suspend
-    fun getFollowings(
-        pageIndex: Int,
-        pageSize: Int,
-        userId: String
-    ): List<UserSnippet> = withContext(ioDispatcher) {
-        delay(1000)
-
-        val offset = pageIndex * pageSize
-
-        val followings = mutableListOf<UserSnippet>()
-        followingsId.forEach { followingId ->
-            users.filter { it.id == followingId }.map { it.toUserSnippet() }
-                .forEach { followings.add(it) }
-        }
-        if (offset >= followings.size) {
-            return@withContext listOf<UserSnippet>()
-        } else if (offset + pageSize >= followings.size) {
-            return@withContext followings.subList(offset, followings.size)
-        } else {
-            return@withContext followings.subList(offset, offset + pageSize)
-        }
-    }
-
-    override suspend
-    fun getPagedUsers(
+    override suspend fun getPagedUsers(
         searchQuery: String,
         filter: FilterParamsUsers
     ): Flow<PagingData<UserSnippet>> {
-        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, searchQuery, filter)
-        }
-
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                initialLoadSize = PAGE_SIZE,
-                prefetchDistance = PAGE_SIZE / 2,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { UsersPagingSource(loader) }
-        ).flow
-    }
-
-    override suspend
-    fun getPagedAthletes(
-        searchQuery: String,
-        filter: FilterParamsUsers
-    ): Flow<PagingData<UserSnippet>> {
-        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, searchQuery, filter)
-        }
-
-        return Pager(
-            config = PagingConfig(
-                pageSize = PAGE_SIZE,
-                initialLoadSize = PAGE_SIZE,
-                prefetchDistance = PAGE_SIZE / 2,
-                enablePlaceholders = false
-            ),
-            pagingSourceFactory = { UsersPagingSource(loader) }
-        ).flow
-    }
-
-    override suspend
-    fun getPagedOrganizations(
-        searchQuery: String,
-        filter: FilterParamsUsers
-    ): Flow<PagingData<UserSnippet>> {
-        val loader: UserSnippetsPageLoader = { pageIndex, pageSize ->
-            getUsers(pageIndex, pageSize, searchQuery, filter)
+        val loader: UserSnippetsPageLoader = { lastUser, pageIndex, pageSize ->
+            try {
+                usersDataSource.getPagedUsers(searchQuery, filter, lastUser, pageSize)
+            } catch (e: Exception) {
+                Log.d("abcdef", e.toString())
+                throw Exception(e)
+            }
         }
 
         return Pager(
@@ -323,40 +224,8 @@ class InMemoryUsersRepository @Inject constructor(
         return usersDataSource.signIn(email, password)
     }
 
-    override suspend fun signUp(signUpDataEntity: SignUpDataEntity) {
+    override suspend fun signUp(signUpDataEntity: UserCreateEditDataEntity) {
         usersDataSource.signUp(signUpDataEntity)
-    }
-
-    private suspend
-    fun getUsers(
-        pageIndex: Int,
-        pageSize: Int,
-        searchQuery: String,
-        filter: FilterParamsUsers,
-    ): List<UserSnippet> = withContext(ioDispatcher) {
-        delay(1000)
-
-        Log.d("SEARCHUSER", "$searchQuery $filter")
-
-        val offset = pageIndex * pageSize
-
-        val usersFound = when (filter.usersType) {
-            FilterParamsUsers.UsersType.ATHLETES ->
-                users.filter { it is Athlete && containsAnyCase(it.name, searchQuery) }
-            FilterParamsUsers.UsersType.ORGANIZATIONS ->
-                users.filter { it is Organization && containsAnyCase(it.name, searchQuery) }
-            FilterParamsUsers.UsersType.ALL -> users.filter {
-                containsAnyCase(it.name, searchQuery)
-            }
-        }.map { it.toUserSnippet() }
-
-        if (offset >= usersFound.size) {
-            return@withContext listOf<UserSnippet>()
-        } else if (offset + pageSize >= usersFound.size) {
-            return@withContext usersFound.subList(offset, usersFound.size)
-        } else {
-            return@withContext usersFound.subList(offset, offset + pageSize)
-        }
     }
 
     override fun reload() {
@@ -364,7 +233,7 @@ class InMemoryUsersRepository @Inject constructor(
     }
 
     companion object {
-        const val PAGE_SIZE = 12
+        const val PAGE_SIZE = 10
     }
 
 }
