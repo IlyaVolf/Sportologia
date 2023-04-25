@@ -116,7 +116,6 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
                 ?: return@setFragmentResultListener
             currentServiceCreateEditItem.exercises.add(exercise)
             setExercises(currentServiceCreateEditItem.exercises)
-            Log.d("abcdef", "${currentServiceCreateEditItem}, ${exercise}")
             exercisesAdapter.notifyDataSetChanged()
         }
 
@@ -129,7 +128,6 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
             currentServiceCreateEditItem.exercises[currentServiceCreateEditItem.exercises.indexOfFirst { it.id == exercise.id }] =
                 exercise
             setExercises(currentServiceCreateEditItem.exercises)
-            Log.d("abcdef", "${currentServiceCreateEditItem}, ${exercise}")
             exercisesAdapter.notifyDataSetChanged()
         }
 

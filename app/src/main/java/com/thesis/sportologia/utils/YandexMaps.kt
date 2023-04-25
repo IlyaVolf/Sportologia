@@ -9,6 +9,8 @@ class YandexMaps {
     companion object {
 
         fun getPosition(context: Context, address: String): Position? {
+            if (address.isEmpty()) return null
+
             val geocoder = Geocoder(context)
             val geocodeResult =
                 geocoder.getFromLocationName(address, 1)?.firstOrNull() ?: return null

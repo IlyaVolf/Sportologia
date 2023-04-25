@@ -18,6 +18,7 @@
         app:tb_toolbarRightButton="@string/action_complete" />
 
     <ScrollView
+        android:id="@+id/fpss_contentBlock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

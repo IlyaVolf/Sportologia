@@ -10,9 +10,9 @@ interface UsersDataSource {
 
     suspend fun signIn(email: String, password: String): String
 
-    suspend fun signUp(userCreateEditDataEntity: UserCreateEditDataEntity)
+    suspend fun signUp(userCreateDataEntity: UserCreateDataEntity)
 
-    suspend fun updateUser(userCreateEditDataEntity: UserCreateEditDataEntity)
+    suspend fun updateUser(userEditDataEntity: UserEditDataEntity)
 
     suspend fun deleteUser(userId: String)
 

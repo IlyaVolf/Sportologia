@@ -2,12 +2,10 @@ package com.thesis.sportologia.ui
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.users.AuthTokenRepository
 import com.thesis.sportologia.model.users.UsersRepository
-import com.thesis.sportologia.model.users.entities.GenderType
-import com.thesis.sportologia.model.users.entities.UserCreateDataEntity
-import com.thesis.sportologia.model.users.entities.UserType
+import com.thesis.sportologia.model.users.entities.*
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.entities.ProfileSettingsViewItem
 import com.thesis.sportologia.utils.*
@@ -19,11 +17,14 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileSettingsSignUpViewModel @Inject constructor(
-    private val authTokenRepository: AuthTokenRepository,
+class ProfileSettingsViewModel @Inject constructor(
     private val usersRepository: UsersRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
+
+    private val _profileSettingsHolder =
+        ObservableHolder<ProfileSettingsViewItem>(DataHolder.init())
+    val profileSettingsHolder = _profileSettingsHolder.share()
 
     private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
     val saveHolder = _saveHolder.share()
@@ -31,27 +32,78 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
     private val _toastMessageEvent = MutableLiveEvent<ExceptionType>()
     val toastMessageEvent = _toastMessageEvent.share()
 
-    private val _navigateToTabsEvent = MutableUnitLiveEvent()
-    val navigateToTabsEvent = _navigateToTabsEvent.share()
+    init {
+        getProfileSettings()
+    }
 
-    fun signUp(email: String, password: String, profileSettingsViewItem: ProfileSettingsViewItem) {
+    fun getProfileSettings() {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Main) {
+                    _profileSettingsHolder.value = DataHolder.loading()
+                }
+
+                val user = usersRepository.getUser(CurrentAccount().id, CurrentAccount().id)
+                val profileSettings = when (user) {
+                    is Athlete -> {
+                        ProfileSettingsViewItem(
+                            accountType = UserType.ATHLETE,
+                            name = user.name,
+                            nickname = user.id,
+                            description = user.description,
+                            gender = user.gender,
+                            birthDate = user.birthDate,
+                            profilePhotoUri = user.profilePhotoURI,
+                            categories = user.categories,
+                            position = user.position
+                        )
+                    }
+                    is Organization -> {
+                        ProfileSettingsViewItem(
+                            accountType = UserType.ORGANIZATION,
+                            name = user.name,
+                            nickname = user.id,
+                            description = user.description,
+                            gender = null,
+                            birthDate = null,
+                            profilePhotoUri = user.profilePhotoURI,
+                            categories = user.categories,
+                            position = user.position
+                        )
+                    }
+                    else -> throw Exception()
+                }
+
+                withContext(Dispatchers.Main) {
+                    _profileSettingsHolder.value = DataHolder.ready(profileSettings)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _profileSettingsHolder.value = DataHolder.error(e)
+                }
+            }
+        }
+    }
+
+    fun onSaveButtonPressed(profileSettingsViewItem: ProfileSettingsViewItem) {
+
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
                     _saveHolder.value = DataHolder.loading()
                 }
 
-                if (!validateData(email, password, profileSettingsViewItem)) {
-                    _saveHolder.value = DataHolder.error(Exception())
+                if (!validateData(profileSettingsViewItem)) {
+                    withContext(Dispatchers.Main) {
+                        _saveHolder.value = DataHolder.error(Exception())
+                    }
                     return@launch
                 }
 
                 val reformattedDescription = reformatText(profileSettingsViewItem.description ?: "")
 
-                val token = usersRepository.signUp(
-                    UserCreateDataEntity(
-                        email = email,
-                        password = password,
+                usersRepository.updateUser(
+                    UserEditDataEntity(
                         userId = profileSettingsViewItem.nickname!!,
                         name = profileSettingsViewItem.name!!,
                         userType = profileSettingsViewItem.accountType!!,
@@ -64,28 +116,19 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
                     )
                 )
 
-                authTokenRepository.setToken(token)
-
                 withContext(Dispatchers.Main) {
                     _saveHolder.value = DataHolder.ready(Unit)
-                    launchTabsScreen()
                 }
             } catch (e: Exception) {
-                Log.d("abcdef", e.toString())
                 withContext(Dispatchers.Main) {
                     _toastMessageEvent.publishEvent(ExceptionType.OTHER)
                     _saveHolder.value = DataHolder.error(e)
                 }
             }
-            // TODO email и nickname exceptions
         }
     }
 
-    private fun validateData(
-        email: String,
-        password: String,
-        profileSettingsViewItem: ProfileSettingsViewItem
-    ): Boolean {
+    private fun validateData(profileSettingsViewItem: ProfileSettingsViewItem): Boolean {
         if (!validateName(profileSettingsViewItem.name)) {
             return false
         }
@@ -98,7 +141,11 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
             return false
         }
 
-        if (!validateBirthDate(profileSettingsViewItem.accountType, profileSettingsViewItem.birthDate)) {
+        if (!validateBirthDate(
+                profileSettingsViewItem.accountType,
+                profileSettingsViewItem.birthDate
+            )
+        ) {
             return false
         }
 
@@ -150,15 +197,11 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
         return newText.toString()
     }
 
-    private fun launchTabsScreen() = _navigateToTabsEvent.publishEvent()
-
     enum class ExceptionType {
-        NICKNAME_ALREADY_EXISTS,
-        EMAIL_ALREADY_EXISTS,
         EMPTY_NAME,
         EMPTY_NICKNAME,
-        EMPTY_BIRTHDATE,
         EMPTY_GENDER,
+        EMPTY_BIRTHDATE,
         OTHER,
     }
 

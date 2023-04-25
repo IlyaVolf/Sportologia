@@ -58,6 +58,12 @@ class DateBasicView(
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
+    fun setDateMillis(timeMillis: Long) {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = timeMillis
+        binding.textBlock.text = parseDate(calendar, DATE_PATTERN)
+    }
+
     fun getDateMillis(): Long? {
         return binding.textBlock.text.toString().toLongOrNull()
     }
@@ -87,7 +93,7 @@ class DateBasicView(
             dateAndTime[Calendar.DAY_OF_MONTH] = dayOfMonth
 
             if (validateDate()) {
-                binding.textBlock.text = parseDate(dateAndTime, "d MMMM uuuu")
+                binding.textBlock.text = parseDate(dateAndTime, DATE_PATTERN)
             }
         }
 
@@ -167,6 +173,10 @@ class DateBasicView(
         binding.textBlock.post {
             binding.textBlock.text = savedDate
         }
+    }
+
+    companion object {
+        const val DATE_PATTERN = "d MMMM uuuu"
     }
 
     class SavedState : BaseSavedState {

@@ -98,12 +98,10 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         }
 
         initAddPhotosButton()
-
     }
 
     private fun initAddPhotosButton() {
         binding.addPhotosButton.setOnClickListener {
-            Log.d("abcdef", "setListener")
             if (ContextCompat.checkSelfPermission(
                     context!!,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
@@ -140,7 +138,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
     private fun getPostIdArg(): String? = args.postId.postId
 
     private fun onCancelButtonPressed() {
-        createDialog()
+        createCancelDialog()
     }
 
     private fun getCurrentData() {
@@ -156,7 +154,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         }
     }
 
-    private fun createDialog() {
+    private fun createCancelDialog() {
         val messageText = getString(R.string.ask_cancel_post_warning)
 
         val neutralButtonText = getString(R.string.action_back)

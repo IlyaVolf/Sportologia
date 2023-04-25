@@ -5,6 +5,7 @@ import com.thesis.sportologia.utils.Position
 
 data class Athlete(
     val gender: GenderType,
+    val birthDate: Long,
     override var position: Position?,
     override var id: String,
     override var name: String,

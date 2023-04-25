@@ -1,6 +1,5 @@
 package com.thesis.sportologia.model.users.sources
 
-import android.util.Log
 import com.google.firebase.firestore.*
 import com.thesis.sportologia.model.posts.sources.FirestorePostsDataSource
 import com.thesis.sportologia.model.settings.sources.SettingsDataSource
@@ -80,9 +79,9 @@ class FirestoreUsersDataSource @Inject constructor(
         return documentRef.id
     }
 
-    override suspend fun signUp(userCreateEditDataEntity: UserCreateEditDataEntity) {
+    override suspend fun signUp(userCreateDataEntity: UserCreateDataEntity) {
         if (!database.collection(ACCOUNTS_PATH)
-                .whereEqualTo("email", userCreateEditDataEntity.email)
+                .whereEqualTo("email", userCreateDataEntity.email)
                 .get()
                 .await()
                 .isEmpty
@@ -90,7 +89,7 @@ class FirestoreUsersDataSource @Inject constructor(
             throw UserWithEmailAlreadyExists()
         }
         if (!database.collection(ACCOUNTS_PATH)
-                .whereEqualTo("id", userCreateEditDataEntity.userId)
+                .whereEqualTo("id", userCreateDataEntity.userId)
                 .get()
                 .await()
                 .isEmpty
@@ -103,24 +102,24 @@ class FirestoreUsersDataSource @Inject constructor(
             transaction
                 .set(
                     database.collection(ACCOUNTS_PATH)
-                        .document(userCreateEditDataEntity.userId),
+                        .document(userCreateDataEntity.userId),
                     hashMapOf<String, Any>(
-                        "email" to userCreateEditDataEntity.email,
-                        "password" to userCreateEditDataEntity.password,
+                        "email" to userCreateDataEntity.email,
+                        "password" to userCreateDataEntity.password,
                     )
                 )
 
-            val userFirestoreEntity = when (userCreateEditDataEntity.userType) {
+            val userFirestoreEntity = when (userCreateDataEntity.userType) {
                 UserType.ATHLETE -> {
                     hashMapOf(
-                        "id" to userCreateEditDataEntity.userId,
-                        "name" to userCreateEditDataEntity.name,
-                        "description" to userCreateEditDataEntity.description,
-                        "userType" to userCreateEditDataEntity.userType,
-                        "gender" to userCreateEditDataEntity.gender!!,
-                        "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
-                        "position" to userCreateEditDataEntity.position?.toGeoPoint(),
-                        "categories" to userCreateEditDataEntity.categories,
+                        "id" to userCreateDataEntity.userId,
+                        "name" to userCreateDataEntity.name,
+                        "description" to userCreateDataEntity.description,
+                        "userType" to userCreateDataEntity.userType,
+                        "gender" to userCreateDataEntity.gender!!,
+                        "profilePhotoURI" to userCreateDataEntity.profilePhotoURI,
+                        "position" to userCreateDataEntity.position?.toGeoPoint(),
+                        "categories" to userCreateDataEntity.categories,
                         "photosCount" to 0,
                         "followersCount" to 0,
                         "followingsCount" to 0,
@@ -128,13 +127,13 @@ class FirestoreUsersDataSource @Inject constructor(
                 }
                 UserType.ORGANIZATION -> {
                     hashMapOf(
-                        "id" to userCreateEditDataEntity.userId,
-                        "name" to userCreateEditDataEntity.name,
-                        "description" to userCreateEditDataEntity.description,
-                        "userType" to userCreateEditDataEntity.userType,
-                        "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
-                        "position" to userCreateEditDataEntity.position?.toGeoPoint(),
-                        "categories" to userCreateEditDataEntity.categories,
+                        "id" to userCreateDataEntity.userId,
+                        "name" to userCreateDataEntity.name,
+                        "description" to userCreateDataEntity.description,
+                        "userType" to userCreateDataEntity.userType,
+                        "profilePhotoURI" to userCreateDataEntity.profilePhotoURI,
+                        "position" to userCreateDataEntity.position?.toGeoPoint(),
+                        "categories" to userCreateDataEntity.categories,
                         "photosCount" to 0,
                         "followersCount" to 0,
                         "followingsCount" to 0,
@@ -144,14 +143,14 @@ class FirestoreUsersDataSource @Inject constructor(
 
             transaction
                 .set(
-                    database.collection(USERS_PATH).document(userCreateEditDataEntity.userId),
+                    database.collection(USERS_PATH).document(userCreateDataEntity.userId),
                     userFirestoreEntity
                 )
 
             transaction.update(database.collection(USERS_PATH)
-                .document(userCreateEditDataEntity.userId),
+                .document(userCreateDataEntity.userId),
                 hashMapOf<String, Any>(
-                    "tokens" to userCreateEditDataEntity.name.split(" ").filter { it.isNotBlank() }
+                    "tokens" to userCreateDataEntity.name.split(" ").filter { it.isNotBlank() }
                         .map {
                             it.lowercase(
                                 Locale.getDefault()
@@ -202,6 +201,7 @@ class FirestoreUsersDataSource @Inject constructor(
                     },
                     id = user.id!!,
                     name = user.name!!,
+                    birthDate = user.birthDate!!,
                     description = user.description!!,
                     position = user.position.toPosition(),
                     profilePhotoURI = user.profilePhotoURI,
@@ -230,7 +230,7 @@ class FirestoreUsersDataSource @Inject constructor(
             }
             .await()
 
-        return followersDocument.documents.isEmpty()
+        return followersDocument.documents.isNotEmpty()
     }
 
     private suspend fun getUserPhotos(userId: String, isLimited: Boolean): List<String> {
@@ -254,33 +254,33 @@ class FirestoreUsersDataSource @Inject constructor(
         return res
     }
 
-    override suspend fun updateUser(userCreateEditDataEntity: UserCreateEditDataEntity) {
-        val userFirestoreEntity = when (userCreateEditDataEntity.userType) {
+    override suspend fun updateUser(userEditDataEntity: UserEditDataEntity) {
+        val userFirestoreEntity = when (userEditDataEntity.userType) {
             UserType.ATHLETE -> {
                 hashMapOf(
-                    "name" to userCreateEditDataEntity.name,
-                    "description" to userCreateEditDataEntity.description,
-                    "userType" to userCreateEditDataEntity.userType,
-                    "gender" to userCreateEditDataEntity.gender!!,
-                    "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
-                    "position" to userCreateEditDataEntity.position?.toGeoPoint(),
-                    "categories" to userCreateEditDataEntity.categories,
+                    "name" to userEditDataEntity.name,
+                    "description" to userEditDataEntity.description,
+                    "userType" to userEditDataEntity.userType,
+                    "gender" to userEditDataEntity.gender!!,
+                    "profilePhotoURI" to userEditDataEntity.profilePhotoURI,
+                    "position" to userEditDataEntity.position?.toGeoPoint(),
+                    "categories" to userEditDataEntity.categories,
                 )
             }
             UserType.ORGANIZATION -> {
                 hashMapOf(
-                    "name" to userCreateEditDataEntity.name,
-                    "description" to userCreateEditDataEntity.description,
-                    "userType" to userCreateEditDataEntity.userType,
-                    "profilePhotoURI" to userCreateEditDataEntity.profilePhotoURI,
-                    "position" to userCreateEditDataEntity.position?.toGeoPoint(),
-                    "categories" to userCreateEditDataEntity.categories,
+                    "name" to userEditDataEntity.name,
+                    "description" to userEditDataEntity.description,
+                    "userType" to userEditDataEntity.userType,
+                    "profilePhotoURI" to userEditDataEntity.profilePhotoURI,
+                    "position" to userEditDataEntity.position?.toGeoPoint(),
+                    "categories" to userEditDataEntity.categories,
                 )
             }
         }
 
         database.collection(USERS_PATH)
-            .document(userCreateEditDataEntity.userId)
+            .document(userEditDataEntity.userId)
             .update(userFirestoreEntity)
             .await()
     }

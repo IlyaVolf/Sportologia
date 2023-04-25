@@ -4,6 +4,7 @@ import com.google.firebase.firestore.GeoPoint
 
 data class UserFirestoreEntity(
     var id: String? = null,
+    var birthDate: Long? = null,
     var gender: String? = null,
     var name: String? = null,
     var description: String? = null,

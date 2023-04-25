@@ -23,7 +23,9 @@ interface UsersRepository {
 
     suspend fun signIn(email: String, password: String): String
 
-    suspend fun signUp(signUpDataEntity: UserCreateEditDataEntity): String
+    suspend fun signUp(userCreateDataEntity: UserCreateDataEntity): String
+
+    suspend fun updateUser(userEditDataEntity: UserEditDataEntity)
 
     suspend fun checkEmailExists(email: String): Boolean
 

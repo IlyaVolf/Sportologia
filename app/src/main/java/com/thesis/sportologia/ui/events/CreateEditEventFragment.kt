@@ -204,7 +204,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
     }
 
     private fun onCancelButtonPressed() {
-        createDialog()
+        createCancelDialog()
     }
 
     private fun onSaveButtonPressed() {
@@ -214,7 +214,7 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         }
     }
 
-    private fun createDialog() {
+    private fun createCancelDialog() {
         val messageText = getString(R.string.ask_cancel_event_warning)
 
         val neutralButtonText = getString(R.string.action_back)
