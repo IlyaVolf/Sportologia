@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -24,6 +25,7 @@ import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.ui.entities.ProfileSettingsViewItem
 import com.thesis.sportologia.ui.posts.CreateEditPostFragment
 import com.thesis.sportologia.ui.posts.entities.toCreateEditItem
+import com.thesis.sportologia.ui.services.CreateEditServiceFragment
 import com.thesis.sportologia.ui.views.MultiChoiceBasicView
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.ui.views.SpinnerBasicView
@@ -148,11 +150,13 @@ class ProfileSettingsFragment : Fragment() {
     private fun renderData() {
         profilePhoto = currentProfileSettings.profilePhotoUri
 
-        with (binding) {
+        with(binding) {
             when (currentProfileSettings.accountType!!) {
                 UserType.ATHLETE -> {
                     athleteFirstname.setText(currentProfileSettings.name!!.split(" ")[0])
-                    athleteLastname.setText(currentProfileSettings.name!!.split(" ").getOrNull(1) ?: "")
+                    athleteLastname.setText(
+                        currentProfileSettings.name!!.split(" ").getOrNull(1) ?: ""
+                    )
                     description.setText(currentProfileSettings.description!!)
                     gender.setItem(
                         when (currentProfileSettings.gender!!) {
@@ -341,11 +345,19 @@ class ProfileSettingsFragment : Fragment() {
     }
 
     private fun goBack(isSaved: Boolean) {
-        //sendResult(isSaved)
+        if (isSaved) {
+            sendResult()
+        }
 
         findNavController().navigateUp()
     }
 
+    private fun sendResult() {
+        requireActivity().supportFragmentManager.setFragmentResult(
+            ProfileFragment.IS_EDITED_REQUEST_CODE,
+            bundleOf()
+        )
+    }
 
 ////////////////////
 

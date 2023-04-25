@@ -69,6 +69,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             Profile.OTHER -> initRenderProfileOther()
         }
 
+        initResultListeners()
         initNavToProfile()
 
         return binding.root
@@ -88,6 +89,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             CurrentAccount().id
         } else {
             userId
+        }
+    }
+
+    private fun initResultListeners() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            IS_EDITED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, _ ->
+            viewModel.refresh()
         }
     }
 
@@ -507,6 +517,8 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     companion object {
         const val DEFAULT_USER_ID = "\$current_user"
+
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
 
         const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_PROFILE"
         const val GO_TO_STATS_REQUEST_CODE = "GO_TO_STATS_REQUEST_CODE_FROM_PROFILE"
