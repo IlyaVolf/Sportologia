@@ -58,6 +58,10 @@ class DateBasicView(
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
+    fun getDateMillis(): Long? {
+        return binding.textBlock.text.toString().toLongOrNull()
+    }
+
     private fun initializeAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(

@@ -228,6 +228,10 @@ class InMemoryUsersRepository @Inject constructor(
         usersDataSource.signUp(signUpDataEntity)
     }
 
+    override suspend fun checkEmailExists(email: String): Boolean {
+        return usersDataSource.checkEmailExists(email)
+    }
+
     override fun reload() {
         userLazyFlowSubject.newAsyncLoad()
     }

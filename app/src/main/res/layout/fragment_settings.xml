@@ -15,5 +15,17 @@
         app:tb_isToolbarUnderlined="false"
         app:tb_toolbarTitle="@string/settings"/>
 
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp"/>
+
+    <com.thesis.sportologia.ui.views.ButtonBasicView
+        android:layout_marginHorizontal="@dimen/margin_sides"
+        app:isIconOn="false"
+        app:textColor="@color/white"
+        app:backgroundColor="@color/red_accent"
+        app:text="@string/action_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

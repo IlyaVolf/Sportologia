@@ -67,7 +67,7 @@
                 android:id="@+id/athlete_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:editTextHint="@string/hint_athlete_name"
+                app:editTextHint="@string/hint_organization_name"
                 app:editTextLimit="70"
                 app:editTextLines="2"
                 app:editTextTitle="@string/athlete_name" />

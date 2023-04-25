@@ -22,6 +22,9 @@
     <string name="error_account_with_this_email_exists">Аккаунт с указанным email уже существует</string>
     <string name="error_account_with_this_nickname_exists">Аккаунт с указанным никнеймом уже существует</string>
     <string name="error_set_favorite">Не удалось добавить в избранное</string>
+    <string name="error_empty_email">Не указан email</string>
+    <string name="error_empty_password">Не указан пароль</string>
+    <string name="error_short_password">Длина пароля должна быть не менее 6 символов</string>
 
     <!-- Actions -->
     <string name="action_complete">Завершить</string>
@@ -46,6 +49,7 @@
     <string name="action_apply">Применить</string>
     <string name="action_send">Отправить</string>
     <string name="action_save">Сохранить</string>
+    <string name="action_logout">Выйти из аккаунта</string>
     <string name="action_discard_changes">Отменить изменения</string>
 
     <!-- Photos -->
@@ -102,8 +106,12 @@
     <string name="account_type">Тип учётной записи</string>
     <string name="athlete">Спортсмен</string>
     <string name="organization">Организация</string>
-    <string name="athlete_name">Имя пользователя</string>
+    <string name="athlete_firstname">Имя пользователя</string>
+    <string name="athlete_name">Фамилия пользователя</string>
+    <string name="athlete_lastname">Фамилия пользователя</string>
+    <string name="athlete_nickname">Никнейм пользователя</string>
     <string name="organization_name">Название организации</string>
+    <string name="organization_nickname">Никнейм организации</string>
     <string name="gender">Пол</string>
     <string name="age">Дата рождения</string>
     <string name="male">Мужской</string>
@@ -115,14 +123,17 @@
     <string name="profile_settings">Настройки профиля</string>
 
     <string name="hint_account_type">Укажите тип учётной записи</string>
-    <string name="hint_athlete_name">Введите имя пользователя</string>
-    <string name="hint_organization_name">Введите название организации</string>
-    <string name="hint_description">Введите описание</string>
-    <string name="hint_gender">Выберите пол</string>
+    <string name="hint_athlete_firstname">Укажите имя пользователя</string>
+    <string name="hint_athlete_lastname">Укажите фамилию пользователя</string>
+    <string name="hint_athlete_nickname">Укажите никнейм пользователя</string>
+    <string name="hint_organization_name">Укажите название организации</string>
+    <string name="hint_organization_nickname">Укажите никнейм организации</string>
+    <string name="hint_description">Укажите описание</string>
+    <string name="hint_gender">Укажите пол</string>
     <string name="hint_age">Укажите дату рождения</string>
     <string name="hint_athlete_interests">Укажите свои интересы</string>
     <string name="hint_organization_specializations">Укажите свои специализации</string>
-    <string name="hint_address">Укажите свой адрес</string>
+    <string name="hint_address">Укажите свой адрес (Опционально)</string>
 
     <!-- User's Page -->
     <string name="followers">Подписчики</string>

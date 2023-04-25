@@ -17,7 +17,10 @@ import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.ServiceType
+import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
+import com.thesis.sportologia.ui.views.OnToolbarBasicAction
+import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.formatFloat
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +44,7 @@ class FilterFragmentServices : Fragment() {
         currentFilterParamsServices = getFilterFragmentArg() as FilterParamsServices
         currentCategories = currentFilterParamsServices.categories ?: Categories.emptyCategoriesMap
 
+        initResetButton()
         initCategoriesSpinner()
         initPriceEditText()
         initRatingEditText()
@@ -52,6 +56,18 @@ class FilterFragmentServices : Fragment() {
     }
 
     private fun getFilterFragmentArg(): FilterParams = args.filterParams
+
+    private fun initResetButton() {
+        binding.fragmentFilterServiceTb.setListener {
+            when (it) {
+                OnToolbarBasicAction.LEFT -> {
+                    /*currentFilterParamsServices = getFilterFragmentArg() as FilterParamsServices
+                    currentCategories = currentFilterParamsServices.categories ?: Categories.emptyCategoriesMap*/
+                }
+                else -> {}
+            }
+        }
+    }
 
     private fun initPriceEditText() {
         binding.fragmentFilterServicePrice.filterEdittextTitle.text =
@@ -109,7 +125,7 @@ class FilterFragmentServices : Fragment() {
     }
 
     private fun initSortBySpinner() {
-        val options = com.thesis.sportologia.utils.AssociativeList(
+        val options = AssociativeList(
             listOf(
                 Pair(
                     getString(R.string.filter_sort_by_popularity),

@@ -25,6 +25,9 @@
             android:name="email"
             app:argType="string"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_signUpFragment_to_profileSettingsSignUpFragment"
+            app:destination="@id/profileSettingsSignUpFragment" />
     </fragment>
     <fragment
         android:id="@+id/tabsFragment"
@@ -131,5 +134,17 @@
         <argument
             android:name="filterParams"
             app:argType="com.thesis.sportologia.model.FilterParams" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileSettingsSignUpFragment"
+        android:name="com.thesis.sportologia.ui.ProfileSettingsSignUpFragment"
+        android:label="fragment_profile_settings_signup"
+        tools:layout="@layout/fragment_profile_settings_signup" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
     </fragment>
 </navigation>

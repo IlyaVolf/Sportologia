@@ -43,7 +43,7 @@ class SignUpFragment : Fragment() {
         binding.fsuSignupButton.setOnClickListener {
             val email = binding.fsuEmail.text.toString()
             val password = binding.fsuPassword.text.toString()
-            viewModel.signUp(email, password)
+            viewModel.onSignUpButtonPressed(email, password)
         }
         binding.fsuBackButton.setOnClickListener {
             navigateToBackPage()
@@ -51,24 +51,43 @@ class SignUpFragment : Fragment() {
     }
 
     private fun initObservers() = viewModel.state.observe(viewLifecycleOwner) {
-        observeShowNicknameErrorMessageEvent()
-        observeShowEmailErrorMessageEvent()
+        observeExceptionMessageEvent()
         observeNavigateToTabsEvent()
     }
 
-    private fun observeShowNicknameErrorMessageEvent() =
-        viewModel.showNicknameErrorToastEvent.observeEvent(viewLifecycleOwner) {
-            toast(context, getString(R.string.error_account_with_this_nickname_exists))
+    private fun observeExceptionMessageEvent() =
+        viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
+            when (it) {
+                SignUpViewModel.ExceptionType.EMAIL_ALREADY_EXISTS -> toast(
+                    context,
+                    getString(R.string.error_account_with_this_email_exists)
+                )
+                SignUpViewModel.ExceptionType.EMPTY_PASSWORD -> toast(
+                    context,
+                    getString(R.string.error_empty_password)
+                )
+                SignUpViewModel.ExceptionType.EMPTY_EMAIL -> toast(
+                    context,
+                    getString(R.string.error_empty_email)
+                )
+                SignUpViewModel.ExceptionType.SHORT_PASSWORD -> toast(
+                    context,
+                    getString(R.string.error_short_password)
+                )
+                else -> toast(context, getString(R.string.error))
+            }
         }
 
-    private fun observeShowEmailErrorMessageEvent() =
-        viewModel.showEmailErrorToastEvent.observeEvent(viewLifecycleOwner) {
-            toast(context, getString(R.string.error_account_with_this_email_exists))
-        }
+    private fun observeNavigateToTabsEvent() =
+        viewModel.navigateToProfileSettingsSignUpEvent.observeEvent(viewLifecycleOwner) {
+            val direction =
+                SignUpFragmentDirections.actionSignUpFragmentToProfileSettingsSignUpFragment(
+                    email = binding.fsuEmail.toString(),
+                    password = binding.fsuPassword.text.toString()
+                )
 
-    private fun observeNavigateToTabsEvent() = viewModel.navigateToTabsEvent.observeEvent(viewLifecycleOwner) {
-        findNavController().navigate(R.id.action_signInFragment_to_tabsFragment)
-    }
+            findNavController().navigate(direction)
+        }
 
     private fun navigateToBackPage() {
         findNavController().popBackStack()

@@ -37,4 +37,6 @@ interface UsersDataSource {
         pageSize: Int
     ): List<UserSnippet>
 
+    suspend fun checkEmailExists(email: String): Boolean
+
 }

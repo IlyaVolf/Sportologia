@@ -7,12 +7,14 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:statusBarColor="@color/white"
-    tools:context="com.thesis.sportologia.ui.RegistrationFragment">
+    tools:context="com.thesis.sportologia.ui.ProfileSettingsSignUpFragment">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
+        android:id="@+id/fpss_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tb_toolbarTitle="@string/registration"
+        app:tb_toolbarLeftButton="@string/action_back"
         app:tb_toolbarRightButton="@string/action_complete" />
 
     <ScrollView
@@ -47,7 +49,7 @@
                     android:focusable="true"
                     android:foreground="@drawable/photo_custom_round"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/avatar_photo" />
+                    android:src="@drawable/avatar" />
 
             </androidx.cardview.widget.CardView>
 
@@ -63,22 +65,40 @@
                 app:spinnerTitle="@string/account_type" />
 
             <com.thesis.sportologia.ui.views.EditTextBasicView
-                android:id="@+id/athlete_name"
+                android:id="@+id/athlete_firstname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:editTextHint="@string/hint_athlete_name"
+                app:editTextHint="@string/hint_athlete_firstname"
                 app:editTextLimit="70"
                 app:editTextLines="2"
-                app:editTextTitle="@string/athlete_name" />
+                app:editTextTitle="@string/athlete_firstname" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/athlete_lastname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_athlete_lastname"
+                app:editTextLimit="70"
+                app:editTextLines="2"
+                app:editTextTitle="@string/athlete_lastname" />
 
             <com.thesis.sportologia.ui.views.EditTextBasicView
                 android:id="@+id/organization_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:editTextHint="@string/hint_organization_name"
-                app:editTextLimit="100"
+                app:editTextLimit="70"
                 app:editTextLines="2"
                 app:editTextTitle="@string/organization_name" />
+
+            <com.thesis.sportologia.ui.views.EditTextBasicView
+                android:id="@+id/nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:editTextHint="@string/hint_athlete_nickname"
+                app:editTextLimit="70"
+                app:editTextLines="2"
+                app:editTextTitle="@string/athlete_nickname" />
 
             <com.thesis.sportologia.ui.views.SpinnerBasicView
                 android:id="@+id/gender"

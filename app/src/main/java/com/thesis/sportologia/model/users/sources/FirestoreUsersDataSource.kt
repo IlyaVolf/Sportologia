@@ -387,28 +387,28 @@ class FirestoreUsersDataSource @Inject constructor(
 
         if (lastMarker == null) {
             currentPageDocuments =
-            if (filter.usersType == FilterParamsUsers.UsersType.ALL) {
-                database.collection(USERS_PATH)
-                    .whereArrayContainsAny("tokens", searchQueryTokens)
+                if (filter.usersType == FilterParamsUsers.UsersType.ALL) {
+                    database.collection(USERS_PATH)
+                        .whereArrayContainsAny("tokens", searchQueryTokens)
                         .orderBy("id")
-                    .limit(pageSize.toLong())
-                    .get()
-                    .addOnFailureListener { e ->
-                        throw Exception(e)
-                    }
-                    .await()
-            } else {
-                database.collection(USERS_PATH)
-                    .whereArrayContainsAny("tokens", searchQueryTokens)
-                    .whereEqualTo("userType", filter.usersType)
-                    .orderBy("id")
-                    .limit(pageSize.toLong())
-                    .get()
-                    .addOnFailureListener { e ->
-                        throw Exception(e)
-                    }
-                    .await()
-            }
+                        .limit(pageSize.toLong())
+                        .get()
+                        .addOnFailureListener { e ->
+                            throw Exception(e)
+                        }
+                        .await()
+                } else {
+                    database.collection(USERS_PATH)
+                        .whereArrayContainsAny("tokens", searchQueryTokens)
+                        .whereEqualTo("userType", filter.usersType)
+                        .orderBy("id")
+                        .limit(pageSize.toLong())
+                        .get()
+                        .addOnFailureListener { e ->
+                            throw Exception(e)
+                        }
+                        .await()
+                }
         } else {
             if (filter.usersType == FilterParamsUsers.UsersType.ALL) {
                 currentPageDocuments = database.collection(USERS_PATH)
@@ -557,6 +557,14 @@ class FirestoreUsersDataSource @Inject constructor(
         }
 
         return res
+    }
+
+    override suspend fun checkEmailExists(email: String): Boolean {
+        return !database.collection(ACCOUNTS_PATH)
+                .whereEqualTo("email", email)
+                .get()
+                .await()
+                .isEmpty
     }
 
     private data class PhotosFirestoreDataEntity(
