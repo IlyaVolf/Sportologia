@@ -34,7 +34,8 @@ class SignUpFragment : Fragment() {
         }
 
         initListeners()
-        initObservers()
+        observeExceptionMessageEvent()
+        observeNavigateToProfileSettingsEvent()
 
         return binding.root
     }
@@ -46,13 +47,8 @@ class SignUpFragment : Fragment() {
             viewModel.onSignUpButtonPressed(email, password)
         }
         binding.fsuBackButton.setOnClickListener {
-            navigateToBackPage()
+            goBack()
         }
-    }
-
-    private fun initObservers() = viewModel.state.observe(viewLifecycleOwner) {
-        observeExceptionMessageEvent()
-        observeNavigateToTabsEvent()
     }
 
     private fun observeExceptionMessageEvent() =
@@ -78,18 +74,18 @@ class SignUpFragment : Fragment() {
             }
         }
 
-    private fun observeNavigateToTabsEvent() =
+    private fun observeNavigateToProfileSettingsEvent() =
         viewModel.navigateToProfileSettingsSignUpEvent.observeEvent(viewLifecycleOwner) {
             val direction =
                 SignUpFragmentDirections.actionSignUpFragmentToProfileSettingsSignUpFragment(
-                    email = binding.fsuEmail.toString(),
+                    email = binding.fsuEmail.text.toString(),
                     password = binding.fsuPassword.text.toString()
                 )
 
             findNavController().navigate(direction)
         }
 
-    private fun navigateToBackPage() {
+    private fun goBack() {
         findNavController().popBackStack()
     }
 

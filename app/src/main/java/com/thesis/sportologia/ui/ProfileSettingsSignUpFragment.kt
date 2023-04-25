@@ -240,7 +240,7 @@ class ProfileSettingsSignUpFragment : Fragment() {
 
     private fun observeNavigateToTabsEvent() =
         viewModel.navigateToTabsEvent.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_signInFragment_to_tabsFragment)
+            findNavController().navigate(R.id.action_profileSettingsSignUpFragment_to_tabsFragment)
         }
 
     private fun observeExceptionMessageEvent() =

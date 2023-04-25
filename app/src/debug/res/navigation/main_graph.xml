@@ -146,5 +146,8 @@
         <argument
             android:name="password"
             app:argType="string" />
+        <action
+            android:id="@+id/action_profileSettingsSignUpFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
     </fragment>
 </navigation>

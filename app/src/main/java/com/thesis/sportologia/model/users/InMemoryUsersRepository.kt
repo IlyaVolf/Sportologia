@@ -224,8 +224,9 @@ class InMemoryUsersRepository @Inject constructor(
         return usersDataSource.signIn(email, password)
     }
 
-    override suspend fun signUp(signUpDataEntity: UserCreateEditDataEntity) {
+    override suspend fun signUp(signUpDataEntity: UserCreateEditDataEntity): String {
         usersDataSource.signUp(signUpDataEntity)
+        return usersDataSource.signIn(signUpDataEntity.email, signUpDataEntity.password)
     }
 
     override suspend fun checkEmailExists(email: String): Boolean {

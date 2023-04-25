@@ -45,6 +45,7 @@ class YandexMaps {
                 && geocodeResult.postalCode != geocodeResult.featureName
                 && geocodeResult.thoroughfare != geocodeResult.featureName
                 && geocodeResult.locality != geocodeResult.featureName
+                && geocodeResult.premises != geocodeResult.featureName
             ) {
                 address.append(geocodeResult.featureName)
                 address.append(", ")

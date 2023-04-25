@@ -1,7 +1,9 @@
 package com.thesis.sportologia.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.users.AuthTokenRepository
 import com.thesis.sportologia.model.users.UsersRepository
 import com.thesis.sportologia.model.users.entities.GenderType
 import com.thesis.sportologia.model.users.entities.UserCreateEditDataEntity
@@ -18,6 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileSettingsSignUpViewModel @Inject constructor(
+    private val authTokenRepository: AuthTokenRepository,
     private val usersRepository: UsersRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -39,12 +42,13 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
                 }
 
                 if (!validateData(email, password, profileSettingsViewItem)) {
+                    _saveHolder.value = DataHolder.error(Exception())
                     return@launch
                 }
 
                 val reformattedDescription = reformatText(profileSettingsViewItem.description ?: "")
 
-                usersRepository.signUp(
+                val token = usersRepository.signUp(
                     UserCreateEditDataEntity(
                         email = email,
                         password = password,
@@ -58,11 +62,15 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
                         categories = profileSettingsViewItem.categories!!
                     )
                 )
+
+                authTokenRepository.setToken(token)
+
                 withContext(Dispatchers.Main) {
                     _saveHolder.value = DataHolder.ready(Unit)
                     launchTabsScreen()
                 }
             } catch (e: Exception) {
+                Log.d("abcdef", e.toString())
                 withContext(Dispatchers.Main) {
                     _toastMessageEvent.publishEvent(ExceptionType.OTHER)
                     _saveHolder.value = DataHolder.error(e)

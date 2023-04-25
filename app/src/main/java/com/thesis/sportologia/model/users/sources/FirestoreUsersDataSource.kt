@@ -1,5 +1,6 @@
 package com.thesis.sportologia.model.users.sources
 
+import android.util.Log
 import com.google.firebase.firestore.*
 import com.thesis.sportologia.model.posts.sources.FirestorePostsDataSource
 import com.thesis.sportologia.model.settings.sources.SettingsDataSource
@@ -147,11 +148,21 @@ class FirestoreUsersDataSource @Inject constructor(
                     userFirestoreEntity
                 )
 
+            transaction.update(database.collection(USERS_PATH)
+                .document(userCreateEditDataEntity.userId),
+                hashMapOf<String, Any>(
+                    "tokens" to userCreateEditDataEntity.name.split(" ").filter { it.isNotBlank() }
+                        .map {
+                            it.lowercase(
+                                Locale.getDefault()
+                            )
+                        } + "")
+            )
+
             null
         }.addOnFailureListener {
             throw AuthException()
         }.await()
-
     }
 
     override suspend fun getUser(currentUserId: String, userId: String): User {
@@ -219,7 +230,7 @@ class FirestoreUsersDataSource @Inject constructor(
             }
             .await()
 
-        return followersDocument.isEmpty
+        return followersDocument.documents.isEmpty()
     }
 
     private suspend fun getUserPhotos(userId: String, isLimited: Boolean): List<String> {
@@ -561,10 +572,10 @@ class FirestoreUsersDataSource @Inject constructor(
 
     override suspend fun checkEmailExists(email: String): Boolean {
         return !database.collection(ACCOUNTS_PATH)
-                .whereEqualTo("email", email)
-                .get()
-                .await()
-                .isEmpty
+            .whereEqualTo("email", email)
+            .get()
+            .await()
+            .isEmpty
     }
 
     private data class PhotosFirestoreDataEntity(

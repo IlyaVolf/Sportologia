@@ -87,7 +87,7 @@ class DateBasicView(
             dateAndTime[Calendar.DAY_OF_MONTH] = dayOfMonth
 
             if (validateDate()) {
-                binding.textBlock.text = parseDate(dateAndTime, "d M uuuu, H:mm")
+                binding.textBlock.text = parseDate(dateAndTime, "d MMMM uuuu")
             }
         }
 
