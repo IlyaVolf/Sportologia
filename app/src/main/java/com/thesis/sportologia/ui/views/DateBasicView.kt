@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -59,13 +60,16 @@ class DateBasicView(
     }
 
     fun setDateMillis(timeMillis: Long) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = timeMillis
-        binding.textBlock.text = parseDate(calendar, DATE_PATTERN)
+        dateAndTime.timeInMillis = timeMillis
+        binding.textBlock.text = parseDate(dateAndTime, DATE_PATTERN)
     }
 
     fun getDateMillis(): Long? {
-        return binding.textBlock.text.toString().toLongOrNull()
+        return if (binding.textBlock.text == "") {
+            null
+        } else {
+            dateAndTime.timeInMillis
+        }
     }
 
     private fun initializeAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {

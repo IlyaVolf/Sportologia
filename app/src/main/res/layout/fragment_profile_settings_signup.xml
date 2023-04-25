@@ -155,5 +155,15 @@
         </LinearLayout>
 
     </ScrollView>
+    <include
+        android:id="@+id/fpss_loading"
+        layout="@layout/view_loading"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/fpss_error"
+        layout="@layout/view_error"
+        android:visibility="gone" />
+
 
 </LinearLayout>

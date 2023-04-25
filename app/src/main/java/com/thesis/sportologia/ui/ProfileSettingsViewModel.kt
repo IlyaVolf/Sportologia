@@ -87,48 +87,44 @@ class ProfileSettingsViewModel @Inject constructor(
 
     fun onSaveButtonPressed(profileSettingsViewItem: ProfileSettingsViewItem) {
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
-                withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.loading()
-                }
+                _saveHolder.value = DataHolder.loading()
 
                 if (!validateData(profileSettingsViewItem)) {
-                    withContext(Dispatchers.Main) {
-                        _saveHolder.value = DataHolder.error(Exception())
-                    }
+                    _saveHolder.value = DataHolder.error(Exception())
                     return@launch
                 }
 
-                val reformattedDescription = reformatText(profileSettingsViewItem.description ?: "")
+                val reformattedDescription =
+                    reformatText(profileSettingsViewItem.description ?: "")
 
-                usersRepository.updateUser(
-                    UserEditDataEntity(
-                        userId = profileSettingsViewItem.nickname!!,
-                        name = profileSettingsViewItem.name!!,
-                        userType = profileSettingsViewItem.accountType!!,
-                        gender = profileSettingsViewItem.gender,
-                        birthDate = profileSettingsViewItem.birthDate,
-                        description = reformattedDescription,
-                        profilePhotoURI = profileSettingsViewItem.profilePhotoUri,
-                        position = profileSettingsViewItem.position,
-                        categories = profileSettingsViewItem.categories!!
+                withContext(Dispatchers.IO) {
+                    usersRepository.updateUser(
+                        UserEditDataEntity(
+                            userId = profileSettingsViewItem.nickname!!,
+                            name = profileSettingsViewItem.name!!,
+                            userType = profileSettingsViewItem.accountType!!,
+                            gender = profileSettingsViewItem.gender,
+                            birthDate = profileSettingsViewItem.birthDate,
+                            description = reformattedDescription,
+                            profilePhotoURI = profileSettingsViewItem.profilePhotoUri,
+                            position = profileSettingsViewItem.position,
+                            categories = profileSettingsViewItem.categories!!
+                        )
                     )
-                )
-
-                withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(Unit)
                 }
+                _saveHolder.value = DataHolder.ready(Unit)
             } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    _toastMessageEvent.publishEvent(ExceptionType.OTHER)
-                    _saveHolder.value = DataHolder.error(e)
-                }
+                _toastMessageEvent.publishEvent(ExceptionType.OTHER)
+                _saveHolder.value = DataHolder.error(e)
             }
         }
     }
 
     private fun validateData(profileSettingsViewItem: ProfileSettingsViewItem): Boolean {
+        Log.d("abcdef", profileSettingsViewItem.toString())
+
         if (!validateName(profileSettingsViewItem.name)) {
             return false
         }
@@ -137,7 +133,11 @@ class ProfileSettingsViewModel @Inject constructor(
             return false
         }
 
-        if (!validateGender(profileSettingsViewItem.accountType, profileSettingsViewItem.gender)) {
+        if (!validateGender(
+                profileSettingsViewItem.accountType,
+                profileSettingsViewItem.gender
+            )
+        ) {
             return false
         }
 

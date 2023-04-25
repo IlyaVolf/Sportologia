@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileSettingsSignupBinding
+import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.users.entities.GenderType
 import com.thesis.sportologia.model.users.entities.UserType
 import com.thesis.sportologia.ui.entities.ProfileSettingsViewItem
@@ -55,8 +56,7 @@ class ProfileSettingsSignUpFragment : Fragment() {
         initInterestsMultiChoiceList()
         initSpecializationsMultiChoiceList()
 
-        observeNavigateToTabsEvent()
-        observeExceptionMessageEvent()
+        observeViewModel()
 
         return binding.root
     }
@@ -238,25 +238,51 @@ class ProfileSettingsSignUpFragment : Fragment() {
         return YandexMaps.getPosition(context!!, addressText)
     }
 
-    private fun observeNavigateToTabsEvent() =
-        viewModel.navigateToTabsEvent.observeEvent(viewLifecycleOwner) {
-            findNavController().navigate(R.id.action_profileSettingsSignUpFragment_to_tabsFragment)
-        }
+    private fun observeViewModel() {
+        viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
+            when (holder) {
+                DataHolder.INIT -> {}
+                DataHolder.LOADING -> {
+                    binding.fpssLoading.root.visibility = View.VISIBLE
+                    binding.fpssError.root.visibility = View.GONE
+                    binding.fpssContentBlock.visibility = View.GONE
+                }
+                is DataHolder.READY -> {
+                    binding.fpssLoading.root.visibility = View.GONE
+                    binding.fpssError.root.visibility = View.GONE
+                    binding.fpssContentBlock.visibility = View.VISIBLE
+                }
+                is DataHolder.ERROR -> {
+                    binding.fpssLoading.root.visibility = View.GONE
+                    binding.fpssError.root.visibility = View.VISIBLE
+                    binding.fpssContentBlock.visibility = View.GONE
 
-    private fun observeExceptionMessageEvent() =
-        viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
-            when (it) {
-                ProfileSettingsSignUpViewModel.ExceptionType.EMAIL_ALREADY_EXISTS -> toast(
-                    context,
-                    getString(R.string.error_account_with_this_email_exists)
-                )
-                ProfileSettingsSignUpViewModel.ExceptionType.NICKNAME_ALREADY_EXISTS -> toast(
-                    context,
-                    getString(R.string.error_account_with_this_nickname_exists)
-                )
-                else -> toast(context, getString(R.string.error))
+                    binding.fpssError.veText.text = holder.failure.message
+                    binding.fpssError.veTryAgain.setOnClickListener {
+                        viewModel.signUp(email, password, getCurrentData())
+                    }
+                }
+            }
+
+            viewModel.navigateToTabsEvent.observeEvent(viewLifecycleOwner) {
+                findNavController().navigate(R.id.action_profileSettingsSignUpFragment_to_tabsFragment)
+            }
+
+            viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
+                when (it) {
+                    ProfileSettingsSignUpViewModel.ExceptionType.EMAIL_ALREADY_EXISTS -> toast(
+                        context,
+                        getString(R.string.error_account_with_this_email_exists)
+                    )
+                    ProfileSettingsSignUpViewModel.ExceptionType.NICKNAME_ALREADY_EXISTS -> toast(
+                        context,
+                        getString(R.string.error_account_with_this_nickname_exists)
+                    )
+                    else -> toast(context, getString(R.string.error))
+                }
             }
         }
+    }
 
     private fun onSaveButtonPressed() {
         viewModel.saveHolder.value?.onNotLoading {

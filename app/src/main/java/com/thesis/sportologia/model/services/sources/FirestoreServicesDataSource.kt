@@ -692,7 +692,6 @@ class FirestoreServicesDataSource @Inject constructor() : ServicesDataSource {
         serviceId: String,
         isFavourite: Boolean
     ) {
-        Log.d("abcdef", "isFavourite $isFavourite")
         if (isFavourite) {
             database.collection(SERVICES_PATH)
                 .document(serviceId)

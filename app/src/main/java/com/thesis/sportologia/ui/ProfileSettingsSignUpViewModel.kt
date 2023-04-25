@@ -35,11 +35,9 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
     val navigateToTabsEvent = _navigateToTabsEvent.share()
 
     fun signUp(email: String, password: String, profileSettingsViewItem: ProfileSettingsViewItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
-                withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.loading()
-                }
+                _saveHolder.value = DataHolder.loading()
 
                 if (!validateData(email, password, profileSettingsViewItem)) {
                     _saveHolder.value = DataHolder.error(Exception())
@@ -48,34 +46,31 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
 
                 val reformattedDescription = reformatText(profileSettingsViewItem.description ?: "")
 
-                val token = usersRepository.signUp(
-                    UserCreateDataEntity(
-                        email = email,
-                        password = password,
-                        userId = profileSettingsViewItem.nickname!!,
-                        name = profileSettingsViewItem.name!!,
-                        userType = profileSettingsViewItem.accountType!!,
-                        gender = profileSettingsViewItem.gender,
-                        birthDate = profileSettingsViewItem.birthDate,
-                        description = reformattedDescription,
-                        profilePhotoURI = profileSettingsViewItem.profilePhotoUri,
-                        position = profileSettingsViewItem.position,
-                        categories = profileSettingsViewItem.categories!!
+                withContext(Dispatchers.IO) {
+                    val token = usersRepository.signUp(
+                        UserCreateDataEntity(
+                            email = email,
+                            password = password,
+                            userId = profileSettingsViewItem.nickname!!,
+                            name = profileSettingsViewItem.name!!,
+                            userType = profileSettingsViewItem.accountType!!,
+                            gender = profileSettingsViewItem.gender,
+                            birthDate = profileSettingsViewItem.birthDate,
+                            description = reformattedDescription,
+                            profilePhotoURI = profileSettingsViewItem.profilePhotoUri,
+                            position = profileSettingsViewItem.position,
+                            categories = profileSettingsViewItem.categories!!
+                        )
                     )
-                )
 
-                authTokenRepository.setToken(token)
-
-                withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(Unit)
-                    launchTabsScreen()
+                    authTokenRepository.setToken(token)
                 }
+
+                _saveHolder.value = DataHolder.ready(Unit)
+                launchTabsScreen()
             } catch (e: Exception) {
-                Log.d("abcdef", e.toString())
-                withContext(Dispatchers.Main) {
-                    _toastMessageEvent.publishEvent(ExceptionType.OTHER)
-                    _saveHolder.value = DataHolder.error(e)
-                }
+                _toastMessageEvent.publishEvent(ExceptionType.OTHER)
+                _saveHolder.value = DataHolder.error(e)
             }
             // TODO email и nickname exceptions
         }
@@ -98,7 +93,11 @@ class ProfileSettingsSignUpViewModel @Inject constructor(
             return false
         }
 
-        if (!validateBirthDate(profileSettingsViewItem.accountType, profileSettingsViewItem.birthDate)) {
+        if (!validateBirthDate(
+                profileSettingsViewItem.accountType,
+                profileSettingsViewItem.birthDate
+            )
+        ) {
             return false
         }
 

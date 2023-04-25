@@ -52,6 +52,9 @@ class ProfileSettingsFragment : Fragment() {
         initInterestsMultiChoiceList()
         initSpecializationsMultiChoiceList()
 
+        binding.interests.setListener { }
+        binding.specializations.setListener { }
+
         observeViewModel()
 
         return binding.root
@@ -143,6 +146,8 @@ class ProfileSettingsFragment : Fragment() {
     }
 
     private fun renderData() {
+        profilePhoto = currentProfileSettings.profilePhotoUri
+
         with (binding) {
             when (currentProfileSettings.accountType!!) {
                 UserType.ATHLETE -> {
@@ -171,8 +176,7 @@ class ProfileSettingsFragment : Fragment() {
 
     private fun renderSelectedInterests(categories: Map<String, Boolean>) {
         val categoriesLocalizedMap =
-            TrainingProgrammesCategories.getLocalizedCategories(context!!, categories)
-        Log.d("abcdef", categoriesLocalizedMap.toString())
+            Categories.getLocalizedCategories(context!!, categories)
         binding.interests.initMultiChoiceList(
             categoriesLocalizedMap,
             getString(R.string.hint_athlete_interests)
@@ -181,7 +185,7 @@ class ProfileSettingsFragment : Fragment() {
 
     private fun renderSelectedSpecializations(categories: Map<String, Boolean>) {
         val categoriesLocalizedMap =
-            TrainingProgrammesCategories.getLocalizedCategories(context!!, categories)
+            Categories.getLocalizedCategories(context!!, categories)
         binding.specializations.initMultiChoiceList(
             categoriesLocalizedMap,
             getString(R.string.hint_organization_specializations)
