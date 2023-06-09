@@ -177,7 +177,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                  ).await()
          }*/
 
-        if (lastMarker == null) {
+        /** if (lastMarker == null) {
             currentPageDocuments = database.collection(EVENTS_PATH)
                 .whereEqualTo("organizerId", userId)
                 .orderBy("datePlusId", Query.Direction.ASCENDING)
@@ -192,6 +192,44 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
                 .startAfter(lastMarker)
                 .get()
                 .await()
+        }*/
+
+        if (lastMarker == null) {
+            if (!isUpcomingOnly) {
+                currentPageDocuments = database.collection(EVENTS_PATH)
+                    .whereEqualTo("organizerId", userId)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            } else {
+                currentPageDocuments = database.collection(EVENTS_PATH)
+                    .whereEqualTo("organizerId", userId)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .get()
+                    .await()
+            }
+        } else {
+            if (!isUpcomingOnly) {
+                currentPageDocuments = database.collection(EVENTS_PATH)
+                    .whereEqualTo("organizerId", userId)
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .await()
+            } else {
+                currentPageDocuments = database.collection(EVENTS_PATH)
+                    .whereEqualTo("organizerId", userId)
+                    .whereGreaterThan("datePlusId", Calendar.getInstance().timeInMillis.toString())
+                    .orderBy("datePlusId", Query.Direction.ASCENDING)
+                    .limit(pageSize.toLong())
+                    .startAfter(lastMarker)
+                    .get()
+                    .await()
+            }
         }
 
         if (currentPageDocuments.isEmpty) {
@@ -665,6 +703,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         eventDataEntity: EventDataEntity,
         isLiked: Boolean
     ) {
+        Log.d("abcdef", "userId $userId")
         if (isLiked) {
             database.collection(EVENTS_PATH)
                 .document(eventDataEntity.id!!)

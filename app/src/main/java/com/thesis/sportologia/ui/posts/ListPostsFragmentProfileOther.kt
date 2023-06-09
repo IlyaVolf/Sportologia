@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts
 
 import android.os.Bundle
+import android.util.Log
 import androidx.core.os.bundleOf
 import com.thesis.sportologia.ui.ProfileFragment
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
@@ -20,6 +21,7 @@ class ListPostsFragmentProfileOther : ListPostsFragment() {
     lateinit var factory: ListPostsViewModelProfile.Factory
 
     override val viewModel by viewModelCreator {
+        Log.d("abcdef", "ListPostsFragmentProfileOther $userId")
         factory.create(userId)
     }
 

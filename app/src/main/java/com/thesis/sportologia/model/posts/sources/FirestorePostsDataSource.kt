@@ -5,6 +5,9 @@ import android.util.Log
 import androidx.core.net.toUri
 import com.google.firebase.firestore.*
 import com.google.firebase.storage.FirebaseStorage
+import com.thesis.sportologia.model.AppException
+import com.thesis.sportologia.model.BackendException
+import com.thesis.sportologia.model.ConnectionException
 import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.model.posts.entities.PostFirestoreEntity
 import com.thesis.sportologia.model.users.entities.UserFirestoreEntity
@@ -114,6 +117,7 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
         pageSize: Int
     ): List<PostDataEntity> {
         try {
+
             val currentPageDocuments: QuerySnapshot?
             val currentPageIds = mutableListOf<String>()
             val currentPageLikes = mutableListOf<Boolean>()
@@ -177,10 +181,6 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
                 }
             }
 
-            if (currentPageDocuments.isEmpty) {
-                return emptyList()
-            }
-
             val posts = currentPageDocuments.toObjects(PostFirestoreEntity::class.java)
 
             currentPageDocuments.forEach {
@@ -216,11 +216,12 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
             }
 
             return res
-        } catch (e: FirebaseFirestoreException) {
-            if (e.code == FirebaseFirestoreException.Code.UNAVAILABLE) {
-                throw Exception("Offline")
+        } catch (e: Exception) {
+            if (e is FirebaseFirestoreException && e.code == FirebaseFirestoreException.Code.UNAVAILABLE) {
+                Log.d("abcdef", "ConnectionException")
+                throw ConnectionException(e)
             } else {
-                throw e
+                throw AppException(e)
             }
         }
     }
@@ -413,7 +414,12 @@ class FirestorePostsDataSource @Inject constructor() : PostsDataSource {
 
     }
 
+    private fun uploadPhotos(postPhotos: List<String>): List<String> {
+        return emptyList()
+    }
+
     override suspend fun updatePost(postDataEntity: PostDataEntity) {
+        val firestorePhotosUrls = uploadPhotos(postDataEntity.photosUrls)
         val photosFirestore = postDataEntity.photosUrls
         /*val photosFirestore = mutableListOf<Uri>()
         postDataEntity.photosUrls.forEach {

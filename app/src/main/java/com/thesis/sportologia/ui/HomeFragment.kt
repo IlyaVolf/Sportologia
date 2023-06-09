@@ -148,14 +148,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     override fun observeViewModel() {
-        viewModel.avatarHolder.observe(viewLifecycleOwner) { holder ->
+        viewModel.profilePhotoHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
-                DataHolder.LOADING -> {}
-                DataHolder.INIT -> {}
                 is DataHolder.READY -> {
                     setAvatar(holder.data, context!!, binding.toolbar.avatar)
                 }
-                is DataHolder.ERROR -> {}
+                else -> {}
             }
         }
     }

@@ -94,6 +94,7 @@ abstract class ListPostsFragment : Fragment() {
         binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
     }
 
+    // сделать абстрактным
     private fun initResultsProcessing() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             CreateEditPostFragment.IS_CREATED_REQUEST_CODE,

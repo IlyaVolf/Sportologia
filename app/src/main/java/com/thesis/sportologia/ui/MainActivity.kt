@@ -16,7 +16,6 @@ import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
-
 /**
  * Container for all screens in the app.
  */

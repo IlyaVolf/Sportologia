@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.events.EventsLocalChanges
@@ -138,7 +139,7 @@ abstract class ListEventsViewModel constructor(
     private suspend fun setLike(eventListItem: EventListItem) {
         try {
             val newFlagValue = !eventListItem.isLiked
-            eventsRepository.setIsLiked(userId, eventListItem.eventDataEntity, newFlagValue)
+            eventsRepository.setIsLiked(CurrentAccount().id, eventListItem.eventDataEntity, newFlagValue)
             localChanges.isLikedFlags[eventListItem.id] = newFlagValue
             localChanges.likesCount[eventListItem.id] =
                 (localChanges.likesCount[eventListItem.id]
@@ -152,7 +153,7 @@ abstract class ListEventsViewModel constructor(
     private suspend fun setFavoriteFlag(eventListItem: EventListItem) {
         try {
             val newFlagValue = !eventListItem.isFavourite
-            eventsRepository.setIsFavourite(userId, eventListItem.eventDataEntity, newFlagValue)
+            eventsRepository.setIsFavourite(CurrentAccount().id, eventListItem.eventDataEntity, newFlagValue)
             localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
             localChangesFlow.value = OnChange(localChanges)
         } catch (e: Exception) {

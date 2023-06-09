@@ -29,7 +29,7 @@ class InMemoryPostsRepository @Inject constructor(
     override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
-        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
+        val loader: PostsPageLoader = { lastTimestamp, _, pageSize ->
             postsDataSource.getPagedUserPosts(userId, lastTimestamp, pageSize)
         }
 

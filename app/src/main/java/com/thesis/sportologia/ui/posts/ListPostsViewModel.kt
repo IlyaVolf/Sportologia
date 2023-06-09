@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.model.OnChange
 import com.thesis.sportologia.model.posts.PostsLocalChanges
@@ -104,7 +105,6 @@ abstract class ListPostsViewModel constructor(
     }
 
     override fun filterApply(athTorgF: Boolean?) {
-        Log.d("abcdef", "filterApply $athTorgF")
         if (_athTorgFLiveData.value == athTorgF) return
 
         _athTorgFLiveData.value = athTorgF
@@ -126,7 +126,7 @@ abstract class ListPostsViewModel constructor(
     private suspend fun setLike(postListItem: PostListItem) {
         try {
             val newFlagValue = !postListItem.isLiked
-            postsRepository.setIsLiked(userId, postListItem.postDataEntity, newFlagValue)
+            postsRepository.setIsLiked(CurrentAccount().id, postListItem.postDataEntity, newFlagValue)
             localChanges.isLikedFlags[postListItem.id] = newFlagValue
             localChanges.likesCount[postListItem.id] =
                 (localChanges.likesCount[postListItem.id]
@@ -140,7 +140,7 @@ abstract class ListPostsViewModel constructor(
     private suspend fun setFavoriteFlag(postListItem: PostListItem) {
         try {
             val newFlagValue = !postListItem.isFavourite
-            postsRepository.setIsFavourite(userId, postListItem.postDataEntity, newFlagValue)
+            postsRepository.setIsFavourite(CurrentAccount().id, postListItem.postDataEntity, newFlagValue)
             localChanges.isFavouriteFlags[postListItem.id] = newFlagValue
             localChangesFlow.value = OnChange(localChanges)
         } catch (e: Exception) {

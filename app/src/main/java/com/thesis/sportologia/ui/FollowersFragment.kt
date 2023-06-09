@@ -76,7 +76,7 @@ class FollowersFragment : Fragment() {
     }
 
     private fun initContentBlock() {
-        val listUsersFragmentFollowers =  ListUsersFragmentFollowers.newInstance(userId)
+        val listUsersFragmentFollowers = ListUsersFragmentFollowers.newInstance(userId)
 
         adapter = PagerAdapter(this, arrayListOf(listUsersFragmentFollowers))
         viewPager = binding.pager

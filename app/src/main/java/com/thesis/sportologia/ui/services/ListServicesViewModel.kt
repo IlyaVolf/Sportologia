@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.di.IoDispatcher
 import com.thesis.sportologia.model.OnChange
@@ -117,7 +118,7 @@ abstract class ListServicesViewModel constructor(
 
     private suspend fun setFavoriteFlag(serviceListItem: ServiceListItem) {
         val newFlagValue = !serviceListItem.isFavourite
-        servicesRepository.setIsFavourite(userId, serviceListItem.serviceDataEntity.id!!, newFlagValue)
+        servicesRepository.setIsFavourite(CurrentAccount().id, serviceListItem.serviceDataEntity.id!!, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }
