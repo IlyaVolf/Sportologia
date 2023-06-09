@@ -14,6 +14,7 @@ interface EventsDataSource {
     ): List<EventDataEntity>
 
     suspend fun getPagedUserEvents(
+        organizerId: String,
         userId: String,
         isUpcomingOnly: Boolean,
         lastMarker: String?,

@@ -8,6 +8,7 @@ import android.text.BoringLayout
 import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.*
 import com.squareup.picasso.Picasso

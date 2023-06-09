@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events
 
 
+import android.util.Log
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -24,6 +25,7 @@ class ListEventsViewModelSearch @AssistedInject constructor(
     override fun getDataFlow(): Flow<PagingData<EventDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
+                Log.d("abcdef", "ListEventsViewModelSearch $userId")
                 eventsRepository.getPagedEvents(userId, it, filterParamsLive.value!!)
             }.cachedIn(viewModelScope)
     }

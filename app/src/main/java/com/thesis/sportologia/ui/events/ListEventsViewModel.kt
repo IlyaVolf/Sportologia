@@ -196,6 +196,8 @@ abstract class ListEventsViewModel constructor(
     ): PagingData<EventListItem> {
         return events
             .map { event ->
+                Log.d("abcdef", "merge ${event.isLiked} ${localChanges}")
+
                 val isInProgress = localChanges.value.idsInProgress.contains(event.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[event.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[event.id]

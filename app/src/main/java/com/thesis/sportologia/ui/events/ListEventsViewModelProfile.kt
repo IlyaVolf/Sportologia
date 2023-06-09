@@ -6,6 +6,7 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.events.EventsRepository
 import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
@@ -23,10 +24,11 @@ class ListEventsViewModelProfile @AssistedInject constructor(
 ) : ListEventsViewModel(filterParams, userId, eventsRepository, logger) {
 
     override fun getDataFlow(): Flow<PagingData<EventDataEntity>> {
+        Log.d("abcdef", "ListEventsViewModelProfile $userId")
         return searchLive.asFlow()
             .flatMapLatest {
                 Log.d("abcdef", "getDataFlow ${isUpcomingOnlyLiveData.value!!}")
-                eventsRepository.getPagedUserEvents(userId, isUpcomingOnlyLiveData.value!!)
+                eventsRepository.getPagedUserEvents(userId, CurrentAccount().id, isUpcomingOnlyLiveData.value!!)
             }.cachedIn(viewModelScope)
     }
 

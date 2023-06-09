@@ -19,6 +19,7 @@ interface EventsRepository {
     ): Flow<PagingData<EventDataEntity>>
 
     suspend fun getPagedUserEvents(
+        organizerId: String,
         userId: String,
         isUpcomingOnly: Boolean
     ): Flow<PagingData<EventDataEntity>>
