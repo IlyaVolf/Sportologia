@@ -1,11 +1,74 @@
 buildscript {
-    ext.kotlin_version = "1.5.31"
-    ext.coroutines_version = "1.6.1"
-    ext.nav_version = "2.4.0"
-    ext.okhttp_version = "4.9.3"
-    ext.retrofit_version = "2.9.0"
 
-    ext.hilt_version = "2.38.1"
+    ext {
+        ext.kotlin_version = "1.5.31"
+        ext.coroutines_version = "1.6.1"
+        ext.nav_version = "2.4.0"
+        ext.okhttp_version = "4.9.3"
+        ext.retrofit_version = "2.9.0"
+
+        ext.hilt_version = "2.38.1"
+
+        Libs = [
+                Android: [
+                        CoreKtx: "androidx.core:core-ktx:1.7.0",
+                        AppCompat: "androidx.appcompat:appcompat:1.4.1",
+                        NavigationFragmentsKtx: "androidx.navigation:navigation-fragment-ktx:$nav_version",
+                        NavigationUIKtx: "androidx.navigation:navigation-ui-ktx:$nav_version",
+                        ConstraintLayout: "androidx.constraintlayout:constraintlayout:2.1.3",
+                        LegacySupport: "androidx.legacy:legacy-support-v4:1.0.0",
+                        LifecycleLivedataKtx: "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1",
+                        LifecycleViewModelKtx:  "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1",
+                        CoreTesting: "androidx.arch.core:core-testing:2.1.0",
+                        SwipeRefreshLayout: "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0",
+                        PagingKtx: "androidx.paging:paging-runtime-ktx:3.1.1",
+                ],
+                Google: [
+                        Material: "com.google.android.material:material:1.5.0",
+                        Hilt: "com.google.dagger:hilt-android:$hilt_version",
+                        HiltCompiler: "com.google.dagger:hilt-compiler:$hilt_version",
+                        Firebase: [
+                                Firestore: "com.google.firebase:firebase-firestore-ktx:24.4.5",
+                                Storage: "com.google.firebase:firebase-storage-ktx:20.1.0",
+                                Auth: "com.google.firebase:firebase-auth:21.0.1",
+                        ],
+                        PlayServicesLocation: "com.google.android.gms:play-services-location:20.0.0\"",
+                ],
+                Yandex: [
+                        MapsFull: "com.yandex.android:maps.mobile:4.1.0-full"
+                ],
+                JetBrains: [
+                        CoroutinesKtx: "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+                ],
+                Testing: [
+                        JUnit: "junit:junit:4.13.2",
+                        JUnitJupiter: "org.junit.jupiter:junit-jupiter",
+                        MockK: "io.mockk:mockk:1.12.4",
+                        CoroutinesTest: "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1",
+                        AndroidCoreTesting: "androidx.arch.core:core-testing:2.1.0"
+                ],
+                Stuff: [
+                        Picasso: "implementation 'com.squareup.picasso:picasso:2.8",
+                        Glide: "com.github.bumptech.glide:glide:4.12.0",
+                        Jsoup: "implementation 'org.jsoup:jsoup:1.13.1",
+
+                ],
+        ]
+
+        Modules = [
+                Navigation: ":navigation",
+                Data: ":data",
+                Core: ":core",
+                Features: [
+                        SignIn: ":features:sign-in",
+                        SignUp: ":features:sign-up",
+                        Home: ":features:home",
+                        Posts: ":features:posts",
+                        Services: ":features:services",
+                        Events: ":features:events",
+                ],
+        ]
+    }
 
     repositories {
         google()
@@ -26,6 +89,8 @@ buildscript {
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
+
+
 }
 
 allprojects {

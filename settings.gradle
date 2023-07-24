@@ -1,2 +1,4 @@
 rootProject.name = "Sportologia"
 include ':app'
+include ':data'
+include ':core'
