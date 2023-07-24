@@ -161,7 +161,7 @@ class FirestoreEventsDataSource @Inject constructor() : EventsDataSource {
         pageSize: Int
     ): List<EventDataEntity> {
 
-        Log.d("abcdef", "$organizerId $userId")
+       //    Log.d("abcdef", "$organizerId $userId")
 
         val currentPageDocuments: QuerySnapshot?
         val currentPageIds = mutableListOf<String>()
