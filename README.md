@@ -22,48 +22,44 @@ Kotlin, MVVM, Jetpack DataStore, Kotlin Coroutines, Kotlin Flow, Hilt, Jetpack N
 
 ### Скриншоты
 
-<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/a5de1a79-5d71-409b-8cd9-eb7c4d5eb723" width="216" height="384">
-<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/e8511ba2-fa42-4935-b53b-5c895903b327" width="216" height="384">
-<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/d6dabda5-085f-4564-8dee-a82f94cd7fcc" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/2dbdc4bf-e705-405b-af8b-c504ee52a41a" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/6105640c-f524-4fd3-b525-edda4fd285bc" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/74fcdfd5-4d1f-4eb1-a317-4dddb9438685" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/0e039839-c0d3-4926-b6fd-60043106c045" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/f5b354df-3b95-461b-848a-3d93f5e81a9c" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/8571395d-6657-4316-969f-4b995972e9b4" width="216" height="384">
-<img src="https://github.com/IlyaVolf/LimaApp/assets/70796651/494acb1f-89f9-4397-8450-565235f9112e" width="216" height="384">
+-  Вход в учётную запись, регистрация
 
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/736a5810-7111-45ae-9938-20501c197aaa" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/587f8881-898a-45c0-9bb3-f5fa2779054a" width="216" height="384">
 
+-  Главная страница
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/791f1705-d196-4d6e-8bab-4c9a3f93fcee" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/cf1dd7b4-2096-475e-aec8-7ca4df6c0dfe" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/58f3f0cf-99a6-4ccf-85e6-2c3ad9f15815" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/985d2d9b-6828-4b40-9eac-8c49a9221c2c" width="216" height="384">
 
-  ![photo_2023-06-09_18-48-27](https://github.com/IlyaVolf/Sportologia/assets/70796651/a5de1a79-5d71-409b-8cd9-eb7c4d5eb723)
-  ![photo_2023-06-09_18-48-27 (2)](https://github.com/IlyaVolf/Sportologia/assets/70796651/e8511ba2-fa42-4935-b53b-5c895903b327)
-  ![photo_2023-06-09_18-50-41](https://github.com/IlyaVolf/Sportologia/assets/70796651/d6dabda5-085f-4564-8dee-a82f94cd7fcc)
-  ![photo_2023-06-11_13-43-57](https://github.com/IlyaVolf/Sportologia/assets/70796651/0bc1d1ef-0871-434f-8cae-133590d4b1c2)
-![photo_2023-06-11_13-44-00](https://github.com/IlyaVolf/Sportologia/assets/70796651/40af13f2-c3b1-46e8-873a-1574dff41d14)
-![photo_2023-06-11_13-44-01](https://github.com/IlyaVolf/Sportologia/assets/70796651/ef78a4fa-da92-4fbc-b840-5b50981e183a)
-![photo_2023-06-11_13-44-02](https://github.com/IlyaVolf/Sportologia/assets/70796651/181f4fda-112b-44ed-926e-2b25e24c7a2f)
-![photo_2023-06-09_17-50-04](https://github.com/IlyaVolf/Sportologia/assets/70796651/2e143f6b-b6af-43c6-91b3-418be1fa4a98)
-![photo_2023-06-09_17-50-06](https://github.com/IlyaVolf/Sportologia/assets/70796651/be8d57c4-581d-4e73-b556-6627d5392efa)
-![photo_2023-06-09_17-50-06 (2)](https://github.com/IlyaVolf/Sportologia/assets/70796651/a2ef87af-10ff-497a-a59a-b0dd9aaba4b8)
-![photo_2023-06-09_18-06-56](https://github.com/IlyaVolf/Sportologia/assets/70796651/ef48baab-ddff-4f93-a3c2-36e33ee947c1)
-![photo_2023-06-09_18-06-56 (2)](https://github.com/IlyaVolf/Sportologia/assets/70796651/f4a70c11-9050-4cd5-8508-5912611cc0ea)
-![photo_2023-06-09_18-06-57](https://github.com/IlyaVolf/Sportologia/assets/70796651/5f49b9bd-77af-40cb-9d0f-30eaf03e0a7a)
-![photo_2023-06-09_18-06-57 (2)](https://github.com/IlyaVolf/Sportologia/assets/70796651/27228f1f-c1d3-4dd0-a006-4e7b7048b739)
-![photo_2023-06-09_18-31-37](https://github.com/IlyaVolf/Sportologia/assets/70796651/319544bb-ce44-4053-901e-0ba8e9a19f95)
-![photo_2023-06-09_18-31-38](https://github.com/IlyaVolf/Sportologia/assets/70796651/02dcd7d4-ca78-4ca9-84b5-66c50976d2e6)
-![photo_2023-06-09_18-31-39](https://github.com/IlyaVolf/Sportologia/assets/70796651/9fcd7e81-3ee3-4e45-b7e1-a05720340bb5)
-![photo_2023-06-09_18-31-40](https://github.com/IlyaVolf/Sportologia/assets/70796651/f85e8b29-4f03-43e0-acdb-13601166e938)
-![photo_2023-06-09_18-40-01](https://github.com/IlyaVolf/Sportologia/assets/70796651/baa55cdb-e1d2-436c-be9f-9fae0b4cbbfb)
-![photo_2023-06-09_18-41-22](https://github.com/IlyaVolf/Sportologia/assets/70796651/24af73d4-ee39-483b-a18c-f37bee7a1197)
-![photo_2023-06-09_18-41-22 (2)](https://github.com/IlyaVolf/Sportologia/assets/70796651/1d0badd0-6d2c-4b9e-985a-a5c145250c16)
-![photo_2023-06-09_18-48-26](https://github.com/IlyaVolf/Sportologia/assets/70796651/150da76e-2e50-4cd4-87f6-210e091bc25b)
+-  Страница пользователя
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/5f1fdf5e-c321-4165-bf35-7e64ecf41357" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/fe656788-7e2d-4aa9-a4f8-9d91e4de2cd6" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/65f8c513-7d53-4ead-9fdb-2dde2bef8309" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/5ff61b4c-d270-49d8-be24-78fa51217945" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/aedbcbd5-fc80-4111-964f-35b3a997c7a5" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/64bf5a53-8ade-4993-b135-58d3effbf3da" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/aa75c2c8-ad91-445c-9c4b-a2f50f430711" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/3a535ce5-5233-4a44-9387-d118770dfc8f" width="216" height="384">
 
+-  Страница с услугами
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/00c07ead-25fd-4ef1-8199-37e4b20bceae" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/4f125da1-b091-4162-82bf-c58ff4924373" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/13e28446-cca9-44a0-8ba8-412ce248c0a9" width="216" height="384">
 
-
-
+-   Страница поиска
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/7a5c47dc-9009-4d6b-99df-3f74dd71e24d" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/dd73c0de-29e3-4fb1-8736-2bfd51a2be11" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/5b34a7d1-bc0b-4a9f-a396-cf69da79bf5c" width="216" height="384">
+<img src="https://github.com/IlyaVolf/Sportologia/assets/70796651/45567037-2f4c-4a31-b1ff-ab6c6c7744fe" width="216" height="384">
 
 ### Видео
-Продолжительность - 1:38
+-  Продолжительность - 1:15
 
-![video_2023-08-16_19-49-38 (1) (online-video-cutter com)](https://github.com/IlyaVolf/LimaApp/assets/70796651/e9c0c5fa-f67c-4cf4-963f-7121791107ff)
+![video_2023-08-16_21-39-25 (online-video-cutter com)](https://github.com/IlyaVolf/LimaApp/assets/70796651/1ef504e4-80e9-4417-8e28-754ba40b7aa8)
+
+-  Продолжительность - 1:13
+
+![video_2023-08-16_22-28-30 (online-video-cutter com)](https://github.com/IlyaVolf/LimaApp/assets/70796651/5a5a92f2-442d-42f3-a78d-7f581d359230)
 
