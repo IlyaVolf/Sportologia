@@ -13,7 +13,7 @@
 -  тёмная и светлая темы.
 
 ## Тех. стек
-Kotlin, MVVM, Jetpack DataStore, Kotlin Coroutines, Kotlin Flow, Hilt, Jetpack Navigation Component, Jetpack Paging 3, Google Cloud Firestore, Google Cloud Storage, Google Firebase Authentication, Yandex MapKit SDK, Glide.
+Kotlin, MVVM, Jetpack DataStore, Kotlin Coroutines, Kotlin Flow, LiveData, Hilt, Jetpack Navigation Component, Jetpack Paging 3, Google Cloud Firestore, Google Cloud Storage, Google Firebase Authentication, Yandex MapKit SDK, Glide.
 
 ## Демонстрация приложения
 
