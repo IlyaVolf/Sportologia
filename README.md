@@ -20,7 +20,7 @@ Kotlin, MVVM, Jetpack DataStore, Kotlin Coroutines, Kotlin Flow, LiveData, Hilt,
 ## Демонстрация приложения
 
 ### Дизайн
-[Дизайн в Figma](https://www.figma.com/file/QG7eM8nOX1fpbAiPGnrop1/Untitled?type=design&mode=design)
+[Дизайн в Figma](https://www.figma.com/file/QG7eM8nOX1fpbAiPGnrop1/Sportologia-Share)
 
 ### Скриншоты
 
