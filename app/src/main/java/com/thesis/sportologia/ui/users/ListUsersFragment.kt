@@ -47,12 +47,9 @@ abstract class ListUsersFragment : Fragment() {
     protected lateinit var binding: FragmentListUsersBinding
     private lateinit var usersHeaderAdapter: UsersHeaderAdapter
     private lateinit var adapter: UsersPagerAdapter
-    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Log.d("LIFECYCLE", "FOLLOWERS onCreate")
 
         userId = arguments?.getString("userId") ?: throw Exception()
         filterParams = savedInstanceState?.getSerializable("filterParams") as FilterParamsUsers?
@@ -73,6 +70,7 @@ abstract class ListUsersFragment : Fragment() {
     ): View {
         binding = FragmentListUsersBinding.inflate(inflater, container, false)
 
+        initErrorActions()
         initSwipeToRefresh()
         initUsersList()
         initSearchQueryReceiver()
@@ -88,19 +86,11 @@ abstract class ListUsersFragment : Fragment() {
         return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-
-        Log.d("LIFECYCLE", "FOLLOWERS onDestroyView")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        Log.d("LIFECYCLE", "FOLLOWERS onDestroy")
-    }
-
     abstract fun initUsersHeaderAdapter(): UsersHeaderAdapter
+
+    private fun initErrorActions() {
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
+    }
 
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -134,23 +124,12 @@ abstract class ListUsersFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.usersSwipeRefreshLayout
-        } else {
-            null
-        }
         usersHeaderAdapter = initUsersHeaderAdapter()
         val concatAdapter = ConcatAdapter(usersHeaderAdapter, adapterWithLoadState)
 
         binding.usersList.layoutManager = LinearLayoutManager(context)
         binding.usersList.adapter = concatAdapter
         (binding.usersList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
-
-        mainLoadStateHolder = LoadStateAdapterPage.Holder(
-            binding.loadStateView,
-            swipeRefreshLayout,
-            tryAgainAction
-        )
     }
 
     private fun initSwipeToRefresh() {
@@ -173,23 +152,25 @@ abstract class ListUsersFragment : Fragment() {
     }
 
     private fun observeLoadState(adapter: UsersPagerAdapter) {
-        // you can also use adapter.addLoadStateListener
+        // can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
-                // main indicator in the center of the screen
-                mainLoadStateHolder.bind(state.refresh)
-            }
-        }
 
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                binding.usersList.isVisible = false
-                binding.usersEmptyBlock.isVisible = true
-            } else {
-                binding.usersList.isVisible = true
-                binding.usersEmptyBlock.isVisible = false
+                val isError = state.refresh is LoadState.Error
+                val isLoading = state.refresh is LoadState.Loading
+                val isEmpty = (state.source.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached && adapter.itemCount < 1)
+
+                // main indicator in the center of the screen
+                binding.loadStateView.flpError.root.isVisible = isError
+                if (isSwipeToRefreshEnabled) {
+                    binding.usersSwipeRefreshLayout.isRefreshing = isLoading
+                    binding.loadStateView.flpLoading.root.isVisible = false
+                } else {
+                    binding.loadStateView.flpLoading.root.isVisible = isLoading
+                }
+                binding.usersEmptyBlock.isVisible = isEmpty
+                binding.usersList.isVisible = !isError
             }
         }
     }

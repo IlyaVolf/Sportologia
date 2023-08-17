@@ -1,27 +1,39 @@
 package com.thesis.sportologia.model.posts
 
 import androidx.paging.PagingData
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface PostsRepository {
 
-    suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>>
+    val localChanges: PostsLocalChanges
+    val localChangesFlow: MutableStateFlow<OnChange<PostsLocalChanges>>
 
-    suspend fun getPagedUserSubscribedOnPosts(userId: String, athTorgF: Boolean?): Flow<PagingData<Post>>
+    suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<Post>>
+    suspend fun getPagedUserSubscribedOnPosts(
+        userId: String,
+        userType: UserType?
+    ): Flow<PagingData<PostDataEntity>>
 
-    suspend fun getPost(postId: Long): Post?
+    suspend fun getPagedUserFavouritePosts(
+        userId: String,
+        userType: UserType?
+    ): Flow<PagingData<PostDataEntity>>
 
-    suspend fun createPost(post: Post)
+    suspend fun getPost(postId: String, userId: String): PostDataEntity?
 
-    suspend fun updatePost(post: Post)
+    suspend fun createPost(postDataEntity: PostDataEntity)
 
-    suspend fun deletePost(postId: Long)
+    suspend fun updatePost(postDataEntity: PostDataEntity)
 
-    suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean)
+    suspend fun deletePost(postId: String)
 
-    suspend fun setIsFavourite(userId: String, post: Post, isFavourite: Boolean)
+    suspend fun setIsLiked(userId: String, postDataEntity: PostDataEntity, isLiked: Boolean)
+
+    suspend fun setIsFavourite(userId: String, postDataEntity: PostDataEntity, isFavourite: Boolean)
 
 }

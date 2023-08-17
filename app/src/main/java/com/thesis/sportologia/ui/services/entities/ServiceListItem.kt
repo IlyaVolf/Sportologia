@@ -1,23 +1,27 @@
 package com.thesis.sportologia.ui.services.entities
 
-import android.location.Address
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
+import com.thesis.sportologia.model.services.entities.ServiceType
+import com.thesis.sportologia.model.users.entities.UserType
 
 data class ServiceListItem(
-    val service: Service,
+    val serviceDataEntity: ServiceDataEntity,
     val isInProgress: Boolean,
 ) {
-    val id: Long get() = service.id
-    val name: String get() = service.name
-    val description: String get() = service.publicDescription
-    val authorId: String get() = service.authorId
-    val authorName: String get() = service.authorName
-    val price: Float get() = service.price
-    val userType: Service.UserType get() = service.authorType
-    val serviceType: Service.ServiceType get() = service.type
-    val currency: String get() = service.currency
-    val profilePictureUrl: String? get() = service.profilePictureUrl
-    val categories: Map<String, Boolean> get() = service.categories
-    val isFavourite: Boolean get() = service.isFavourite
-    val photosUrls: List<String>? get() = service.photosUrls
+    val id: String get() = serviceDataEntity.id!!
+    val name: String get() = serviceDataEntity.name
+    val description: String get() = serviceDataEntity.generalDescription
+    val authorId: String get() = serviceDataEntity.authorId
+    val authorName: String get() = serviceDataEntity.authorName
+    val authorType: UserType get() = serviceDataEntity.authorType
+    val price: Float get() = serviceDataEntity.price
+    val serviceType: ServiceType get() = serviceDataEntity.type
+    val currency: String get() = serviceDataEntity.currency
+    val profilePictureUrl: String? get() = serviceDataEntity.profilePictureUrl
+    val categories: Map<String, Boolean> get() = serviceDataEntity.categories
+    val acquiredNumber: Int get() = serviceDataEntity.acquiredNumber
+    val reviewsNumber: Int get() = serviceDataEntity.reviewsNumber
+    val rating: Float? get() = serviceDataEntity.rating
+    val isFavourite: Boolean get() = serviceDataEntity.isFavourite
+    val photosUrls: List<String> get() = serviceDataEntity.generalPhotosUrls
 }

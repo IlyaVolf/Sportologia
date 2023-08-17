@@ -1,13 +1,5 @@
 package com.thesis.sportologia.ui._obsolete
 
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.model.posts.entities.Post
-import com.thesis.sportologia.ui.base.BaseViewHolder
-import com.thesis.sportologia.ui.views.ItemPostView
-import com.thesis.sportologia.ui.views.OnItemPostActionListener
-import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
-import com.thesis.sportologia.utils.parseDate
-
 /**class PostViewHolder(
     private val onItemPostActionListener: OnItemPostActionListener,
     private val onSpinnerMoreActionListener: OnSpinnerMoreActionListener,

@@ -15,8 +15,10 @@ import com.thesis.sportologia.databinding.FragmentFilterUsersBinding
 import com.thesis.sportologia.ui.SearchFragment.Companion.FILTER_PARAMETERS
 import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
+import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
+import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +42,7 @@ class FilterFragmentUsers : Fragment() {
         currentFilterParamsUsers = getFilterFragmentArg() as FilterParamsUsers
         currentCategories = currentFilterParamsUsers.categories ?: Categories.emptyCategoriesMap
 
+        initResetButton()
         initCategoriesSpinner()
         initDistanceEditText()
         initAddressEditText()
@@ -50,6 +53,18 @@ class FilterFragmentUsers : Fragment() {
     }
 
     private fun getFilterFragmentArg(): FilterParams = args.filterParams
+
+    private fun initResetButton() {
+        binding.fragmentFilterUserTb.setListener {
+            when (it) {
+                OnToolbarBasicAction.LEFT -> {
+                    /*currentFilterParamsUsers = getFilterFragmentArg() as FilterParamsUsers
+                    currentCategories = currentFilterParamsUsers.categories ?: Categories.emptyCategoriesMap*/
+                }
+                else -> {}
+            }
+        }
+    }
 
     private fun initDistanceEditText() {
         binding.fragmentFilterUserDistance.filterEdittextTitle.text =
@@ -78,7 +93,7 @@ class FilterFragmentUsers : Fragment() {
     }
 
     private fun initUserTypeSpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(getString(R.string.search_all), FilterParamsUsers.UsersType.ALL),
                 Pair(

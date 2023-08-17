@@ -8,14 +8,23 @@
     <string name="network_connection_error">Невозможно подключиться к серверу</string>
     <string name="network_internal_error">Внутрення ошибка. Пожалуйста, повторите позже</string>
 
+    <string name="not_specified">Не указан</string>
+
     <!-- Errors -->
     <string name="error">Ошибка</string>
     <string name="error_loading_title">Ошибка подключения</string>
     <string name="error_loading_message">Проверьте соединение с интернетом</string>
     <string name="error_default_load_error_body">Ошибка подключения: проверьте соединение с интернетом</string>
     <string name="error_loading">Ошибка при загрузке</string>
+    <string name="error_acquiring">Ошибка при приобретении</string>
     <string name="error_date">Указана неверная дата</string>
+    <string name="error_invalid_email_or_password">Указан неправильный email или пароль</string>
+    <string name="error_account_with_this_email_exists">Аккаунт с указанным email уже существует</string>
+    <string name="error_account_with_this_nickname_exists">Аккаунт с указанным никнеймом уже существует</string>
     <string name="error_set_favorite">Не удалось добавить в избранное</string>
+    <string name="error_empty_email">Не указан email</string>
+    <string name="error_empty_password">Не указан пароль</string>
+    <string name="error_short_password">Длина пароля должна быть не менее 6 символов</string>
 
     <!-- Actions -->
     <string name="action_complete">Завершить</string>
@@ -32,7 +41,7 @@
     <string name="action_unsubscribe_2">В подписках</string>
     <string name="action_open">Открыть</string>
     <string name="action_close">Закрыть</string>
-    <string name="action_purchase">Приобрести</string>
+    <string name="action_acquire">Приобрести</string>
     <string name="action_reset">Сбросить</string>
     <string name="action_clear">Очистить</string>
     <string name="action_all">Все</string>
@@ -40,7 +49,17 @@
     <string name="action_apply">Применить</string>
     <string name="action_send">Отправить</string>
     <string name="action_save">Сохранить</string>
+    <string name="action_logout">Выйти из аккаунта</string>
     <string name="action_discard_changes">Отменить изменения</string>
+
+    <!-- Photos -->
+    <string name="mon_short">пн</string>
+    <string name="tue_short">вт</string>
+    <string name="wen_short">ср</string>
+    <string name="thu_short">чт</string>
+    <string name="fri_short">пт</string>
+    <string name="sat_short">сб</string>
+    <string name="sun_short">вс</string>
 
     <!-- Categories -->
     <string name="categories_not_specified">Не указаны</string>
@@ -87,8 +106,12 @@
     <string name="account_type">Тип учётной записи</string>
     <string name="athlete">Спортсмен</string>
     <string name="organization">Организация</string>
-    <string name="athlete_name">Имя пользователя</string>
+    <string name="athlete_firstname">Имя пользователя</string>
+    <string name="athlete_name">Фамилия пользователя</string>
+    <string name="athlete_lastname">Фамилия пользователя</string>
+    <string name="athlete_nickname">Никнейм пользователя</string>
     <string name="organization_name">Название организации</string>
+    <string name="organization_nickname">Никнейм организации</string>
     <string name="gender">Пол</string>
     <string name="age">Дата рождения</string>
     <string name="male">Мужской</string>
@@ -100,14 +123,17 @@
     <string name="profile_settings">Настройки профиля</string>
 
     <string name="hint_account_type">Укажите тип учётной записи</string>
-    <string name="hint_athlete_name">Введите имя пользователя</string>
-    <string name="hint_organization_name">Введите название организации</string>
-    <string name="hint_description">Введите описание</string>
-    <string name="hint_gender">Выберите пол</string>
+    <string name="hint_athlete_firstname">Укажите имя пользователя</string>
+    <string name="hint_athlete_lastname">Укажите фамилию пользователя</string>
+    <string name="hint_athlete_nickname">Укажите никнейм пользователя</string>
+    <string name="hint_organization_name">Укажите название организации</string>
+    <string name="hint_organization_nickname">Укажите никнейм организации</string>
+    <string name="hint_description">Укажите описание</string>
+    <string name="hint_gender">Укажите пол</string>
     <string name="hint_age">Укажите дату рождения</string>
     <string name="hint_athlete_interests">Укажите свои интересы</string>
     <string name="hint_organization_specializations">Укажите свои специализации</string>
-    <string name="hint_address">Укажите свой адрес</string>
+    <string name="hint_address">Укажите свой адрес (Опционально)</string>
 
     <!-- User's Page -->
     <string name="followers">Подписчики</string>
@@ -152,9 +178,14 @@
     <string name="service_price">Стоимость</string>
     <string name="service_categories">Категории</string>
     <string name="service_description">Описание</string>
-    <string name="service_acquired_number">Категории</string>
+    <string name="service_acquired_number">Приобритений</string>
     <string name="service_reviews_number">Отзывов</string>
     <string name="service_rating">Рейтинг</string>
+    <string name="service_acquired_successfully">Успешное приобретение</string>
+    <string name="service_general_info">Общая информация</string>
+    <string name="service_detailed_info">Подробная информация</string>
+
+    <string name="no_exercises">Нет упражнений</string>
 
     <!-- Currency Abbreviations and Prices -->
     <string name="free">Бесплатно</string>
@@ -227,6 +258,7 @@
     <string name="ask_delete_event_warning">Удалить мероприятие?</string>
     <string name="error_event_empty_fields">Ошибка: не указаны все поля</string>
     <string name="error_event_incorrect_date">Ошибка: указаны неверные даты</string>
+    <string name="error_event_incorrect_address">Ошибка: неверный адрес</string>
     <string name="error_price_event">Ошибка: указана неверная цена</string>
 
     <string name="event_name_hint">Укажите название мероприятия</string>
@@ -241,39 +273,55 @@
     <string name="event_categories_hint">Укажите категорию мероприятия</string>
     <string name="event_description_hint">Введите описание мероприятия</string>
 
-    <!-- Create Service (Program) Page -->
+    <!-- Create/Edit/Delete Service (Program) Page -->
     <string name="service_type">Вид услуги</string>
     <string name="training_program">Тренировочная программа</string>
     <string name="program_name">Название программы</string>
     <string name="program_price">Стоимость</string>
     <string name="program_aim">Цель</string>
-    <string name="program_description">Описание</string>
-    <string name="program_info_for_clients">Информация для клиентов</string>
+    <string name="program_general_description">Описание программы</string>
+    <string name="program_detailed_description_for_clients">Информация для клиентов</string>
     <string name="exercise_add">Добавить упражнение</string>
 
+    <string name="create_exercise">Создать упражение</string>
 
     <string name="ask_cancel_create_service">Отменить создание услуги?</string>
     <string name="ask_cancel_edit_service">Отменить редактирование услуги?</string>
     <string name="ask_cancel_service_warning">Все изменения будут утеряны</string>
     <string name="ask_delete_service_warning">Удалить услугу?</string>
 
+    <string name="service_name">Название услуги</string>
+    <string name="service_aims">Цели</string>
+
+    <string name="service_type_hint">Выберите вид услуги</string>
     <string name="service_name_hint">Укажите название мероприятия</string>
+    <string name="service_aims_hint">Укажите нацеленность</string>
     <string name="service_rating_hint_from">От</string>
 
     <string name="program_name_hint">Укажите название программы</string>
-    <string name="program_aim_hint">Укажите нацеленность программы</string>
-    <string name="program_price_hint">Укажите стоимость программы</string>
+    <string name="program_price_hint">Укажите стоимость программы (Руб)</string>
     <string name="program_description_hint">Введите описание программы</string>
     <string name="program_info_for_clients_hint">Укажите доп. информацию для клиентов</string>
 
-    <!-- Create Exercise Page -->
+    <!-- Create/Edit/Delete Service Exercise Page -->
     <string name="exercises">Упражнения</string>
     <string name="exercise">Упражнение</string>
-    <string name="exercise_name">Название</string>
+    <string name="exercise_name">Название упражнения</string>
     <string name="exercise_description">Описание</string>
     <string name="exercise_sets_number">Число подходов</string>
     <string name="exercise_reps_number">Число повторений</string>
     <string name="exercise_regularity">Регулярность</string>
+
+    <string name="exercise_of_sets">подходов</string>
+    <string name="exercise_of_reps">повторений</string>
+    <string name="exercise_everyday">Каждый день</string>
+    <string name="exercise_in_a_day">Через день</string>
+    <string name="exercise_photo">фото</string>
+
+    <string name="ask_cancel_create_exercise">Отменить создание упражнения?</string>
+    <string name="ask_cancel_edit_exercise">Отменить редактирование упражнения?</string>
+    <string name="ask_cancel_exercise_warning">Все изменения будут утеряны</string>
+    <string name="ask_delete_exercise_warning">Удалить упражнение?</string>
 
     <string name="exercise_name_hint">Укажите название упражнения</string>
     <string name="exercise_description_hint">Укажите описание упражнения</string>
@@ -301,6 +349,9 @@
     <string name="filter_users_hint">Тип пользователей</string>
     <string name="filter_price">Стоимость</string>
     <string name="filter_price_hint">До, руб</string>
+    <string name="filter_rating">Рейтинг</string>
+    <string name="filter_rating_hint">От</string>
+    <string name="rating_from">Рейтинг от</string>
     <string name="under">До</string>
     <string name="within">В пределах</string>
     <string name="km">км</string>
@@ -311,8 +362,10 @@
     <string name="filter_posts_organizations">Организации</string>
     <string name="filter_events_all">Все</string>
     <string name="filter_events_upcoming">Предстоящие</string>
+    <string name="filter_service_type">Тип</string>
     <string name="filter_services_all">Все</string>
     <string name="filter_services_tr_programs">Трен. программы</string>
+    <string name="filter_services_tr_programs_short">Трен. программы</string>
 
 
     <!-- Settings Page -->

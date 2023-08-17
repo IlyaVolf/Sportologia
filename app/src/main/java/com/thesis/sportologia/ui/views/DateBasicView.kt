@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -58,6 +59,19 @@ class DateBasicView(
         initializeAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
+    fun setDateMillis(timeMillis: Long) {
+        dateAndTime.timeInMillis = timeMillis
+        binding.textBlock.text = parseDate(dateAndTime, DATE_PATTERN)
+    }
+
+    fun getDateMillis(): Long? {
+        return if (binding.textBlock.text == "") {
+            null
+        } else {
+            dateAndTime.timeInMillis
+        }
+    }
+
     private fun initializeAttributes(attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) {
         if (attrs == null) return
         val typedArray = context.obtainStyledAttributes(
@@ -83,7 +97,7 @@ class DateBasicView(
             dateAndTime[Calendar.DAY_OF_MONTH] = dayOfMonth
 
             if (validateDate()) {
-                binding.textBlock.text = parseDate(dateAndTime, "d M uuuu, H:mm")
+                binding.textBlock.text = parseDate(dateAndTime, DATE_PATTERN)
             }
         }
 
@@ -163,6 +177,10 @@ class DateBasicView(
         binding.textBlock.post {
             binding.textBlock.text = savedDate
         }
+    }
+
+    companion object {
+        const val DATE_PATTERN = "d MMMM uuuu"
     }
 
     class SavedState : BaseSavedState {

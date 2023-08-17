@@ -8,13 +8,10 @@ import androidx.navigation.navOptions
 import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
-import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.TabsFragmentDirections
 import com.thesis.sportologia.ui.services.CreateEditServiceFragment
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
 
@@ -60,7 +57,7 @@ abstract class ServicesHeaderAdapter(
 
     interface FilterListener {
 
-        fun filterApply(serviceType: Service.ServiceType?)
+        fun filterApply(serviceType: ServiceType?)
 
     }
 
@@ -86,7 +83,7 @@ abstract class ServicesHeaderAdapter(
             binding.servicesFilterSpace.isVisible = false
         }
 
-        protected fun enableServicesFilter(serviceType: Service.ServiceType?) {
+        protected fun enableServicesFilter(serviceType: ServiceType?) {
             binding.servicesFilter.root.isVisible = true
             binding.servicesFilterSpace.isVisible = true
             binding.servicesFilter.spinner.initAdapter(filterOptionsList, getFilterValue(serviceType))
@@ -113,22 +110,22 @@ abstract class ServicesHeaderAdapter(
             fragment.context?.getString(R.string.filter_services_tr_programs) ?: "",
         )
 
-        private fun getFilterValue(serviceType: Service.ServiceType?): String {
+        private fun getFilterValue(serviceType: ServiceType?): String {
             return when (serviceType) {
-                Service.ServiceType.TRAINING_PROGRAM -> filterOptionsList[1]
+                ServiceType.TRAINING_PROGRAM -> filterOptionsList[1]
                 else -> filterOptionsList[0]
             }
         }
 
         private val eventsFilterListener: OnSpinnerOnlyOutlinedActionListener = {
             when (it) {
-                filterOptionsList[1] -> listener.filterApply(Service.ServiceType.TRAINING_PROGRAM)
+                filterOptionsList[1] -> listener.filterApply(ServiceType.TRAINING_PROGRAM)
                 filterOptionsList[0] -> listener.filterApply(null)
             }
         }
 
         private fun onCreateServiceButtonPressed() {
-            /*val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
+            val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
                 CreateEditServiceFragment.ServiceId(null)
             )
 
@@ -140,7 +137,7 @@ abstract class ServicesHeaderAdapter(
                         popEnter = R.anim.pop_enter
                         popExit = R.anim.pop_exit
                     }
-                })*/
+                })
         }
 
     }

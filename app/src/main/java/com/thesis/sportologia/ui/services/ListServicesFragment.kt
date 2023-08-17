@@ -16,15 +16,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListServicesBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.ui.ProfileFragment
-import com.thesis.sportologia.ui.SearchFragment
-import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
+import com.thesis.sportologia.ui.*
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.services.adapters.ServicesHeaderAdapter
 import com.thesis.sportologia.ui.services.adapters.ServicesPagerAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,15 +37,14 @@ abstract class ListServicesFragment : Fragment() {
     abstract val viewModel: ListServicesViewModel
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onAuthorBlockPressedAction: (String) -> Unit
-    abstract val onStatsBlockPressedAction: (Long) -> Unit
-    abstract val onInfoBlockPressedAction: (Long) -> Unit
+    abstract val onStatsBlockPressedAction: (String) -> Unit
+    abstract val onInfoBlockPressedAction: (String) -> Unit
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var filterParams: FilterParamsServices
     protected lateinit var binding: FragmentListServicesBinding
     private lateinit var servicesHeaderAdapter: ServicesHeaderAdapter
     private lateinit var adapter: ServicesPagerAdapter
-    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,6 +74,7 @@ abstract class ListServicesFragment : Fragment() {
     ): View {
         binding = FragmentListServicesBinding.inflate(inflater, container, false)
 
+        initErrorActions()
         initResultsProcessing()
         initSwipeToRefresh()
         initServicesList()
@@ -96,6 +92,10 @@ abstract class ListServicesFragment : Fragment() {
     }
 
     abstract fun initServicesHeaderAdapter(): ServicesHeaderAdapter
+
+    private fun initErrorActions() {
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
+    }
 
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -116,7 +116,7 @@ abstract class ListServicesFragment : Fragment() {
     }
 
     private fun initResultsProcessing() {
-        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+        requireActivity().supportFragmentManager.setFragmentResultListener(
             CreateEditServiceFragment.IS_CREATED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
@@ -134,21 +134,28 @@ abstract class ListServicesFragment : Fragment() {
             if (isSaved) {
                 viewModel.onServiceEdited()
             }
-        }*/
+        }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            ServiceFragment.IS_DELETED_REQUEST_CODE,
             viewLifecycleOwner
         ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
+            val isDeleted = data.getBoolean(ServiceFragment.IS_DELETED)
+            if (isDeleted) {
+                viewModel.onServiceDeleted()
             }
         }
+
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            REFRESH_SERVICES_LIST_KEY,
+            viewLifecycleOwner
+        ) { _, _ ->
+            viewModel.refresh()
+        }
+
     }
 
     private fun initServicesList() {
-
         // in case of loading errors this callback is called when you tap the 'Try Again' button
         val tryAgainAction: TryAgainAction = { adapter.retry() }
 
@@ -159,11 +166,6 @@ abstract class ListServicesFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.servicesSwipeRefreshLayout
-        } else {
-            null
-        }
         servicesHeaderAdapter = initServicesHeaderAdapter()
         val concatAdapter = ConcatAdapter(servicesHeaderAdapter, adapterWithLoadState)
 
@@ -172,11 +174,6 @@ abstract class ListServicesFragment : Fragment() {
         (binding.servicesList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations =
             false
 
-        mainLoadStateHolder = LoadStateAdapterPage.Holder(
-            binding.loadStateView,
-            swipeRefreshLayout,
-            tryAgainAction
-        )
     }
 
     private fun initSwipeToRefresh() {
@@ -199,23 +196,25 @@ abstract class ListServicesFragment : Fragment() {
     }
 
     private fun observeLoadState(adapter: ServicesPagerAdapter) {
-        // you can also use adapter.addLoadStateListener
+        // can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
-                // main indicator in the center of the screen
-                mainLoadStateHolder.bind(state.refresh)
-            }
-        }
 
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                binding.servicesList.isVisible = false
-                binding.servicesEmptyBlock.isVisible = true
-            } else {
-                binding.servicesList.isVisible = true
-                binding.servicesEmptyBlock.isVisible = false
+                val isError = state.refresh is LoadState.Error
+                val isLoading = state.refresh is LoadState.Loading
+                val isEmpty = (state.source.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached && adapter.itemCount < 1)
+
+                // main indicator in the center of the screen
+                binding.loadStateView.flpError.root.isVisible = isError
+                if (isSwipeToRefreshEnabled) {
+                    binding.servicesSwipeRefreshLayout.isRefreshing = isLoading
+                    binding.loadStateView.flpLoading.root.isVisible = false
+                } else {
+                    binding.loadStateView.flpLoading.root.isVisible = isLoading
+                }
+                binding.servicesEmptyBlock.isVisible = isEmpty
+                binding.servicesList.isVisible = !isError
             }
         }
     }

@@ -1,33 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/photos_swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/services_empty_block"
-            style="@style/TextStyleSecondary"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:gravity="center"
-            android:text="@string/photos_empty" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/photos_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
+            android:nestedScrollingEnabled="true"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             app:spanCount="3"
-            tools:listitem="@layout/item_photo"/>
+            tools:listitem="@layout/item_photo" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/photos_empty_block"
+                    style="@style/TextStyleSecondary"
+                    android:layout_width="match_parent"
+                    android:layout_height="96dp"
+                    android:layout_marginVertical="12dp"
+                    android:gravity="center"
+                    android:text="@string/photos_empty"
+                    android:visibility="gone" />
+
+                <include
+                    android:id="@+id/load_state_view"
+                    layout="@layout/view_load_state" />
+
+            </FrameLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
     </LinearLayout>
 
-</ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

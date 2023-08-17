@@ -36,7 +36,6 @@ class ListEventsFragmentFavourites : ListEventsFragment() {
             this,
             viewModel,
             filterParams,
-            viewModel.isUpcomingOnly
         )
     }
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/service"
+    app:startDestination="@id/serviceFragment">
+    <fragment
+        android:id="@+id/serviceFragment"
+        android:name="com.thesis.sportologia.ui.ServiceFragment"
+        android:label="fragment_service"
+        tools:layout="@layout/fragment_service">
+        <argument
+            android:name="serviceId"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_serviceFragment_to_profile_nested"
+            app:destination="@id/profile_nested">
+            <argument
+                android:name="userId"
+                android:defaultValue="$current_user"
+                app:argType="string" />
+        </action>
+        <action
+            android:id="@+id/action_serviceFragment_to_exerciseFragment"
+            app:destination="@id/exerciseFragment" />
+    </fragment>
+    <include app:graph="@navigation/profile_nested" />
+    <fragment
+        android:id="@+id/exerciseFragment"
+        android:name="com.thesis.sportologia.ui.ExerciseFragment"
+        android:label="fragment_exercise"
+        tools:layout="@layout/fragment_exercise" >
+        <argument
+            android:name="exerciseId"
+            app:argType="string" />
+        <argument
+            android:name="serviceId"
+            app:argType="string" />
+    </fragment>
+</navigation>

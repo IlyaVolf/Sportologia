@@ -4,14 +4,36 @@ fun removeEmptyStrings(text: String): String {
     return text.replace("^\\n+|\\n+\$".toRegex(), "")
 }
 
-fun formatFloat(number: Float, accuracy: Int): String {
+fun formatQuantity(number: Int): String {
+
+    return if (number < 0) {
+        "0"
+    } else if (number < 1000) {
+        number.toString()
+    } else if (number < 1000000) {
+        val string = number.toString().substring(0)
+        number.toString().substring(0, string.length - 3) + "K"
+    } else {
+        val string = number.toString().substring(0)
+        number.toString().substring(0, string.length - 6) + "M"
+    }
+
+}
+
+fun formatFloat(number: Float, accuracy: Int, removeLeadingZeros: Boolean): String {
     val numberString = "%.${accuracy}f".format(number)
     val numberSplit = numberString.split(".")
-    return if (numberSplit.last() == "0") {
-        numberSplit.first()
-    } else {
-        numberString
-    }
+    var fraction = numberSplit.last()
+    return if (removeLeadingZeros) {
+        while (fraction.lastOrNull() == '0') {
+            fraction = fraction.substring(0, fraction.length - 1)
+        }
+        if (fraction == "") {
+            numberSplit.first()
+        } else {
+            numberSplit.first() + "." + fraction
+        }
+    } else numberString
 }
 
 fun concatMap(map: Map<String, Boolean>?, separator: String): String {

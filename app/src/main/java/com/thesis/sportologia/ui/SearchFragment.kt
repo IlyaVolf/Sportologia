@@ -23,9 +23,11 @@ import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.events.ListEventsFragmentSearch
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
+import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.services.ListServicesFragmentSearch
 import com.thesis.sportologia.ui.users.ListUsersFragmentSearch
+import com.thesis.sportologia.ui.users.SearchContainerFragmentUsers
 import com.thesis.sportologia.utils.findTopNavController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -65,13 +67,13 @@ class SearchFragment : Fragment() {
                         SearchTab.Tab.SERVICES,
                         ListServicesFragmentSearch.newInstance(CurrentAccount().id),
                         { filterParams ->
-                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentUsers(
+                            TabsFragmentDirections.actionTabsFragmentToFilterFragmentServices(
                                 filterParams
                             )
                         },
                         getString(R.string.search_services),
                         SUBMIT_SEARCH_SERVICES_QUERY_REQUEST_CODE,
-                        FilterParamsUsers.newEmptyInstance()
+                        FilterParamsServices.newEmptyInstance()
                     ),
                     SearchTab(
                         SearchTab.Tab.EVENTS,
@@ -108,6 +110,7 @@ class SearchFragment : Fragment() {
         initSearchBar()
         initFilterResultListener()
         initContentBlock()
+        initOnInfoPressed()
         initNavToProfile()
 
         //sendSearchQuery()
@@ -126,7 +129,6 @@ class SearchFragment : Fragment() {
             override fun onQueryTextSubmit(query: String): Boolean {
                 binding.searchBar.searchView.clearFocus()
                 searchQuery = query
-                Log.d("ABCDEF", "onQueryTextSubmit")
                 sendSearchQuery()
                 return true
             }
@@ -135,7 +137,6 @@ class SearchFragment : Fragment() {
             override fun onQueryTextChange(newText: String?): Boolean {
                 if (searchQuery == newText) return true
                 searchQuery = newText ?: ""
-                Log.d("ABCDEF", "onQueryTextChange")
                 sendSearchQuery()
                 return true
             }
@@ -155,7 +156,7 @@ class SearchFragment : Fragment() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 currentSearchTab = searchTabs[tab?.position ?: 0]
-             }
+            }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
@@ -215,6 +216,27 @@ class SearchFragment : Fragment() {
         }
     }
 
+    private fun initOnInfoPressed() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getString(SERVICE_ID)
+            val direction =
+                SearchFragmentDirections.actionSearchFragmentToService(serviceId!!)
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }
+    }
+
     private fun onOpenFilterButtonPressed() {
         findTopNavController().navigate(currentSearchTab.direction(currentSearchTab.filterParams),
             navOptions {
@@ -247,7 +269,7 @@ class SearchFragment : Fragment() {
 
     companion object {
         const val GO_TO_OWN_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_OWN_REQUEST_CODE_FROM_SEARCH"
-        const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_USERS"
+        const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_SEARCH"
         const val GO_TO_STATS_REQUEST_CODE = "GO_TO_STATS_REQUEST_CODE_FROM_USERS"
         const val GO_TO_SERVICE_REQUEST_CODE = "GO_TO_SERVICE_REQUEST_CODE_FROM_USERS"
 

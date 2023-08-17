@@ -288,65 +288,9 @@
 
                             </LinearLayout>
 
-                            <androidx.constraintlayout.widget.ConstraintLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="19dp"
-                                android:orientation="horizontal">
-
-                                <TextView
-                                    android:id="@+id/photo_label"
-                                    style="@style/TextStyleBold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginLeft="@dimen/margin_sides"
-                                    android:text="@string/photos"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                                <TextView
-                                    android:id="@+id/photo_count"
-                                    style="@style/TextStyleBold"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text=" (1)"
-                                    app:layout_constraintLeft_toRightOf="@id/photo_label"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                                <TextView
-                                    android:id="@+id/open_photos_button"
-                                    style="@style/TextStyleButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="@dimen/margin_sides"
-                                    android:background="@drawable/background_transparent"
-                                    android:clickable="true"
-                                    android:focusable="true"
-                                    android:text="@string/action_open"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toTopOf="parent" />
-
-                                <Space
-                                    android:id="@+id/space_1"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="7dp"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/photo_label" />
-
-                                <com.thesis.sportologia.ui.views.PhotosBlockPageView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    app:layout_constraintLeft_toLeftOf="parent"
-                                    app:layout_constraintRight_toRightOf="parent"
-                                    app:layout_constraintTop_toBottomOf="@id/space_1"
-                                    app:pbp_photo_1="@drawable/photo_house"
-                                    app:pbp_photo_2="@drawable/photo_house"
-                                    app:pbp_photo_3="@drawable/photo_house"
-                                    app:pbp_photo_4="@drawable/photo_house"
-                                    app:pbp_photosNumber="4" />
-
-                            </androidx.constraintlayout.widget.ConstraintLayout>
+                            <include
+                                android:id="@+id/photos_block"
+                                layout="@layout/view_photos_block_profile"/>
 
                             <Space
                                 android:layout_width="match_parent"

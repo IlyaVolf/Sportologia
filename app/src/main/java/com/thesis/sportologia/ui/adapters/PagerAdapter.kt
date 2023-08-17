@@ -18,4 +18,5 @@ class PagerAdapter(fragment: Fragment, val fragments: ArrayList<Fragment>) : Fra
             else -> throw Exception()
         }
     }
+
 }

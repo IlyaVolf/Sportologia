@@ -17,6 +17,7 @@ import com.thesis.sportologia.ui.search.adapters.FilterButtonsListAdapter
 import com.thesis.sportologia.model.FilterParams
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
 import com.thesis.sportologia.ui.search.entities.FilterToggleButtonItem
+import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.AssociativeList
 import com.thesis.sportologia.utils.Categories
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,6 +41,7 @@ class FilterFragmentEvents : Fragment() {
         currentFilterParamsEvents = getFilterFragmentArg() as FilterParamsEvents
         currentCategories = currentFilterParamsEvents.categories ?: Categories.emptyCategoriesMap
 
+        initResetButton()
         initCategoriesSpinner()
         initPriceEditText()
         initDistanceEditText()
@@ -52,6 +54,18 @@ class FilterFragmentEvents : Fragment() {
     }
 
     private fun getFilterFragmentArg(): FilterParams = args.filterParams
+
+    private fun initResetButton() {
+        binding.fragmentFilterEventTb.setListener {
+            when (it) {
+                OnToolbarBasicAction.LEFT -> {
+                    /*currentFilterParamsEvents = FilterParamsEvents.newEmptyInstance()
+                    currentCategories = currentFilterParamsEvents.categories ?: Categories.emptyCategoriesMap*/
+                }
+                else -> {}
+            }
+        }
+    }
 
     private fun initDistanceEditText() {
         binding.fragmentFilterEventDistance.filterEdittextTitle.text =
@@ -103,7 +117,7 @@ class FilterFragmentEvents : Fragment() {
     }
 
     private fun initSortBySpinner() {
-        val options = AssociativeList(
+        val options = com.thesis.sportologia.utils.AssociativeList(
             listOf(
                 Pair(getString(R.string.filter_sort_by_date), FilterParamsEvents.EventsSortBy.Date),
                 Pair(
@@ -182,7 +196,7 @@ class FilterFragmentEvents : Fragment() {
         if (currentCategories.containsValue(true)) {
             currentFilterParamsEvents.categories = currentCategories
         } else {
-            currentFilterParamsEvents.distance = null
+            currentFilterParamsEvents.categories = null
         }
 
         val distance =

@@ -16,6 +16,8 @@
     <color name="green">#00FF00</color>
     <color name="blue">#0000FF</color>
 
+    <color name="red_accent">#FFDA4747</color>
+
     <color name="white_20a">#33FFFFFF</color>
     <color name="black_10a">#1A000000</color>
     <color name="black_20a">#33000000</color>

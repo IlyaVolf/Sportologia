@@ -8,8 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navOptions
+import androidx.viewpager2.widget.ViewPager2
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentFollowingsBinding
+import com.thesis.sportologia.ui.adapters.PagerAdapter
+import com.thesis.sportologia.ui.users.ListUsersFragmentFollowers
 import com.thesis.sportologia.ui.users.ListUsersFragmentFollowings
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,26 +23,21 @@ class FollowingsFragment : Fragment() {
 
     private lateinit var binding: FragmentFollowingsBinding
     private lateinit var userId: String
-    private lateinit var listUsersFragmentFollowings: ListUsersFragmentFollowings
+    private lateinit var adapter: PagerAdapter
+    private lateinit var viewPager: ViewPager2
 
     private fun getUserId(): String = args.userId
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        userId = getUserId()
-        listUsersFragmentFollowings = ListUsersFragmentFollowings.newInstance(userId)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentFollowingsBinding.inflate(inflater, container, false)
+        userId = getUserId()
 
         initToolbar()
         initOnFollowerPressed()
-        initListFragment()
+        initContentBlock()
 
         return binding.root
     }
@@ -78,17 +76,12 @@ class FollowingsFragment : Fragment() {
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun initContentBlock() {
+        val listUsersFragmentFollowings =  ListUsersFragmentFollowings.newInstance(userId)
 
-        requireActivity().supportFragmentManager.beginTransaction()
-            .remove(listUsersFragmentFollowings).commit()
-    }
-
-    private fun initListFragment() {
-        requireActivity().supportFragmentManager.beginTransaction().add(
-            R.id.followings_list_container, listUsersFragmentFollowings
-        ).commit()
+        adapter = PagerAdapter(this, arrayListOf(listUsersFragmentFollowings))
+        viewPager = binding.pager
+        viewPager.adapter = adapter
     }
 
     private fun onBackButtonPressed() {

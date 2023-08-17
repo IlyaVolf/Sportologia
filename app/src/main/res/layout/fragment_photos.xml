@@ -1,38 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.thesis.sportologia.ui.PhotosFragment">
 
-    <LinearLayout
+    <com.thesis.sportologia.ui.views.ToolbarBasicView
+        android:id="@+id/photos_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.thesis.sportologia.ui.views.ToolbarBasicView
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tb_toolbarLeftButton="@string/action_back"
-            app:tb_toolbarTitle="@string/photos" />
-
-        <include layout="@layout/fragment_list_photos"/>
-
-    </LinearLayout>
-
-    <com.thesis.sportologia.ui.views.ButtonRoundView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/margin_sides"
-        android:layout_marginBottom="36dp"
-        app:br_drawable="@drawable/icon_album"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:tb_toolbarLeftButton="@string/action_back"
+        app:tb_isToolbarUnderlined="false"
+        app:tb_toolbarTitle="@string/photos"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

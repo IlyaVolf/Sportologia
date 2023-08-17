@@ -22,8 +22,8 @@ import com.thesis.sportologia.utils.ResourcesUtils.getString
 class ServicesPagerAdapter(
     val fragment: Fragment,
     private val onAuthorBlockPressedAction: (String) -> Unit,
-    private val onStatsBlockPressedAction: (Long) -> Unit,
-    private val onInfoBlockPressedAction: (Long) -> Unit,
+    private val onStatsBlockPressedAction: (String) -> Unit,
+    private val onInfoBlockPressedAction: (String) -> Unit,
     private val listener: MoreButtonListener,
 ) : PagingDataAdapter<ServiceListItem, ServicesPagerAdapter.Holder>(ServicesDiffCallback()) {
 
@@ -46,12 +46,26 @@ class ServicesPagerAdapter(
             }
         }
 
-        itemService.setCategories(serviceListItem.categories)
+        itemService.setCategories(
+            TrainingProgrammesCategories.getLocalizedCategories(
+                context,
+                serviceListItem.categories
+            )
+        )
         itemService.setServiceName(serviceListItem.name)
         itemService.setDescription(serviceListItem.description)
         itemService.setAuthorName(serviceListItem.authorName)
+        itemService.setAuthorType(
+            Localization.convertUserTypeEnumToLocalized(
+                context,
+                serviceListItem.authorType
+            )
+        )
         itemService.setAuthorAvatar(serviceListItem.profilePictureUrl)
         itemService.setPrice(serviceListItem.price, serviceListItem.currency)
+        itemService.setAcquiredNumber(serviceListItem.acquiredNumber)
+        itemService.setReviewsNumber(serviceListItem.reviewsNumber)
+        itemService.setRating(serviceListItem.rating)
         itemService.setFavs(serviceListItem.isFavourite)
         itemService.setPhotos(serviceListItem.photosUrls)
     }
@@ -67,80 +81,7 @@ class ServicesPagerAdapter(
         val binding: ItemServiceBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    private fun createOnEditDialog(serviceListItem: ServiceListItem) {
-        createSimpleDialog(
-            context,
-            null,
-            getString(R.string.ask_delete_service_warning),
-            getString(R.string.action_delete),
-            { _, _ ->
-                run {
-                    listener.onServiceDelete(serviceListItem)
-                }
-            },
-            getString(R.string.action_cancel),
-            { dialog, _ ->
-                run {
-                    dialog.cancel()
-                }
-            },
-            null,
-            null,
-        )
-    }
-
-    private fun onMoreButtonPressed(
-        serviceListItem: ServiceListItem
-    ) {
-        val actionsMore: Array<Pair<String, DialogOnClickAction?>> =
-            if (serviceListItem.authorId == CurrentAccount().id) {
-                arrayOf(
-                    Pair(getString(R.string.action_edit)) { _, _ ->
-                        run {
-                            onEditButtonPressed(serviceListItem.id)
-                        }
-                    },
-                    Pair(getString(R.string.action_delete)) { _, _ ->
-                        run {
-                            createOnEditDialog(serviceListItem)
-                        }
-                    },
-                )
-            } else {
-                arrayOf(
-                    Pair(getString(R.string.action_report)) { _, _ -> }
-                )
-            }
-
-        createSpinnerDialog(
-            context,
-            null,
-            null,
-            actionsMore
-        )
-    }
-
-    private fun onEditButtonPressed(serviceId: Long) {
-        /*val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditServiceFragment(
-            CreateEditServiceFragment.ServiceId(serviceId)
-        )
-
-        fragment.findTopNavController().navigate(direction,
-            navOptions {
-                anim {
-                    enter = R.anim.enter
-                    exit = R.anim.exit
-                    popEnter = R.anim.pop_enter
-                    popExit = R.anim.pop_exit
-                }
-            })*/
-    }
-
     interface MoreButtonListener {
-        /**
-         * Called when the user taps the "Delete" button in a list item
-         */
-        fun onServiceDelete(serviceListItem: ServiceListItem)
 
         /**
          * Called when the user taps the "Star" button in a list item.

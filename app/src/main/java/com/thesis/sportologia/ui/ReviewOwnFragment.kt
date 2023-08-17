@@ -23,9 +23,6 @@ class ReviewOwnFragment : Fragment() {
         val ratingBlock = binding.root.findViewById<SelectStarsView>(R.id.rating_fro)
         ratingBlock.setListener { }
 
-        //val a = binding.textBlock.setTitle("aadad")
-
-
         return binding.root
     }
 

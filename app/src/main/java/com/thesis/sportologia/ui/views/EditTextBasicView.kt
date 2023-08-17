@@ -87,6 +87,10 @@ class EditTextBasicView(
         typedArray.recycle()
     }
 
+    fun setHint(hint: String) {
+        binding.title.hint = hint
+    }
+
     fun setTitle(title: String) {
         binding.title.text = title
     }

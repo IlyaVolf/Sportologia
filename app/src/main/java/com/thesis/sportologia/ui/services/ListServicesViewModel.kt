@@ -5,10 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
+import com.thesis.sportologia.di.IoDispatcher
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.services.ServicesLocalChanges
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.services.adapters.ServicesHeaderAdapter
 import com.thesis.sportologia.ui.services.adapters.ServicesPagerAdapter
@@ -30,15 +35,15 @@ abstract class ListServicesViewModel constructor(
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsServices>()
 
-    private val serviceTypeLiveData = MutableLiveData<Service.ServiceType?>(null)
-    var serviceType: Service.ServiceType?
+    val localChanges = servicesRepository.localChanges
+    val localChangesFlow = servicesRepository.localChangesFlow
+
+    private val serviceTypeLiveData = MutableLiveData<ServiceType?>(null)
+    var serviceType: ServiceType?
         get() = serviceTypeLiveData.value
         set(value) {
             serviceTypeLiveData.value = value
         }
-
-    private val localChanges = LocalChanges()
-    private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
     private val _errorServices = MutableLiveEvent<Int>()
     val errorServices = _errorServices.share()
@@ -63,22 +68,7 @@ abstract class ListServicesViewModel constructor(
         )
     }
 
-    abstract fun getDataFlow(): Flow<PagingData<Service>>
-
-    override fun onServiceDelete(serviceListItem: ServiceListItem) {
-        if (isInProgress(serviceListItem.id)) return
-
-        viewModelScope.launch {
-            try {
-                setProgress(serviceListItem.id, true)
-                delete(serviceListItem)
-            } catch (e: Exception) {
-                showError(R.string.error_loading_title)
-            } finally {
-                setProgress(serviceListItem.id, false)
-            }
-        }
-    }
+    abstract fun getDataFlow(): Flow<PagingData<ServiceDataEntity>>
 
     override fun onToggleFavouriteFlag(serviceListItem: ServiceListItem) {
         if (isInProgress(serviceListItem.id)) return
@@ -86,7 +76,9 @@ abstract class ListServicesViewModel constructor(
         viewModelScope.launch {
             try {
                 setProgress(serviceListItem.id, true)
-                setFavoriteFlag(serviceListItem)
+                withContext(Dispatchers.IO) {
+                    setFavoriteFlag(serviceListItem)
+                }
             } catch (e: Exception) {
                 showError(R.string.error_loading_title)
             } finally {
@@ -95,7 +87,7 @@ abstract class ListServicesViewModel constructor(
         }
     }
 
-    override fun filterApply(serviceType: Service.ServiceType?) {
+    override fun filterApply(serviceType: ServiceType?) {
         if (this.serviceType == serviceType) return
 
         this.serviceType = serviceType
@@ -109,7 +101,7 @@ abstract class ListServicesViewModel constructor(
     }
 
     fun refresh() {
-        this.searchLive.postValue(this.searchLive.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     fun onServiceCreated() {
@@ -120,19 +112,18 @@ abstract class ListServicesViewModel constructor(
         invalidateList()
     }
 
+    fun onServiceDeleted() {
+        invalidateList()
+    }
+
     private suspend fun setFavoriteFlag(serviceListItem: ServiceListItem) {
         val newFlagValue = !serviceListItem.isFavourite
-        servicesRepository.setIsFavourite(userId, serviceListItem.service, newFlagValue)
+        servicesRepository.setIsFavourite(CurrentAccount().id, serviceListItem.serviceDataEntity.id!!, newFlagValue)
         localChanges.isFavouriteFlags[serviceListItem.id] = newFlagValue
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private suspend fun delete(serviceListItem: ServiceListItem) {
-        servicesRepository.deleteService(serviceListItem.id)
-        invalidateList()
-    }
-
-    private fun setProgress(serviceListItemId: Long, inProgress: Boolean) {
+    private fun setProgress(serviceListItemId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(serviceListItemId)
         } else {
@@ -141,7 +132,7 @@ abstract class ListServicesViewModel constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(serviceListItemId: Long) =
+    private fun isInProgress(serviceListItemId: String) =
         localChanges.idsInProgress.contains(serviceListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
@@ -157,40 +148,22 @@ abstract class ListServicesViewModel constructor(
     }
 
     private fun merge(
-        services: PagingData<Service>,
-        localChanges: OnChange<LocalChanges>
+        services: PagingData<ServiceDataEntity>,
+        localChanges: OnChange<ServicesLocalChanges>
     ): PagingData<ServiceListItem> {
         return services
             .map { service ->
                 val isInProgress = localChanges.value.idsInProgress.contains(service.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[service.id]
 
-                val serviceWithLocalChanges = service
-                if (localFavoriteFlag != null) {
-                    serviceWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                val serviceWithLocalChanges = if (localFavoriteFlag == null) {
+                    service.copy()
+                } else {
+                    service.copy(isFavourite = localFavoriteFlag)
                 }
-
                 ServiceListItem(serviceWithLocalChanges, isInProgress)
             }
     }
 
-    /**
-     * Non-data class which allows passing the same reference to the
-     * MutableStateFlow multiple times in a row.
-     */
-    class OnChange<T>(val value: T)
-
-    /**
-     * Contains:
-     * 1) identifiers of items which are processed now (deleting or favorite
-     * flag updating).
-     * 2) local isLiked and isFavourite flag updates to avoid list reloading
-     */
-    class LocalChanges {
-        val idsInProgress = mutableSetOf<Long>()
-
-        // TODO фото
-        val isFavouriteFlags = mutableMapOf<Long, Boolean>()
-    }
 
 }

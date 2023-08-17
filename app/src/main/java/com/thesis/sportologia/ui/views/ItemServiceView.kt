@@ -7,10 +7,8 @@ import android.widget.*
 import com.squareup.picasso.Picasso
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemServiceBinding
-import com.thesis.sportologia.utils.Categories
-import com.thesis.sportologia.utils.concatMap
-import com.thesis.sportologia.utils.getPriceWithCurrency
-import com.thesis.sportologia.utils.setAvatar
+import com.thesis.sportologia.model.users.entities.UserType
+import com.thesis.sportologia.utils.*
 import java.net.URI
 import kotlin.properties.Delegates
 
@@ -37,7 +35,6 @@ class ItemServiceView(
     private val binding: ItemServiceBinding
 
     private var isAddedToFavs by Delegates.notNull<Boolean>()
-    private var mode = Mode.PREVIEW
 
     private var listeners = mutableListOf<OnItemServiceActionListener?>()
 
@@ -85,7 +82,6 @@ class ItemServiceView(
         inflater.inflate(R.layout.item_service, this, true)
         binding = readyBinding ?: ItemServiceBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
-        setUpModeRender()
         initListeners()
     }
 
@@ -102,24 +98,6 @@ class ItemServiceView(
         typedArray.recycle()
     }
 
-    fun setMode(mode: Mode) {
-        this.mode = mode
-        setUpModeRender()
-    }
-
-    private fun setUpModeRender() {
-        when (mode) {
-            Mode.PREVIEW -> {
-                binding.serviceMore.visibility = GONE
-                binding.serviceInfo.visibility = VISIBLE
-            }
-            Mode.DETAILED -> {
-                binding.serviceMore.visibility = VISIBLE
-                binding.serviceInfo.visibility = GONE
-            }
-        }
-    }
-
     fun setFavs(isAddedToFavs: Boolean) {
         this.isAddedToFavs = isAddedToFavs
 
@@ -132,7 +110,6 @@ class ItemServiceView(
         }
     }
 
-    // TODO временный метод. Нужно через setFavs после + ответа с сервера
     private fun toggleFavs() {
         isAddedToFavs = !isAddedToFavs
 
@@ -157,30 +134,32 @@ class ItemServiceView(
         binding.serviceUserName.text = username
     }
 
+    fun setAuthorType(userType: String) {
+        binding.serviceUserType.text = userType
+    }
+
     fun setAuthorAvatar(uriImage: String?) {
         setAvatar(uriImage, context, binding.serviceAvatar)
     }
 
     fun setAcquiredNumber(acquiredNumber: Int) {
-        binding.serviceAcquiredNumber.text = acquiredNumber.toString()
+        binding.serviceAcquiredNumber.text = formatQuantity(acquiredNumber)
     }
 
     fun setReviewsNumber(reviewsNumber: Int) {
-        binding.serviceReviewsNumber.text = reviewsNumber.toString()
+        binding.serviceReviewsNumber.text = formatQuantity(reviewsNumber)
     }
 
-    fun setRating(rating: String) {
-        binding.serviceRatingAverage.text = rating
+    fun setRating(rating: Float?) {
+        binding.serviceRatingAverage.text = rating?.toString() ?: "-"
     }
 
-    // TODO логика преобразования валют в VM
     fun setPrice(price: Float, currency: String) {
         binding.servicePrice.text = getPriceWithCurrency(context, price, currency)
     }
 
     fun setCategories(categories: Map<String, Boolean>) {
-        val categoriesLocalized = Categories.getLocalizedCategories(context, categories)
-        val categoriesString = concatMap(categoriesLocalized, ", ")
+        val categoriesString = concatMap(categories, ", ")
         if (categoriesString != "") {
             binding.serviceCategories.text = categoriesString
         } else {
@@ -229,11 +208,6 @@ class ItemServiceView(
             }
         }
 
-        binding.serviceMore.setOnClickListener {
-            listeners.forEach { listener ->
-                listener?.invoke(OnItemServiceAction.MORE)
-            }
-        }
     }
 
     fun setListener(listener: OnItemServiceActionListener?) {
@@ -242,10 +216,6 @@ class ItemServiceView(
 
     fun removeListener(listener: OnItemServiceActionListener?) {
         listeners.remove(listener)
-    }
-
-    enum class Mode {
-        PREVIEW, DETAILED
     }
 
     // SAVE

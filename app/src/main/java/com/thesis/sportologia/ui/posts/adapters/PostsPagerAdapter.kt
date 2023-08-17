@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.posts.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -61,7 +62,7 @@ class PostsPagerAdapter(
         val binding: ItemPostBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
-    private fun createOnEditDialog(postListItem: PostListItem) {
+    private fun createOnDeleteDialog(postListItem: PostListItem) {
         createSimpleDialog(
             context,
             null,
@@ -94,7 +95,7 @@ class PostsPagerAdapter(
                     },
                     Pair(getString(R.string.action_delete)) { _, _ ->
                         run {
-                            createOnEditDialog(postListItem)
+                            createOnDeleteDialog(postListItem)
                         }
                     },
                 )
@@ -112,7 +113,7 @@ class PostsPagerAdapter(
         )
     }
 
-    private fun onEditButtonPressed(postId: Long) {
+    private fun onEditButtonPressed(postId: String) {
         val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditPostFragment(
             CreateEditPostFragment.PostId(postId)
         )

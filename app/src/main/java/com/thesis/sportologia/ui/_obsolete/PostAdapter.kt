@@ -1,14 +1,5 @@
 package com.thesis.sportologia.ui._obsolete
 
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.thesis.sportologia.model.posts.entities.Post
-import com.thesis.sportologia.ui.base.BaseAdapter
-import com.thesis.sportologia.ui.base.BaseViewHolder
-import com.thesis.sportologia.ui.views.ItemPostView
-import com.thesis.sportologia.ui.views.OnItemPostActionListener
-import com.thesis.sportologia.ui.views.OnSpinnerMoreActionListener
-
 /**class PostAdapter(
     private val OnItemPostActionListener: OnItemPostActionListener,
     private val onSpinnerMoreActionListener: OnSpinnerMoreActionListener,

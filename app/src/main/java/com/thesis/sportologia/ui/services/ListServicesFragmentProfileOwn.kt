@@ -25,20 +25,20 @@ class ListServicesFragmentProfileOwn : ListServicesFragment() {
         factory.create(filterParams, userId)
     }
 
-    override val isSwipeToRefreshEnabled: Boolean = true
+    override val isSwipeToRefreshEnabled: Boolean = false
     override val onAuthorBlockPressedAction: (String) -> Unit = { userId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_PROFILE_REQUEST_CODE,
             bundleOf(ProfileFragment.USER_ID to userId)
         )
     }
-    override val onStatsBlockPressedAction: (Long) -> Unit = { serviceId ->
+    override val onStatsBlockPressedAction: (String) -> Unit = { serviceId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_STATS_REQUEST_CODE,
             bundleOf(ProfileFragment.SERVICE_ID to serviceId)
         )
     }
-    override val onInfoBlockPressedAction: (Long) -> Unit = { serviceId ->
+    override val onInfoBlockPressedAction: (String) -> Unit = { serviceId ->
         requireActivity().supportFragmentManager.setFragmentResult(
             ProfileFragment.GO_TO_SERVICE_REQUEST_CODE,
             bundleOf(ProfileFragment.SERVICE_ID to serviceId)

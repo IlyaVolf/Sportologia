@@ -32,12 +32,7 @@ class ListEventsFragmentProfileOther : ListEventsFragment() {
     }
 
     override fun initEventsHeaderAdapter(): EventsHeaderAdapter {
-        return EventsHeaderAdapterProfileOther(
-            this,
-            viewModel,
-            filterParams,
-            viewModel.isUpcomingOnly
-        )
+        return EventsHeaderAdapterProfileOther(this, viewModel, filterParams)
     }
 
     companion object {

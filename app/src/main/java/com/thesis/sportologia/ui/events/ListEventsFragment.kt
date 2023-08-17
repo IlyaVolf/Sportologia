@@ -16,15 +16,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.REFRESH_EVENTS_LIST_KEY
 import com.thesis.sportologia.ui.SearchFragment
-import com.thesis.sportologia.ui.adapters.LoadStateAdapterPage
 import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.adapters.TryAgainAction
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,7 +44,6 @@ abstract class ListEventsFragment : Fragment() {
     protected lateinit var binding: FragmentListEventsBinding
     private lateinit var eventsHeaderAdapter: EventsHeaderAdapter
     private lateinit var adapter: EventsPagerAdapter
-    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +67,7 @@ abstract class ListEventsFragment : Fragment() {
     ): View {
         binding = FragmentListEventsBinding.inflate(inflater, container, false)
 
+        initErrorActions()
         initResultsProcessing()
         initSwipeToRefresh()
         initEventsList()
@@ -80,6 +77,7 @@ abstract class ListEventsFragment : Fragment() {
         observeEvents(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
+        observeFilter()
 
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
@@ -88,6 +86,10 @@ abstract class ListEventsFragment : Fragment() {
     }
 
     abstract fun initEventsHeaderAdapter(): EventsHeaderAdapter
+
+    private fun initErrorActions() {
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
+    }
 
     private fun initSearchQueryReceiver() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
@@ -129,13 +131,10 @@ abstract class ListEventsFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            REFRESH_EVENTS_LIST_KEY,
             viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
+        ) { _, _ ->
+            viewModel.refresh()
         }
     }
 
@@ -151,23 +150,12 @@ abstract class ListEventsFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.eventsSwipeRefreshLayout
-        } else {
-            null
-        }
         eventsHeaderAdapter = initEventsHeaderAdapter()
         val concatAdapter = ConcatAdapter(eventsHeaderAdapter, adapterWithLoadState)
 
         binding.eventsList.layoutManager = LinearLayoutManager(context)
         binding.eventsList.adapter = concatAdapter
         (binding.eventsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
-
-        mainLoadStateHolder = LoadStateAdapterPage.Holder(
-            binding.loadStateView,
-            swipeRefreshLayout,
-            tryAgainAction
-        )
     }
 
     private fun initSwipeToRefresh() {
@@ -190,23 +178,25 @@ abstract class ListEventsFragment : Fragment() {
     }
 
     private fun observeLoadState(adapter: EventsPagerAdapter) {
-        // you can also use adapter.addLoadStateListener
+        // can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
-                // main indicator in the center of the screen
-                mainLoadStateHolder.bind(state.refresh)
-            }
-        }
 
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                binding.eventsList.isVisible = false
-                binding.eventsEmptyBlock.isVisible = true
-            } else {
-                binding.eventsList.isVisible = true
-                binding.eventsEmptyBlock.isVisible = false
+                val isError = state.refresh is LoadState.Error
+                val isLoading = state.refresh is LoadState.Loading
+                val isEmpty = (state.source.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached && adapter.itemCount < 1)
+
+                // main indicator in the center of the screen
+                binding.loadStateView.flpError.root.isVisible = isError
+                if (isSwipeToRefreshEnabled) {
+                    binding.eventsSwipeRefreshLayout.isRefreshing = isLoading
+                    binding.loadStateView.flpLoading.root.isVisible = false
+                } else {
+                    binding.loadStateView.flpLoading.root.isVisible = isLoading
+                }
+                binding.eventsEmptyBlock.isVisible = isEmpty
+                binding.eventsList.isVisible = !isError
             }
         }
     }
@@ -254,6 +244,12 @@ abstract class ListEventsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: EventsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
+        }
+    }
+
+    private fun observeFilter() {
+        viewModel.isUpcomingOnlyLiveData.observe(viewLifecycleOwner) {
+            eventsHeaderAdapter.setIsUpcomingOnly(it)
         }
     }
 

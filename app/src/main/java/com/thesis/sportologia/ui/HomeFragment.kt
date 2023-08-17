@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navOptions
@@ -20,14 +19,11 @@ import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.ui.posts.ListPostsFragmentHome
 import com.thesis.sportologia.ui.adapters.PagerAdapter
 import com.thesis.sportologia.ui.base.BaseFragment
-import com.thesis.sportologia.ui.events.ListEventsFragment
 import com.thesis.sportologia.ui.events.ListEventsFragmentHome
 import com.thesis.sportologia.ui.views.OnToolbarHomeAction
 import com.thesis.sportologia.utils.findTopNavController
 import com.thesis.sportologia.utils.setAvatar
-import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(R.layout.fragment_home) {
@@ -152,14 +148,12 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
     }
 
     override fun observeViewModel() {
-        viewModel.avatarHolder.observe(viewLifecycleOwner) { holder ->
+        viewModel.profilePhotoHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
-                DataHolder.LOADING -> {}
-                DataHolder.INIT -> {}
                 is DataHolder.READY -> {
                     setAvatar(holder.data, context!!, binding.toolbar.avatar)
                 }
-                is DataHolder.ERROR -> {}
+                else -> {}
             }
         }
     }

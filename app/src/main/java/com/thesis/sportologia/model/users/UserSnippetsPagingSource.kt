@@ -4,12 +4,14 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.thesis.sportologia.model.users.entities.UserSnippet
 
-typealias UserSnippetsPageLoader = suspend (pageIndex: Int, pageSize: Int) -> List<UserSnippet>
+typealias UserSnippetsPageLoader = suspend (lastUser: String?, pageIndex: Int, pageSize: Int) -> List<UserSnippet>
 
 @Suppress("UnnecessaryVariable")
 class UsersPagingSource(
     private val loader: UserSnippetsPageLoader,
 ) : PagingSource<Int, UserSnippet>() {
+
+    var lastUser: String? = null
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UserSnippet> {
         // get the index of page to be loaded (it may be NULL, in this case let's load the first page with index = 0)
@@ -17,8 +19,11 @@ class UsersPagingSource(
 
         return try {
             // loading the desired page of users
-            val users = loader.invoke(pageIndex, params.loadSize)
+            val users = loader.invoke(lastUser, pageIndex, params.loadSize)
             // success! now we can return LoadResult.Page
+
+            lastUser = users.lastOrNull()?.id
+
             return LoadResult.Page(
                 data = users,
                 // index of the previous page if exists

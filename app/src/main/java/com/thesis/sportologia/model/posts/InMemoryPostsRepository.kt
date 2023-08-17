@@ -5,148 +5,33 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.thesis.sportologia.di.IoDispatcher
-import com.thesis.sportologia.model.posts.entities.Post
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
+import com.thesis.sportologia.model.posts.sources.PostsDataSource
+import com.thesis.sportologia.model.users.entities.UserType
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class InMemoryPostsRepository @Inject constructor(
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val postsDataSource: PostsDataSource
 ) : PostsRepository {
 
-    val postSample = Post(
-        id = 0L,
-        authorId = "i_chiesov",
-        authorName = "Игорь Чиёсов",
-        profilePictureUrl = null,
-        text = "Hello!",
-        likesCount = 5,
-        isAuthorAthlete = true,
-        isLiked = true,
-        isFavourite = true,
-        postedDate = Calendar.getInstance().timeInMillis,
-        photosUrls = mutableListOf(
-            "https://cdn.5280.com/2014/03/ss_skis.jpg"
-        )
-    )
+    override val localChanges = PostsLocalChanges()
+    override val localChangesFlow = MutableStateFlow(OnChange(localChanges))
 
-    private val posts = mutableListOf(
-        postSample,
-        Post(
-            id = 1L,
-            authorId = "stroitel",
-            authorName = "Тренажёрный зал Строитель",
-            profilePictureUrl = null,
-            text = "Построй тело свой мечты!",
-            likesCount = 0,
-            isAuthorAthlete = false,
-            isLiked = false,
-            isFavourite = false,
-            postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = mutableListOf(
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-                "https://put-sily.ru/wp-content/uploads/3/c/2/3c2b97534a2a46911071431e4e519750.jpeg",
-            )
-        ),
-        Post(
-            id = 2L,
-            authorId = "nikita",
-            authorName = "Никита Романов",
-            profilePictureUrl = "https://i.imgur.com/tGbaZCY.jpg",
-            text = "Люблю спорт!",
-            likesCount = 1,
-            isAuthorAthlete = true,
-            isLiked = true,
-            isFavourite = true,
-            postedDate = Calendar.getInstance().timeInMillis,
-            photosUrls = null
-        ),
-        postSample.copy(id = 3L),
-        postSample.copy(id = 4L),
-        postSample.copy(id = 5L),
-        postSample.copy(id = 6L),
-        postSample.copy(id = 7L),
-        postSample.copy(id = 8L),
-        postSample.copy(id = 9L),
-        postSample.copy(id = 10L),
-        postSample.copy(id = 11L),
-        postSample.copy(id = 12L),
-        postSample.copy(
-            authorName = "Антон Игорев",
-            authorId = "best_mate",
-            id = 13L,
-            text = "abcdefghiklmnopqrstvuxwyz"
-        ),
-        postSample.copy(id = 14L),
-        postSample.copy(id = 15L),
-        postSample.copy(id = 16L),
-        postSample.copy(id = 17L),
-        postSample.copy(id = 18L),
-        postSample.copy(id = 19L),
-        postSample.copy(id = 20L),
-        postSample.copy(id = 21L),
-        postSample.copy(id = 22L),
-        postSample.copy(id = 23L),
-        postSample.copy(id = 24L),
-        postSample.copy(id = 25L),
-
-        )
-
-    private val followersIds = mutableListOf("i_chiesov", "stroitel", "nikita")
-
-    /* override suspend fun getUserPosts(userId: Int): List<Post> {
-        delay(1000)
-        return posts.filter { it.authorId == userId }
-    } */
-
-
-    private suspend fun getUserPosts(pageIndex: Int, pageSize: Int, userId: String): List<Post> =
-        withContext(
-            ioDispatcher
-        ) {
-            delay(1000)
-            val offset = pageIndex * pageSize
-
-            val filteredPosts =
-                posts.filter { it.authorId == userId }.sortedByDescending { it.postedDate }
-
-            // filteredPosts.sortedByDescending { it.postedDate }
-
-            // TODO SORT BY DATE
-
-            // TODO
-            // throw Exception("a")
-
-            if (offset >= filteredPosts.size) {
-                return@withContext listOf<Post>()
-            } else if (offset + pageSize >= filteredPosts.size) {
-                return@withContext filteredPosts.subList(offset, filteredPosts.size)
-            } else {
-                return@withContext filteredPosts.subList(offset, offset + pageSize)
-            }
+    override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<PostDataEntity>> {
+        val loader: PostsPageLoader = { lastTimestamp, _, pageSize ->
+            postsDataSource.getPagedUserPosts(userId, lastTimestamp, pageSize)
         }
-
-    override suspend fun getPagedUserPosts(userId: String): Flow<PagingData<Post>> {
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserPosts(pageIndex, pageSize, userId)
-        }
-
-        //delay(2000)
 
         return Pager(
             config = PagingConfig(
@@ -161,13 +46,11 @@ class InMemoryPostsRepository @Inject constructor(
 
     override suspend fun getPagedUserSubscribedOnPosts(
         userId: String,
-        athTorgF: Boolean?
-    ): Flow<PagingData<Post>> {
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserSubscribedOnPosts(pageIndex, pageSize, userId, athTorgF)
+        userType: UserType?
+    ): Flow<PagingData<PostDataEntity>> {
+        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
+            postsDataSource.getPagedUserSubscribedOnPosts(userId, userType, lastTimestamp, pageSize)
         }
-
-        //delay(2000)
 
         return Pager(
             config = PagingConfig(
@@ -180,49 +63,12 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    private suspend fun getUserSubscribedOnPosts(
-        pageIndex: Int,
-        pageSize: Int,
+    override suspend fun getPagedUserFavouritePosts(
         userId: String,
-        athTorgF: Boolean?
-    ): List<Post> = withContext(
-        ioDispatcher
-    ) {
-        val res = mutableListOf<Post>()
-
-        delay(1000)
-
-        // TODO
-        //throw Exception("a")
-
-        val offset = pageIndex * pageSize
-
-        followersIds.forEach { id ->
-            if (athTorgF == null) {
-                res.addAll(posts.filter { it.authorId == id })
-            } else {
-                res.addAll(posts.filter { it.authorId == id && it.isAuthorAthlete == athTorgF })
-            }
-        }
-
-        res.sortedByDescending { it.postedDate }
-
-        // TODO МЕТОД ФИГНЯ
-
-        // TODO SORT BY DATE
-
-        if (offset >= res.size) {
-            return@withContext listOf<Post>()
-        } else if (offset + pageSize >= res.size) {
-            return@withContext res.subList(offset, res.size)
-        } else {
-            return@withContext res.subList(offset, offset + pageSize)
-        }
-    }
-
-    override suspend fun getPagedUserFavouritePosts(athTorgF: Boolean?): Flow<PagingData<Post>> {
-        val loader: PostsPageLoader = { pageIndex, pageSize ->
-            getUserFavouritePosts(pageIndex, pageSize, athTorgF)
+        userType: UserType?
+    ): Flow<PagingData<PostDataEntity>> {
+        val loader: PostsPageLoader = { lastTimestamp, pageIndex, pageSize ->
+            postsDataSource.getPagedUserFavouritePosts(userId, userType, lastTimestamp, pageSize)
         }
 
         return Pager(
@@ -236,127 +82,46 @@ class InMemoryPostsRepository @Inject constructor(
         ).flow
     }
 
-    override suspend fun getPost(postId: Long): Post? = withContext(ioDispatcher) {
-        delay(1000)
-
-        return@withContext if (posts.none { it.id == postId }) null else posts.filter { it.id == postId }[0]
+    override suspend fun getPost(postId: String, userId: String): PostDataEntity {
+        return postsDataSource.getPost(postId, userId)
     }
 
-    suspend fun getUserFavouritePosts(
-        pageIndex: Int,
-        pageSize: Int,
-        athTorgF: Boolean?
-    ): List<Post> =
-        withContext(ioDispatcher) {
-            delay(1000)
-            val offset = pageIndex * pageSize
-
-            // временный и корявый метод! Ибо тут не учитыааются пользователи
-            val filteredPosts = if (athTorgF != null) {
-                posts.filter { it.isFavourite && it.isAuthorAthlete == athTorgF }
-                    .sortedByDescending { it.postedDate }
-            } else {
-                posts.filter { it.isFavourite }.sortedByDescending { it.postedDate }
-            }
-            // TODO SORT BY DATE
-
-            // TODO
-            //throw Exception("a")
-
-            if (offset >= filteredPosts.size) {
-                return@withContext listOf<Post>()
-            } else if (offset + pageSize >= filteredPosts.size) {
-                return@withContext filteredPosts.subList(offset, filteredPosts.size)
-            } else {
-                return@withContext filteredPosts.subList(offset, offset + pageSize)
-            }
-        }
-
-    /*override suspend fun getUserSubscribedOnPosts(userId: Int, athTorgF: Boolean?): List<Post> {
-        delay(1000)
-        val res = mutableListOf<Post>()
-
-        followersIds.forEach { id ->
-            if (athTorgF == null) {
-                res.addAll(posts.filter { it.authorId == id })
-            } else {
-                res.addAll(posts.filter { it.authorId == id && it.isAuthorAthlete == athTorgF })
-            }
-        }
-
-        return res
-    }*/
-
-    override suspend fun createPost(post: Post) {
-        delay(1000)
-        posts.add(post)
-
-        //throw Exception("Ошибка подключения: проверьте соединение с интернетом.")
+    override suspend fun createPost(postDataEntity: PostDataEntity) {
+        postsDataSource.createPost(postDataEntity)
     }
 
-    override suspend fun updatePost(post: Post) {
-        delay(1000)
-
-        posts.find { it.id == post.id }.apply {
-            this!!.text = post.text
-            this.photosUrls = post.photosUrls
-        }
-
+    override suspend fun updatePost(postDataEntity: PostDataEntity) {
+        postsDataSource.updatePost(postDataEntity)
     }
 
-    override suspend fun deletePost(postId: Long) {
-        delay(1000)
-        posts.removeIf { it.id == postId }
+    override suspend fun deletePost(postId: String) {
+        postsDataSource.deletePost(postId)
+        localChanges.remove(postId)
     }
 
-    override suspend fun setIsLiked(userId: String, post: Post, isLiked: Boolean) {
-        withContext(ioDispatcher) {
-            delay(1000)
-
-            val postInList = posts.find { it.id == post.id } ?: throw IllegalStateException()
-
-            postInList.isLiked = isLiked
-
-            if (isLiked) {
-                postInList.likesCount++
-            } else {
-                postInList.likesCount--
-            }
+    override suspend fun setIsLiked(
+        userId: String,
+        postDataEntity: PostDataEntity,
+        isLiked: Boolean
+    ) = withContext(ioDispatcher) {
+        withTimeout(AWAITING_TIME) {
+            postsDataSource.setIsLiked(userId, postDataEntity, isLiked)
         }
     }
 
-    override suspend fun setIsFavourite(userId: String, post: Post, isFavourite: Boolean) =
-        withContext(ioDispatcher) {
-            delay(1000)
-
-            // TODO
-            //throw Exception("a")
-
-            posts.find { it.id == post.id }?.isFavourite = isFavourite
+    override suspend fun setIsFavourite(
+        userId: String,
+        postDataEntity: PostDataEntity,
+        isFavourite: Boolean
+    ) = withContext(ioDispatcher) {
+        withTimeout(AWAITING_TIME) {
+            postsDataSource.setIsFavourite(userId, postDataEntity, isFavourite)
         }
-
-    /*override suspend fun likePost(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isLiked = true, likesCount = post.likesCount + 1))
     }
-
-    override suspend fun unlikePost(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isLiked = false, likesCount = post.likesCount - 1))
-    }
-
-    override suspend fun addPostToFavourites(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isAddedToFavourites = true))
-    }
-
-    override suspend fun removePostFromFavourites(userId: Int, post: Post) {
-        delay(1000)
-        updatePost(post.copy(isAddedToFavourites = false))
-    }*/
 
     // TODO увеличение числа PAGE_SIZE фиксит баг с отсуствием прокрутки (футер не вылезает) списка после обновления
     private companion object {
         const val PAGE_SIZE = 8
+        const val AWAITING_TIME = 5000L
     }
 }

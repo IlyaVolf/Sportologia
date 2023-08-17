@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isInvisible
@@ -15,7 +16,7 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListPostsBinding
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.REFRESH_POSTS_LIST_KEY
 import com.thesis.sportologia.ui.adapters.*
 import com.thesis.sportologia.ui.posts.adapters.PostsHeaderAdapter
 import com.thesis.sportologia.ui.posts.adapters.PostsPagerAdapter
@@ -42,8 +43,8 @@ abstract class ListPostsFragment : Fragment() {
 
     protected var userId by Delegates.notNull<String>()
     protected lateinit var binding: FragmentListPostsBinding
+    private lateinit var postsHeaderAdapter: PostsHeaderAdapter
     private lateinit var adapter: PostsPagerAdapter
-    private lateinit var mainLoadStateHolder: LoadStateAdapterPage.Holder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +73,7 @@ abstract class ListPostsFragment : Fragment() {
         Log.d("LIFE", "onCreateView ${this.hashCode()}")
         binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
+        initErrorActions()
         initResultsProcessing()
         initSwipeToRefresh()
         initPostsList()
@@ -80,6 +82,7 @@ abstract class ListPostsFragment : Fragment() {
         observePosts(adapter)
         observeLoadState(adapter)
         observeInvalidationEvents(adapter)
+        observeFilter()
 
         handleScrollingToTop(adapter)
         handleListVisibility(adapter)
@@ -87,6 +90,11 @@ abstract class ListPostsFragment : Fragment() {
         return binding.root
     }
 
+    private fun initErrorActions() {
+        binding.loadStateView.flpError.veTryAgain.setOnClickListener { adapter.retry() }
+    }
+
+    // сделать абстрактным
     private fun initResultsProcessing() {
         requireActivity().supportFragmentManager.setFragmentResultListener(
             CreateEditPostFragment.IS_CREATED_REQUEST_CODE,
@@ -109,13 +117,10 @@ abstract class ListPostsFragment : Fragment() {
         }
 
         requireActivity().supportFragmentManager.setFragmentResultListener(
-            ProfileFragment.REFRESH_REQUEST_CODE,
+            REFRESH_POSTS_LIST_KEY,
             viewLifecycleOwner
-        ) { _, data ->
-            val refresh = data.getBoolean(ProfileFragment.REFRESH)
-            if (refresh) {
-                viewModel.refresh()
-            }
+        ) { _, _ ->
+            viewModel.refresh()
         }
     }
 
@@ -135,23 +140,12 @@ abstract class ListPostsFragment : Fragment() {
         val adapterWithLoadState =
             adapter.withLoadStateHeaderAndFooter(headerAdapter, footerAdapter)
 
-        val swipeRefreshLayout = if (isSwipeToRefreshEnabled) {
-            binding.postsSwipeRefreshLayout
-        } else {
-            null
-        }
-        val postsHeaderAdapter = initPostHeaderAdapter()
+        postsHeaderAdapter = initPostHeaderAdapter()
         val concatAdapter = ConcatAdapter(postsHeaderAdapter, adapterWithLoadState)
 
         binding.postsList.layoutManager = LinearLayoutManager(context)
         binding.postsList.adapter = concatAdapter
         (binding.postsList.itemAnimator as? DefaultItemAnimator)?.supportsChangeAnimations = false
-
-        mainLoadStateHolder = LoadStateAdapterPage.Holder(
-            binding.loadStateView,
-            swipeRefreshLayout,
-            tryAgainAction
-        )
     }
 
     private fun initSwipeToRefresh() {
@@ -174,23 +168,25 @@ abstract class ListPostsFragment : Fragment() {
     }
 
     private fun observeLoadState(adapter: PostsPagerAdapter) {
-        // you can also use adapter.addLoadStateListener
+        // can also use adapter.addLoadStateListener
         lifecycleScope.launch {
             adapter.loadStateFlow.debounce(200).collectLatest { state ->
-                // main indicator in the center of the screen
-                mainLoadStateHolder.bind(state.refresh)
-            }
-        }
 
-        adapter.addLoadStateListener { loadState ->
-            if (loadState.source.refresh is LoadState.NotLoading
-                && loadState.append.endOfPaginationReached && adapter.itemCount < 1
-            ) {
-                binding.postsList.isVisible = false
-                binding.postsEmptyBlock.isVisible = true
-            } else {
-                binding.postsList.isVisible = true
-                binding.postsEmptyBlock.isVisible = false
+                val isError = state.refresh is LoadState.Error
+                val isLoading = state.refresh is LoadState.Loading
+                val isEmpty = (state.source.refresh is LoadState.NotLoading
+                        && state.append.endOfPaginationReached && adapter.itemCount < 1)
+
+                // main indicator in the center of the screen
+                binding.loadStateView.flpError.root.isVisible = isError
+                if (isSwipeToRefreshEnabled) {
+                    binding.postsSwipeRefreshLayout.isRefreshing = isLoading
+                    binding.loadStateView.flpLoading.root.isVisible = false
+                } else {
+                    binding.loadStateView.flpLoading.root.isVisible = isLoading
+                }
+                binding.postsEmptyBlock.isVisible = isEmpty
+                binding.postsList.isVisible = !isError
             }
         }
     }
@@ -238,6 +234,12 @@ abstract class ListPostsFragment : Fragment() {
     private fun observeInvalidationEvents(adapter: PostsPagerAdapter) {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
+        }
+    }
+
+    private fun observeFilter() {
+        viewModel.athTorgFLiveData.observe(viewLifecycleOwner) {
+            postsHeaderAdapter.setAthTorgF(it)
         }
     }
 

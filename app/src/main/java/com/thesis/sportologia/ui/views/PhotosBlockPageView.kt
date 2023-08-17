@@ -6,7 +6,8 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.ViewPhotosBlockPageBinding
+import com.thesis.sportologia.databinding.ViewPhotosBlockRowBinding
+import com.thesis.sportologia.utils.setPhoto
 import kotlin.properties.Delegates
 
 class PhotosBlockPageView(
@@ -16,7 +17,7 @@ class PhotosBlockPageView(
     defStyleRes: Int
 ) : LinearLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    private val binding: ViewPhotosBlockPageBinding
+    private val binding: ViewPhotosBlockRowBinding
 
     private var photosNumber by Delegates.notNull<Int>()
 
@@ -37,8 +38,8 @@ class PhotosBlockPageView(
 
     init {
         val inflater = LayoutInflater.from(context)
-        inflater.inflate(R.layout.view_photos_block_page, this, true)
-        binding = ViewPhotosBlockPageBinding.bind(this)
+        inflater.inflate(R.layout.view_photos_block_row, this, true)
+        binding = ViewPhotosBlockRowBinding.bind(this)
         initAttributes(attrs, defStyleAttr, defStyleRes)
     }
 
@@ -61,9 +62,74 @@ class PhotosBlockPageView(
         photo3 = typedArray.getResourceId(R.styleable.PhotosBlockPageView_pbp_photo_3, 0)
         photo4 = typedArray.getResourceId(R.styleable.PhotosBlockPageView_pbp_photo_4, 0)
 
-        drawPhotos()
+        //drawPhotos()
 
         typedArray.recycle()
+    }
+
+    fun setPhotos(photos: List<String>) {
+        photosNumber = photos.size
+
+        binding.row1.visibility = GONE
+        binding.row1.weightSum = 160f
+
+        binding.photo1.visibility = GONE
+        binding.photo2.visibility = GONE
+        binding.photo3.visibility = GONE
+        binding.photo4.visibility = GONE
+        binding.space1.visibility = GONE
+        binding.space2.visibility = GONE
+        binding.space3.visibility = GONE
+
+        when (photosNumber) {
+            0 -> {
+            }
+            1 -> {
+                binding.row1.visibility = VISIBLE
+
+                setPhoto(photos[0], context, binding.photo1)
+                binding.photo1.visibility = VISIBLE
+            }
+            2 -> {
+                binding.row1.visibility = VISIBLE
+
+                binding.space1.visibility = VISIBLE
+
+                setPhoto(photos[0], context, binding.photo1)
+                binding.photo1.visibility = VISIBLE
+                setPhoto(photos[1], context, binding.photo2)
+                binding.photo2.visibility = VISIBLE
+            }
+            3 -> {
+                binding.row1.visibility = VISIBLE
+
+                binding.space1.visibility = VISIBLE
+                binding.space2.visibility = VISIBLE
+
+                setPhoto(photos[0], context, binding.photo1)
+                binding.photo1.visibility = VISIBLE
+                setPhoto(photos[1], context, binding.photo2)
+                binding.photo2.visibility = VISIBLE
+                setPhoto(photos[2], context, binding.photo3)
+                binding.photo3.visibility = VISIBLE
+            }
+            4 -> {
+                binding.row1.visibility = VISIBLE
+
+                binding.space1.visibility = VISIBLE
+                binding.space2.visibility = VISIBLE
+                binding.space3.visibility = VISIBLE
+
+                setPhoto(photos[0], context, binding.photo1)
+                binding.photo1.visibility = VISIBLE
+                setPhoto(photos[1], context, binding.photo2)
+                binding.photo2.visibility = VISIBLE
+                setPhoto(photos[2], context, binding.photo3)
+                binding.photo3.visibility = VISIBLE
+                setPhoto(photos[3], context, binding.photo4)
+                binding.photo4.visibility = VISIBLE
+            }
+        }
     }
 
     private fun drawPhotos() {

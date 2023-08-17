@@ -1,10 +1,12 @@
 package com.thesis.sportologia.ui
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.users.UsersRepository
 import com.thesis.sportologia.ui.base.BaseViewModel
+import com.thesis.sportologia.ui.events.LogInUseCase
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,34 +21,31 @@ class HomeViewModel @Inject constructor(
 
     private val userId = CurrentAccount().id
 
-    private val _avatarHolder = ObservableHolder<String?>(DataHolder.loading())
-    val avatarHolder = _avatarHolder.share()
+    private val _profilePhotoHolder = ObservableHolder<String?>(DataHolder.loading())
+    val profilePhotoHolder = _profilePhotoHolder.share()
 
     init {
         init()
     }
 
     fun init() = viewModelScope.launch(Dispatchers.IO) {
+       // Log.d("abcdef", "usecase1")
+       // LogInUseCase(Dispatchers.IO)
         withContext(Dispatchers.Main) {
-            _avatarHolder.value = DataHolder.loading()
+            _profilePhotoHolder.value = DataHolder.loading()
         }
         getUser()
     }
 
     private suspend fun getUser() {
         try {
-            val user = usersRepository.getUser(userId)
+            val user = usersRepository.getUser(CurrentAccount().id, userId)
             withContext(Dispatchers.Main) {
-                if (user != null) {
-                    _avatarHolder.value =
-                        DataHolder.ready(user.profilePhotoURI)
-                } else {
-                    _avatarHolder.value = DataHolder.error(Exception("no such user"))
-                }
+                _profilePhotoHolder.value = DataHolder.ready(user.profilePhotoURI)
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
-                _avatarHolder.value = DataHolder.error(e)
+                _profilePhotoHolder.value = DataHolder.error(e)
             }
         }
     }

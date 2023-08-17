@@ -20,7 +20,15 @@
         android:id="@+id/signUpFragment"
         android:name="com.thesis.sportologia.ui.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up" >
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_signUpFragment_to_profileSettingsSignUpFragment"
+            app:destination="@id/profileSettingsSignUpFragment" />
+    </fragment>
     <fragment
         android:id="@+id/tabsFragment"
         android:name="com.thesis.sportologia.ui.TabsFragment"
@@ -47,6 +55,9 @@
         <action
             android:id="@+id/action_tabsFragment_to_createEditServiceFragment"
             app:destination="@id/createEditServiceFragment" />
+        <action
+            android:id="@+id/action_tabsFragment_to_filterFragmentServices"
+            app:destination="@id/filterFragmentServices" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -98,22 +109,45 @@
         android:name="com.thesis.sportologia.ui.services.CreateEditServiceFragment"
         android:label="fragment_create_edit_service"
         tools:layout="@layout/fragment_create_edit_service" >
+        <argument
+            android:name="serviceId"
+            app:argType="com.thesis.sportologia.ui.services.CreateEditServiceFragment$ServiceId" />
         <action
-            android:id="@+id/action_createEditServiceFragment_to_createEditServiceDetailedFragment"
-            app:destination="@id/createEditServiceDetailedFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/createEditServiceDetailedFragment"
-        android:name="com.thesis.sportologia.ui.services.CreateEditServiceDetailedFragment"
-        android:label="fragment_create_edit_service_detailed"
-        tools:layout="@layout/fragment_create_edit_service_detailed" >
-        <action
-            android:id="@+id/action_createEditServiceDetailedFragment_to_createEditExerciseFragment"
+            android:id="@+id/action_createEditServiceFragment_to_createEditExerciseFragment"
             app:destination="@id/createEditExerciseFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEditExerciseFragment"
         android:name="com.thesis.sportologia.ui.services.CreateEditExerciseFragment"
         android:label="fragment_create_edit_exercise"
-        tools:layout="@layout/fragment_create_edit_exercise" />
+        tools:layout="@layout/fragment_create_edit_exercise" >
+        <argument
+            android:name="exercise"
+            app:argType="com.thesis.sportologia.model.services.entities.ExerciseDataEntity"
+            app:nullable="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/filterFragmentServices"
+        android:name="com.thesis.sportologia.ui.FilterFragmentServices"
+        android:label="fragment_filter_services"
+        tools:layout="@layout/fragment_filter_services">
+        <argument
+            android:name="filterParams"
+            app:argType="com.thesis.sportologia.model.FilterParams" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileSettingsSignUpFragment"
+        android:name="com.thesis.sportologia.ui.ProfileSettingsSignUpFragment"
+        android:label="fragment_profile_settings_signup"
+        tools:layout="@layout/fragment_profile_settings_signup" >
+        <argument
+            android:name="email"
+            app:argType="string" />
+        <argument
+            android:name="password"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_profileSettingsSignUpFragment_to_tabsFragment"
+            app:destination="@id/tabsFragment" />
+    </fragment>
 </navigation>

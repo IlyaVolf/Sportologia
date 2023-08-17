@@ -1,21 +1,20 @@
 package com.thesis.sportologia.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.navigation.NavArgument
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ActivityMainBinding
+import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 /**
  * Container for all screens in the app.
@@ -49,16 +48,19 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setContentView(R.layout.activity_main)
-
-        Log.d("BUGFIX","")
-
         val binding = ActivityMainBinding.inflate(layoutInflater).also { setContentView(it.root) }
 
+        val locale = Locale("ru", "RU")
+        Locale.setDefault(locale)
+
         val navController = getRootNavController()
-        prepareRootNavController(navController)
+        prepareRootNavController(isSignedIn(), navController)
         onNavControllerActivated(navController)
 
         supportFragmentManager.registerFragmentLifecycleCallbacks(fragmentListener, true)
+
+        MapKitFactory.setApiKey("9eb8aa69-aac3-42cb-b67f-fbe4c5bff23b")
+        //MapKitFactory.initialize(this)
 
         /*navController.addOnDestinationChangedListener { controller, destination, arguments ->
             when(destination.id) {
@@ -116,9 +118,15 @@ class MainActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean =
         (navController?.navigateUp() ?: false) || super.onSupportNavigateUp()
 
-    private fun prepareRootNavController(navController: NavController) {
+    private fun prepareRootNavController(isSignedIn: Boolean, navController: NavController) {
         val graph = navController.navInflater.inflate(getMainNavigationGraphId())
-        graph.setStartDestination(getTabsDestination())
+        graph.setStartDestination(
+            if (isSignedIn) {
+                getTabsDestination()
+            } else {
+                getSignInDestination()
+            }
+        )
         navController.graph = graph
     }
 

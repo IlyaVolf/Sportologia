@@ -4,6 +4,9 @@
     package="com.thesis.sportologia">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.thesis.sportologia.App"
@@ -19,8 +22,8 @@
 
         <activity
             android:name="com.thesis.sportologia.ui.SplashActivity"
-            android:theme="@style/SplashActivityStyle"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/SplashActivityStyle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

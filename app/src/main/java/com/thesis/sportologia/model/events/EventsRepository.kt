@@ -1,31 +1,53 @@
 package com.thesis.sportologia.model.events
 
 import androidx.paging.PagingData
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 
 interface EventsRepository {
 
-    suspend fun getPagedUserEvents(userId: String): Flow<PagingData<Event>>
+    val localChanges: EventsLocalChanges
+    val localChangesFlow: MutableStateFlow<OnChange<EventsLocalChanges>>
 
-    suspend fun getPagedUserSubscribedOnEvents(userId: String, isUpcomingOnly: Boolean): Flow<PagingData<Event>>
+    suspend fun getPagedEvents(
+        userId: String,
+        searchQuery: String,
+        filter: FilterParamsEvents
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedUserFavouriteEvents(isUpcomingOnly: Boolean): Flow<PagingData<Event>>
+    suspend fun getPagedUserEvents(
+        organizerId: String,
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getPagedEvents(searchQuery: String, filter: FilterParamsEvents): Flow<PagingData<Event>>
+    suspend fun getPagedUserSubscribedOnEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun getEvent(postId: Long): Event?
+    suspend fun getPagedUserFavouriteEvents(
+        userId: String,
+        isUpcomingOnly: Boolean
+    ): Flow<PagingData<EventDataEntity>>
 
-    suspend fun createEvent(post: Event)
+    suspend fun getEvent(eventId: String, userId: String): EventDataEntity?
 
-    suspend fun updateEvent(post: Event)
+    suspend fun createEvent(eventDataEntity: EventDataEntity)
 
-    suspend fun deleteEvent(postId: Long)
+    suspend fun updateEvent(eventDataEntity: EventDataEntity)
 
-    suspend fun setIsLiked(userId: String, post: Event, isLiked: Boolean)
+    suspend fun deleteEvent(eventId: String)
 
-    suspend fun setIsFavourite(userId: String, post: Event, isFavourite: Boolean)
+    suspend fun setIsLiked(userId: String, eventDataEntity: EventDataEntity, isLiked: Boolean)
+
+    suspend fun setIsFavourite(
+        userId: String,
+        eventDataEntity: EventDataEntity,
+        isFavourite: Boolean
+    )
 
 }

@@ -5,9 +5,10 @@ import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.services.ServicesRepository
-import com.thesis.sportologia.model.services.entities.Service
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
+import com.thesis.sportologia.model.services.entities.ServiceDataEntity
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -21,10 +22,10 @@ class ListServicesViewModelSearch @AssistedInject constructor(
     logger: Logger
 ) : ListServicesViewModel(filterParams, userId, servicesRepository, logger) {
 
-    override fun getDataFlow(): Flow<PagingData<Service>> {
+    override fun getDataFlow(): Flow<PagingData<ServiceDataEntity>> {
         return searchLive.asFlow()
             .flatMapLatest {
-                servicesRepository.getPagedServices(it, filterParamsLive.value!!)
+                servicesRepository.getPagedServices(CurrentAccount().id, it, filterParamsLive.value!!)
             }.cachedIn(viewModelScope)
     }
 

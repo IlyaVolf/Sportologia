@@ -8,25 +8,23 @@ class EventsHeaderAdapterHome(
     fragment: Fragment,
     val listener: FilterListener,
     filterParamsEvents: FilterParamsEvents,
-    val isUpcomingOnly: Boolean,
 ) : EventsHeaderAdapter(fragment, listener, filterParamsEvents) {
 
     override fun createHolder(
         fragment: Fragment,
         binding: FragmentListEventsHeaderBinding
     ): Holder {
-        return HolderHome(fragment, listener, binding, isUpcomingOnly)
+        return HolderHome(fragment, listener, binding)
     }
 
     class HolderHome(
         fragment: Fragment,
         listener: FilterListener,
         binding: FragmentListEventsHeaderBinding,
-        isUpcomingOnly: Boolean,
     ) : Holder(fragment, binding, listener) {
 
         override val renderHeader: () -> Unit = {
-            enableEventsFilter(isUpcomingOnly)
+            enableEventsFilter()
         }
 
     }

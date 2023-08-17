@@ -112,7 +112,17 @@ class MultiChoiceBasicView(
         updateText()
     }
 
-    fun getCheckedDataMap(customKeys: Array<String>?): Map<String, Boolean> {
+    fun getCheckedDataMap(): Map<String, Boolean> {
+        val map = hashMapOf<String, Boolean>()
+
+        for (i in checkedData.indices) {
+            map[data[i]] = checkedData[i]
+        }
+
+        return map
+    }
+
+   /*fun getCheckedDataMap(customKeys: Array<String>?): Map<String, Boolean> {
         val list = hashMapOf<String, Boolean>()
 
         for (i in checkedData.indices) {
@@ -124,7 +134,7 @@ class MultiChoiceBasicView(
         }
 
         return list
-    }
+    }*/
 
     fun getCheckedData(): List<DataExtended> {
         val list = mutableListOf<DataExtended>()
@@ -141,7 +151,7 @@ class MultiChoiceBasicView(
     }
 
     private fun updateText() {
-        binding.textBlock.text = concatMap(getCheckedDataMap(null), SEPARATOR)
+        binding.textBlock.text = concatMap(getCheckedDataMap(), SEPARATOR)
     }
 
     private fun initListeners() {

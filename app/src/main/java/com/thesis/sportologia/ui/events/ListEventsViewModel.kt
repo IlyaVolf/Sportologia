@@ -7,11 +7,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
+import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
+import com.thesis.sportologia.model.OnChange
+import com.thesis.sportologia.model.events.EventsLocalChanges
 import com.thesis.sportologia.model.events.EventsRepository
-import com.thesis.sportologia.model.events.entities.Event
+import com.thesis.sportologia.model.events.entities.EventDataEntity
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.model.users.entities.FilterParamsUsers
 import com.thesis.sportologia.ui.base.BaseViewModel
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
@@ -27,20 +29,17 @@ abstract class ListEventsViewModel constructor(
     private val userId: String,
     private val eventsRepository: EventsRepository,
     logger: Logger
-) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener, EventsHeaderAdapter.FilterListener {
+) : BaseViewModel(logger), EventsPagerAdapter.MoreButtonListener,
+    EventsHeaderAdapter.FilterListener {
 
     protected val searchLive = MutableLiveData("")
     protected val filterParamsLive = MutableLiveData<FilterParamsEvents>()
 
-    private val isUpcomingOnlyLiveData = MutableLiveData(true)
-    var isUpcomingOnly: Boolean
-        get() = isUpcomingOnlyLiveData.value!!
-        set(value) {
-            isUpcomingOnlyLiveData.value = value
-        }
+    private val _isUpcomingOnlyLiveData = MutableLiveData(true)
+    val isUpcomingOnlyLiveData = _isUpcomingOnlyLiveData.share()
 
-    private val localChanges = LocalChanges()
-    private val localChangesFlow = MutableStateFlow(OnChange(localChanges))
+    private val localChanges = eventsRepository.localChanges
+    private val localChangesFlow = eventsRepository.localChangesFlow
 
     private val _errorEvents = MutableLiveEvent<Int>()
     val errorEvents = _errorEvents.share()
@@ -65,7 +64,7 @@ abstract class ListEventsViewModel constructor(
         )
     }
 
-    abstract fun getDataFlow(): Flow<PagingData<Event>>
+    abstract fun getDataFlow(): Flow<PagingData<EventDataEntity>>
 
     override fun onEventDelete(eventListItem: EventListItem) {
         if (isInProgress(eventListItem.id)) return
@@ -113,9 +112,9 @@ abstract class ListEventsViewModel constructor(
     }
 
     override fun filterApply(isUpcomingOnly: Boolean) {
-        if (this.isUpcomingOnly == isUpcomingOnly) return
+        if (_isUpcomingOnlyLiveData.value == isUpcomingOnly) return
 
-        this.isUpcomingOnly = isUpcomingOnly
+        _isUpcomingOnlyLiveData.value = isUpcomingOnly
         refresh()
     }
 
@@ -126,7 +125,7 @@ abstract class ListEventsViewModel constructor(
     }
 
     fun refresh() {
-        this.searchLive.postValue(this.searchLive.value)
+        this.searchLive.value = this.searchLive.value
     }
 
     fun onEventCreated() {
@@ -138,18 +137,28 @@ abstract class ListEventsViewModel constructor(
     }
 
     private suspend fun setLike(eventListItem: EventListItem) {
-        val newFlagValue = !eventListItem.isLiked
-        eventsRepository.setIsLiked(userId, eventListItem.event, newFlagValue)
-        localChanges.isLikedFlags[eventListItem.id] = newFlagValue
-        //localChanges.isTextFlags[eventListItem.id] = eventListItem.text + "asgagasagag"
-        localChangesFlow.value = OnChange(localChanges)
+        try {
+            val newFlagValue = !eventListItem.isLiked
+            eventsRepository.setIsLiked(CurrentAccount().id, eventListItem.eventDataEntity, newFlagValue)
+            localChanges.isLikedFlags[eventListItem.id] = newFlagValue
+            localChanges.likesCount[eventListItem.id] =
+                (localChanges.likesCount[eventListItem.id]
+                    ?: eventListItem.likesCount) + (if (newFlagValue) 1 else -1)
+            localChangesFlow.value = OnChange(localChanges)
+        } catch (e: Exception) {
+            showError(R.string.error_loading_title)
+        }
     }
 
     private suspend fun setFavoriteFlag(eventListItem: EventListItem) {
-        val newFlagValue = !eventListItem.isFavourite
-        eventsRepository.setIsFavourite(userId, eventListItem.event, newFlagValue)
-        localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
-        localChangesFlow.value = OnChange(localChanges)
+        try {
+            val newFlagValue = !eventListItem.isFavourite
+            eventsRepository.setIsFavourite(CurrentAccount().id, eventListItem.eventDataEntity, newFlagValue)
+            localChanges.isFavouriteFlags[eventListItem.id] = newFlagValue
+            localChangesFlow.value = OnChange(localChanges)
+        } catch (e: Exception) {
+            showError(R.string.error_loading_title)
+        }
     }
 
     private suspend fun delete(eventListItem: EventListItem) {
@@ -157,7 +166,7 @@ abstract class ListEventsViewModel constructor(
         invalidateList()
     }
 
-    private fun setProgress(eventListItemId: Long, inProgress: Boolean) {
+    private fun setProgress(eventListItemId: String, inProgress: Boolean) {
         if (inProgress) {
             localChanges.idsInProgress.add(eventListItemId)
         } else {
@@ -166,7 +175,7 @@ abstract class ListEventsViewModel constructor(
         localChangesFlow.value = OnChange(localChanges)
     }
 
-    private fun isInProgress(eventListItemId: Long) =
+    private fun isInProgress(eventListItemId: String) =
         localChanges.idsInProgress.contains(eventListItemId)
 
     private fun showError(@StringRes errorMessage: Int) {
@@ -182,45 +191,33 @@ abstract class ListEventsViewModel constructor(
     }
 
     private fun merge(
-        events: PagingData<Event>,
-        localChanges: OnChange<LocalChanges>
+        events: PagingData<EventDataEntity>,
+        localChanges: OnChange<EventsLocalChanges>
     ): PagingData<EventListItem> {
         return events
             .map { event ->
+                Log.d("abcdef", "merge ${event.isLiked} ${localChanges}")
+
                 val isInProgress = localChanges.value.idsInProgress.contains(event.id)
                 val localFavoriteFlag = localChanges.value.isFavouriteFlags[event.id]
                 val localLikedFlag = localChanges.value.isLikedFlags[event.id]
+                val localLikesCountFlag = localChanges.value.likesCount[event.id]
 
-                val eventWithLocalChanges = event
+                var eventWithLocalChanges = event.copy()
                 if (localFavoriteFlag != null) {
-                    eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
+                    eventWithLocalChanges =
+                        eventWithLocalChanges.copy(isFavourite = localFavoriteFlag)
                 }
                 if (localLikedFlag != null) {
-                    eventWithLocalChanges.copy(isFavourite = localLikedFlag)
+                    eventWithLocalChanges = eventWithLocalChanges.copy(isLiked = localLikedFlag)
+                }
+                if (localLikesCountFlag != null) {
+                    eventWithLocalChanges =
+                        eventWithLocalChanges.copy(likesCount = localLikesCountFlag)
                 }
 
                 EventListItem(eventWithLocalChanges, isInProgress)
             }
-    }
-
-    /**
-     * Non-data class which allows passing the same reference to the
-     * MutableStateFlow multiple times in a row.
-     */
-    class OnChange<T>(val value: T)
-
-    /**
-     * Contains:
-     * 1) identifiers of items which are processed now (deleting or favorite
-     * flag updating).
-     * 2) local isLiked and isFavourite flag updates to avoid list reloading
-     */
-    class LocalChanges {
-        val idsInProgress = mutableSetOf<Long>()
-
-        // TODO фото
-        val isLikedFlags = mutableMapOf<Long, Boolean>()
-        val isFavouriteFlags = mutableMapOf<Long, Boolean>()
     }
 
 }

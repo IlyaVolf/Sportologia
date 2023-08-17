@@ -60,6 +60,15 @@ sealed class DataHolder<out TData> {
     }
 
     /**
+     * @param block Будет вызван во всех состояниях кроме загрузки данных
+     */
+    inline fun onNotLoading(block: () -> Unit) {
+        if (this !is LOADING) {
+            block()
+        }
+    }
+
+    /**
      * @param block Будет вызван в состоянии ошибки загрузки данных
      */
     inline fun onError(block: (Throwable) -> Unit) {
@@ -99,6 +108,11 @@ sealed class DataHolder<out TData> {
      * Проверка на состояние готовности
      */
     inline val isReady get() = this is READY
+
+    /**
+     * Проверка на состояние неготовности
+     */
+    inline val isNotReady get() = this !is READY
 
     /**
      * Проверка на состояние ошибки

@@ -29,8 +29,8 @@ class UsersPagerAdapter(
             iuName.text = userSnippetListItem.name
             setAvatar(userSnippetListItem.profilePhotoURI, context, iuAvatar)
 
-            val addressText = userSnippetListItem.address?.toString() ?: ""
-            if (addressText == "") {
+            val addressText = YandexMaps.getAddress(context, userSnippetListItem.position)
+            if (addressText == null) {
                 iuAddress.visibility = GONE
             } else {
                 iuAddress.visibility = VISIBLE

@@ -38,6 +38,7 @@ class FavouritesFragment : Fragment() {
         initToolbar()
         initContentBlock()
         initNavToProfile()
+        initOnInfoPressed()
 
         return binding.root
     }
@@ -92,6 +93,29 @@ class FavouritesFragment : Fragment() {
                     }
                 })
         }
+    }
+
+    private fun initOnInfoPressed() {
+        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getLong(SERVICE_ID)
+            val direction =
+                FavouritesFragmentDirections.actionFavouritesFragmentToService(
+                    serviceId
+                )
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }*/
     }
 
     private fun onBackButtonPressed() {

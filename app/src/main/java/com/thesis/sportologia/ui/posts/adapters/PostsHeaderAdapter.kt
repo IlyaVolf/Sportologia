@@ -15,8 +15,16 @@ import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 
 abstract class PostsHeaderAdapter(
     private val fragment: Fragment,
-    private val listener: FilterListener
+    private val listener: FilterListener,
 ) : RecyclerView.Adapter<PostsHeaderAdapter.Holder>() {
+
+    private var athTorgF: Boolean? = null
+
+    @JvmName("setAthTorgF1")
+    fun setAthTorgF(athTorgF: Boolean?) {
+        this.athTorgF = athTorgF
+        notifyDataSetChanged()
+    }
 
     protected lateinit var binding: FragmentListPostsHeaderBinding
 
@@ -36,7 +44,7 @@ abstract class PostsHeaderAdapter(
         binding.createPostButtonSpace.isVisible = false
     }
 
-    protected fun enablePostsFilter(athTorgF: Boolean?) {
+    protected fun enablePostsFilter() {
         binding.postsFilter.root.isVisible = true
         binding.postsFilterSpace.isVisible = true
         binding.postsFilter.spinner.initAdapter(filterOptionsList, getFilterValue(athTorgF))

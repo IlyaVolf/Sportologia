@@ -1,24 +1,34 @@
 package com.thesis.sportologia.ui.posts
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreateEditPostBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.ui.base.BaseFragment
+import com.thesis.sportologia.ui.events.entities.EventCreateEditItem
+import com.thesis.sportologia.ui.events.entities.toCreateEditItem
+import com.thesis.sportologia.ui.posts.entities.PostCreateEditItem
+import com.thesis.sportologia.ui.posts.entities.toCreateEditItem
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
-import com.thesis.sportologia.utils.createSimpleDialog
-import com.thesis.sportologia.utils.observeEvent
-import com.thesis.sportologia.utils.viewModelCreator
+import com.thesis.sportologia.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.Serializable
 import javax.inject.Inject
@@ -38,23 +48,16 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         factory.create(postId)
     }
 
-    private var postId: Long? = null
+    private var postId: String? = null
+    private var isDataReceived = false
+    private var currentPostCreateEditItem: PostCreateEditItem =
+        PostCreateEditItem.getEmptyInstance()
 
     private lateinit var mode: Mode
 
     private val args by navArgs<CreateEditPostFragmentArgs>()
-
-    // TODO
-    private val photosUrls = mutableListOf<String>()
-
-    private var savedText: String? = null
-
     private lateinit var binding: FragmentCreateEditPostBinding
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(TEXT_KEY, binding.text.text.toString())
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,7 +68,6 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         initMode()
         initRender()
 
-        savedText = savedInstanceState?.getString(TEXT_KEY)
         observeGoBackEvent()
         observeToastMessageEvent()
 
@@ -95,6 +97,26 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
             }
         }
 
+        initAddPhotosButton()
+    }
+
+    private fun initAddPhotosButton() {
+        binding.addPhotosButton.setOnClickListener {
+            if (ContextCompat.checkSelfPermission(
+                    context!!,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    requireActivity(), arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
+            } else {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
     }
 
     private fun initMode() {
@@ -107,33 +129,32 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         }
     }
 
-    private fun setEditableText(post: Post?) {
-        if (post == null) return
-
-        if (savedText == null) {
-            binding.text.setText(post.text)
-        } else {
-            binding.text.setText(savedText)
+    private fun renderData() {
+        if (currentPostCreateEditItem.text != null) {
+            binding.text.setText(currentPostCreateEditItem.text!!)
         }
     }
 
-
-    private fun getPostIdArg(): Long? = args.postId.postId
+    private fun getPostIdArg(): String? = args.postId.postId
 
     private fun onCancelButtonPressed() {
-        createDialog()
+        createCancelDialog()
     }
 
-
-    private fun onSaveButtonPressed() {
-        viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
-            if (holder !is DataHolder.LOADING) {
-                viewModel.onSaveButtonPressed(binding.text.text.toString(), photosUrls)
-            }
+    private fun getCurrentData() {
+        with(currentPostCreateEditItem) {
+            text = binding.text.text.toString()
         }
     }
 
-    private fun createDialog() {
+    private fun onSaveButtonPressed() {
+        getCurrentData()
+        viewModel.saveHolder.value?.onNotLoading {
+            viewModel.onSaveButtonPressed(currentPostCreateEditItem)
+        }
+    }
+
+    private fun createCancelDialog() {
         val messageText = getString(R.string.ask_cancel_post_warning)
 
         val neutralButtonText = getString(R.string.action_back)
@@ -162,12 +183,13 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
             },
             null,
             null,
-            )
+        )
     }
 
     override fun observeViewModel() {
         viewModel.saveHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fcpLoading.root.visibility = VISIBLE
                     binding.fcpError.root.visibility = GONE
@@ -190,6 +212,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
         viewModel.postHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
+                DataHolder.INIT -> {}
                 DataHolder.LOADING -> {
                     binding.fcpLoading.root.visibility = VISIBLE
                     binding.fcpError.root.visibility = GONE
@@ -200,7 +223,11 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
                     binding.fcpError.root.visibility = GONE
                     binding.textBlock.visibility = VISIBLE
 
-                    setEditableText(holder.data)
+                    if (holder.data != null && !isDataReceived) {
+                        currentPostCreateEditItem = holder.data.toCreateEditItem()
+                        isDataReceived = true
+                    }
+                    renderData()
                 }
                 is DataHolder.ERROR -> {
                     binding.fcpLoading.root.visibility = GONE
@@ -255,7 +282,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         viewModel.toastMessageEvent.observeEvent(viewLifecycleOwner) {
             val errorText =
                 when (it) {
-                    CreateEditPostViewModel.ErrorType.EMPTY_POST -> getString(R.string.error_empty_post)
+                    CreateEditPostViewModel.ErrorType.EMPTY_TEXT -> getString(R.string.error_empty_post)
                 }
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
@@ -268,23 +295,40 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
     // TODO parcelable
     data class PostId(
-        val postId: Long?
+        val postId: String?
     ) : Serializable
 
     companion object {
-        /*data class EditResult(
-            val isSaved: Boolean,
-            val postId: Long?,
-            val text: String?,
-        ) : Serializable*/
-
         const val TEXT_KEY = "TEXT_KEY"
 
         const val IS_CREATED = "IS_CREATED"
         const val IS_EDITED = "IS_EDITED"
 
-        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE"
-        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
+        const val IS_CREATED_REQUEST_CODE = "IS_CREATED_REQUEST_CODE_POST"
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE_POST"
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                val intent =
+                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                startActivityForResult(intent, 2)
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null) {
+            val pickedPhoto = data.data.toString()
+            currentPostCreateEditItem.photosUrls = currentPostCreateEditItem.photosUrls + pickedPhoto
+        }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 }

@@ -1,30 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.ServicesAcquiredFragment">
+    tools:context="com.thesis.sportologia.ui.HomeFragment">
 
-    <com.thesis.sportologia.ui.views.ToolbarBasicView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/materialup.appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tb_toolbarTitle="@string/acquired_services" />
+        android:backgroundTint="@color/background">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:titleEnabled="false">
 
-            <include layout="@layout/fragment_list_services"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        </LinearLayout>
+                <com.thesis.sportologia.ui.views.ToolbarBasicView
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:tb_isToolbarUnderlined="false"
+                    app:tb_toolbarTitle="@string/acquired_services" />
 
-    </ScrollView>
+            </LinearLayout>
 
-</LinearLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

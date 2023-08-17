@@ -4,9 +4,8 @@ import androidx.fragment.app.Fragment
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
-import com.thesis.sportologia.model.services.entities.Service
+import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.utils.*
-import java.util.*
 
 class ServicesHeaderAdapterSearch(
     fragment: Fragment,
@@ -71,9 +70,9 @@ class ServicesHeaderAdapterSearch(
             if (filterParamsServices.ratingFrom != null) {
                 val restrictionBlock = StringBuilder("")
 
-                restrictionBlock.append(fragment.getString(R.string.service_rating_hint_from))
+                restrictionBlock.append(fragment.getString(R.string.rating_from))
                     .append(" ")
-                    .append(formatFloat(filterParamsServices.ratingFrom!!, 1))
+                    .append(formatFloat(filterParamsServices.ratingFrom!!, 1, true))
 
                 restrictionBlockList.add(restrictionBlock.toString())
             }
@@ -83,7 +82,7 @@ class ServicesHeaderAdapterSearch(
 
                 restrictionBlock.append(
                     when (filterParamsServices.serviceType!!) {
-                        Service.ServiceType.TRAINING_PROGRAM ->
+                        ServiceType.TRAINING_PROGRAM ->
                             fragment.getString(R.string.service_training_program_short)
                     }
                 )

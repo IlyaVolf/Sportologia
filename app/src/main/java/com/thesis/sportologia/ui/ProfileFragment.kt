@@ -17,6 +17,7 @@ import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentProfileBinding
 import com.thesis.sportologia.model.DataHolder
+import com.thesis.sportologia.model.photos.entities.Photo
 import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOther
 import com.thesis.sportologia.ui.posts.ListPostsFragmentProfileOwn
 import com.thesis.sportologia.ui.adapters.PagerAdapter
@@ -54,12 +55,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
 
     private val args by navArgs<ProfileFragmentArgs>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        Log.d("SEARCHH", "onCreate PROFILE")
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -74,6 +69,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             Profile.OTHER -> initRenderProfileOther()
         }
 
+        initResultListeners()
         initNavToProfile()
 
         return binding.root
@@ -93,6 +89,15 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             CurrentAccount().id
         } else {
             userId
+        }
+    }
+
+    private fun initResultListeners() {
+        requireActivity().supportFragmentManager.setFragmentResultListener(
+            IS_EDITED_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, _ ->
+            viewModel.refresh()
         }
     }
 
@@ -118,6 +123,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButtonsBlock.visibility = View.VISIBLE
 
         initToolbar()
+        initOnInfoPressed()
         initFollowersButton()
         initFollowingsButton()
         initRefreshLayout()
@@ -169,8 +175,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             viewModel.refresh()
 
             requireActivity().supportFragmentManager.setFragmentResult(
-                REFRESH_REQUEST_CODE,
-                bundleOf(REFRESH to true)
+                REFRESH_POSTS_LIST_KEY,
+                bundleOf()
+            )
+
+            requireActivity().supportFragmentManager.setFragmentResult(
+                REFRESH_SERVICES_LIST_KEY,
+                bundleOf()
+            )
+
+            requireActivity().supportFragmentManager.setFragmentResult(
+                REFRESH_EVENTS_LIST_KEY,
+                bundleOf()
             )
         }
 
@@ -269,17 +285,17 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     override fun observeViewModel() {
         viewModel.userHolder.observe(viewLifecycleOwner) { holder ->
             when (holder) {
-                DataHolder.LOADING -> {
-                    binding.swipeRefreshLayout.isRefreshing = true
-                    binding.fpLoading.root.visibility = View.INVISIBLE
-                    binding.fpError.root.visibility = View.INVISIBLE
-                    binding.fpContentBlock.visibility = View.VISIBLE
-                }
                 DataHolder.INIT -> {
                     binding.swipeRefreshLayout.isRefreshing = false
                     binding.fpLoading.root.visibility = View.VISIBLE
                     binding.fpError.root.visibility = View.INVISIBLE
                     binding.fpContentBlock.visibility = View.INVISIBLE
+                }
+                DataHolder.LOADING -> {
+                    binding.swipeRefreshLayout.isRefreshing = true
+                    binding.fpLoading.root.visibility = View.INVISIBLE
+                    binding.fpError.root.visibility = View.INVISIBLE
+                    binding.fpContentBlock.visibility = View.VISIBLE
                 }
                 is DataHolder.READY -> {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -288,16 +304,6 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     binding.fpContentBlock.visibility = View.VISIBLE
 
                     renderUserDetails(holder.data)
-                    // TODO идея, чтобы при подписке все не перезагружать. Но работает так себе
-                    // TODO при переходе от одного экрана  к другому, видимо, все заново грузит
-                    /*    when (holder.data.lastAction) {
-                            UserListItem.LastAction.INIT -> {
-                                renderUserDetails(holder.data)
-                            }
-                            UserListItem.LastAction.SUBSCRIBE_CHANGED -> {
-                                renderUserDetailsOnSubscriptionAction(holder.data)
-                            }
-                     }*/
                 }
                 is DataHolder.ERROR -> {
                     binding.swipeRefreshLayout.isRefreshing = false
@@ -331,12 +337,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         binding.subscribeButton.setButtonPressed(userItem.isSubscribed)
     }
 
+    private fun renderPhotosBlock(photosCount: Int, photosSnippets: List<String>) {
+        binding.photosBlock.photoLabelAndCount.text =
+            getString(R.string.photos) + " (" + photosCount + ")"
+        binding.photosBlock.photosRow.setPhotos(photosSnippets)
+    }
+
     private fun renderUserDetails(userItem: UserListItem) {
         binding.subscribeButton.setOnClickListener {
             onSubscribeButtonPressed()
         }
 
-        binding.openPhotosButton.setOnClickListener {
+        binding.photosBlock.root.setOnClickListener {
             onOpenPhotosButtonPressed()
         }
 
@@ -345,16 +357,18 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             is AthleteListItem -> binding.userType.text = getString(R.string.athlete)
             is OrganizationListItem -> binding.userType.text = getString(R.string.organization)
         }
-        // TODO address formatting
-        binding.address.text = userItem.address.toString()
         binding.description.text = userItem.description
         binding.followersCount.text = userItem.followersCount.toString()
         binding.followingsCount.text = userItem.followingsCount.toString()
         binding.categories.text = getCategoriesText(userItem)
 
+        val addressText = YandexMaps.getAddress(context!!, userItem.position)
+        binding.address.text = addressText ?: getString(R.string.not_specified)
+
         setAvatar(userItem.profilePhotoURI, context!!, binding.avatar)
 
         renderUserDetailsOnSubscriptionAction(userItem)
+        renderPhotosBlock(userItem.photosCount, userItem.photosSnippets)
     }
 
     private fun getCategoriesText(userItem: UserListItem): String {
@@ -434,8 +448,10 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
     }
 
     private fun onOpenPhotosButtonPressed() {
-        findNavController().navigate(R.id.action_profileFragment_to_photosFragment,
-            null,
+        val direction =
+            ProfileFragmentDirections.actionProfileFragmentToPhotosFragment(userId)
+        findNavController().navigate(
+            direction,
             navOptions {
                 anim {
                     enter = R.anim.slide_in_right
@@ -476,8 +492,33 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
             })
     }
 
+    private fun initOnInfoPressed() {
+        /*requireActivity().supportFragmentManager.setFragmentResultListener(
+            GO_TO_SERVICE_REQUEST_CODE,
+            viewLifecycleOwner
+        ) { _, data ->
+            val serviceId = data.getLong(SERVICE_ID)
+            val direction =
+                ProfileFragmentDirections.actionProfileFragmentToService(
+                    serviceId
+                )
+            findNavController().navigate(
+                direction,
+                navOptions {
+                    anim {
+                        enter = R.anim.slide_in_right
+                        exit = R.anim.slide_out_left
+                        popEnter = R.anim.slide_in_left
+                        popExit = R.anim.slide_out_right
+                    }
+                })
+        }*/
+    }
+
     companion object {
         const val DEFAULT_USER_ID = "\$current_user"
+
+        const val IS_EDITED_REQUEST_CODE = "IS_EDITED_REQUEST_CODE"
 
         const val GO_TO_PROFILE_REQUEST_CODE = "GO_TO_PROFILE_REQUEST_CODE_FROM_PROFILE"
         const val GO_TO_STATS_REQUEST_CODE = "GO_TO_STATS_REQUEST_CODE_FROM_PROFILE"
@@ -486,8 +527,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         const val USER_ID = "USER_ID"
         const val SERVICE_ID = "SERVICE_ID"
 
-
-        const val REFRESH_REQUEST_CODE = "REFRESH_REQUEST_CODE"
+        const val ABCDEFG = "ABCDEFG"
         const val REFRESH = "REFRESH"
     }
 

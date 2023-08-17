@@ -2,13 +2,23 @@ package com.thesis.sportologia.utils
 
 import android.content.Context
 import com.thesis.sportologia.R
-import com.thesis.sportologia.model.events.entities.Event
 
 class TrainingProgrammesCategories {
 
     companion object {
 
-        val emptyTrainingProgrammesCategoriesMap
+        val emptyCategoriesAssociativeList
+            get() = com.thesis.sportologia.utils.AssociativeList(
+                listOf(
+                    Pair(GAINING_MUSCLES_MASS, false),
+                    Pair(LOSING_WEIGHT, false),
+                    Pair(KEEPING_FORM, false),
+                    Pair(ELSE, false)
+                ),
+            )
+
+
+        val emptyCategoriesMap
             get() = hashMapOf(
                 Pair(GAINING_MUSCLES_MASS, false),
                 Pair(LOSING_WEIGHT, false),
@@ -16,7 +26,7 @@ class TrainingProgrammesCategories {
                 Pair(ELSE, false),
             )
 
-        fun getLocalizedTrainingProgrammesCategories(
+        fun getLocalizedCategories(
             context: Context,
             hashMap: Map<String, Boolean>
         ): Map<String, Boolean> {
@@ -24,13 +34,13 @@ class TrainingProgrammesCategories {
             val localizedHashMap = hashMapOf<String, Boolean>()
 
             hashMap.forEach {
-                localizedHashMap[convertEnumToTrainingProgrammeCategory(context, it.key)!!] = it.value
+                localizedHashMap[convertEnumToCategory(context, it.key)!!] = it.value
             }
 
             return localizedHashMap
         }
 
-        fun convertEnumToTrainingProgrammeCategory(
+        fun convertEnumToCategory(
             context: Context?,
             categoryEnum: String
         ): String? {
@@ -45,11 +55,39 @@ class TrainingProgrammesCategories {
             }
         }
 
-        const val GAINING_MUSCLES_MASS = "Gainng mMuscles mass"
-        const val LOSING_WEIGHT = "Losing weight"
-        const val KEEPING_FORM = "Keeping form"
-        const val ELSE = "Else"
+        fun getCategoriesFromLocalized(
+            context: Context,
+            hashMap: Map<String, Boolean>
+        ): Map<String, Boolean> {
 
+            val localizedHashMap = hashMapOf<String, Boolean>()
+
+            hashMap.forEach {
+                localizedHashMap[convertCategoryToEnum(context, it.key)!!] = it.value
+            }
+
+            return localizedHashMap
+        }
+
+        fun convertCategoryToEnum(
+            context: Context?,
+            category: String
+        ): String? {
+            context ?: return null
+
+            return when (category) {
+                context.getString(R.string.tp_category_gaining_muscles_mass) -> GAINING_MUSCLES_MASS
+                context.getString(R.string.tp_category_losing_weight) -> LOSING_WEIGHT
+                context.getString(R.string.tp_category_keeping_form) -> KEEPING_FORM
+                context.getString(R.string.tp_category_else) -> ELSE
+                else -> null
+            }
+        }
+
+        const val GAINING_MUSCLES_MASS = "GAINING_MUSCLES_MASS"
+        const val LOSING_WEIGHT = "LOSING_WEIGHT"
+        const val KEEPING_FORM = "KEEPING_FORM"
+        const val ELSE = "ELSE"
     }
 
 }

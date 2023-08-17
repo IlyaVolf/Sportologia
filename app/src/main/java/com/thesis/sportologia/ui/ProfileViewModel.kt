@@ -58,21 +58,17 @@ class ProfileViewModel @AssistedInject constructor(
 
     private suspend fun getUser() {
         try {
-            val user = usersRepository.getUser(userId)
+            val user = usersRepository.getUser(CurrentAccount().id, userId)
             withContext(Dispatchers.Main) {
-                if (user != null) {
-                    when (user) {
-                        is Athlete -> {
-                            _userHolder.value =
-                                DataHolder.ready(AthleteListItem(user.copy()))
+                when (user) {
+                    is Athlete -> {
+                        _userHolder.value =
+                            DataHolder.ready(AthleteListItem(user.copy()))
 
-                        }
-                        is Organization -> {
-                            _userHolder.value = DataHolder.ready(OrganizationListItem(user.copy()))
-                        }
                     }
-                } else {
-                    _userHolder.value = DataHolder.error(Exception("no such user"))
+                    is Organization -> {
+                        _userHolder.value = DataHolder.ready(OrganizationListItem(user.copy()))
+                    }
                 }
             }
         } catch (e: Exception) {
@@ -96,7 +92,7 @@ class ProfileViewModel @AssistedInject constructor(
                 _subscribeHolder.value = DataHolder.loading()
             }
 
-            usersRepository.setIsSubscribe(CurrentAccount().id, userId, newIsSubscribed)
+            usersRepository.setIsSubscribed(CurrentAccount().id, userId, newIsSubscribed)
             withContext(Dispatchers.Main) {
                 _userHolder.value =
                     DataHolder.ready(getUserItemOnSubscriptionAction(userItem, newIsSubscribed))

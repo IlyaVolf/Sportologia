@@ -1,6 +1,7 @@
 package com.thesis.sportologia.ui.events.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -49,6 +50,7 @@ class EventsPagerAdapter(
         itemEvent.setDescription(eventListItem.description)
         itemEvent.setOrganizerName(eventListItem.organizerName)
         itemEvent.setOrganizerAvatar(eventListItem.profilePictureUrl)
+        itemEvent.setAddress(YandexMaps.getAddress(context, eventListItem.position) ?: getString(R.string.not_specified))
         itemEvent.setPrice(eventListItem.price, eventListItem.currency)
         itemEvent.setDate(eventListItem.dateFrom, eventListItem.dateTo)
         itemEvent.setLikes(eventListItem.likesCount, eventListItem.isLiked)
@@ -120,7 +122,7 @@ class EventsPagerAdapter(
         )
     }
 
-    private fun onEditButtonPressed(eventId: Long) {
+    private fun onEditButtonPressed(eventId: String) {
         val direction = TabsFragmentDirections.actionTabsFragmentToCreateEditEventFragment(
             CreateEditEventFragment.EventId(eventId)
         )

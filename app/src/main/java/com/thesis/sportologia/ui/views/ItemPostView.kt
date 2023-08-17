@@ -7,6 +7,7 @@ import android.widget.*
 import com.bumptech.glide.Glide
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemPostBinding
+import com.thesis.sportologia.utils.formatQuantity
 import com.thesis.sportologia.utils.parseDatePublication
 import com.thesis.sportologia.utils.setAvatar
 import java.util.Calendar
@@ -122,23 +123,22 @@ class ItemPostView(
     }
 
     fun setLikes(likesCount: Int, isLiked: Boolean) {
+        val likesCountFormatted = formatQuantity(likesCount)
+
         this.isLiked = isLiked
+        this.likesCount = likesCountFormatted
 
         if (likesCount < 0) {
-            this.likesCount = "0"
             this.isLiked = false
-        } else if (likesCount < 1000) {
-            this.likesCount = likesCount.toString()
-        } else if (likesCount < 1000000) {
-            val string = likesCount.toString().substring(0)
-            this.likesCount = likesCount.toString().substring(0, string.length - 3) + "K"
-        } else {
-            val string = likesCount.toString().substring(0)
-            this.likesCount = likesCount.toString().substring(0, string.length - 6) + "M"
+            this.likesCount = "0"
         }
 
-        binding.postLikesCount.text = this.likesCount
+        binding.postLikesCount.text = likesCountFormatted
 
+        renderLike()
+    }
+
+    private fun renderLike() {
         if (this.isLiked) {
             binding.postLike.setColorFilter(context.getColor(R.color.pink))
         } else {

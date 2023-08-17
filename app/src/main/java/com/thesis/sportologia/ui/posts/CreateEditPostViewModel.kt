@@ -1,12 +1,13 @@
 package com.thesis.sportologia.ui.posts
 
-
 import androidx.lifecycle.viewModelScope
 import com.thesis.sportologia.CurrentAccount
 import com.thesis.sportologia.model.DataHolder
 import com.thesis.sportologia.model.posts.PostsRepository
-import com.thesis.sportologia.model.posts.entities.Post
+import com.thesis.sportologia.model.posts.entities.PostDataEntity
 import com.thesis.sportologia.ui.base.BaseViewModel
+import com.thesis.sportologia.ui.posts.entities.PostCreateEditItem
+import com.thesis.sportologia.ui.posts.entities.toCreateEditItem
 import com.thesis.sportologia.utils.*
 import com.thesis.sportologia.utils.logger.Logger
 import dagger.assisted.Assisted
@@ -18,7 +19,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 
 class CreateEditPostViewModel @AssistedInject constructor(
-    @Assisted private val postId: Long?,
+    @Assisted private val postId: String?,
     private val postsRepository: PostsRepository,
     logger: Logger
 ) : BaseViewModel(logger) {
@@ -28,10 +29,10 @@ class CreateEditPostViewModel @AssistedInject constructor(
 
     private var mode: Mode
 
-    private val _postHolder = ObservableHolder<Post?>(DataHolder.ready(null))
+    private val _postHolder = ObservableHolder<PostDataEntity?>(DataHolder.init())
     val postHolder = _postHolder.share()
 
-    private val _saveHolder = ObservableHolder(DataHolder.ready(null))
+    private val _saveHolder = ObservableHolder<Unit>(DataHolder.init())
     val saveHolder = _saveHolder.share()
 
     private val _toastMessageEvent = MutableLiveEvent<ErrorType>()
@@ -41,49 +42,44 @@ class CreateEditPostViewModel @AssistedInject constructor(
     val goBackEvent = _goBackEvent.share()
 
     init {
-        if (postId == null) {
-            mode = Mode.CREATE
+        mode = if (postId == null) {
+            Mode.CREATE
         } else {
-            mode = Mode.EDIT
-            getPost()
+            Mode.EDIT
         }
+        getPost()
     }
 
-    fun onSaveButtonPressed(text: String, photosUrls: List<String>) {
-        if (!validateText(text)) {
+    fun onSaveButtonPressed(post: PostCreateEditItem) {
+        if (!validateData(post)) {
             return
         }
 
-        // check whether text has left the same
-        var post: Post? = null
-        _postHolder.value!!.onReady {
-            post = it
-        }
-        if (text == post?.text) {
-            goBack()
+        if (mode == Mode.EDIT) {
+            checkIfTheSame(post)
         }
 
-        val reformattedText = reformatText(text)
+        val reformattedText = reformatText(post.text!!)
 
-        lateinit var newPost: Post
+        lateinit var newPost: PostDataEntity
         when (mode) {
             Mode.CREATE ->
-                newPost = Post(
-                    id = -1, // не тут надо создавать!
+                newPost = PostDataEntity(
+                    null,
                     authorName = currentAccount.userName,
                     authorId = currentAccount.id,
                     profilePictureUrl = currentAccount.profilePictureUrl,
                     text = reformattedText,
                     likesCount = 0,
-                    isAuthorAthlete = currentAccount.isAthlete,
+                    userType = currentAccount.userType,
                     isLiked = false,
                     isFavourite = false,
                     postedDate = Calendar.getInstance().timeInMillis, // по идее в самом коцне надо создавать!
-                    photosUrls = photosUrls
+                    photosUrls = post.photosUrls
                 )
             Mode.EDIT ->
                 _postHolder.value!!.onReady {
-                    newPost = it!!.copy(text = reformattedText, photosUrls = photosUrls)
+                    newPost = it!!.copy(text = reformattedText, photosUrls = post.photosUrls)
                 }
         }
 
@@ -97,7 +93,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
                     Mode.EDIT -> postsRepository.updatePost(newPost)
                 }
                 withContext(Dispatchers.Main) {
-                    _saveHolder.value = DataHolder.ready(null)
+                    _saveHolder.value = DataHolder.ready(Unit)
                     goBack()
                 }
             } catch (e: Exception) {
@@ -106,30 +102,43 @@ class CreateEditPostViewModel @AssistedInject constructor(
                 }
             }
         }
-
-        return
     }
 
-    private fun getPost() = viewModelScope.launch(Dispatchers.IO) {
-        try {
-            withContext(Dispatchers.Main) {
-                _postHolder.value = DataHolder.loading()
-            }
-            val post = postsRepository.getPost(postId!!)
-            withContext(Dispatchers.Main) {
-                _postHolder.value = DataHolder.ready(post)
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                _postHolder.value = DataHolder.error(e)
+    private fun getPost() {
+        if (mode == Mode.CREATE) {
+            _postHolder.value = DataHolder.ready(null)
+            return
+        }
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                withContext(Dispatchers.Main) {
+                    _postHolder.value = DataHolder.loading()
+                }
+                val post = postsRepository.getPost(postId!!, CurrentAccount().id)
+                withContext(Dispatchers.Main) {
+                    _postHolder.value = DataHolder.ready(post)
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    _postHolder.value = DataHolder.error(e)
+                }
             }
         }
     }
 
-    private fun validateText(text: String): Boolean {
+    private fun validateData(post: PostCreateEditItem): Boolean {
+        if (!validateText(post.text)) {
+            return false
+        }
+
+        return true
+    }
+
+    private fun validateText(text: String?): Boolean {
         // check whether the text is empty
-        if (text == "") {
-            _toastMessageEvent.publishEvent(ErrorType.EMPTY_POST)
+        if (text == null || text == "") {
+            _toastMessageEvent.publishEvent(ErrorType.EMPTY_TEXT)
             return false
         }
 
@@ -145,10 +154,23 @@ class CreateEditPostViewModel @AssistedInject constructor(
         return newText.toString()
     }
 
+    private fun checkIfTheSame(post: PostCreateEditItem): Boolean {
+        var savedPost: PostDataEntity? = null
+        _postHolder.value!!.onReady {
+            savedPost = it
+        }
+
+        if (savedPost!!.toCreateEditItem() == post) {
+            return false
+        }
+
+        return true
+    }
+
     private fun goBack() = _goBackEvent.publishEvent()
 
     enum class ErrorType {
-        EMPTY_POST
+        EMPTY_TEXT
     }
 
     enum class Mode {
@@ -158,7 +180,7 @@ class CreateEditPostViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory {
-        fun create(postId: Long?): CreateEditPostViewModel
+        fun create(postId: String?): CreateEditPostViewModel
     }
 
 

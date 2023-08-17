@@ -22,18 +22,35 @@ fun setAvatar(uri: String?, context: Context, avatarView: ImageView) {
     }
 }
 
-fun setPhoto(uri: String?, context: Context, view: ImageView) {
-    if (uri != null) {
-        if (uri.isNotBlank()) {
+fun setPhoto(uri: String?, context: Context, view: ImageView, isSquare: Boolean = true) {
+    if (isSquare) {
+        if (uri != null) {
+            if (uri.isNotBlank()) {
+                Glide.with(context)
+                    .load(uri)
+                    .placeholder(R.drawable.item_photo_placeholder)
+                    .error(R.drawable.item_photo_placeholder)
+                    .centerCrop()
+                    .into(view)
+            }
+        } else {
             Glide.with(context)
-                .load(uri)
-                .placeholder(R.drawable.item_photo_placeholder)
-                .error(R.drawable.item_photo_placeholder)
+                .load(R.drawable.item_photo_placeholder)
                 .into(view)
         }
     } else {
-        Glide.with(context)
-            .load(R.drawable.item_photo_placeholder)
-            .into(view)
+        if (uri != null) {
+            if (uri.isNotBlank()) {
+                Glide.with(context)
+                    .load(uri)
+                    .placeholder(R.drawable.item_photo_placeholder)
+                    .error(R.drawable.item_photo_placeholder)
+                    .into(view)
+            }
+        } else {
+            Glide.with(context)
+                .load(R.drawable.item_photo_placeholder)
+                .into(view)
+        }
     }
 }
