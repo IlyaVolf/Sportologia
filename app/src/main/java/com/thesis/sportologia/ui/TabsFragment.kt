@@ -13,11 +13,13 @@ import com.thesis.sportologia.ui.services.service_screen.ServicesAcquiredFragmen
 
 class TabsFragment : Fragment(R.layout.fragment_tabs) {
 
-    private lateinit var binding: FragmentTabsBinding
+    private var _binding: FragmentTabsBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = FragmentTabsBinding.bind(view)
+        _binding = FragmentTabsBinding.bind(view)
 
         val navHost = childFragmentManager.findFragmentById(R.id.tabsContainer) as NavHostFragment
         val navController = navHost.navController
@@ -45,5 +47,10 @@ class TabsFragment : Fragment(R.layout.fragment_tabs) {
         ) { _, _ ->
             binding.bottomNavigationView.selectedItemId = R.id.profile_own
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

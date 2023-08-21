@@ -22,7 +22,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FavouritesFragment : Fragment() {
-    private lateinit var binding: FragmentFavouritesBinding
+
+    private var _binding: FragmentFavouritesBinding? = null
+    private val binding
+        get() = _binding!!
 
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -32,7 +35,7 @@ class FavouritesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFavouritesBinding.inflate(inflater, container, false)
+        _binding = FragmentFavouritesBinding.inflate(inflater, container, false)
 
         initToolbar()
         initContentBlock()
@@ -119,6 +122,11 @@ class FavouritesFragment : Fragment() {
 
     private fun onBackButtonPressed() {
         findNavController().navigateUp()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

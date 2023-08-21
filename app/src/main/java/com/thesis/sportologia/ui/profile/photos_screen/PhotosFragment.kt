@@ -18,7 +18,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class PhotosFragment : Fragment() {
     private val args by navArgs<PhotosFragmentArgs>()
 
-    private lateinit var binding: FragmentPhotosBinding
+    private var _binding: FragmentPhotosBinding? = null
+    private val binding
+        get() = _binding!!
+
     private lateinit var userId: String
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -29,7 +32,7 @@ class PhotosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPhotosBinding.inflate(inflater, container, false)
+        _binding = FragmentPhotosBinding.inflate(inflater, container, false)
         userId = getUserId()
 
         initToolbar()
@@ -57,6 +60,11 @@ class PhotosFragment : Fragment() {
 
     private fun onBackButtonPressed() {
         findNavController().navigateUp()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

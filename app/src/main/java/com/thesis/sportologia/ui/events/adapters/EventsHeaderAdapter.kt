@@ -152,4 +152,5 @@ abstract class EventsHeaderAdapter(
         }
 
     }
+
 }

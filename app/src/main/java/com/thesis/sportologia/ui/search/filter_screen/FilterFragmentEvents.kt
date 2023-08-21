@@ -30,13 +30,15 @@ class FilterFragmentEvents : Fragment() {
 
     private val args by navArgs<FilterFragmentEventsArgs>()
 
-    private lateinit var binding: FragmentFilterEventsBinding
+    private var _binding: FragmentFilterEventsBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFilterEventsBinding.inflate(inflater, container, false)
+        _binding = FragmentFilterEventsBinding.inflate(inflater, container, false)
 
         currentFilterParamsEvents = getFilterFragmentArg() as FilterParamsEvents
         currentCategories = currentFilterParamsEvents.categories ?: Categories.emptyCategoriesMap
@@ -221,6 +223,11 @@ class FilterFragmentEvents : Fragment() {
         }
 
         currentFilterParamsEvents.address = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

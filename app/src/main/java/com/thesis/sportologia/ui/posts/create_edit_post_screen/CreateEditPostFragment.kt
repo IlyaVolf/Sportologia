@@ -43,13 +43,16 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         factory.create(postId)
     }
 
+    private var _binding: FragmentCreateEditPostBinding? = null
+    private val binding
+        get() = _binding!!
+
     private var postId: String? = null
     private var isDataReceived = false
     private var currentPostCreateEditItem: PostCreateEditItem =
         PostCreateEditItem.getEmptyInstance()
 
     private lateinit var mode: Mode
-    private lateinit var binding: FragmentCreateEditPostBinding
 
     private val args by navArgs<CreateEditPostFragmentArgs>()
 
@@ -57,7 +60,7 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCreateEditPostBinding.inflate(inflater, container, false)
+        _binding = FragmentCreateEditPostBinding.inflate(inflater, container, false)
 
         initMode()
         initRender()
@@ -279,6 +282,11 @@ class CreateEditPostFragment : BaseFragment(R.layout.fragment_create_edit_post) 
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
         }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     enum class Mode {
         CREATE,

@@ -12,13 +12,16 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ReviewOwnFragment : Fragment() {
-    private lateinit var binding: FragmentReviewOwnBinding
+
+    private var _binding: FragmentReviewOwnBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentReviewOwnBinding.inflate(inflater, container, false)
+        _binding = FragmentReviewOwnBinding.inflate(inflater, container, false)
 
         val ratingBlock = binding.root.findViewById<SelectStarsView>(R.id.rating_fro)
         ratingBlock.setListener { }
@@ -30,5 +33,10 @@ class ReviewOwnFragment : Fragment() {
         binding.ratingFro.setGrade(grade)
         binding.titleFro.setTitle(title)
         binding.textFro.setText(text)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

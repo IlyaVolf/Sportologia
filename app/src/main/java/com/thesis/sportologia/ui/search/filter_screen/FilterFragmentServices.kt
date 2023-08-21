@@ -33,13 +33,15 @@ class FilterFragmentServices : Fragment() {
 
     private val args by navArgs<FilterFragmentServicesArgs>()
 
-    private lateinit var binding: FragmentFilterServicesBinding
+    private var _binding: FragmentFilterServicesBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFilterServicesBinding.inflate(inflater, container, false)
+        _binding = FragmentFilterServicesBinding.inflate(inflater, container, false)
 
         currentFilterParamsServices = getFilterFragmentArg() as FilterParamsServices
         currentCategories = currentFilterParamsServices.categories ?: Categories.emptyCategoriesMap
@@ -232,6 +234,11 @@ class FilterFragmentServices : Fragment() {
 
     private fun validateRating(rating: Float): Boolean {
         return rating in 1.0..5.0
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

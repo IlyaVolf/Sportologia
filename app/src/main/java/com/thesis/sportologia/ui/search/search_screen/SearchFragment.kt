@@ -32,9 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchFragment : Fragment() {
 
+    private var _binding: FragmentSearchBinding? = null
+    private val binding
+        get() = _binding!!
+
     private lateinit var searchTabs: List<SearchTab>
     private lateinit var currentSearchTab: SearchTab
-    private lateinit var binding: FragmentSearchBinding
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var tabLayout: TabLayout
@@ -101,7 +104,7 @@ class SearchFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSearchBinding.inflate(inflater, container, false)
+        _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
         Log.d("SEARCHH", "onCreateView ${currentSearchTab.filterParams}")
 
@@ -246,6 +249,11 @@ class SearchFragment : Fragment() {
                     popExit = R.anim.pop_exit
                 }
             })
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     data class SearchTabList(

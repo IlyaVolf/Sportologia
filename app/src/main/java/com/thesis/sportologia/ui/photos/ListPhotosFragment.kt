@@ -42,10 +42,13 @@ class ListPhotosFragment : Fragment() {
         factory.create(userId)
     }
 
+    private var _binding: FragmentListPhotosBinding? = null
+    private val binding
+        get() = _binding!!
+
     private val isSwipeToRefreshEnabled = true
 
     private var userId by Delegates.notNull<String>()
-    private lateinit var binding: FragmentListPhotosBinding
     private lateinit var adapter: PhotosPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,7 +63,7 @@ class ListPhotosFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListPhotosBinding.inflate(inflater, container, false)
+        _binding = FragmentListPhotosBinding.inflate(inflater, container, false)
 
         initErrorActions()
         initSwipeToRefresh()
@@ -188,6 +191,12 @@ class ListPhotosFragment : Fragment() {
             adapter.refresh()
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
     companion object {
         // TODO можно создать переменную: обновлять ли адаптер в прицнипе. А также скрывать при переходе в другой экран для оптимизации

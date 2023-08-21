@@ -37,10 +37,13 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         factory.create(serviceId)
     }
 
+    private var _binding: FragmentServiceBinding? = null
+    private val binding
+        get() = _binding!!
+
     private val args by navArgs<ServiceFragmentArgs>()
 
     private lateinit var mode: Mode
-    private lateinit var binding: FragmentServiceBinding
     private var serviceId by Delegates.notNull<String>()
 
     private fun getServiceIdArg(): String = args.serviceId
@@ -49,7 +52,7 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentServiceBinding.inflate(inflater, container, false)
+        _binding = FragmentServiceBinding.inflate(inflater, container, false)
         serviceId = getServiceIdArg()
 
         initToolbar()
@@ -469,6 +472,11 @@ class ServiceFragment : BaseFragment(R.layout.fragment_service) {
         val adapter = ExercisesAdapter(onExercisePressed)
         binding.exercisesList.adapter = adapter
         adapter.setupItems(exercises)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     enum class Mode {
