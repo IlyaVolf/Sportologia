@@ -32,7 +32,7 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding
-        get() = _binding ?: throw RuntimeException("FragmentNewCocktailBinding is null")
+        get() = _binding!!
 
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2

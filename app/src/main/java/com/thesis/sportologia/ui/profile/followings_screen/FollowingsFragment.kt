@@ -20,7 +20,11 @@ import dagger.hilt.android.AndroidEntryPoint
 class FollowingsFragment : Fragment() {
     private val args by navArgs<FollowingsFragmentArgs>()
 
-    private lateinit var binding: FragmentFollowingsBinding
+    private var _binding: FragmentFollowingsBinding? = null
+    private val binding
+        get() = _binding!!
+
+
     private lateinit var userId: String
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -31,7 +35,7 @@ class FollowingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFollowingsBinding.inflate(inflater, container, false)
+        _binding = FragmentFollowingsBinding.inflate(inflater, container, false)
         userId = getUserId()
 
         initToolbar()
@@ -85,6 +89,11 @@ class FollowingsFragment : Fragment() {
 
     private fun onBackButtonPressed() {
         findNavController().navigateUp()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

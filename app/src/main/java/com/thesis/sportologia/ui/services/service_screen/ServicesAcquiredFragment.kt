@@ -19,7 +19,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ServicesAcquiredFragment : Fragment() {
 
-    private lateinit var binding: FragmentServicesAcquiredBinding
+    private var _binding: FragmentServicesAcquiredBinding? = null
+    private val binding
+        get() = _binding!!
+
+
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
 
@@ -27,7 +31,7 @@ class ServicesAcquiredFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentServicesAcquiredBinding.inflate(inflater, container, false)
+        _binding = FragmentServicesAcquiredBinding.inflate(inflater, container, false)
 
         initOnAuthorPressed()
         initOnInfoPressed()
@@ -96,6 +100,11 @@ class ServicesAcquiredFragment : Fragment() {
                     }
                 })
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

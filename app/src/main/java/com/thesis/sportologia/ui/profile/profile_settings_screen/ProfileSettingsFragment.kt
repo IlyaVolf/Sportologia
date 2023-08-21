@@ -28,7 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileSettingsFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileSettingsBinding
+    private var _binding: FragmentProfileSettingsBinding? = null
+    private val binding
+        get() = _binding!!
 
     private lateinit var currentProfileSettings: ProfileSettingsViewItem
 
@@ -39,7 +41,7 @@ class ProfileSettingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileSettingsBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileSettingsBinding.inflate(inflater, container, false)
 
         initToolbar()
         initProfilePhotoButton()
@@ -350,6 +352,11 @@ class ProfileSettingsFragment : Fragment() {
             ProfileFragment.IS_EDITED_REQUEST_CODE,
             bundleOf()
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 ////////////////////

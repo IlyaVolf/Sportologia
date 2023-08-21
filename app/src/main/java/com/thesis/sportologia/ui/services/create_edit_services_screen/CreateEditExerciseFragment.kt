@@ -39,19 +39,22 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
         factory.create(currentExerciseCreateEditItem)
     }
 
+    private var _binding: FragmentCreateEditExerciseBinding? = null
+    private val binding
+        get() = _binding!!
+
     private val args by navArgs<CreateEditExerciseFragmentArgs>()
 
     private var isDataReceived = false
     private lateinit var currentExerciseCreateEditItem: ExerciseCreateEditItem
 
     private lateinit var mode: Mode
-    private lateinit var binding: FragmentCreateEditExerciseBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCreateEditExerciseBinding.inflate(inflater, container, false)
+        _binding = FragmentCreateEditExerciseBinding.inflate(inflater, container, false)
 
         initMode()
         initRender()
@@ -384,6 +387,11 @@ class CreateEditExerciseFragment : BaseFragment(R.layout.fragment_create_edit_ex
             Log.d("abcdef", "$currentExerciseCreateEditItem")
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

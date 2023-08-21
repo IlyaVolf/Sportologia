@@ -35,6 +35,10 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
         factory.create(serviceId)
     }
 
+    private var _binding: FragmentCreateEditServiceBinding? = null
+    private val binding
+        get() = _binding!!
+
     private val args by navArgs<CreateEditServiceFragmentArgs>()
 
     private var serviceId: String? = null
@@ -43,13 +47,12 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
     private val exercisesAdapter by lazy { ExercisesAdapter(onExercisePressed) }
 
     private lateinit var mode: Mode
-    private lateinit var binding: FragmentCreateEditServiceBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCreateEditServiceBinding.inflate(inflater, container, false)
+        _binding = FragmentCreateEditServiceBinding.inflate(inflater, container, false)
 
         initMode()
         initRender()
@@ -399,6 +402,11 @@ class CreateEditServiceFragment : BaseFragment(R.layout.fragment_create_edit_ser
 
             Toast.makeText(context, errorText, Toast.LENGTH_SHORT).show()
         }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
     enum class Mode {
         CREATE,

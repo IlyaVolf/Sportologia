@@ -42,8 +42,11 @@ abstract class ListPostsFragment : Fragment() {
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onHeaderBlockPressedAction: (String) -> Unit
 
+    private var _binding: FragmentListPostsBinding? = null
+    private val binding
+        get() = _binding!!
+
     protected var userId by Delegates.notNull<String>()
-    protected lateinit var binding: FragmentListPostsBinding
     private lateinit var postsHeaderAdapter: PostsHeaderAdapter
     private lateinit var adapter: PostsPagerAdapter
 
@@ -54,11 +57,6 @@ abstract class ListPostsFragment : Fragment() {
         adapter = PostsPagerAdapter(this, onHeaderBlockPressedAction, viewModel)
 
         Log.d("LIFE", "onCreate ${this.hashCode()}")
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        Log.d("LIFE", "onDestroyView ${this.hashCode()}")
     }
 
     override fun onDestroy() {
@@ -72,7 +70,7 @@ abstract class ListPostsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         Log.d("LIFE", "onCreateView ${this.hashCode()}")
-        binding = FragmentListPostsBinding.inflate(inflater, container, false)
+        _binding = FragmentListPostsBinding.inflate(inflater, container, false)
 
         initErrorActions()
         initResultsProcessing()
@@ -242,6 +240,12 @@ abstract class ListPostsFragment : Fragment() {
         viewModel.athTorgFLiveData.observe(viewLifecycleOwner) {
             postsHeaderAdapter.setAthTorgF(it)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+        Log.d("LIFE", "onDestroyView ${this.hashCode()}")
     }
 
 }

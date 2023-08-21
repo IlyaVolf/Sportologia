@@ -30,7 +30,10 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
 
     private val args by navArgs<ExerciseFragmentArgs>()
 
-    private lateinit var binding: FragmentExerciseBinding
+    private var _binding: FragmentExerciseBinding? = null
+    private val binding
+        get() = _binding!!
+
     private lateinit var serviceId: String
     private lateinit var exerciseId: String
 
@@ -41,7 +44,7 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentExerciseBinding.inflate(inflater, container, false)
+        _binding = FragmentExerciseBinding.inflate(inflater, container, false)
 
         serviceId = getServiceIdArg()
         exerciseId = getExerciseIdArg()
@@ -131,6 +134,11 @@ class ExerciseFragment : BaseFragment(R.layout.fragment_exercise) {
         } else {
             binding.exercisePhotosBlockSpace.visibility = VISIBLE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

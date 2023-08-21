@@ -17,9 +17,11 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignUpFragment : Fragment() {
 
-    private lateinit var binding: FragmentSignUpBinding
-
     private val viewModel by viewModels<SignUpViewModel>()
+
+    private var _binding: FragmentSignUpBinding? = null
+    private val binding
+        get() = _binding!!
 
     private val args by navArgs<SignUpFragmentArgs>()
 
@@ -27,7 +29,7 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSignUpBinding.inflate(inflater, container, false)
+        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
 
         if (savedInstanceState == null && getEmailArgument() != null) {
             binding.fsuEmail.setText(getEmailArgument())
@@ -90,5 +92,10 @@ class SignUpFragment : Fragment() {
     }
 
     private fun getEmailArgument(): String? = args.email
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

@@ -41,9 +41,12 @@ abstract class ListUsersFragment : Fragment() {
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onUserSnippetItemPressed: (String) -> Unit
 
+    private var _binding: FragmentListUsersBinding? = null
+    private val binding
+        get() = _binding!!
+
     protected var userId by Delegates.notNull<String>()
     protected lateinit var filterParams: FilterParamsUsers
-    protected lateinit var binding: FragmentListUsersBinding
     private lateinit var usersHeaderAdapter: UsersHeaderAdapter
     private lateinit var adapter: UsersPagerAdapter
 
@@ -67,7 +70,7 @@ abstract class ListUsersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListUsersBinding.inflate(inflater, container, false)
+        _binding = FragmentListUsersBinding.inflate(inflater, container, false)
 
         initErrorActions()
         initSwipeToRefresh()
@@ -218,6 +221,11 @@ abstract class ListUsersFragment : Fragment() {
         viewModel.invalidateEvents.observeEvent(this) {
             adapter.refresh()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

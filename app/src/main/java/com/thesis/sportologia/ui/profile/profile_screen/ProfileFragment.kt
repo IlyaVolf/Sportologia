@@ -47,8 +47,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         factory.create(getUserIdArg())
     }
 
+    private var _binding: FragmentProfileBinding? = null
+    private val binding
+        get() = _binding!!
+
     private lateinit var mode: Profile
-    private lateinit var binding: FragmentProfileBinding
     private lateinit var userId: String
     private lateinit var adapter: PagerAdapter
     private lateinit var viewPager: ViewPager2
@@ -60,7 +63,7 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
 
         userId = getUserIdArg()
 
@@ -514,6 +517,11 @@ class ProfileFragment : BaseFragment(R.layout.fragment_profile) {
                     }
                 })
         }*/
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {

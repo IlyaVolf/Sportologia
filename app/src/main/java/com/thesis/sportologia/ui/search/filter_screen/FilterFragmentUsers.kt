@@ -30,13 +30,15 @@ class FilterFragmentUsers : Fragment() {
 
     private val args by navArgs<FilterFragmentUsersArgs>()
 
-    private lateinit var binding: FragmentFilterUsersBinding
+    private var _binding: FragmentFilterUsersBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentFilterUsersBinding.inflate(inflater, container, false)
+        _binding = FragmentFilterUsersBinding.inflate(inflater, container, false)
 
         currentFilterParamsUsers = getFilterFragmentArg() as FilterParamsUsers
         currentCategories = currentFilterParamsUsers.categories ?: Categories.emptyCategoriesMap
@@ -184,6 +186,11 @@ class FilterFragmentUsers : Fragment() {
         }
 
         currentFilterParamsUsers.address = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

@@ -16,7 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SignInFragment : Fragment() {
 
-    private lateinit var binding: FragmentSignInBinding
+    private var _binding: FragmentSignInBinding? = null
+    private val binding
+        get() = _binding!!
+
 
     private val viewModel by viewModels<SignInViewModel>()
 
@@ -24,7 +27,7 @@ class SignInFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSignInBinding.inflate(inflater, container, false)
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
 
         initListeners()
         initObservers()
@@ -63,6 +66,11 @@ class SignInFragment : Fragment() {
 
         val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment(emailArg)
         findNavController().navigate(direction)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

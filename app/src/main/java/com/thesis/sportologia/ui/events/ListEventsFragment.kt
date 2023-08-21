@@ -38,9 +38,13 @@ abstract class ListEventsFragment : Fragment() {
     abstract val isSwipeToRefreshEnabled: Boolean
     abstract val onHeaderBlockPressedAction: (String) -> Unit
 
+    private var _binding: FragmentListEventsBinding? = null
+    private val binding
+        get() = _binding!!
+
+
     protected var userId by Delegates.notNull<String>()
     protected lateinit var filterParams: FilterParamsEvents
-    protected lateinit var binding: FragmentListEventsBinding
     private lateinit var eventsHeaderAdapter: EventsHeaderAdapter
     private lateinit var adapter: EventsPagerAdapter
 
@@ -64,7 +68,7 @@ abstract class ListEventsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListEventsBinding.inflate(inflater, container, false)
+        _binding = FragmentListEventsBinding.inflate(inflater, container, false)
 
         initErrorActions()
         initResultsProcessing()
@@ -251,5 +255,11 @@ abstract class ListEventsFragment : Fragment() {
             eventsHeaderAdapter.setIsUpcomingOnly(it)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 }

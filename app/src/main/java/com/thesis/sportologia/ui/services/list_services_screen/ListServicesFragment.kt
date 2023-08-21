@@ -42,9 +42,12 @@ abstract class ListServicesFragment : Fragment() {
     abstract val onStatsBlockPressedAction: (String) -> Unit
     abstract val onInfoBlockPressedAction: (String) -> Unit
 
+    private var _binding: FragmentListServicesBinding? = null
+    private val binding
+        get() = _binding!!
+
     protected var userId by Delegates.notNull<String>()
     protected lateinit var filterParams: FilterParamsServices
-    protected lateinit var binding: FragmentListServicesBinding
     private lateinit var servicesHeaderAdapter: ServicesHeaderAdapter
     private lateinit var adapter: ServicesPagerAdapter
 
@@ -74,7 +77,7 @@ abstract class ListServicesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentListServicesBinding.inflate(inflater, container, false)
+        _binding = FragmentListServicesBinding.inflate(inflater, container, false)
 
         initErrorActions()
         initResultsProcessing()
@@ -265,6 +268,11 @@ abstract class ListServicesFragment : Fragment() {
         viewModel.invalidateServices.observeEvent(this) {
             adapter.refresh()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

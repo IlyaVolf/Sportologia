@@ -47,6 +47,10 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         factory.create(eventId)
     }
 
+    private var _binding: FragmentCreateEditEventBinding? = null
+    private val binding
+        get() = _binding!!
+
     private val args by navArgs<CreateEditEventFragmentArgs>()
 
     private var eventId: String? = null
@@ -55,13 +59,12 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
         EventCreateEditItem.getEmptyInstance()
 
     private lateinit var mode: Mode
-    private lateinit var binding: FragmentCreateEditEventBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentCreateEditEventBinding.inflate(inflater, container, false)
+        _binding = FragmentCreateEditEventBinding.inflate(inflater, container, false)
 
         initMode()
         initRender()
@@ -390,6 +393,11 @@ class CreateEditEventFragment : BaseFragment(R.layout.fragment_create_edit_event
             currentEventCreateEditItem.photosUrls.add(pickedPhoto.toString())
         }
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

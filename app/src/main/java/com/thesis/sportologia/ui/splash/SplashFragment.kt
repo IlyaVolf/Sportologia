@@ -15,12 +15,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
 
-    private lateinit var binding: FragmentSplashBinding
+    private var _binding: FragmentSplashBinding? = null
+    private val binding
+        get() = _binding!!
 
     private val viewModel by viewModels<SplashViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentSplashBinding.bind(view)
+        _binding = FragmentSplashBinding.bind(view)
         super.onViewCreated(view, savedInstanceState)
 
         //renderAnimations()
@@ -36,6 +38,11 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         val args = MainActivityArgs(isSignedIn)
         intent.putExtras(args.toBundle())
         startActivity(intent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

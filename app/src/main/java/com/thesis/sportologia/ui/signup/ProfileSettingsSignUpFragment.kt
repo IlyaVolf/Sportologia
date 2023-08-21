@@ -27,11 +27,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class ProfileSettingsSignUpFragment : Fragment() {
 
-    private lateinit var binding: FragmentProfileSettingsSignupBinding
-
     private var currentAccountType = CurrentAccountType.NONE
     private val viewModel by viewModels<ProfileSettingsSignUpViewModel>()
     private var profilePhoto: String? = null
+
+    private var _binding: FragmentProfileSettingsSignupBinding? = null
+    private val binding
+        get() = _binding!!
 
     private lateinit var email: String
     private lateinit var password: String
@@ -42,7 +44,7 @@ class ProfileSettingsSignUpFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentProfileSettingsSignupBinding.inflate(inflater, container, false)
+        _binding = FragmentProfileSettingsSignupBinding.inflate(inflater, container, false)
 
         email = getEmailArgument()
         password = getPasswordArgument()
@@ -302,6 +304,11 @@ class ProfileSettingsSignUpFragment : Fragment() {
 
     private fun getEmailArgument(): String = args.email
     private fun getPasswordArgument(): String = args.password
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 ////////////////////
 
