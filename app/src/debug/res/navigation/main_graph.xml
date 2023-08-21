@@ -6,7 +6,7 @@
     app:startDestination="@id/signInFragment">
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.thesis.sportologia.ui.SignInFragment"
+        android:name="com.thesis.sportologia.ui.signin.SignInFragment"
         android:label="fragment_sign_in"
         tools:layout="@layout/fragment_sign_in" >
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.thesis.sportologia.ui.SignUpFragment"
+        android:name="com.thesis.sportologia.ui.signup.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <argument
@@ -61,22 +61,22 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.thesis.sportologia.ui.SettingsFragment"
+        android:name="com.thesis.sportologia.ui.settings.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
     <fragment
         android:id="@+id/profileSettingsFragment"
-        android:name="com.thesis.sportologia.ui.ProfileSettingsFragment"
+        android:name="com.thesis.sportologia.ui.profile.profile_settings_screen.ProfileSettingsFragment"
         android:label="fragment_profile_settings"
         tools:layout="@layout/fragment_profile_settings" />
     <fragment
         android:id="@+id/createEditPostFragment"
-        android:name="com.thesis.sportologia.ui.posts.CreateEditPostFragment"
+        android:name="com.thesis.sportologia.ui.posts.create_edit_post_screen.CreateEditPostFragment"
         android:label="fragment_create_edit_post"
         tools:layout="@layout/fragment_create_edit_post" >
         <argument
             android:name="postId"
-            app:argType="com.thesis.sportologia.ui.posts.CreateEditPostFragment$PostId" />
+            app:argType="com.thesis.sportologia.ui.posts.create_edit_post_screen.CreateEditPostFragment$PostId" />
     </fragment>
     <fragment
         android:id="@+id/createEditEventFragment"
@@ -89,7 +89,7 @@
     </fragment>
     <fragment
         android:id="@+id/filterFragmentUsers"
-        android:name="com.thesis.sportologia.ui.FilterFragmentUsers"
+        android:name="com.thesis.sportologia.ui.search.filter_screen.FilterFragmentUsers"
         android:label="fragment_filter_users" >
         <argument
             android:name="filterParams"
@@ -97,7 +97,7 @@
     </fragment>
     <fragment
         android:id="@+id/filterFragmentEvents"
-        android:name="com.thesis.sportologia.ui.FilterFragmentEvents"
+        android:name="com.thesis.sportologia.ui.search.filter_screen.FilterFragmentEvents"
         android:label="fragment_filter_events"
         tools:layout="@layout/fragment_filter_events" >
         <argument
@@ -106,19 +106,19 @@
     </fragment>
     <fragment
         android:id="@+id/createEditServiceFragment"
-        android:name="com.thesis.sportologia.ui.services.CreateEditServiceFragment"
+        android:name="com.thesis.sportologia.ui.services.create_edit_services_screen.CreateEditServiceFragment"
         android:label="fragment_create_edit_service"
         tools:layout="@layout/fragment_create_edit_service" >
         <argument
             android:name="serviceId"
-            app:argType="com.thesis.sportologia.ui.services.CreateEditServiceFragment$ServiceId" />
+            app:argType="com.thesis.sportologia.ui.services.create_edit_services_screen.CreateEditServiceFragment$ServiceId" />
         <action
             android:id="@+id/action_createEditServiceFragment_to_createEditExerciseFragment"
             app:destination="@id/createEditExerciseFragment" />
     </fragment>
     <fragment
         android:id="@+id/createEditExerciseFragment"
-        android:name="com.thesis.sportologia.ui.services.CreateEditExerciseFragment"
+        android:name="com.thesis.sportologia.ui.services.create_edit_services_screen.CreateEditExerciseFragment"
         android:label="fragment_create_edit_exercise"
         tools:layout="@layout/fragment_create_edit_exercise" >
         <argument
@@ -128,7 +128,7 @@
     </fragment>
     <fragment
         android:id="@+id/filterFragmentServices"
-        android:name="com.thesis.sportologia.ui.FilterFragmentServices"
+        android:name="com.thesis.sportologia.ui.search.filter_screen.FilterFragmentServices"
         android:label="fragment_filter_services"
         tools:layout="@layout/fragment_filter_services">
         <argument
@@ -137,7 +137,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileSettingsSignUpFragment"
-        android:name="com.thesis.sportologia.ui.ProfileSettingsSignUpFragment"
+        android:name="com.thesis.sportologia.ui.signup.ProfileSettingsSignUpFragment"
         android:label="fragment_profile_settings_signup"
         tools:layout="@layout/fragment_profile_settings_signup" >
         <argument

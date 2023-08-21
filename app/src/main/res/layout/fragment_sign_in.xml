@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.SignInFragment">
+    tools:context="com.thesis.sportologia.ui.signin.SignInFragment">
 
     <ImageView
         android:layout_width="match_parent"

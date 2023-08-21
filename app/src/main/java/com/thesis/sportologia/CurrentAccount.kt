@@ -2,6 +2,7 @@ package com.thesis.sportologia
 
 import com.thesis.sportologia.model.users.entities.UserType
 
+// TODO
 data class CurrentAccount(
     val id: String = "i_volf",
     val profilePictureUrl: String = "https://i.imgur.com/tGbaZCY.jpg",

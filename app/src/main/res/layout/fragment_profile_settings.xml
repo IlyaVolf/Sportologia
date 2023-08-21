@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:statusBarColor="@color/white"
-    tools:context="com.thesis.sportologia.ui.ProfileSettingsFragment">
+    tools:context="com.thesis.sportologia.ui.profile.profile_settings_screen.ProfileSettingsFragment">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:id="@+id/fps_toolbar"

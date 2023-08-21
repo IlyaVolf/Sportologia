@@ -7,6 +7,6 @@
     android:orientation="vertical"
     android:gravity="center"
     tools:background="@drawable/splash"
-    tools:context=".ui.SplashFragment">
+    tools:context=".ui.splash.SplashFragment">
 
 </LinearLayout>

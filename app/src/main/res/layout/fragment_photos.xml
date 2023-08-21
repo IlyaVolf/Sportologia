@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.PhotosFragment">
+    tools:context="com.thesis.sportologia.ui.profile.photos_screen.PhotosFragment">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:id="@+id/photos_toolbar"

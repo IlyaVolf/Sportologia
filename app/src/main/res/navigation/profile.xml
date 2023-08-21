@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.thesis.sportologia.ui.ProfileFragment"
+        android:name="com.thesis.sportologia.ui.profile.profile_screen.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -32,7 +32,7 @@
     </fragment>
     <fragment
         android:id="@+id/favouritesFragment"
-        android:name="com.thesis.sportologia.ui.FavouritesFragment"
+        android:name="com.thesis.sportologia.ui.profile.favourites_screen.FavouritesFragment"
         android:label="fragment_favourites"
         tools:layout="@layout/fragment_favourites" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/followersFragment"
-        android:name="com.thesis.sportologia.ui.FollowersFragment"
+        android:name="com.thesis.sportologia.ui.profile.followers_screen.FollowersFragment"
         android:label="fragment_followers"
         tools:layout="@layout/fragment_followers" >
         <argument
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/followingsFragment"
-        android:name="com.thesis.sportologia.ui.FollowingsFragment"
+        android:name="com.thesis.sportologia.ui.profile.followings_screen.FollowingsFragment"
         android:label="fragment_followings"
         tools:layout="@layout/fragment_followings" >
         <argument
@@ -65,7 +65,7 @@
     </fragment>
     <fragment
         android:id="@+id/photosFragment"
-        android:name="com.thesis.sportologia.ui.PhotosFragment"
+        android:name="com.thesis.sportologia.ui.profile.photos_screen.PhotosFragment"
         android:label="fragment_photos"
         tools:layout="@layout/fragment_photos" >
         <argument

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentListPostsHeaderBinding
 import com.thesis.sportologia.ui.TabsFragmentDirections
-import com.thesis.sportologia.ui.posts.CreateEditPostFragment
+import com.thesis.sportologia.ui.posts.create_edit_post_screen.CreateEditPostFragment
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 
 abstract class PostsHeaderAdapter(

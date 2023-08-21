@@ -6,7 +6,7 @@
     app:startDestination="@id/serviceFragment">
     <fragment
         android:id="@+id/serviceFragment"
-        android:name="com.thesis.sportologia.ui.ServiceFragment"
+        android:name="com.thesis.sportologia.ui.services.service_screen.ServiceFragment"
         android:label="fragment_service"
         tools:layout="@layout/fragment_service">
         <argument
@@ -27,7 +27,7 @@
     <include app:graph="@navigation/profile_nested" />
     <fragment
         android:id="@+id/exerciseFragment"
-        android:name="com.thesis.sportologia.ui.ExerciseFragment"
+        android:name="com.thesis.sportologia.ui.services.service_screen.ExerciseFragment"
         android:label="fragment_exercise"
         tools:layout="@layout/fragment_exercise" >
         <argument

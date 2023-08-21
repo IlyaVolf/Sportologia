@@ -4,20 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.navOptions
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.thesis.sportologia.CurrentAccount
-import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.ItemServiceBinding
-import com.thesis.sportologia.ui.TabsFragmentDirections
-import com.thesis.sportologia.ui.services.CreateEditServiceFragment
 import com.thesis.sportologia.ui.services.entities.ServiceListItem
 import com.thesis.sportologia.ui.views.ItemServiceView
 import com.thesis.sportologia.ui.views.OnItemServiceAction
 import com.thesis.sportologia.utils.*
-import com.thesis.sportologia.utils.ResourcesUtils.getString
 
 class ServicesPagerAdapter(
     val fragment: Fragment,

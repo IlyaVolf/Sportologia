@@ -2,11 +2,9 @@ package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import com.thesis.sportologia.ui.ProfileFragment
+import com.thesis.sportologia.ui.profile.profile_screen.ProfileFragment
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterProfileOwn
-import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapterSearch
-import com.thesis.sportologia.ui.users.adapters.UsersHeaderAdapter
 import com.thesis.sportologia.utils.viewModelCreator
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -12,11 +12,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.thesis.sportologia.databinding.FragmentListPhotosBinding
-import com.thesis.sportologia.ui.adapters.*
+import com.thesis.sportologia.ui.base.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.photos.adapters.PhotosPagerAdapter
+import com.thesis.sportologia.utils.TryAgainAction
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import com.thesis.sportologia.utils.viewModelCreator

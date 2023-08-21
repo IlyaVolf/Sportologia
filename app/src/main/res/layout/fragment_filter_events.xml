@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.thesis.sportologia.ui.FilterFragmentEvents">
+    tools:context="com.thesis.sportologia.ui.search.filter_screen.FilterFragmentEvents">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:id="@+id/fragment_filter_event_tb"

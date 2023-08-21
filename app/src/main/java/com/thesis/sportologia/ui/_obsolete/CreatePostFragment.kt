@@ -16,7 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentCreatePostBinding
 import com.thesis.sportologia.model.DataHolder
-import com.thesis.sportologia.ui.posts.CreateEditPostFragment
+import com.thesis.sportologia.ui.posts.create_edit_post_screen.CreateEditPostFragment
 import com.thesis.sportologia.ui.base.BaseFragment
 import com.thesis.sportologia.ui.views.OnToolbarBasicAction
 import com.thesis.sportologia.utils.observeEvent
