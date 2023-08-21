@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.FollowersFragment">
+    tools:context="com.thesis.sportologia.ui.profile.followers_screen.FollowersFragment">
 
     <com.thesis.sportologia.ui.views.ToolbarBasicView
         android:id="@+id/followers_toolbar"

@@ -1,12 +1,9 @@
 package com.thesis.sportologia.ui.users.adapters
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import com.thesis.sportologia.R
-import com.thesis.sportologia.databinding.FragmentFilterUsersBinding
 import com.thesis.sportologia.databinding.FragmentListUsersHeaderBinding
 import com.thesis.sportologia.model.users.entities.FilterParamsUsers
-import com.thesis.sportologia.ui.FilterFragmentUsers
 import com.thesis.sportologia.utils.Categories
 import com.thesis.sportologia.utils.concatList
 import com.thesis.sportologia.utils.concatMap

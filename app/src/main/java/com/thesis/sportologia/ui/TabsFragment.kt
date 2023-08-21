@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.thesis.sportologia.R
 import com.thesis.sportologia.databinding.FragmentTabsBinding
+import com.thesis.sportologia.ui.home.HomeFragment
+import com.thesis.sportologia.ui.search.search_screen.SearchFragment
+import com.thesis.sportologia.ui.services.service_screen.ServicesAcquiredFragment
 
 class TabsFragment : Fragment(R.layout.fragment_tabs) {
 

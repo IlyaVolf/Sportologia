@@ -1,7 +1,6 @@
 package com.thesis.sportologia.ui.events
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thesis.sportologia.databinding.FragmentListEventsBinding
 import com.thesis.sportologia.model.events.entities.FilterParamsEvents
-import com.thesis.sportologia.ui.REFRESH_EVENTS_LIST_KEY
-import com.thesis.sportologia.ui.SearchFragment
-import com.thesis.sportologia.ui.adapters.LoadStateAdapterPaging
-import com.thesis.sportologia.ui.adapters.TryAgainAction
+import com.thesis.sportologia.ui.entities.REFRESH_EVENTS_LIST_KEY
+import com.thesis.sportologia.ui.search.search_screen.SearchFragment
+import com.thesis.sportologia.ui.base.LoadStateAdapterPaging
 import com.thesis.sportologia.ui.events.adapters.EventsHeaderAdapter
 import com.thesis.sportologia.ui.events.adapters.EventsPagerAdapter
+import com.thesis.sportologia.utils.TryAgainAction
 import com.thesis.sportologia.utils.observeEvent
 import com.thesis.sportologia.utils.simpleScan
 import dagger.hilt.android.AndroidEntryPoint

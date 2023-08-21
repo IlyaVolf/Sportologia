@@ -11,7 +11,7 @@ import com.thesis.sportologia.databinding.FragmentListServicesHeaderBinding
 import com.thesis.sportologia.model.services.entities.FilterParamsServices
 import com.thesis.sportologia.model.services.entities.ServiceType
 import com.thesis.sportologia.ui.TabsFragmentDirections
-import com.thesis.sportologia.ui.services.CreateEditServiceFragment
+import com.thesis.sportologia.ui.services.create_edit_services_screen.CreateEditServiceFragment
 import com.thesis.sportologia.ui.views.OnSpinnerOnlyOutlinedActionListener
 import com.thesis.sportologia.utils.findTopNavController
 

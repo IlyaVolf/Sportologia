@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.thesis.sportologia.ui.SearchFragment">
+    tools:context="com.thesis.sportologia.ui.search.search_screen.SearchFragment">
 
     <include
         android:id="@+id/search_bar"
